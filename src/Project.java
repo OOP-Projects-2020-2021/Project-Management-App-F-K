@@ -16,15 +16,14 @@ public class Project {
   }
 
   private String title;
+    /** Optional. */
   private @Nullable String description;
-  /** Optional. */
-  private @Nullable User assignee;
   /** Optional. The person who is responsible for the project. */
+  private @Nullable User assignee;
   /** Optional. The person who checks whether the project is properly finished. */
   private @Nullable User supervisor;
   /** The list of users who contributed in any way to the project. */
   private List<User> contributors;
-
   private ProjectStatus status;
 
   private Project(Builder builder) {
