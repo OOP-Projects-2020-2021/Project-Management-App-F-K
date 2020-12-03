@@ -8,12 +8,12 @@ import java.util.*;
  * @author Bori Fazakas
  */
 public class Project {
-    public enum ProjectStatus {
-        TO_DO,
-        IN_PROGRESS,
-        MARKED_AS_DONE,
-        FINISHED
-    }
+  public enum ProjectStatus {
+    TO_DO,
+    IN_PROGRESS,
+    MARKED_AS_DONE,
+    FINISHED
+  }
 
     private String title;
     private @Nullable String description; /** Optional. */
