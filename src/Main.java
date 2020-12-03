@@ -1,3 +1,5 @@
+import java.util.List;
+
 public class Main {
   public static void main(String[] args) {
     // test Project class
@@ -6,9 +8,6 @@ public class Main {
     Project project = new Project.Builder("washing the dishes")
                           .addAssignee(assignee)
                           .addSupervisor(supervisor)
-                          .setStatus(Project.ProjectStatus.MARKED_AS_DONE)
-                          .addContributor(assignee)
-                          .addContributor(supervisor)
                           .build();
   }
 }
