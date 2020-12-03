@@ -2,6 +2,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
+/**
+ * Represents a Project and holds its data.
+ *
+ * @author Bori Fazakas
+ */
 public class Project {
     public enum ProjectStatus {
         TO_DO,
@@ -11,9 +16,11 @@ public class Project {
     }
 
     private String title;
-    private @Nullable String description;
-    private @Nullable User assignee;
+    private @Nullable String description; /** Optional. */
+    private @Nullable User assignee; /** Optional. The person who is responsible for the project. */
+    /** Optional. The person who checks whether the project is properly finished.*/
     private @Nullable User supervisor;
+    /** The list of users who contributed in any way to the project. */
     private List<User> contributors;
     private ProjectStatus status;
 
@@ -26,7 +33,14 @@ public class Project {
         this.status = ProjectStatus.TO_DO;
     }
 
+    /**
+     * Marks the given user as a contributor, and also sets the project's status to IN_PROGRESS.
+     * The IN_PROGRESS status should never be manually set.
+     */
     public void addContributor(User contributor) {
+        if (this.status == ProjectStatus.TO_DO) {
+            this.status = ProjectStatus.IN_PROGRESS;
+        }
         this.contributors.add(contributor);
     }
 
