@@ -10,7 +10,7 @@ public class Project {
         FINISHED
     }
 
-    private String name;
+    private String title;
     private @Nullable String description;
     private @Nullable User assignee;
     private @Nullable User supervisor;
@@ -18,7 +18,7 @@ public class Project {
     private ProjectStatus status;
 
     private Project(Builder builder) {
-        this.name = builder.name;
+        this.title = builder.title;
         this.description = builder.description;
         this.assignee = builder.assignee;
         this.supervisor = builder.supervisor;
@@ -42,12 +42,12 @@ public class Project {
         return Collections.unmodifiableList(contributors);
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = Objects.requireNonNull(name);
+    public void setTitle(String title) {
+        this.title = Objects.requireNonNull(title);
     }
 
     public Optional<String> getDescription() {
@@ -83,13 +83,13 @@ public class Project {
     }
 
     public static final class Builder {
-        private String name;
+        private String title;
         private @Nullable String description;
         private @Nullable User assignee;
         private @Nullable User supervisor;
 
-        public Builder(String name) {
-            this.name = Objects.requireNonNull(name);
+        public Builder(String title) {
+            this.title = Objects.requireNonNull(title);
         }
 
         public Builder addDescription(String description) {
