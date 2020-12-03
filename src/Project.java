@@ -92,17 +92,17 @@ public class Project {
             this.title = Objects.requireNonNull(title);
         }
 
-        public Builder addDescription(String description) {
+        public Builder setDescription(String description) {
             this.description = description;
             return this;
         }
 
-        public Builder addAssignee(User assignee) {
+        public Builder setAssignee(User assignee) {
             this.assignee = assignee;
             return this;
         }
 
-        public Builder addSupervisor(User supervisor) {
+        public Builder setSupervisor(User supervisor) {
             this.supervisor = supervisor;
             return this;
         }
