@@ -1,4 +1,4 @@
-name: Github Actions: Google Java Formatter
+name: Github Actions - Google Java Formatter
 
 # Controls when the action will run. 
 on: push
