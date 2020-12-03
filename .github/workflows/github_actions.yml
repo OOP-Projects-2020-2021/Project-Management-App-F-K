@@ -1,0 +1,20 @@
+name: Github Actions: Google Java Formatter
+
+# Controls when the action will run. 
+on: push
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  formatting:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2 # v2 minimum required
+      - uses: actions/setup-java@v1
+        with:
+          # Recommended: latest versions of Google Java Format require JDK 11+
+          java-version: "11"
+      - uses: axel-op/googlejavaformat-action@v3
+        with:
+          args: "--skip-sorting-imports --replace"
+          # Recommended if you use MacOS:
+          # githubToken: ${{ secrets.GITHUB_TOKEN }}
