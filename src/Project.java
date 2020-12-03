@@ -19,6 +19,15 @@ public class Project {
     private List<User> contributors;
     private ProjectStatus status;
 
+    private Project(Builder builder) {
+        this.name = builder.name;
+        this.description = builder.description;
+        this.assignee = builder.assignee;
+        this.supervisor = builder.supervisor;
+        this.contributors = builder.contributors;
+        this.status = builder.status;
+    }
+
     public static final class Builder {
         private String name;
         private @Nullable String description;
@@ -57,8 +66,8 @@ public class Project {
             return this;
         }
 
-//        public Project build() {
-//            // return new Project(this);
-//        }
+        public Project build() {
+            return new Project(this);
+        }
     }
 }
