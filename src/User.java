@@ -1,4 +1,4 @@
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * Represents a User and contains its account information.
@@ -8,23 +8,14 @@ import java.io.*;
 
 public class User implements Serializable {
 
+    /** Each user has a unique username. */
     private String username;
+    /** Each user has a password used for authentication. */
     private String password;
 
-    public User(String username, String password) {
+    public User(String username,String password) {
         this.username = username;
         this.password = password;
-    }
-
-    /**
-     * Validates the username and password introduced by the user.
-     * @param username uniquely identifies the user
-     * @param password is only checked if the username is valid
-     * @return boolean
-     */
-    public boolean isValidLogInData(String username, String password) {
-
-        return true;
     }
 
     public String getUsername() {
@@ -42,5 +33,4 @@ public class User implements Serializable {
     public void setPassword(String password) {
         this.password = password;
     }
-
 }
