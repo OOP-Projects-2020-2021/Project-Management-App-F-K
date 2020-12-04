@@ -10,17 +10,17 @@ import java.util.*;
 public class Team implements Serializable {
 
     /** The name of the team. */
-    private @NotNull String name;
+    private String name;
     /** The code that uniquely identifies the team. */
     private int code;
     /** The team manager. */
-    private @NotNull User manager;
+    private User manager;
     /** A set of the members of the team. */
     private HashSet<User> members = new HashSet<>();
     /** A list of the projects belonging to the team. */
     private List<Project> projects = new ArrayList<>();
 
-    public Team(@NotNull String name,@NotNull User manager) {
+    public Team(String name,User manager) {
         this.name = name;
         this.manager = manager;
         this.code = generateCode();
@@ -66,7 +66,7 @@ public class Team implements Serializable {
         this.projects.remove(project);
     }
 
-    public @NotNull String getName() {
+    public String getName() {
         return name;
     }
 
@@ -82,7 +82,7 @@ public class Team implements Serializable {
         this.code = code;
     }
 
-    public @NotNull User getManager() {
+    public User getManager() {
         return manager;
     }
 
