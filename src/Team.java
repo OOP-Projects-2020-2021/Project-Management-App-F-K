@@ -95,6 +95,6 @@ public class Team implements Serializable {
     }
 
     public List<Project> getProjects() {
-        return projects;
+        return Collections.unmodifiableList(projects);
     }
 }
