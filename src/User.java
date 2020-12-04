@@ -1,11 +1,9 @@
-import java.io.Serializable;
-
 /**
  * Represents a User and contains its account information.
  *
  * @author Beata Keresztes
  */
-public class User implements Serializable {
+public class User {
 
   /** Each user has a unique username. */
   private String username;

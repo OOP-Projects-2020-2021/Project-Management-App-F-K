@@ -1,5 +1,4 @@
 import org.jetbrains.annotations.NotNull;
-import java.io.Serializable;
 import java.util.*;
 
 /**
@@ -7,12 +6,14 @@ import java.util.*;
  *
  * @author Beata Keresztes
  */
-public class Team implements Serializable {
+public class Team {
 
     /** The name of the team. */
     private @NotNull String name;
     /** The code that uniquely identifies the team. */
-    private int code;
+    private @NotNull String code;
+    /** The number of characters the code must consist of. */
+    private static final int CODE_LENGTH = 6;
     /** The team manager. */
     private @NotNull User manager;
     /** A set of the members of the team. */
@@ -27,11 +28,12 @@ public class Team implements Serializable {
     }
 
     /**
-     * Generate a unique identification code for the team.
-     * @return int generated code
+     * Generate a unique, fixed-length identification code for the team.
+     * @return String generated code
      */
-    private int generateCode() {
-        return (new Random().nextInt());
+    public String generateCode() {
+        int randomNumber = (int)(Math.random() * (int)Math.pow(10,CODE_LENGTH) + 1);
+        return Integer.toString(randomNumber);
     }
 
     /**
@@ -74,12 +76,13 @@ public class Team implements Serializable {
         this.name = Objects.requireNonNull(name);
     }
 
-    public int getCode() {
+    public @NotNull String getCode() {
         return code;
     }
 
-    public void setCode(int code) {
-        this.code = code;
+    /** Change the team code. */
+    public void setCode() {
+        this.code = generateCode();
     }
 
     public @NotNull User getManager() {
@@ -90,8 +93,8 @@ public class Team implements Serializable {
         this.manager = Objects.requireNonNull(manager);
     }
 
-    public HashSet<User> getMembers() {
-        return members;
+    public Set<User> getMembers() {
+        return Collections.unmodifiableSet(members);
     }
 
     public List<Project> getProjects() {
