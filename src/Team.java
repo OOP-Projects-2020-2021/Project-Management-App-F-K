@@ -80,11 +80,6 @@ public class Team {
         return code;
     }
 
-    /** Change the team code. */
-    public void setCode() {
-        this.code = generateCode();
-    }
-
     public @NotNull User getManager() {
         return manager;
     }
