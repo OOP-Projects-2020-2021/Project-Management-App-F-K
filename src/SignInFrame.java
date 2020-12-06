@@ -120,9 +120,6 @@ public class SignInFrame extends JFrame{
         this.setVisible(true);      // make frame visible
     }
 
-    public static void main(String[] args) {
-       SignInFrame signIn =  new SignInFrame();
-    }
     private class ButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {

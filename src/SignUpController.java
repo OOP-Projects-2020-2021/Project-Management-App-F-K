@@ -10,7 +10,10 @@ public class SignUpController {
     }
     public void signUp(String username, String password) {
         // TODO!! check if user input has a correct format ex.min_length,alphanumeric_characters
-        signUpFrame.dispatchEvent(new WindowEvent(signUpFrame,WindowEvent.WINDOW_CLOSING));
+        closeFrame();
     }
 
+    public void closeFrame() {
+        signUpFrame.dispatchEvent(new WindowEvent(signUpFrame,WindowEvent.WINDOW_CLOSING));
+    }
 }
