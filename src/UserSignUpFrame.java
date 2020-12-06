@@ -10,10 +10,8 @@ public class UserSignUpFrame  extends JFrame {
     JLabel passwordLabel;
     JTextField usernameTextField;
     JPasswordField passwordField;
-    JButton signInButton;
-    JButton createAccountButton;
-    JLabel createAccountLabel;
-
+    JButton signUpButton;
+    
     private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 300;
     private static final int DEFAULT_GAP_SIZE = 20;
@@ -23,7 +21,7 @@ public class UserSignUpFrame  extends JFrame {
 
     public UserSignUpFrame() {
         // main Frame
-        this.setTitle("Sign in");
+        this.setTitle("Sign up");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(FRAME_WIDTH,FRAME_HEIGHT);
         this.setLayout(new BorderLayout());
@@ -37,7 +35,7 @@ public class UserSignUpFrame  extends JFrame {
         mainPanel.setBorder(centerAlignmentPadding);  // add padding
 
         GridLayout mainPanelLayout = new GridLayout();
-        mainPanelLayout.setColumns(2);
+        mainPanelLayout.setColumns(1);
         mainPanelLayout.setRows(2);
         mainPanelLayout.setVgap(DEFAULT_GAP_SIZE*2);
         mainPanel.setLayout(mainPanelLayout);
@@ -71,39 +69,20 @@ public class UserSignUpFrame  extends JFrame {
         Border buttonBorder = BorderFactory.createEmptyBorder(10,20,10,20); // button border
         ButtonListener buttonListener = new ButtonListener();
 
-        signInButton = new JButton();
-        signInButton.setText("Sign in");
-        signInButton.setBackground(Color.GRAY);
-        signInButton.setBorder(buttonBorder);
-        signInButton.setAlignmentX(CENTER_ALIGNMENT);
-        signInButton.setFocusable(false);
-        signInButton.addActionListener(buttonListener);
+        signUpButton = new JButton();
+        signUpButton.setText("Sign up");
+        signUpButton.setBackground(Color.GRAY);
+        signUpButton.setBorder(buttonBorder);
+        signUpButton.setAlignmentX(CENTER_ALIGNMENT);
+        signUpButton.setFocusable(false);
+        signUpButton.addActionListener(buttonListener);
 
-        JPanel signInButtonPanel = new JPanel();
-        signInButtonPanel.add(signInButton);    // add sign-in button to a separate panel
+        JPanel signUpButtonPanel = new JPanel();
+        signUpButtonPanel.add(signUpButton);    // add sign-in button to a separate panel
 
-        createAccountLabel = new JLabel();
-        createAccountLabel.setSize(LABEL_WIDTH,LABEL_HEIGHT);
-        createAccountLabel.setText("Don't have an account yet?");
-        createAccountLabel.setHorizontalAlignment((int)CENTER_ALIGNMENT);
-        createAccountLabel.setLabelFor(createAccountButton);
 
-        createAccountButton = new JButton();
-        createAccountButton.setText("Create account");
-        createAccountButton.setBackground(Color.GRAY);
-        createAccountButton.setFocusable(false);
-        createAccountButton.setAlignmentX(CENTER_ALIGNMENT);
-        createAccountButton.setBorder(buttonBorder);
-        createAccountButton.addActionListener(buttonListener);
+        this.add(signUpButtonPanel,BorderLayout.CENTER); // add button panel to the frame
 
-        // add create account label and button to a separate panel
-        JPanel createAccountPanel = new JPanel();
-        createAccountPanel.add(createAccountLabel);
-        createAccountPanel.add(createAccountButton);
-
-        this.add(signInButtonPanel,BorderLayout.CENTER); // add button panel to the frame
-
-        this.add(createAccountPanel,BorderLayout.SOUTH); // add create account option panel to the frame
 
         this.pack();                // pack components
         this.setResizable(false);   // doesn't allow window resizing
@@ -114,13 +93,8 @@ public class UserSignUpFrame  extends JFrame {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             JButton source = (JButton) actionEvent.getSource();
-            if(source == signInButton) {
-                // TODO!! add action here
-                System.out.println("sign in");
-            }
-            else if(source == createAccountButton) {
-                // TODO!! add action here
-                System.out.println("create account");
+            if(source == signUpButton) {
+                JOptionPane.showMessageDialog(signUpButton,"You have signed up successfully","Successful sign-up",JOptionPane.INFORMATION_MESSAGE);
             }
         }
 

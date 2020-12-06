@@ -120,12 +120,11 @@ public class UserSignInFrame extends JFrame{
         public void actionPerformed(ActionEvent actionEvent) {
             JButton source = (JButton) actionEvent.getSource();
             if(source == signInButton) {
-                JOptionPane.showMessageDialog(signInButton,"You have signed in successfully","Successful log-in",JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(signInButton,"You have signed in successfully","Successful sign-in",JOptionPane.INFORMATION_MESSAGE);
             }
             else if(source == createAccountButton) {
-                System.out.println("create account");
+                JOptionPane.showConfirmDialog(signInButton,"Do you want to create an account?","Create an account",JOptionPane.YES_NO_OPTION);
             }
         }
-
     }
 }
