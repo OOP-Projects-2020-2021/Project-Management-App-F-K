@@ -1,7 +1,9 @@
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
-public class MainMenu extends JMenuBar{
+public class MainMenu extends JMenuBar implements ActionListener {
     private JMenu accountMenu = new JMenu("My account");
     private JMenu teamsMenu = new JMenu("My teams");
 
@@ -37,4 +39,16 @@ public class MainMenu extends JMenuBar{
         joinTeamItem.setMnemonic(KeyEvent.VK_J);
     }
 
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == accountSettingsItem) {
+            // todo: init settings frame
+        } else if (actionEvent.getSource() == logoutItem) {
+            // todo: logout user and init login frame
+        } else if (actionEvent.getSource() == createTeamItem) {
+            // todo: init create team frame
+        } else if(actionEvent.getSource() == joinTeamItem) {
+            // todo: init join team frame
+        }
+    }
 }
