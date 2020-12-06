@@ -4,10 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * JoinTeamFrame is a frame used for team creation.
- * It displays a textfield in which the user has to enter the team's code.
- * After pushing the submit button, the user will have joined the team with the specified code if
- * it exists.
+ * JoinTeamFrame is a frame used for team creation. It displays a textfield in which the user has to
+ * enter the team's code. After pushing the submit button, the user will have joined the team with
+ * the specified code if it exists.
  *
  * @author Bori Fazakas
  */

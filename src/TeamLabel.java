@@ -2,8 +2,8 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * TeamLabel is a label representing the most important information of a team, as displayed in
- * the TeamListPanel.
+ * TeamLabel is a label representing the most important information of a team, as displayed in the
+ * TeamListPanel.
  *
  * @author Bori Fazakas
  */

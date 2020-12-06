@@ -4,10 +4,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * CreateTeamFrame is a frame used for team creation.
- * It displays a textfield in which the user can specify the new team's name.
- * The team is created when the submit button is pushed, if the requirements for a correct team
- * creation are fulfilled.
+ * CreateTeamFrame is a frame used for team creation. It displays a textfield in which the user can
+ * specify the new team's name. The team is created when the submit button is pushed, if the
+ * requirements for a correct team creation are fulfilled.
  *
  * @author Bori Fazakas
  */

@@ -5,7 +5,7 @@ import javax.swing.*;
  *
  * @author Bori Fazakas
  */
-public class MainMenuController extends FrameController{
+public class MainMenuController extends FrameController {
 
   public MainMenuController(JFrame frame) {
     super(frame);
