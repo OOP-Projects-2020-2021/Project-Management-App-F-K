@@ -9,7 +9,11 @@ public class CreateTeamFrame extends JFrame implements ActionListener {
     private JTextField teamNameTextField;
     private JButton submitBtn;
 
+    private CreateTeamController controller;
+
     public CreateTeamFrame() {
+        controller = new CreateTeamController(this);
+
         teamNameLabel = new JLabel("Enter the team name:");
         teamNameTextField = new JTextField();
         teamNameTextField.setPreferredSize(new Dimension(140, 20));
@@ -39,7 +43,7 @@ public class CreateTeamFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == submitBtn) {
-            // todo: create new team
+            controller.createTeam(teamNameTextField.getText());
         }
     }
 }
