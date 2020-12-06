@@ -11,4 +11,8 @@ public class JoinTeamController extends FrameController {
     System.out.println("Join team with code: " + teamCode);
     closeFrame();
   }
+
+  public void onClose(JFrame parentFrame) {
+    parentFrame.setEnabled(true);
+  }
 }

@@ -1,49 +1,87 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
-public class CreateTeamFrame extends JFrame implements ActionListener {
-  private JLabel teamNameLabel;
-  private JTextField teamNameTextField;
-  private JButton submitBtn;
+public class CreateTeamFrame extends JFrame implements ActionListener, WindowListener {
+    private JLabel teamNameLabel;
+    private JTextField teamNameTextField;
+    private JButton submitBtn;
 
-  private CreateTeamController controller;
+    private CreateTeamController controller;
 
-  public CreateTeamFrame() {
-    controller = new CreateTeamController(this);
+    private JFrame parentFrame;
 
-    teamNameLabel = new JLabel("Enter the team name:");
-    teamNameTextField = new JTextField();
-    teamNameTextField.setPreferredSize(new Dimension(140, 20));
+    public CreateTeamFrame(JFrame parent) {
+        controller = new CreateTeamController(this);
+        parentFrame = parent;
 
-    JPanel dataPanel = new JPanel(new GridLayout(1, 2));
-    dataPanel.add(teamNameLabel);
-    dataPanel.add(teamNameTextField);
-    dataPanel.setPreferredSize(new Dimension(300, 50));
+        teamNameLabel = new JLabel("Enter the team name:");
+        teamNameTextField = new JTextField();
+        teamNameTextField.setPreferredSize(new Dimension(140, 20));
 
-    submitBtn = new JButton("Submit");
-    submitBtn.addActionListener(this);
+        JPanel dataPanel = new JPanel(new GridLayout(1, 2));
+        dataPanel.add(teamNameLabel);
+        dataPanel.add(teamNameTextField);
+        dataPanel.setPreferredSize(new Dimension(300, 50));
 
-    JPanel contentPannel = new JPanel();
-    Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
-    dataPanel.setBorder(padding);
-    this.setContentPane(contentPannel);
+        submitBtn = new JButton("Submit");
+        submitBtn.addActionListener(this);
 
-    this.setTitle("Create a new team");
-    this.setLayout(new BorderLayout(0, 0));
-    this.setSize(new Dimension(380, 120));
-    this.add(dataPanel, BorderLayout.CENTER);
-    this.add(submitBtn, BorderLayout.SOUTH);
-    this.setResizable(false);
-    this.setVisible(true);
-  }
+        JPanel contentPannel = new JPanel();
+        Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+        dataPanel.setBorder(padding);
+        this.setContentPane(contentPannel);
 
-  @Override
-  public void actionPerformed(ActionEvent actionEvent) {
-    if (actionEvent.getSource() == submitBtn) {
-      controller.createTeam(teamNameTextField.getText());
+        this.setTitle("Create a new team");
+        this.addWindowListener(this);
+        this.setLayout(new BorderLayout(0, 0));
+        this.setSize(new Dimension(380, 120));
+        this.add(dataPanel, BorderLayout.CENTER);
+        this.add(submitBtn, BorderLayout.SOUTH);
+        this.setResizable(false);
+        this.setVisible(true);
     }
-  }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == submitBtn) {
+            controller.createTeam(teamNameTextField.getText());
+        }
+    }
+
+    @Override
+    public void windowOpened(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowClosing(WindowEvent evt) {
+        controller.onClose(parentFrame);
+    }
+
+    @Override
+    public void windowClosed(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowIconified(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowDeiconified(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowActivated(WindowEvent windowEvent) {
+
+    }
+
+    @Override
+    public void windowDeactivated(WindowEvent windowEvent) {
+
+    }
 }

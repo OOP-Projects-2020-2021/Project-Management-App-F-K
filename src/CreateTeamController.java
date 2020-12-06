@@ -11,4 +11,8 @@ public class CreateTeamController extends FrameController {
     System.out.println("Create team with name: " + teamName);
     closeFrame();
   }
+
+  public void onClose(JFrame parentFrame) {
+    parentFrame.setEnabled(true);
+  }
 }

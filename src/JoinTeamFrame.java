@@ -1,18 +1,20 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
-public class JoinTeamFrame extends JFrame implements ActionListener {
+public class JoinTeamFrame extends JFrame implements ActionListener, WindowListener {
   private JLabel teamCodeLabel;
   private JTextField teamCodeTextField;
   private JButton submitBtn;
 
   private JoinTeamController controller;
 
-  public JoinTeamFrame() {
+  private JFrame parentFrame;
+
+  public JoinTeamFrame(JFrame parent) {
     controller = new JoinTeamController(this);
+    parentFrame = parent;
 
     teamCodeLabel = new JLabel("Enter the team code:");
     teamCodeTextField = new JTextField();
@@ -32,6 +34,7 @@ public class JoinTeamFrame extends JFrame implements ActionListener {
     this.setContentPane(contentPannel);
 
     this.setTitle("Join a new team");
+    this.addWindowListener(this);
     this.setLayout(new BorderLayout(0, 10));
     this.setSize(new Dimension(320, 120));
     this.add(dataPanel, BorderLayout.CENTER);
@@ -45,5 +48,40 @@ public class JoinTeamFrame extends JFrame implements ActionListener {
     if (actionEvent.getSource() == submitBtn) {
       controller.joinTeam(teamCodeTextField.getText());
     }
+  }
+
+  @Override
+  public void windowOpened(WindowEvent windowEvent) {
+
+  }
+
+  @Override
+  public void windowClosing(WindowEvent evt) {
+    controller.onClose(parentFrame);
+  }
+
+  @Override
+  public void windowClosed(WindowEvent windowEvent) {
+
+  }
+
+  @Override
+  public void windowIconified(WindowEvent windowEvent) {
+
+  }
+
+  @Override
+  public void windowDeiconified(WindowEvent windowEvent) {
+
+  }
+
+  @Override
+  public void windowActivated(WindowEvent windowEvent) {
+
+  }
+
+  @Override
+  public void windowDeactivated(WindowEvent windowEvent) {
+
   }
 }
