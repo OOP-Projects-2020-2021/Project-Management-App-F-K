@@ -15,9 +15,9 @@ public class UserSignUpFrame  extends JFrame {
     private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 300;
     private static final int DEFAULT_GAP_SIZE = 20;
-    private static final int LABEL_WIDTH = 30;
-    private static final int LABEL_HEIGHT = 10;
-    private static final int TEXT_FIELD_COLUMNS = 30;
+    private static final int TEXT_WIDTH = 30;
+    private static final int TEXT_HEIGHT = 10;
+
 
     public UserSignUpFrame() {
         // main Frame
@@ -40,24 +40,31 @@ public class UserSignUpFrame  extends JFrame {
         mainPanelLayout.setVgap(DEFAULT_GAP_SIZE*2);
         mainPanel.setLayout(mainPanelLayout);
 
+        // set font and dimension of the labels&text-fields
+        Font textFont = new Font("Courier", Font.BOLD,15);
+        Dimension textFieldDimension = new Dimension(TEXT_WIDTH,TEXT_HEIGHT);
 
         usernameLabel = new JLabel();
         usernameLabel.setText("Username:");
-        usernameLabel.setSize(LABEL_WIDTH,LABEL_HEIGHT);
+        usernameLabel.setPreferredSize(textFieldDimension);
         usernameLabel.setLabelFor(usernameTextField);
+        usernameLabel.setFont(textFont);
 
         usernameTextField = new JTextField();
-        usernameTextField.setColumns(TEXT_FIELD_COLUMNS);
+        usernameTextField.setPreferredSize(textFieldDimension);
         usernameTextField.setEditable(true);
+        usernameTextField.setFont(textFont);
 
         passwordLabel = new JLabel();
         passwordLabel.setText("Password:");
-        passwordLabel.setSize(LABEL_WIDTH,LABEL_HEIGHT);
+        passwordLabel.setPreferredSize(textFieldDimension);
         passwordLabel.setLabelFor(passwordField);
+        passwordLabel.setFont(textFont);
 
         passwordField = new JPasswordField();
-        passwordField.setColumns(TEXT_FIELD_COLUMNS);
+        passwordField.setPreferredSize(textFieldDimension);
         passwordField.setEditable(true);
+        passwordField.setFont(textFont);
 
         mainPanel.add(usernameLabel);
         mainPanel.add(usernameTextField);
@@ -80,15 +87,16 @@ public class UserSignUpFrame  extends JFrame {
         JPanel signUpButtonPanel = new JPanel();
         signUpButtonPanel.add(signUpButton);    // add sign-in button to a separate panel
 
-
         this.add(signUpButtonPanel,BorderLayout.CENTER); // add button panel to the frame
-
 
         this.pack();                // pack components
         this.setResizable(false);   // doesn't allow window resizing
         this.setVisible(true);      // make frame visible
     }
 
+    public static void main(String[] args) {
+        new UserSignUpFrame();
+    }
     private class ButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
@@ -97,7 +105,6 @@ public class UserSignUpFrame  extends JFrame {
                 JOptionPane.showMessageDialog(signUpButton,"You have signed up successfully","Successful sign-up",JOptionPane.INFORMATION_MESSAGE);
             }
         }
-
     }
 }
 
