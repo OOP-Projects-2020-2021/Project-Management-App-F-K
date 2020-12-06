@@ -1,3 +1,1 @@
-public class UserSignInFrame {
-
-}
+public class UserSignInFrame {}
