@@ -1,8 +1,6 @@
 import javax.swing.*;
 
-public class MainMenu {
-    private JMenuBar menuBar = new JMenuBar();
-
+public class MainMenu extends JMenuBar{
     private JMenu accountMenu = new JMenu("My account");
     private JMenu teamsMenu = new JMenu("My teams");
 
@@ -14,16 +12,15 @@ public class MainMenu {
     private JMenuItem createTeamItem = new JMenuItem("Create new team");
     private JMenuItem joinTeamItem = new JMenuItem("Join team");
 
-    MainMenu() {
-        menuBar.add(accountMenu);
-        menuBar.add(teamsMenu);
-
+    public MainMenu() {
         accountMenu.add(accountSettingsItem);
         accountMenu.add(logoutItem);
 
         teamsMenu.add(createTeamItem);
         teamsMenu.add(joinTeamItem);
 
+        this.add(accountMenu);
+        this.add(teamsMenu);
         //todo set mnemonics
     }
 
