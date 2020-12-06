@@ -56,7 +56,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
         } else if (actionEvent.getSource() == createTeamItem) {
             new CreateTeamFrame();
             // todo: init create team frame
-        } else if(actionEvent.getSource() == joinTeamItem) {
+        } else if (actionEvent.getSource() == joinTeamItem) {
             new JoinTeamFrame();
             // todo: init join team frame
         }
