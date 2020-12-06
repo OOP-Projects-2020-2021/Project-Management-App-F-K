@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class UserSignUpFrame  extends JFrame {
+public class SignUpFrame  extends JFrame {
 
     JLabel usernameLabel;
     JLabel passwordLabel;
@@ -19,7 +19,7 @@ public class UserSignUpFrame  extends JFrame {
     private static final int TEXT_HEIGHT = 10;
 
 
-    public UserSignUpFrame() {
+    public SignUpFrame() {
         // main Frame
         this.setTitle("Sign up");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -95,7 +95,7 @@ public class UserSignUpFrame  extends JFrame {
     }
 
     public static void main(String[] args) {
-        new UserSignUpFrame();
+        new SignUpFrame();
     }
     private class ButtonListener implements ActionListener {
         @Override

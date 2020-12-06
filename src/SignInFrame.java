@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class UserSignInFrame extends JFrame{
+public class SignInFrame extends JFrame{
 
     JLabel usernameLabel;
     JLabel passwordLabel;
@@ -20,7 +20,7 @@ public class UserSignInFrame extends JFrame{
     private static final int TEXT_WIDTH = 30;
     private static final int TEXT_HEIGHT = 10;
 
-    public UserSignInFrame() {
+    public SignInFrame() {
         // main Frame
         this.setTitle("Sign in");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
