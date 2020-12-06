@@ -25,6 +25,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
         this.add(accountMenu);
         this.add(teamsMenu);
 
+        addListeners();
         setMnemonics();
     }
 
@@ -39,6 +40,13 @@ public class MainMenu extends JMenuBar implements ActionListener {
         joinTeamItem.setMnemonic(KeyEvent.VK_J);
     }
 
+    private void addListeners() {
+        accountSettingsItem.addActionListener(this);
+        logoutItem.addActionListener(this);
+        createTeamItem.addActionListener(this);
+        joinTeamItem.addActionListener(this);
+    }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == accountSettingsItem) {
@@ -46,8 +54,10 @@ public class MainMenu extends JMenuBar implements ActionListener {
         } else if (actionEvent.getSource() == logoutItem) {
             // todo: logout user and init login frame
         } else if (actionEvent.getSource() == createTeamItem) {
+            new CreateTeamFrame();
             // todo: init create team frame
         } else if(actionEvent.getSource() == joinTeamItem) {
+            new JoinTeamFrame();
             // todo: init join team frame
         }
     }
