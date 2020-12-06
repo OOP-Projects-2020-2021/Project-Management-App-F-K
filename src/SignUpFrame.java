@@ -3,15 +3,18 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class SignUpFrame  extends JFrame {
 
-    JLabel usernameLabel;
-    JLabel passwordLabel;
-    JTextField usernameTextField;
-    JPasswordField passwordField;
-    JButton signUpButton;
-    
+    private JLabel usernameLabel;
+    private JLabel passwordLabel;
+    private JTextField usernameTextField;
+    private JPasswordField passwordField;
+    private JButton signUpButton;
+
+    private SignUpController signUpController;
+
     private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 300;
     private static final int DEFAULT_GAP_SIZE = 20;
@@ -20,6 +23,8 @@ public class SignUpFrame  extends JFrame {
 
 
     public SignUpFrame() {
+        // add controller
+        this.signUpController = new SignUpController(this);
         // main Frame
         this.setTitle("Sign up");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -103,6 +108,7 @@ public class SignUpFrame  extends JFrame {
             JButton source = (JButton) actionEvent.getSource();
             if(source == signUpButton) {
                 JOptionPane.showMessageDialog(signUpButton,"You have signed up successfully","Successful sign-up",JOptionPane.INFORMATION_MESSAGE);
+                signUpController.signUp(usernameTextField.getName(), Arrays.toString(passwordField.getPassword()));
             }
         }
     }

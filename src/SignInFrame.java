@@ -3,16 +3,19 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Arrays;
 
 public class SignInFrame extends JFrame{
 
-    JLabel usernameLabel;
-    JLabel passwordLabel;
-    JTextField usernameTextField;
-    JPasswordField passwordField;
-    JButton signInButton;
-    JButton createAccountButton;
-    JLabel createAccountLabel;
+    private JLabel usernameLabel;
+    private JLabel passwordLabel;
+    private JTextField usernameTextField;
+    private JPasswordField passwordField;
+    private JButton signInButton;
+    private JButton createAccountButton;
+    private JLabel createAccountLabel;
+
+    private SignInController signInController;
 
     private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 300;
@@ -21,6 +24,8 @@ public class SignInFrame extends JFrame{
     private static final int TEXT_HEIGHT = 10;
 
     public SignInFrame() {
+        // add controller
+        this.signInController = new SignInController(this);
         // main Frame
         this.setTitle("Sign in");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -115,12 +120,16 @@ public class SignInFrame extends JFrame{
         this.setVisible(true);      // make frame visible
     }
 
+    public static void main(String[] args) {
+       SignInFrame signIn =  new SignInFrame();
+    }
     private class ButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
             JButton source = (JButton) actionEvent.getSource();
             if(source == signInButton) {
                 JOptionPane.showMessageDialog(signInButton,"You have signed in successfully","Successful sign-in",JOptionPane.INFORMATION_MESSAGE);
+                signInController.signIn(usernameTextField.getText(), Arrays.toString(passwordField.getPassword()));
             }
             else if(source == createAccountButton) {
                 JOptionPane.showConfirmDialog(signInButton,"Do you want to create an account?","Create an account",JOptionPane.YES_NO_OPTION);
