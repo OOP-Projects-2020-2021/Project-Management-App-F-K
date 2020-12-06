@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class UserSignInFrame extends JFrame{
+public class UserSignUpFrame  extends JFrame {
 
     JLabel usernameLabel;
     JLabel passwordLabel;
@@ -17,10 +17,11 @@ public class UserSignInFrame extends JFrame{
     private static final int FRAME_WIDTH = 400;
     private static final int FRAME_HEIGHT = 300;
     private static final int DEFAULT_GAP_SIZE = 20;
-    private static final int TEXT_WIDTH = 30;
-    private static final int TEXT_HEIGHT = 10;
+    private static final int LABEL_WIDTH = 30;
+    private static final int LABEL_HEIGHT = 10;
+    private static final int TEXT_FIELD_COLUMNS = 30;
 
-    public UserSignInFrame() {
+    public UserSignUpFrame() {
         // main Frame
         this.setTitle("Sign in");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -31,42 +32,34 @@ public class UserSignInFrame extends JFrame{
         JPanel mainPanel = new JPanel();    // main panel
         mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH,FRAME_HEIGHT/2));
 
-        // set borders for the main panel
         Border centerAlignmentPadding = BorderFactory.createEmptyBorder(DEFAULT_GAP_SIZE,2*DEFAULT_GAP_SIZE,DEFAULT_GAP_SIZE,2*DEFAULT_GAP_SIZE);
 
         mainPanel.setBorder(centerAlignmentPadding);  // add padding
 
         GridLayout mainPanelLayout = new GridLayout();
-        mainPanelLayout.setColumns(1);
+        mainPanelLayout.setColumns(2);
         mainPanelLayout.setRows(2);
         mainPanelLayout.setVgap(DEFAULT_GAP_SIZE*2);
         mainPanel.setLayout(mainPanelLayout);
 
-        // set font and dimension of the labels&text-fields
-        Font textFont = new Font("Courier", Font.BOLD,15);
-        Dimension textFieldDimension = new Dimension(TEXT_WIDTH,TEXT_HEIGHT);
 
         usernameLabel = new JLabel();
         usernameLabel.setText("Username:");
-        usernameLabel.setPreferredSize(textFieldDimension);
+        usernameLabel.setSize(LABEL_WIDTH,LABEL_HEIGHT);
         usernameLabel.setLabelFor(usernameTextField);
-        usernameLabel.setFont(textFont);
 
         usernameTextField = new JTextField();
-        usernameTextField.setPreferredSize(textFieldDimension);
+        usernameTextField.setColumns(TEXT_FIELD_COLUMNS);
         usernameTextField.setEditable(true);
-        usernameTextField.setFont(textFont);
 
         passwordLabel = new JLabel();
         passwordLabel.setText("Password:");
-        passwordLabel.setPreferredSize(textFieldDimension);
+        passwordLabel.setSize(LABEL_WIDTH,LABEL_HEIGHT);
         passwordLabel.setLabelFor(passwordField);
-        passwordLabel.setFont(textFont);
 
         passwordField = new JPasswordField();
-        passwordField.setPreferredSize(textFieldDimension);
+        passwordField.setColumns(TEXT_FIELD_COLUMNS);
         passwordField.setEditable(true);
-        passwordField.setFont(textFont);
 
         mainPanel.add(usernameLabel);
         mainPanel.add(usernameTextField);
@@ -75,9 +68,7 @@ public class UserSignInFrame extends JFrame{
 
         this.add(mainPanel,BorderLayout.NORTH); // add the main panel to the frame
 
-        // set borders for the buttons
-        Border buttonBorder = BorderFactory.createEmptyBorder(10,20,10,20);
-        // create an action listener for the buttons
+        Border buttonBorder = BorderFactory.createEmptyBorder(10,20,10,20); // button border
         ButtonListener buttonListener = new ButtonListener();
 
         signInButton = new JButton();
@@ -92,17 +83,21 @@ public class UserSignInFrame extends JFrame{
         signInButtonPanel.add(signInButton);    // add sign-in button to a separate panel
 
         createAccountLabel = new JLabel();
+        createAccountLabel.setSize(LABEL_WIDTH,LABEL_HEIGHT);
         createAccountLabel.setText("Don't have an account yet?");
+        createAccountLabel.setHorizontalAlignment((int)CENTER_ALIGNMENT);
         createAccountLabel.setLabelFor(createAccountButton);
 
         createAccountButton = new JButton();
         createAccountButton.setText("Create account");
         createAccountButton.setBackground(Color.GRAY);
         createAccountButton.setFocusable(false);
+        createAccountButton.setAlignmentX(CENTER_ALIGNMENT);
         createAccountButton.setBorder(buttonBorder);
         createAccountButton.addActionListener(buttonListener);
 
-        JPanel createAccountPanel = new JPanel(new FlowLayout()); // add create account label and button to a separate panel
+        // add create account label and button to a separate panel
+        JPanel createAccountPanel = new JPanel();
         createAccountPanel.add(createAccountLabel);
         createAccountPanel.add(createAccountButton);
 
@@ -121,7 +116,7 @@ public class UserSignInFrame extends JFrame{
             JButton source = (JButton) actionEvent.getSource();
             if(source == signInButton) {
                 // TODO!! add action here
-                JOptionPane.showMessageDialog(signInButton,"You have signed in successfully","Successful log-in",JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("sign in");
             }
             else if(source == createAccountButton) {
                 // TODO!! add action here
@@ -131,3 +126,4 @@ public class UserSignInFrame extends JFrame{
 
     }
 }
+
