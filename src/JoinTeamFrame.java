@@ -9,6 +9,8 @@ public class JoinTeamFrame extends JFrame implements ActionListener {
     private JTextField teamCodeTextField;
     private JButton submitBtn;
 
+    private JoinTeamController controller = new JoinTeamController(this);
+
     public JoinTeamFrame() {
         teamCodeLabel = new JLabel("Enter the team code:");
         teamCodeTextField = new JTextField();
@@ -39,7 +41,7 @@ public class JoinTeamFrame extends JFrame implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == submitBtn) {
-            // todo: join new team
+            controller.joinTeam(teamCodeTextField.getText());
         }
     }
 }
