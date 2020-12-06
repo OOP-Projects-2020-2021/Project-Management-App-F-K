@@ -5,11 +5,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class CreateTeamFrame extends JFrame implements ActionListener {
-    JLabel teamNameLabel;
-    JTextField teamNameTextField;
-    JButton submitBtn;
+    private JLabel teamNameLabel;
+    private JTextField teamNameTextField;
+    private JButton submitBtn;
 
-    CreateTeamFrame() {
+    public CreateTeamFrame() {
         teamNameLabel = new JLabel("Enter the team name:");
         teamNameTextField = new JTextField();
         teamNameTextField.setPreferredSize(new Dimension(140, 20));
