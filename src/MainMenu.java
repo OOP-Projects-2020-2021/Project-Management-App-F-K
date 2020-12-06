@@ -15,9 +15,11 @@ public class MainMenu extends JMenuBar implements ActionListener {
   private JMenuItem createTeamItem = new JMenuItem("Create new team");
   private JMenuItem joinTeamItem = new JMenuItem("Join team");
 
-  private MainMenuController controller = new MainMenuController();
+  private MainMenuController controller;
 
-  public MainMenu() {
+  public MainMenu(JFrame frame) {
+    controller = new MainMenuController(frame);
+
     accountMenu.add(accountSettingsItem);
     accountMenu.add(logoutItem);
 
