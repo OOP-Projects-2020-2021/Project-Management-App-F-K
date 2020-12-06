@@ -1,6 +1,11 @@
 import javax.swing.*;
 import java.awt.event.WindowEvent;
 
+/**
+ * FrameController defines a generic contract for all the controllers of frames.
+ *
+ * @author Bori Fazakas
+ */
 public abstract class FrameController {
   JFrame frame;
 

@@ -3,6 +3,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 
+/**
+ * The MainMenu is the menu of the MainFrame, which provides access to the main functionalities
+ * of the application: logging out (logoutItem), setting the personal data (accountSettingsItem),
+ * creating a new team (createTeamItem) and joining an existing team (joinTeamItem).
+ *
+ * @author Bori Fazakas
+ */
 public class MainMenu extends JMenuBar implements ActionListener {
   private JMenu accountMenu = new JMenu("My account");
   private JMenu teamsMenu = new JMenu("My teams");

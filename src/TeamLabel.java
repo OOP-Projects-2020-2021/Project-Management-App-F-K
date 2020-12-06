@@ -1,6 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * TeamLabel is a label representing the most important information of a team, as displayed in
+ * the TeamListPanel.
+ *
+ * @author Bori Fazakas
+ */
 public class TeamLabel extends JLabel {
 
   public TeamLabel(TeamViewModel teamData) {

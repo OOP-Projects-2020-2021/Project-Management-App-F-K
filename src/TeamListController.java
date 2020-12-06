@@ -2,6 +2,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * TeamListController controls the actions related to TeamListPanel.
+ *
+ * @author Bori Fazakas
+ */
 public class TeamListController {
   public List<TeamViewModel> getUsersTeams() {
     // todo: get list of users teams, exract data for ViewModels and then pass to Panel

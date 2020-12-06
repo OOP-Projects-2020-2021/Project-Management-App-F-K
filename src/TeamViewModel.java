@@ -1,3 +1,9 @@
+/**
+ * TeamViewModel holds the data required for the View (TeamListPanel) to display an icon for a
+ * team. It is an immutable class.
+ *
+ * @author Bori Fazakas
+ */
 public class TeamViewModel {
   private String name;
   private String code;

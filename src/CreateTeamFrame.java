@@ -3,6 +3,14 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * CreateTeamFrame is a frame used for team creation.
+ * It displays a textfield in which the user can specify the new team's name.
+ * The team is created when the submit button is pushed, if the requirements for a correct team
+ * creation are fulfilled.
+ *
+ * @author Bori Fazakas
+ */
 public class CreateTeamFrame extends JFrame implements ActionListener, WindowListener {
     private JLabel teamNameLabel;
     private JTextField teamNameTextField;
@@ -19,6 +27,7 @@ public class CreateTeamFrame extends JFrame implements ActionListener, WindowLis
         teamNameLabel = new JLabel("Enter the team name:");
         teamNameTextField = new JTextField();
         teamNameTextField.setPreferredSize(new Dimension(140, 20));
+        teamNameLabel.setLabelFor(teamNameTextField);
 
         JPanel dataPanel = new JPanel(new GridLayout(1, 2));
         dataPanel.add(teamNameLabel);

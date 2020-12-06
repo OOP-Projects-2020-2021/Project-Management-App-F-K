@@ -3,6 +3,14 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 
+/**
+ * JoinTeamFrame is a frame used for team creation.
+ * It displays a textfield in which the user has to enter the team's code.
+ * After pushing the submit button, the user will have joined the team with the specified code if
+ * it exists.
+ *
+ * @author Bori Fazakas
+ */
 public class JoinTeamFrame extends JFrame implements ActionListener, WindowListener {
   private JLabel teamCodeLabel;
   private JTextField teamCodeTextField;
@@ -19,6 +27,7 @@ public class JoinTeamFrame extends JFrame implements ActionListener, WindowListe
     teamCodeLabel = new JLabel("Enter the team code:");
     teamCodeTextField = new JTextField();
     teamCodeTextField.setPreferredSize(new Dimension(80, 20));
+    teamCodeLabel.setLabelFor(teamCodeTextField);
 
     JPanel dataPanel = new JPanel(new GridLayout(1, 2));
     dataPanel.add(teamCodeLabel);
