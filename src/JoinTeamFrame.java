@@ -1,8 +1,10 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class JoinTeamFrame extends JFrame {
+public class JoinTeamFrame extends JFrame implements ActionListener {
     JLabel teamCodeLabel;
     JTextField teamCodeTextField;
     JButton submitBtn;
@@ -18,6 +20,7 @@ public class JoinTeamFrame extends JFrame {
         dataPanel.setPreferredSize(new Dimension(240, 50));
 
         submitBtn = new JButton("Submit");
+        submitBtn.addActionListener(this);
 
         JPanel contentPannel = new JPanel();
         Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
@@ -31,5 +34,12 @@ public class JoinTeamFrame extends JFrame {
         this.add(submitBtn, BorderLayout.SOUTH);
         this.setResizable(false);
         this.setVisible(true);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        if (actionEvent.getSource() == submitBtn) {
+            // todo: join new team
+        }
     }
 }
