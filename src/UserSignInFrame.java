@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Represents a view of the sign in page.
@@ -70,6 +72,7 @@ public class UserSignInFrame extends JFrame{
         this.add(mainPanel,BorderLayout.NORTH); // add the main panel to the frame
 
         Border buttonBorder = BorderFactory.createEmptyBorder(10,20,10,20); // button border
+        ButtonListener buttonListener = new ButtonListener();
 
         signInButton = new JButton();
         signInButton.setText("Sign in");
@@ -77,6 +80,7 @@ public class UserSignInFrame extends JFrame{
         signInButton.setBorder(buttonBorder);
         signInButton.setAlignmentX(CENTER_ALIGNMENT);
         signInButton.setFocusable(false);
+        signInButton.addActionListener(buttonListener);
 
         JPanel signInButtonPanel = new JPanel();
         signInButtonPanel.add(signInButton);    // add sign-in button to a separate panel
@@ -93,6 +97,7 @@ public class UserSignInFrame extends JFrame{
         createAccountButton.setFocusable(false);
         createAccountButton.setAlignmentX(CENTER_ALIGNMENT);
         createAccountButton.setBorder(buttonBorder);
+        createAccountButton.addActionListener(buttonListener);
 
         // add create account label and button to a separate panel
         JPanel createAccountPanel = new JPanel();
@@ -103,13 +108,24 @@ public class UserSignInFrame extends JFrame{
 
         this.add(createAccountPanel,BorderLayout.SOUTH); // add create account option panel to the frame
 
-        // pack components
-        this.pack();
+        this.pack();                // pack components
         this.setResizable(false);   // doesn't allow window resizing
         this.setVisible(true);      // make frame visible
-
     }
-    public static void main(String[] args) {
-        UserSignInFrame myFrame = new UserSignInFrame();
+
+    private class ButtonListener implements ActionListener {
+        @Override
+        public void actionPerformed(ActionEvent actionEvent) {
+            JButton source = (JButton) actionEvent.getSource();
+            if(source == signInButton) {
+                // TODO!! add action here
+                System.out.println("sign in");
+            }
+            else if(source == createAccountButton) {
+                // TODO!! add action here
+                System.out.println("create account");
+            }
+        }
+
     }
 }
