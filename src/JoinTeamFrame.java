@@ -9,9 +9,11 @@ public class JoinTeamFrame extends JFrame implements ActionListener {
     private JTextField teamCodeTextField;
     private JButton submitBtn;
 
-    private JoinTeamController controller = new JoinTeamController(this);
+    private JoinTeamController controller;
 
     public JoinTeamFrame() {
+        controller = new JoinTeamController(this);
+
         teamCodeLabel = new JLabel("Enter the team code:");
         teamCodeTextField = new JTextField();
         teamCodeTextField.setPreferredSize(new Dimension(80, 20));
