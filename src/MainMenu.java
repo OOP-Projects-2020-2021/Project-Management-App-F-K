@@ -15,6 +15,8 @@ public class MainMenu extends JMenuBar implements ActionListener {
     private JMenuItem createTeamItem = new JMenuItem("Create new team");
     private JMenuItem joinTeamItem = new JMenuItem("Join team");
 
+    private MainMenuController controller = new MainMenuController();
+
     public MainMenu() {
         accountMenu.add(accountSettingsItem);
         accountMenu.add(logoutItem);
@@ -50,15 +52,13 @@ public class MainMenu extends JMenuBar implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         if (actionEvent.getSource() == accountSettingsItem) {
-            // todo: init settings frame
+            controller.enableUserDataSettings();
         } else if (actionEvent.getSource() == logoutItem) {
-            // todo: logout user and init login frame
+            controller.logoutUser();
         } else if (actionEvent.getSource() == createTeamItem) {
-            new CreateTeamFrame();
-            // todo: init create team frame
+            controller.enableCreatingNewTeam();
         } else if (actionEvent.getSource() == joinTeamItem) {
-            new JoinTeamFrame();
-            // todo: init join team frame
+            controller.enableJoiningNewTeam();
         }
     }
 }
