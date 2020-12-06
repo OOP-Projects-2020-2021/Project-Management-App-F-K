@@ -2,6 +2,7 @@ import javax.swing.*;
 import java.awt.event.WindowEvent;
 
 public class SignInController{
+
     JFrame signInFrame;
 
     public SignInController(JFrame signInFrame) {

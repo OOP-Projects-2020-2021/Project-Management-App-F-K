@@ -21,7 +21,6 @@ public class SignUpFrame  extends JFrame {
     private static final int TEXT_WIDTH = 30;
     private static final int TEXT_HEIGHT = 10;
 
-
     public SignUpFrame() {
         // add controller
         this.signUpController = new SignUpController(this);
