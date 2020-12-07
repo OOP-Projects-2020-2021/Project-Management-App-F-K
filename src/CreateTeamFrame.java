@@ -10,7 +10,7 @@ import java.awt.event.*;
  *
  * @author Bori Fazakas
  */
-public class CreateTeamFrame extends JFrame implements ActionListener, WindowListener {
+public class CreateTeamFrame extends JFrame implements ActionListener {
   private JLabel teamNameLabel;
   private JTextField teamNameTextField;
   private JButton submitBtn;
@@ -31,6 +31,7 @@ public class CreateTeamFrame extends JFrame implements ActionListener, WindowLis
   public CreateTeamFrame(JFrame parent) {
     controller = new CreateTeamController(this);
     parentFrame = parent;
+    this.addWindowListener(new CreateTeamWindowAdapter());
 
     teamNameLabel = new JLabel(TEAM_NAME_LABEL_TEXT);
     teamNameTextField = new JTextField();
@@ -51,7 +52,6 @@ public class CreateTeamFrame extends JFrame implements ActionListener, WindowLis
     this.setContentPane(contentPannel);
 
     this.setTitle(FRAME_TITLE);
-    this.addWindowListener(this);
     this.setLayout(new BorderLayout());
     this.setSize(FRAME_DIMENSION);
     this.add(dataPanel, BorderLayout.CENTER);
@@ -67,26 +67,10 @@ public class CreateTeamFrame extends JFrame implements ActionListener, WindowLis
     }
   }
 
-  @Override
-  public void windowOpened(WindowEvent windowEvent) {}
-
-  @Override
-  public void windowClosing(WindowEvent evt) {
-    controller.onClose(parentFrame);
+  private class CreateTeamWindowAdapter extends WindowAdapter {
+    @Override
+    public void windowClosing(WindowEvent evt) {
+      controller.onClose(parentFrame);
+    }
   }
-
-  @Override
-  public void windowClosed(WindowEvent windowEvent) {}
-
-  @Override
-  public void windowIconified(WindowEvent windowEvent) {}
-
-  @Override
-  public void windowDeiconified(WindowEvent windowEvent) {}
-
-  @Override
-  public void windowActivated(WindowEvent windowEvent) {}
-
-  @Override
-  public void windowDeactivated(WindowEvent windowEvent) {}
 }
