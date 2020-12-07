@@ -46,7 +46,8 @@ public class JoinTeamFrame extends JFrame implements ActionListener, WindowListe
     submitBtn.addActionListener(this);
 
     JPanel contentPannel = new JPanel();
-    Border padding = BorderFactory.createEmptyBorder(BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH);
+    Border padding =
+        BorderFactory.createEmptyBorder(BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH);
     dataPanel.setBorder(padding);
     this.setContentPane(contentPannel);
 
