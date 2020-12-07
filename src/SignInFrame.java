@@ -31,7 +31,6 @@ public class SignInFrame extends JFrame{
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(FRAME_WIDTH,FRAME_HEIGHT);
         this.setLayout(new BorderLayout());
-        this.setBackground(Color.GRAY);
 
         JPanel mainPanel = new JPanel();    // main panel
         mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH,FRAME_HEIGHT/2));
@@ -119,6 +118,12 @@ public class SignInFrame extends JFrame{
         this.setResizable(false);   // doesn't allow window resizing
         this.setVisible(true);      // make frame visible
     }
+
+    // add testing method
+    public static void main(String[] args) {
+        new SignInFrame();
+    }
+
 
     private class ButtonListener implements ActionListener {
         @Override

@@ -10,7 +10,7 @@ public class SignInController{
     }
     public void signIn(String username, String password) {
         // TODO!! validate user credentials: if correct close frame, otherwise leave frame (let user try again)
-        closeFrame();
+      //  closeFrame();
     }
     public void closeFrame() {
         signInFrame.dispatchEvent(new WindowEvent(signInFrame,WindowEvent.WINDOW_CLOSING));

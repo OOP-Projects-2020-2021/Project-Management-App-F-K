@@ -29,7 +29,6 @@ public class SignUpFrame  extends JFrame {
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setSize(FRAME_WIDTH,FRAME_HEIGHT);
         this.setLayout(new BorderLayout());
-        this.setBackground(Color.GRAY);
 
         JPanel mainPanel = new JPanel();    // main panel
         mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH,FRAME_HEIGHT/2));
@@ -96,6 +95,11 @@ public class SignUpFrame  extends JFrame {
         this.pack();                // pack components
         this.setResizable(false);   // doesn't allow window resizing
         this.setVisible(true);      // make frame visible
+    }
+
+    // testing method
+    public static void main(String[] args) {
+        new SignUpFrame();
     }
 
     private class ButtonListener implements ActionListener {
