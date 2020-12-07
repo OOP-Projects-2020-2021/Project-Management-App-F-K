@@ -21,7 +21,7 @@ public class SignInController extends UserFrameController {
   /**
    * Opens a new Frame for the User to sign up, and closes the current frame.
    */
-  public void createAccount() {
+  public void enableSigningUp() {
     new SignUpFrame();
     closeFrame();
   }

@@ -68,11 +68,7 @@ public class SignUpFrame extends UserFrame {
     this.pack();
     this.setResizable(false);
     this.setVisible(true);
-    // todo!! solve this
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
 
-  public static void main(String[] args) {
-    new SignUpFrame();
-  }
 }

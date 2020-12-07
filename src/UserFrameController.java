@@ -4,12 +4,11 @@ import java.awt.event.WindowEvent;
 /**
  * FrameController defines a generic contract for all the controllers of frames.
  *
- * @author Bori Fazakas
  */
-public abstract class FrameController {
+public abstract class UserFrameController {
     JFrame frame;
 
-    public FrameController(JFrame frame) {
+    public UserFrameController(JFrame frame) {
         this.frame = frame;
     }
 

@@ -91,7 +91,7 @@ public class SignInFrame extends UserFrame {
         String password = Arrays.toString(passwordField.getPassword());
         signInController.signIn(username,password);
       } else if (source == createAccountButton) {
-        signInController.createAccount();
+        signInController.enableSigningUp();
       }
     }
   }

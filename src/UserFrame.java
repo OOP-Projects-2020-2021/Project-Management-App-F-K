@@ -36,46 +36,39 @@ class UserFrame extends JFrame{
     }
 
     public JLabel createLabel(String text) {
-
         JLabel label = new JLabel();
-
         label.setText(text);
         label.setPreferredSize(TEXT_FIELD_DIMENSION);
         label.setFont(TEXT_FONT);
-
+        return label;
+    }
+    public JLabel createErrorLabel(String text) {
+        JLabel label = createLabel(text);
+        label.setForeground(Color.RED);
         return label;
     }
 
     public JTextField createTextField(String text) {
-
         JTextField textField = new JTextField();
-
         textField.setText(text);
         textField.setPreferredSize(TEXT_FIELD_DIMENSION);
         textField.setFont(TEXT_FONT);
         textField.setEditable(true);
-
         return textField;
     }
     public JPasswordField createPasswordField() {
-
         JPasswordField passwordField = new JPasswordField();
-
         passwordField.setPreferredSize(TEXT_FIELD_DIMENSION);
         passwordField.setFont(TEXT_FONT);
         passwordField.setEditable(true);
-
         return passwordField;
     }
     public JButton createButton(String text) {
-
         JButton button = new JButton();
-
         button.setText(text);
         button.setBorder(BUTTON_BORDER);
         button.setAlignmentX(CENTER_ALIGNMENT);
         button.setFocusable(false);
-
         return button;
     }
 }

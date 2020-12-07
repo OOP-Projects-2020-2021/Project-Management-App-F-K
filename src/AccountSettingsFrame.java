@@ -82,12 +82,6 @@ public class AccountSettingsFrame extends UserFrame {
     });
   }
 
-  public static void main(String[] args) {
-    JFrame frame = new JFrame();
-    frame.setVisible(true);
-    new AccountSettingsFrame(frame);
-  }
-
   private class ButtonListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {

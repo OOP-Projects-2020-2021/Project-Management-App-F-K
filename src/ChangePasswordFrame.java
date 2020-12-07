@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.util.Arrays;
 
@@ -14,13 +13,19 @@ public class ChangePasswordFrame extends UserFrame{
     private JLabel newPasswordAgainLabel;
     private JPasswordField newPasswordAgainField;
     private JButton saveButton;
+    private JLabel wrongPasswordLabel;
 
     private ChangePasswordController changePasswordController;
 
-    public ChangePasswordFrame() {
+    private JFrame parentFrame;
 
-        super(500,300,0);
+    public ChangePasswordFrame(JFrame parentFrame) {
+
+        super(500,350,0);
+
         setPadding(25,20);
+
+        this.parentFrame = parentFrame;
 
         changePasswordController = new ChangePasswordController(this);
 
@@ -63,21 +68,27 @@ public class ChangePasswordFrame extends UserFrame{
         saveButton.addActionListener(e -> {
             String newPassword1 = Arrays.toString(newPasswordField.getPassword());
             String newPassword2 = Arrays.toString(newPasswordAgainField.getPassword());
-            changePasswordController.changePassword(newPassword1, newPassword2);
-            // todo print a message on screen
+            if(changePasswordController.isChangedPassword(newPassword1, newPassword2)) {
+                changePasswordController.onClose(parentFrame);
+            }
+            else {
+               changePasswordController.displayErrorMessage(wrongPasswordLabel);
+               changePasswordController.clearFields(newPasswordField,newPasswordAgainField);
+            }
         });
         saveButtonPanel.add(saveButton);
 
+        wrongPasswordLabel = createErrorLabel("Wrong password!");
+        wrongPasswordLabel.setVisible(false);
+        wrongPasswordLabel.setLabelFor(newPasswordField);
+
+        mainPanel.add(wrongPasswordLabel,BorderLayout.NORTH);
         mainPanel.add(dataInputPanel, BorderLayout.CENTER);
         mainPanel.add(saveButtonPanel, BorderLayout.SOUTH);
 
         this.pack();
         this.setResizable(false);
         this.setVisible(true);
-    }
-
-    public static void main(String[] args) {
-        new ChangePasswordFrame();
     }
 
 }

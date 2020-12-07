@@ -48,14 +48,12 @@ public class AccountSettingsController extends UserFrameController {
   }
   /**
    * Opens a frame which allows the user to change its password.
-   * The current frame will be disabled and hidden until the ChangePasswordFrame is used.
-   * When the user closes the ChangePasswordFrame, the AccountSettingsFrame will be enabled and visible again.
+   * The current frame will be disabled until the ChangePasswordFrame is used.
+   * When the user closes the ChangePasswordFrame, the AccountSettingsFrame will be enabled again.
    */
   private void enableChangingPassword() {
-    //!! todo pass parent frame
-    new ChangePasswordFrame();
+    new ChangePasswordFrame(super.frame);
     super.frame.setEnabled(false);
-    super.frame.setVisible(false);
   }
 
   /**
@@ -63,8 +61,8 @@ public class AccountSettingsController extends UserFrameController {
    * @param parentFrame the frame which will be enabled
    */
   public void onClose(JFrame parentFrame) {
+    closeFrame();
     parentFrame.setVisible(true);
     parentFrame.setEnabled(true);
-    closeFrame();
   }
 }
