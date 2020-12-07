@@ -22,7 +22,7 @@ public class AccountSettingsFrame extends UserFrame {
 
   public AccountSettingsFrame(JFrame parentFrame) {
 
-    super(400,300,10);
+    super(400, 300, 10);
 
     this.parentFrame = parentFrame;
 
@@ -74,12 +74,13 @@ public class AccountSettingsFrame extends UserFrame {
     this.setResizable(false);
     this.setVisible(true);
 
-    addWindowFocusListener(new WindowAdapter() {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        accountSettingsController.onClose(parentFrame);
-      }
-    });
+    addWindowFocusListener(
+        new WindowAdapter() {
+          @Override
+          public void windowClosing(WindowEvent e) {
+            accountSettingsController.onClose(parentFrame);
+          }
+        });
   }
 
   private class ButtonListener implements ActionListener {
@@ -87,8 +88,8 @@ public class AccountSettingsFrame extends UserFrame {
     public void actionPerformed(ActionEvent actionEvent) {
       JButton source = (JButton) actionEvent.getSource();
       if (source == changePasswordButton) {
-          accountSettingsController.askForUserPassword();
-      } else if(source == goBackButton) {
+        accountSettingsController.askForUserPassword();
+      } else if (source == goBackButton) {
         accountSettingsController.onClose(parentFrame);
       }
     }

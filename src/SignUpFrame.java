@@ -12,10 +12,9 @@ public class SignUpFrame extends UserFrame {
 
   private SignUpController signUpController;
 
-
   public SignUpFrame() {
 
-    super(400,300,40);
+    super(400, 300, 40);
 
     this.signUpController = new SignUpController(this);
 
@@ -54,11 +53,12 @@ public class SignUpFrame extends UserFrame {
     signUpButton = createButton("Sign up");
     signUpButton.setAlignmentX(CENTER_ALIGNMENT);
 
-    signUpButton.addActionListener(e -> {
-      String username = usernameTextField.getName();
-      String password = Arrays.toString(passwordField.getPassword());
-      signUpController.signUp(username,password);
-    });
+    signUpButton.addActionListener(
+        e -> {
+          String username = usernameTextField.getName();
+          String password = Arrays.toString(passwordField.getPassword());
+          signUpController.signUp(username, password);
+        });
 
     JPanel signUpButtonPanel = new JPanel();
     signUpButtonPanel.add(signUpButton);
@@ -70,5 +70,4 @@ public class SignUpFrame extends UserFrame {
     this.setVisible(true);
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
-
 }

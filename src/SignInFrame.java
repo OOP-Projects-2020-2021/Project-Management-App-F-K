@@ -18,7 +18,7 @@ public class SignInFrame extends UserFrame {
 
   public SignInFrame() {
 
-    super(400,300,20);
+    super(400, 300, 20);
     this.signInController = new SignInController(this);
 
     this.setTitle("Sign in");
@@ -30,7 +30,7 @@ public class SignInFrame extends UserFrame {
 
     mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
 
-    GridLayout mainPanelLayout = new GridLayout(2,1);
+    GridLayout mainPanelLayout = new GridLayout(2, 1);
     mainPanelLayout.setVgap(GAP_SIZE);
     mainPanel.setLayout(mainPanelLayout);
 
@@ -89,11 +89,10 @@ public class SignInFrame extends UserFrame {
       if (source == signInButton) {
         String username = usernameTextField.getName();
         String password = Arrays.toString(passwordField.getPassword());
-        signInController.signIn(username,password);
+        signInController.signIn(username, password);
       } else if (source == createAccountButton) {
         signInController.enableSigningUp();
       }
     }
   }
-
 }

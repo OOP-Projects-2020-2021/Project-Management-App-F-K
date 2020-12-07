@@ -1,4 +1,5 @@
 import javax.swing.*;
+
 public class SignUpController extends UserFrameController {
 
   public SignUpController(JFrame signUpFrame) {
@@ -6,8 +7,9 @@ public class SignUpController extends UserFrameController {
   }
 
   /**
-   * Forward the data introduced by the user, to create a new account.
-   * Close the current frame and open the teamView frame instead.
+   * Forward the data introduced by the user, to create a new account. Close the current frame and
+   * open the teamView frame instead.
+   *
    * @param username the username set by the user
    * @param password the password set by the user
    */
@@ -16,5 +18,4 @@ public class SignUpController extends UserFrameController {
     // TODO!! open the frame with the main menu
     closeFrame();
   }
-
 }
