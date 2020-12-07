@@ -78,7 +78,7 @@ public class SignInFrame extends UserFrame {
     this.pack();
     this.setResizable(false);
     this.setVisible(true);
-    // TODO!! solve this
+
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
 
@@ -87,24 +87,13 @@ public class SignInFrame extends UserFrame {
     public void actionPerformed(ActionEvent actionEvent) {
       JButton source = (JButton) actionEvent.getSource();
       if (source == signInButton) {
-//        JOptionPane.showMessageDialog(
-//            signInButton,
-//            "You have signed in successfully",
-//            "Successful sign-in",
-//            JOptionPane.INFORMATION_MESSAGE);
-        signInController.signIn(
-            usernameTextField.getText(), Arrays.toString(passwordField.getPassword()));
+        String username = usernameTextField.getName();
+        String password = Arrays.toString(passwordField.getPassword());
+        signInController.signIn(username,password);
       } else if (source == createAccountButton) {
-//        JOptionPane.showConfirmDialog(
-//            signInButton,
-//            "Do you want to create an account?",
-//            "Create an account",
-//            JOptionPane.YES_NO_OPTION);
-          // TODO!! enable sign up frame
+        signInController.createAccount();
       }
     }
   }
-  public static void main(String[] args) {
-    new SignInFrame();
-  }
+
 }
