@@ -1,12 +1,9 @@
 import javax.swing.*;
-import java.awt.event.WindowEvent;
 
-public class SignInController {
-
-  JFrame signInFrame;
+public class SignInController extends  FrameController{
 
   public SignInController(JFrame signInFrame) {
-    this.signInFrame = signInFrame;
+    super(signInFrame);
   }
 
   public void signIn(String username, String password) {
@@ -15,7 +12,4 @@ public class SignInController {
     //  closeFrame();
   }
 
-  public void closeFrame() {
-    signInFrame.dispatchEvent(new WindowEvent(signInFrame, WindowEvent.WINDOW_CLOSING));
-  }
 }

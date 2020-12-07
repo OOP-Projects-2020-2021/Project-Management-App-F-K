@@ -1,12 +1,8 @@
 import javax.swing.*;
-import java.awt.event.WindowEvent;
-
-public class SignUpController {
-
-  JFrame signUpFrame;
+public class SignUpController extends FrameController{
 
   public SignUpController(JFrame signUpFrame) {
-    this.signUpFrame = signUpFrame;
+    super(signUpFrame);
   }
 
   public void signUp(String username, String password) {
@@ -14,7 +10,4 @@ public class SignUpController {
     // closeFrame();
   }
 
-  public void closeFrame() {
-    signUpFrame.dispatchEvent(new WindowEvent(signUpFrame, WindowEvent.WINDOW_CLOSING));
-  }
 }
