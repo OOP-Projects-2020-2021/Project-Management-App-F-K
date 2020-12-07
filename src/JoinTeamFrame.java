@@ -19,32 +19,41 @@ public class JoinTeamFrame extends JFrame implements ActionListener, WindowListe
 
   private JFrame parentFrame;
 
+  private static final Dimension FRAME_DIMENSION = new Dimension(320, 120);
+  private static final Dimension DATA_PANEL_DIMENSION = new Dimension(240, 50);
+  private static final Dimension TEAM_CODE_FIELD_DIMENSION = new Dimension(80, 20);
+  private static final int BORDER_WIDTH = 10;
+
+  private static final String TEAM_CODE_LABEL_TEXT = "Enter the team code:";
+  private static final String SUBMIT_BUTTON_TEXT = "Submit";
+  private static final String FRAME_TITLE = "Join a team";
+
   public JoinTeamFrame(JFrame parent) {
     controller = new JoinTeamController(this);
     parentFrame = parent;
 
-    teamCodeLabel = new JLabel("Enter the team code:");
+    teamCodeLabel = new JLabel(TEAM_CODE_LABEL_TEXT);
     teamCodeTextField = new JTextField();
-    teamCodeTextField.setPreferredSize(new Dimension(80, 20));
+    teamCodeTextField.setPreferredSize(TEAM_CODE_FIELD_DIMENSION);
     teamCodeLabel.setLabelFor(teamCodeTextField);
 
     JPanel dataPanel = new JPanel(new GridLayout(1, 2));
     dataPanel.add(teamCodeLabel);
     dataPanel.add(teamCodeTextField);
-    dataPanel.setPreferredSize(new Dimension(240, 50));
+    dataPanel.setPreferredSize(DATA_PANEL_DIMENSION);
 
-    submitBtn = new JButton("Submit");
+    submitBtn = new JButton(SUBMIT_BUTTON_TEXT);
     submitBtn.addActionListener(this);
 
     JPanel contentPannel = new JPanel();
-    Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+    Border padding = BorderFactory.createEmptyBorder(BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH);
     dataPanel.setBorder(padding);
     this.setContentPane(contentPannel);
 
-    this.setTitle("Join a new team");
+    this.setTitle(FRAME_TITLE);
     this.addWindowListener(this);
     this.setLayout(new BorderLayout(0, 10));
-    this.setSize(new Dimension(320, 120));
+    this.setSize(FRAME_DIMENSION);
     this.add(dataPanel, BorderLayout.CENTER);
     this.add(submitBtn, BorderLayout.SOUTH);
     this.setResizable(false);
