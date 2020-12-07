@@ -97,11 +97,6 @@ public class SignUpFrame  extends JFrame {
         this.setVisible(true);      // make frame visible
     }
 
-    // testing method
-    public static void main(String[] args) {
-        new SignUpFrame();
-    }
-
     private class ButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent actionEvent) {
