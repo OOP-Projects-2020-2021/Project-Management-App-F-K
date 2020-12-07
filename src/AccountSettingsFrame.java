@@ -3,9 +3,11 @@ import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
- * Shows the account information of the user and allows changing the data.
+ * AccountSettingsFrame displays the account information of the user and allows changing the data.
  */
 public class AccountSettingsFrame extends UserFrame {
 
@@ -16,15 +18,19 @@ public class AccountSettingsFrame extends UserFrame {
 
   private AccountSettingsController accountSettingsController;
 
-  public AccountSettingsFrame(User user) {
+  private JFrame parentFrame;
+
+  public AccountSettingsFrame(JFrame parentFrame) {
 
     super(400,300,10);
-    this.accountSettingsController = new AccountSettingsController(this,user);
+
+    this.parentFrame = parentFrame;
+
+    this.accountSettingsController = new AccountSettingsController(this);
 
     this.setTitle("Account Settings");
     this.setSize(FRAME_DIMENSION);
 
-    // create a main panel and add it to the frame
     JPanel mainPanel = new JPanel();
     this.setContentPane(mainPanel);
 
@@ -32,7 +38,6 @@ public class AccountSettingsFrame extends UserFrame {
     mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT * 2 / 3));
     mainPanel.setLayout(new BorderLayout());
 
-    // create a user panel to display the user data
     JPanel userDataPanel = new JPanel(new GridLayout(1, 2));
     Border userDataPanelPadding =
         BorderFactory.createEmptyBorder(
@@ -42,7 +47,7 @@ public class AccountSettingsFrame extends UserFrame {
     usernameLabel = createLabel("Username:");
     usernameLabel.setLabelFor(usernameTextField);
 
-    usernameTextField = createTextField(user.getUsername());
+    usernameTextField = createTextField(accountSettingsController.getUsername());
     usernameTextField.setEditable(false);
 
     userDataPanel.add(usernameLabel);
@@ -68,12 +73,19 @@ public class AccountSettingsFrame extends UserFrame {
     this.pack();
     this.setResizable(false);
     this.setVisible(true);
-    // TODO!! solve this
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+    addWindowFocusListener(new WindowAdapter() {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        accountSettingsController.onClose(parentFrame);
+      }
+    });
   }
 
   public static void main(String[] args) {
-    new AccountSettingsFrame(new User("admin","admin"));
+    JFrame frame = new JFrame();
+    frame.setVisible(true);
+    new AccountSettingsFrame(frame);
   }
 
   private class ButtonListener implements ActionListener {
@@ -81,20 +93,9 @@ public class AccountSettingsFrame extends UserFrame {
     public void actionPerformed(ActionEvent actionEvent) {
       JButton source = (JButton) actionEvent.getSource();
       if (source == changePasswordButton) {
-        // TODO!! validate the current password
-        String password =
-                JOptionPane.showInputDialog(changePasswordButton, "Enter your current password:");
-        if (accountSettingsController.validateCurrentPassword(password)) {
-            // TODO!! enable change password frame
-        } else {
-          JOptionPane.showMessageDialog(
-                  changePasswordButton,
-                  "Password was incorrect.",
-                  "Incorrect password",
-                  JOptionPane.WARNING_MESSAGE);
-        }
+          accountSettingsController.askForUserPassword();
       } else if(source == goBackButton) {
-        // TODO!! close frame and return to main frame
+        accountSettingsController.onClose(parentFrame);
       }
     }
   }
