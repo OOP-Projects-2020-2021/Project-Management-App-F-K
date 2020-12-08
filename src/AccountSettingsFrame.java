@@ -1,15 +1,12 @@
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.awt.event.*;
 
 /**
  * AccountSettingsFrame displays the account information of the user and allows changing the data.
  */
-public class AccountSettingsFrame extends UserFrame {
+public class AccountSettingsFrame extends UserFrame implements  ActionListener {
 
   private JLabel usernameLabel;
   private JTextField usernameTextField;
@@ -22,14 +19,11 @@ public class AccountSettingsFrame extends UserFrame {
 
   public AccountSettingsFrame(JFrame parentFrame) {
 
-    super(400, 300, 10);
+    super("Account Settings",400, 300);
 
     this.parentFrame = parentFrame;
 
     this.accountSettingsController = new AccountSettingsController(this);
-
-    this.setTitle("Account Settings");
-    this.setSize(FRAME_DIMENSION);
 
     JPanel mainPanel = new JPanel();
     this.setContentPane(mainPanel);
@@ -55,14 +49,12 @@ public class AccountSettingsFrame extends UserFrame {
 
     mainPanel.add(userDataPanel, BorderLayout.CENTER);
 
-    ButtonListener buttonListener = new ButtonListener();
-
     changePasswordButton = createButton("Change password");
-    changePasswordButton.addActionListener(buttonListener);
+    changePasswordButton.addActionListener(this);
 
     goBackButton = createButton("Back");
     goBackButton.setFocusable(false);
-    goBackButton.addActionListener(buttonListener);
+    goBackButton.addActionListener(this);
 
     JPanel buttonsPanel = new JPanel(new FlowLayout());
     buttonsPanel.add(changePasswordButton);
@@ -70,20 +62,12 @@ public class AccountSettingsFrame extends UserFrame {
 
     mainPanel.add(buttonsPanel, BorderLayout.SOUTH);
 
-    this.pack();
-    this.setResizable(false);
-    this.setVisible(true);
+    this.addWindowFocusListener(new AccountSettingsWindowAdapter());
 
-    addWindowFocusListener(
-        new WindowAdapter() {
-          @Override
-          public void windowClosing(WindowEvent e) {
-            accountSettingsController.onClose(parentFrame);
-          }
-        });
+    this.pack();
+
   }
 
-  private class ButtonListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       JButton source = (JButton) actionEvent.getSource();
@@ -93,5 +77,11 @@ public class AccountSettingsFrame extends UserFrame {
         accountSettingsController.onClose(parentFrame);
       }
     }
-  }
+    private class AccountSettingsWindowAdapter extends WindowAdapter {
+      @Override
+      public void windowClosing(WindowEvent e) {
+        accountSettingsController.onClose(parentFrame);
+      }
+    }
+
 }

@@ -16,14 +16,15 @@ public class SignInFrame extends UserFrame {
 
   private SignInController signInController;
 
+  private static final int GAP_SIZE = 20;
+
   public SignInFrame() {
 
-    super(400, 300, 20);
-    this.signInController = new SignInController(this);
+    super("Sign in",400, 300);
 
-    this.setTitle("Sign in");
-    this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
     this.setLayout(new BorderLayout());
+
+    this.signInController = new SignInController(this);
 
     JPanel mainPanel = new JPanel();
     mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT / 2));
@@ -76,10 +77,9 @@ public class SignInFrame extends UserFrame {
     this.add(createAccountPanel, BorderLayout.SOUTH);
 
     this.pack();
-    this.setResizable(false);
-    this.setVisible(true);
 
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
   }
 
   private class ButtonListener implements ActionListener {

@@ -1,9 +1,14 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 /** Using this frame the user can set a new password. */
-public class ChangePasswordFrame extends UserFrame {
+public class ChangePasswordFrame extends UserFrame implements ActionListener {
 
   private JLabel newPasswordLabel;
   private JPasswordField newPasswordField;
@@ -11,24 +16,18 @@ public class ChangePasswordFrame extends UserFrame {
   private JPasswordField newPasswordAgainField;
   private JButton saveButton;
   private JLabel wrongPasswordLabel;
-
   private ChangePasswordController changePasswordController;
-
   private JFrame parentFrame;
+
+  private static final String WRONG_PASSWORD_MESSAGE = "Wrong password!";
 
   public ChangePasswordFrame(JFrame parentFrame) {
 
-    super(500, 350, 0);
-
-    setPadding(25, 20);
+    super("Change password",500, 350);
 
     this.parentFrame = parentFrame;
 
     changePasswordController = new ChangePasswordController(this);
-
-    this.setTitle("Change password");
-    this.setSize(FRAME_WIDTH, FRAME_HEIGHT);
-    this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
     JPanel mainPanel = new JPanel();
     mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT * 3 / 4));
@@ -62,20 +61,10 @@ public class ChangePasswordFrame extends UserFrame {
 
     saveButton = createButton("Save");
 
-    saveButton.addActionListener(
-        e -> {
-          String newPassword1 = Arrays.toString(newPasswordField.getPassword());
-          String newPassword2 = Arrays.toString(newPasswordAgainField.getPassword());
-          if (changePasswordController.isChangedPassword(newPassword1, newPassword2)) {
-            changePasswordController.onClose(parentFrame);
-          } else {
-            changePasswordController.displayErrorMessage(wrongPasswordLabel);
-            changePasswordController.clearFields(newPasswordField, newPasswordAgainField);
-          }
-        });
+    saveButton.addActionListener(this);
     saveButtonPanel.add(saveButton);
 
-    wrongPasswordLabel = createErrorLabel("Wrong password!");
+    wrongPasswordLabel = createErrorLabel(WRONG_PASSWORD_MESSAGE);
     wrongPasswordLabel.setVisible(false);
     wrongPasswordLabel.setLabelFor(newPasswordField);
 
@@ -84,7 +73,29 @@ public class ChangePasswordFrame extends UserFrame {
     mainPanel.add(saveButtonPanel, BorderLayout.SOUTH);
 
     this.pack();
-    this.setResizable(false);
-    this.setVisible(true);
+
+    this.addWindowFocusListener(new ChangePasswordWindowAdapter());
+
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent actionEvent) {
+    if (actionEvent.getSource() == saveButton) {
+      String newPassword1 = Arrays.toString(newPasswordField.getPassword());
+      String newPassword2 = Arrays.toString(newPasswordAgainField.getPassword());
+      if (changePasswordController.isChangedPassword(newPassword1, newPassword2)) {
+        changePasswordController.onClose(parentFrame);
+      } else {
+        wrongPasswordLabel.setVisible(true);
+        newPasswordField.setText("");
+        newPasswordAgainField.setText("");
+      }
+    }
+  }
+  private class ChangePasswordWindowAdapter extends WindowAdapter {
+    @Override
+    public void windowClosing(WindowEvent e) {
+      changePasswordController.onClose(parentFrame);
+    }
   }
 }

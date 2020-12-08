@@ -6,6 +6,10 @@ import javax.swing.*;
  */
 public class AccountSettingsController extends FrameController {
 
+  /** Messages displayed to inform the user about the validation of the data. */
+  private static final String ASK_PASSWORD_MESSAGE = "Enter your current password:";
+  private static final String INCORRECT_PASSWORD_MESSAGE = "Incorrect password!";
+
   AccountSettingsController(JFrame accountSettingsFrame) {
     super(accountSettingsFrame);
   }
@@ -34,12 +38,12 @@ public class AccountSettingsController extends FrameController {
    * otherwise it displays an error message.
    */
   public void askForUserPassword() {
-    String password = JOptionPane.showInputDialog(super.frame, "Enter your current password:");
+    String password = JOptionPane.showInputDialog(super.frame, ASK_PASSWORD_MESSAGE);
     if (validateCurrentPassword(password)) {
       enableChangingPassword();
     } else {
       JOptionPane.showMessageDialog(
-          super.frame, "Password was incorrect.", "Incorrect password", JOptionPane.ERROR_MESSAGE);
+          super.frame, INCORRECT_PASSWORD_MESSAGE, INCORRECT_PASSWORD_MESSAGE, JOptionPane.ERROR_MESSAGE);
     }
   }
   /**
