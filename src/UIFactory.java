@@ -37,9 +37,11 @@ public class UIFactory {
         return label;
     }
 
-    public static JTextField createTextField(String text, @Nullable Dimension dimension) {
+    public static JTextField createTextField(@Nullable String text, @Nullable Dimension dimension) {
         JTextField textField = new JTextField();
-        textField.setText(text);
+        if (text != null) {
+            textField.setText(text);
+        }
         textField.setPreferredSize(Objects.requireNonNullElse(dimension, TEXT_FIELD_DIMENSION));
         textField.setFont(NORMAL_TEXT_FONT);
         textField.setEditable(true);
@@ -59,8 +61,7 @@ public class UIFactory {
         button.setText(text);
         button.setBorder(BUTTON_BORDER);
         button.setPreferredSize(Objects.requireNonNullElse(dimension, LABEL_DIMENSION));
-        // todo
-        // button.setAlignmentX();
+        button.setAlignmentX(JFrame.CENTER_ALIGNMENT);
         button.setFocusable(false);
         return button;
     }

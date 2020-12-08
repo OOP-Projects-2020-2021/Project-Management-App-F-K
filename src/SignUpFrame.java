@@ -6,7 +6,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
-public class SignUpFrame extends UserFrame implements ActionListener {
+
+//todo
+public class SignUpFrame extends JFrame implements ActionListener {
 
   private JLabel usernameLabel;
   private JLabel passwordLabel;
@@ -29,7 +31,7 @@ public class SignUpFrame extends UserFrame implements ActionListener {
     this.signUpController = new SignUpController(this);
 
     JPanel mainPanel = new JPanel();
-    mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT / 2));
+    mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() / 2));
 
     mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
 
@@ -37,15 +39,15 @@ public class SignUpFrame extends UserFrame implements ActionListener {
     mainPanelLayout.setVgap(40);
     mainPanel.setLayout(mainPanelLayout);
 
-    usernameLabel = createLabel("Username:");
+    usernameLabel = UIFactory.createLabel("Username:", null);
     usernameLabel.setLabelFor(usernameTextField);
 
-    usernameTextField = createTextField(null);
+    usernameTextField = UIFactory.createTextField(null, null);
 
-    passwordLabel = createLabel("Password:");
+    passwordLabel = UIFactory.createLabel("Password:", null);
     passwordLabel.setLabelFor(passwordField);
 
-    passwordField = createPasswordField();
+    passwordField = UIFactory.createPasswordField(null);
 
     mainPanel.add(usernameLabel);
     mainPanel.add(usernameTextField);
@@ -54,7 +56,7 @@ public class SignUpFrame extends UserFrame implements ActionListener {
 
     this.add(mainPanel, BorderLayout.NORTH);
 
-    signUpButton = createButton("Sign up");
+    signUpButton = UIFactory.createButton("Sign up", null);
     signUpButton.setAlignmentX(CENTER_ALIGNMENT);
 
     signUpButton.addActionListener(this);

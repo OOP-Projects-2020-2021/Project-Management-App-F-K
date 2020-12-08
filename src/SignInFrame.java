@@ -4,7 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-public class SignInFrame extends UserFrame {
+//todo extend whatever
+public class SignInFrame extends JFrame {
 
   private JLabel usernameLabel;
   private JLabel passwordLabel;
@@ -25,23 +26,22 @@ public class SignInFrame extends UserFrame {
     this.signInController = new SignInController(this);
 
     JPanel mainPanel = new JPanel();
-    mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT / 2));
-
+    mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() / 2));
     mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
 
     GridLayout mainPanelLayout = new GridLayout(2, 1);
     mainPanelLayout.setVgap(20);
     mainPanel.setLayout(mainPanelLayout);
 
-    usernameLabel = createLabel("Username:");
+    usernameLabel = UIFactory.createLabel("Username:", null);
     usernameLabel.setLabelFor(usernameTextField);
 
-    usernameTextField = createTextField(null);
+    usernameTextField = UIFactory.createTextField(null, null);
 
-    passwordLabel = createLabel("Password:");
+    passwordLabel = UIFactory.createLabel("Password:", null);
     passwordLabel.setLabelFor(passwordField);
 
-    passwordField = createPasswordField();
+    passwordField = UIFactory.createPasswordField(null);
 
     mainPanel.add(usernameLabel);
     mainPanel.add(usernameTextField);
@@ -52,8 +52,7 @@ public class SignInFrame extends UserFrame {
 
     ButtonListener buttonListener = new ButtonListener();
 
-    signInButton = createButton("Sign in");
-    signInButton.setAlignmentX(CENTER_ALIGNMENT);
+    signInButton = UIFactory.createButton("Sign in", null);
     signInButton.addActionListener(buttonListener);
 
     JPanel signInButtonPanel = new JPanel();
@@ -63,7 +62,7 @@ public class SignInFrame extends UserFrame {
     createAccountLabel.setText("Don't have an account yet?");
     createAccountLabel.setLabelFor(createAccountButton);
 
-    createAccountButton = createButton("Create account");
+    createAccountButton = UIFactory.createButton("Create account", null);
     createAccountButton.addActionListener(buttonListener);
 
     JPanel createAccountPanel = new JPanel(new FlowLayout());

@@ -7,7 +7,7 @@ import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 /** Using this frame the user can set a new password. */
-public class ChangePasswordFrame extends UserFrame implements ActionListener {
+public class ChangePasswordFrame extends JFrame implements ActionListener {
 
   private JLabel newPasswordLabel;
   private JPasswordField newPasswordField;
@@ -29,27 +29,27 @@ public class ChangePasswordFrame extends UserFrame implements ActionListener {
     changePasswordController = new ChangePasswordController(this);
 
     JPanel mainPanel = new JPanel();
-    mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT * 3 / 4));
+    mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()* 3 / 4));
     mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
 
     this.setContentPane(mainPanel);
 
     JPanel dataInputPanel = new JPanel(new GridLayout(2, 1, 10, 10));
-    dataInputPanel.setPreferredSize(FRAME_DIMENSION);
+    dataInputPanel.setPreferredSize(this.getSize());
     dataInputPanel.setBorder(CENTER_ALIGNMENT_PADDING);
 
     BorderLayout dialogPanelLayout = new BorderLayout();
     mainPanel.setLayout(dialogPanelLayout);
 
-    newPasswordLabel = createLabel("Enter new password:");
+    newPasswordLabel = UIFactory.createLabel("Enter new password:", null);
     newPasswordLabel.setLabelFor(newPasswordField);
 
-    newPasswordField = createPasswordField();
+    newPasswordField = UIFactory.createPasswordField(null);
 
-    newPasswordAgainLabel = createLabel("Reenter new password:");
+    newPasswordAgainLabel = UIFactory.createLabel("Reenter new password:", null);
     newPasswordAgainLabel.setLabelFor(newPasswordAgainField);
 
-    newPasswordAgainField = createPasswordField();
+    newPasswordAgainField = UIFactory.createPasswordField(null);
 
     dataInputPanel.add(newPasswordLabel);
     dataInputPanel.add(newPasswordField);
@@ -58,12 +58,12 @@ public class ChangePasswordFrame extends UserFrame implements ActionListener {
 
     JPanel saveButtonPanel = new JPanel(new FlowLayout());
 
-    saveButton = createButton("Save");
+    saveButton = UIFactory.createButton("Save", null);
 
     saveButton.addActionListener(this);
     saveButtonPanel.add(saveButton);
 
-    wrongPasswordLabel = createErrorLabel(WRONG_PASSWORD_MESSAGE);
+    wrongPasswordLabel = UIFactory.createErrorLabel(WRONG_PASSWORD_MESSAGE, null);
     wrongPasswordLabel.setVisible(false);
     wrongPasswordLabel.setLabelFor(newPasswordField);
 

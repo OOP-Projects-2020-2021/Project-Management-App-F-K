@@ -6,7 +6,8 @@ import java.awt.event.*;
 /**
  * AccountSettingsFrame displays the account information of the user and allows changing the data.
  */
-public class AccountSettingsFrame extends UserFrame implements ActionListener {
+//todo
+public class AccountSettingsFrame extends JFrame implements ActionListener {
 
   private JLabel usernameLabel;
   private JTextField usernameTextField;
@@ -29,19 +30,20 @@ public class AccountSettingsFrame extends UserFrame implements ActionListener {
     this.setContentPane(mainPanel);
 
     mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
-    mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT * 2 / 3));
+    mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() * 2 / 3));
     mainPanel.setLayout(new BorderLayout());
 
     JPanel userDataPanel = new JPanel(new GridLayout(1, 2));
+    // todo
     Border userDataPanelPadding =
         BorderFactory.createEmptyBorder(
             TOP_PADDING, SIDE_PADDING * 3, TOP_PADDING, SIDE_PADDING * 3);
     userDataPanel.setBorder(userDataPanelPadding);
 
-    usernameLabel = createLabel("Username:");
+    usernameLabel = UIFactory.createLabel("Username:", null);
     usernameLabel.setLabelFor(usernameTextField);
 
-    usernameTextField = createTextField(accountSettingsController.getUsername());
+    usernameTextField = UIFactory.createTextField(accountSettingsController.getUsername(), null);
     usernameTextField.setEditable(false);
 
     userDataPanel.add(usernameLabel);
@@ -49,10 +51,10 @@ public class AccountSettingsFrame extends UserFrame implements ActionListener {
 
     mainPanel.add(userDataPanel, BorderLayout.CENTER);
 
-    changePasswordButton = createButton("Change password");
+    changePasswordButton = UIFactory.createButton("Change password", null);
     changePasswordButton.addActionListener(this);
 
-    goBackButton = createButton("Back");
+    goBackButton = UIFactory.createButton("Back", null);
     goBackButton.setFocusable(false);
     goBackButton.addActionListener(this);
 
