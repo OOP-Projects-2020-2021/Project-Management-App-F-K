@@ -20,9 +20,13 @@ public class ChangePasswordFrame extends JFrame implements ActionListener {
 
   private static final String WRONG_PASSWORD_MESSAGE = "Wrong password!";
 
-  public ChangePasswordFrame(JFrame parentFrame) {
+  private static final Dimension DIMENSION = new Dimension(500, 350);
 
-    super("Change password", 500, 350);
+  public ChangePasswordFrame(JFrame parentFrame) {
+    super("Change password");
+    this.setSize(DIMENSION);
+    this.setResizable(false);
+    this.setVisible(true);
 
     this.parentFrame = parentFrame;
 
@@ -30,13 +34,13 @@ public class ChangePasswordFrame extends JFrame implements ActionListener {
 
     JPanel mainPanel = new JPanel();
     mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()* 3 / 4));
-    mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
+    mainPanel.setBorder(UIFactory.createCenterAlignmentPadding(this));
 
     this.setContentPane(mainPanel);
 
     JPanel dataInputPanel = new JPanel(new GridLayout(2, 1, 10, 10));
     dataInputPanel.setPreferredSize(this.getSize());
-    dataInputPanel.setBorder(CENTER_ALIGNMENT_PADDING);
+    dataInputPanel.setBorder(UIFactory.createCenterAlignmentPadding(this));
 
     BorderLayout dialogPanelLayout = new BorderLayout();
     mainPanel.setLayout(dialogPanelLayout);
@@ -57,9 +61,7 @@ public class ChangePasswordFrame extends JFrame implements ActionListener {
     dataInputPanel.add(newPasswordAgainField);
 
     JPanel saveButtonPanel = new JPanel(new FlowLayout());
-
     saveButton = UIFactory.createButton("Save", null);
-
     saveButton.addActionListener(this);
     saveButtonPanel.add(saveButton);
 

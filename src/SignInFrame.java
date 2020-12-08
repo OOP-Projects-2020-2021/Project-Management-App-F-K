@@ -4,7 +4,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-//todo extend whatever
 public class SignInFrame extends JFrame {
 
   private JLabel usernameLabel;
@@ -17,9 +16,13 @@ public class SignInFrame extends JFrame {
 
   private SignInController signInController;
 
-  public SignInFrame() {
+  private static final Dimension DIMENSION = new Dimension(400, 300);
 
-    super("Sign in", 400, 300);
+  public SignInFrame() {
+    super("Sign in");
+    this.setSize(DIMENSION);
+    this.setResizable(false);
+    this.setVisible(true);
 
     this.setLayout(new BorderLayout());
 
@@ -27,7 +30,7 @@ public class SignInFrame extends JFrame {
 
     JPanel mainPanel = new JPanel();
     mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() / 2));
-    mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
+    mainPanel.setBorder(UIFactory.createCenterAlignmentPadding(this));
 
     GridLayout mainPanelLayout = new GridLayout(2, 1);
     mainPanelLayout.setVgap(20);

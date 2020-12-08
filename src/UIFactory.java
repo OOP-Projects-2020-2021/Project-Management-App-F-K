@@ -63,4 +63,18 @@ public class UIFactory {
         button.setFocusable(false);
         return button;
     }
+
+    public static Border createCenterAlignmentPadding(JFrame frame) {
+        int top_padding = getTopPadding(frame);
+        int side_padding = getSidePadding(frame);
+        return BorderFactory.createEmptyBorder(top_padding, side_padding, top_padding, side_padding);
+    }
+
+    public static int getTopPadding(Frame frame) {
+      return (int) (frame.getHeight() * UIFactory.TOP_PADDING_HEIGHT_RATIO);
+    }
+
+    public static int getSidePadding(Frame frame) {
+        return (int) (frame.getWidth() * UIFactory.SIDE_PADDING_WIDTH_RATIO);
+    }
 }

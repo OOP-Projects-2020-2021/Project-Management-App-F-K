@@ -20,9 +20,13 @@ public class SignUpFrame extends JFrame implements ActionListener {
 
   private JFrame parentFrame;
 
-  public SignUpFrame(JFrame parentFrame) {
+  private static final Dimension DIMENSION = new Dimension(400, 300);
 
-    super("Sign up", 400, 300);
+  public SignUpFrame(JFrame parentFrame) {
+    super("Sign up");
+    this.setSize(DIMENSION);
+    this.setResizable(false);
+    this.setVisible(true);
 
     this.setLayout(new BorderLayout());
 
@@ -33,7 +37,7 @@ public class SignUpFrame extends JFrame implements ActionListener {
     JPanel mainPanel = new JPanel();
     mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() / 2));
 
-    mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
+    mainPanel.setBorder(UIFactory.createCenterAlignmentPadding(this));
 
     GridLayout mainPanelLayout = new GridLayout(2, 1);
     mainPanelLayout.setVgap(40);
@@ -41,12 +45,10 @@ public class SignUpFrame extends JFrame implements ActionListener {
 
     usernameLabel = UIFactory.createLabel("Username:", null);
     usernameLabel.setLabelFor(usernameTextField);
-
     usernameTextField = UIFactory.createTextField(null, null);
 
     passwordLabel = UIFactory.createLabel("Password:", null);
     passwordLabel.setLabelFor(passwordField);
-
     passwordField = UIFactory.createPasswordField(null);
 
     mainPanel.add(usernameLabel);
@@ -57,8 +59,6 @@ public class SignUpFrame extends JFrame implements ActionListener {
     this.add(mainPanel, BorderLayout.NORTH);
 
     signUpButton = UIFactory.createButton("Sign up", null);
-    signUpButton.setAlignmentX(CENTER_ALIGNMENT);
-
     signUpButton.addActionListener(this);
 
     JPanel signUpButtonPanel = new JPanel();
