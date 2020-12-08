@@ -4,38 +4,36 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
 import java.util.Objects;
-import java.util.Optional;
 
 public class UIFactory {
-    public static final double SIDE_PADDING_WIDTH_RATIO = 0.1;
-    public static final double TOP_PADDING_HEIGHT_RATIO = 0.05;
+  public static final double SIDE_PADDING_WIDTH_RATIO = 0.1;
+  public static final double TOP_PADDING_HEIGHT_RATIO = 0.05;
 
-    public static final Border BUTTON_BORDER = BorderFactory.createEmptyBorder(10, 20, 10, 20);
+  public static final Border BUTTON_BORDER = BorderFactory.createEmptyBorder(10, 20, 10, 20);
 
-    public static final Font NORMAL_TEXT_FONT = new Font("Courier", Font.PLAIN, 15);
-    public static final Font HIGHLIGHT_TEXT_FONT = new Font("Courier", Font.BOLD, 15);
+  public static final Font NORMAL_TEXT_FONT = new Font("Courier", Font.PLAIN, 15);
+  public static final Font HIGHLIGHT_TEXT_FONT = new Font("Courier", Font.BOLD, 15);
 
-    public static final Dimension TEXT_FIELD_DIMENSION = new Dimension(30, 10);
-    public static final Dimension PASSWORD_FIELD_DIMENSION = new Dimension(30, 10);
-    public static final Dimension LABEL_DIMENSION = new Dimension(30, 10);
+  public static final Dimension TEXT_FIELD_DIMENSION = new Dimension(30, 10);
+  public static final Dimension PASSWORD_FIELD_DIMENSION = new Dimension(30, 10);
+  public static final Dimension LABEL_DIMENSION = new Dimension(30, 10);
 
+  public static JLabel createLabel(String text, @Nullable Dimension dimension) {
+    JLabel label = new JLabel();
+    label.setText(text);
+    label.setPreferredSize(Objects.requireNonNullElse(dimension, LABEL_DIMENSION));
+    label.setFont(NORMAL_TEXT_FONT);
+    return label;
+  }
 
-    public static JLabel createLabel(String text, @Nullable Dimension dimension) {
-        JLabel label = new JLabel();
-        label.setText(text);
-        label.setPreferredSize(Objects.requireNonNullElse(dimension, LABEL_DIMENSION));
-        label.setFont(NORMAL_TEXT_FONT);
-        return label;
-    }
-
-    public static JLabel createErrorLabel(String text, @Nullable Dimension dimension) {
-        JLabel label = new JLabel();
-        label.setText(text);
-        label.setFont(NORMAL_TEXT_FONT);
-        label.setForeground(Color.RED);
-        label.setPreferredSize(Objects.requireNonNullElse(dimension, LABEL_DIMENSION));
-        return label;
-    }
+  public static JLabel createErrorLabel(String text, @Nullable Dimension dimension) {
+    JLabel label = new JLabel();
+    label.setText(text);
+    label.setFont(NORMAL_TEXT_FONT);
+    label.setForeground(Color.RED);
+    label.setPreferredSize(Objects.requireNonNullElse(dimension, LABEL_DIMENSION));
+    return label;
+  }
 
     public static JTextField createTextField(@Nullable String text, @Nullable Dimension dimension) {
         JTextField textField = new JTextField();
