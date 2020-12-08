@@ -16,7 +16,6 @@ public class SignInFrame extends UserFrame {
 
   private SignInController signInController;
 
-  private static final int GAP_SIZE = 20;
 
   public SignInFrame() {
 
@@ -32,7 +31,7 @@ public class SignInFrame extends UserFrame {
     mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
 
     GridLayout mainPanelLayout = new GridLayout(2, 1);
-    mainPanelLayout.setVgap(GAP_SIZE);
+    mainPanelLayout.setVgap(20);
     mainPanel.setLayout(mainPanelLayout);
 
     usernameLabel = createLabel("Username:");
