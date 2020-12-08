@@ -23,6 +23,7 @@ public class UIFactory {
     label.setText(text);
     label.setPreferredSize(Objects.requireNonNullElse(dimension, LABEL_DIMENSION));
     label.setFont(NORMAL_TEXT_FONT);
+    label.setHorizontalAlignment(SwingConstants.RIGHT);
     return label;
   }
 
@@ -58,7 +59,6 @@ public class UIFactory {
         JButton button = new JButton();
         button.setText(text);
         button.setBorder(BUTTON_BORDER);
-        button.setPreferredSize(Objects.requireNonNullElse(dimension, LABEL_DIMENSION));
         button.setAlignmentX(JFrame.CENTER_ALIGNMENT);
         button.setFocusable(false);
         return button;

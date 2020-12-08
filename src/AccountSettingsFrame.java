@@ -34,7 +34,6 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     mainPanel.setLayout(new BorderLayout());
 
     JPanel userDataPanel = new JPanel(new GridLayout(1, 2));
-    // todo
     Border userDataPanelPadding =
         BorderFactory.createEmptyBorder(
                 UIFactory.getTopPadding(this),
