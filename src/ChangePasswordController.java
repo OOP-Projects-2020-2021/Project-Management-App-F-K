@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class ChangePasswordController extends UserFrameController {
+public class ChangePasswordController extends FrameController {
 
   public ChangePasswordController(JFrame changePasswordFrame) {
     super(changePasswordFrame);

@@ -4,7 +4,7 @@ import javax.swing.*;
  * AccountSettingsController controls the AccountSettingsFrame, managing operations like gathering
  * the data for display, changing the data and updating the display.
  */
-public class AccountSettingsController extends UserFrameController {
+public class AccountSettingsController extends FrameController {
 
   AccountSettingsController(JFrame accountSettingsFrame) {
     super(accountSettingsFrame);

@@ -5,7 +5,7 @@ import javax.swing.*;
  *
  * @author Beata Keresztes
  */
-public class SignInController extends UserFrameController {
+public class SignInController extends FrameController {
 
   public SignInController(JFrame signInFrame) {
     super(signInFrame);

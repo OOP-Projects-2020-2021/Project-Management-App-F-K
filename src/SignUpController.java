@@ -1,6 +1,6 @@
 import javax.swing.*;
 
-public class SignUpController extends UserFrameController {
+public class SignUpController extends FrameController {
 
   public SignUpController(JFrame signUpFrame) {
     super(signUpFrame);
