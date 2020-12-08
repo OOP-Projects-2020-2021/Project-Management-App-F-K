@@ -35,32 +35,32 @@ public class UIFactory {
     return label;
   }
 
-    public static JTextField createTextField(@Nullable String text, @Nullable Dimension dimension) {
-        JTextField textField = new JTextField();
-        if (text != null) {
-            textField.setText(text);
-        }
-        textField.setPreferredSize(Objects.requireNonNullElse(dimension, TEXT_FIELD_DIMENSION));
-        textField.setFont(NORMAL_TEXT_FONT);
-        textField.setEditable(true);
-        return textField;
+  public static JTextField createTextField(@Nullable String text, @Nullable Dimension dimension) {
+    JTextField textField = new JTextField();
+    if (text != null) {
+      textField.setText(text);
     }
+    textField.setPreferredSize(Objects.requireNonNullElse(dimension, TEXT_FIELD_DIMENSION));
+    textField.setFont(NORMAL_TEXT_FONT);
+    textField.setEditable(true);
+    return textField;
+  }
 
-    public static JPasswordField createPasswordField(@Nullable Dimension dimension) {
-        JPasswordField passwordField = new JPasswordField();
-        passwordField.setPreferredSize(Objects.requireNonNullElse(dimension, PASSWORD_FIELD_DIMENSION));
-        passwordField.setFont(NORMAL_TEXT_FONT);
-        passwordField.setEditable(true);
-        return passwordField;
-    }
+  public static JPasswordField createPasswordField(@Nullable Dimension dimension) {
+    JPasswordField passwordField = new JPasswordField();
+    passwordField.setPreferredSize(Objects.requireNonNullElse(dimension, PASSWORD_FIELD_DIMENSION));
+    passwordField.setFont(NORMAL_TEXT_FONT);
+    passwordField.setEditable(true);
+    return passwordField;
+  }
 
-    public static JButton createButton(String text, @Nullable Dimension dimension) {
-        JButton button = new JButton();
-        button.setText(text);
-        button.setBorder(BUTTON_BORDER);
-        button.setPreferredSize(Objects.requireNonNullElse(dimension, LABEL_DIMENSION));
-        button.setAlignmentX(JFrame.CENTER_ALIGNMENT);
-        button.setFocusable(false);
-        return button;
-    }
+  public static JButton createButton(String text, @Nullable Dimension dimension) {
+    JButton button = new JButton();
+    button.setText(text);
+    button.setBorder(BUTTON_BORDER);
+    button.setPreferredSize(Objects.requireNonNullElse(dimension, LABEL_DIMENSION));
+    button.setAlignmentX(JFrame.CENTER_ALIGNMENT);
+    button.setFocusable(false);
+    return button;
+  }
 }

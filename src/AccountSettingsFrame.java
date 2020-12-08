@@ -6,7 +6,7 @@ import java.awt.event.*;
 /**
  * AccountSettingsFrame displays the account information of the user and allows changing the data.
  */
-//todo
+// todo
 public class AccountSettingsFrame extends JFrame implements ActionListener {
 
   private JLabel usernameLabel;

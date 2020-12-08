@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-//todo extend whatever
+// todo extend whatever
 public class SignInFrame extends JFrame {
 
   private JLabel usernameLabel;
