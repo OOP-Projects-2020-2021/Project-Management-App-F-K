@@ -6,7 +6,7 @@ import java.awt.event.*;
 /**
  * AccountSettingsFrame displays the account information of the user and allows changing the data.
  */
-public class AccountSettingsFrame extends UserFrame implements  ActionListener {
+public class AccountSettingsFrame extends UserFrame implements ActionListener {
 
   private JLabel usernameLabel;
   private JTextField usernameTextField;
@@ -19,7 +19,7 @@ public class AccountSettingsFrame extends UserFrame implements  ActionListener {
 
   public AccountSettingsFrame(JFrame parentFrame) {
 
-    super("Account Settings",400, 300);
+    super("Account Settings", 400, 300);
 
     this.parentFrame = parentFrame;
 
@@ -65,23 +65,22 @@ public class AccountSettingsFrame extends UserFrame implements  ActionListener {
     this.addWindowFocusListener(new AccountSettingsWindowAdapter());
 
     this.pack();
-
   }
 
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-      JButton source = (JButton) actionEvent.getSource();
-      if (source == changePasswordButton) {
-        accountSettingsController.askForUserPassword();
-      } else if (source == goBackButton) {
-        accountSettingsController.onClose(parentFrame);
-      }
+  @Override
+  public void actionPerformed(ActionEvent actionEvent) {
+    JButton source = (JButton) actionEvent.getSource();
+    if (source == changePasswordButton) {
+      accountSettingsController.askForUserPassword();
+    } else if (source == goBackButton) {
+      accountSettingsController.onClose(parentFrame);
     }
-    private class AccountSettingsWindowAdapter extends WindowAdapter {
-      @Override
-      public void windowClosing(WindowEvent e) {
-        accountSettingsController.onClose(parentFrame);
-      }
-    }
+  }
 
+  private class AccountSettingsWindowAdapter extends WindowAdapter {
+    @Override
+    public void windowClosing(WindowEvent e) {
+      accountSettingsController.onClose(parentFrame);
+    }
+  }
 }

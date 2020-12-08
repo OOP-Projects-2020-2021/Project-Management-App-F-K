@@ -1,5 +1,4 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -23,7 +22,7 @@ public class ChangePasswordFrame extends UserFrame implements ActionListener {
 
   public ChangePasswordFrame(JFrame parentFrame) {
 
-    super("Change password",500, 350);
+    super("Change password", 500, 350);
 
     this.parentFrame = parentFrame;
 
@@ -75,7 +74,6 @@ public class ChangePasswordFrame extends UserFrame implements ActionListener {
     this.pack();
 
     this.addWindowFocusListener(new ChangePasswordWindowAdapter());
-
   }
 
   @Override
@@ -92,6 +90,7 @@ public class ChangePasswordFrame extends UserFrame implements ActionListener {
       }
     }
   }
+
   private class ChangePasswordWindowAdapter extends WindowAdapter {
     @Override
     public void windowClosing(WindowEvent e) {

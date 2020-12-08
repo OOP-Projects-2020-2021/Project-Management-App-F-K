@@ -8,6 +8,7 @@ public class AccountSettingsController extends FrameController {
 
   /** Messages displayed to inform the user about the validation of the data. */
   private static final String ASK_PASSWORD_MESSAGE = "Enter your current password:";
+
   private static final String INCORRECT_PASSWORD_MESSAGE = "Incorrect password!";
 
   AccountSettingsController(JFrame accountSettingsFrame) {
@@ -43,7 +44,10 @@ public class AccountSettingsController extends FrameController {
       enableChangingPassword();
     } else {
       JOptionPane.showMessageDialog(
-          super.frame, INCORRECT_PASSWORD_MESSAGE, INCORRECT_PASSWORD_MESSAGE, JOptionPane.ERROR_MESSAGE);
+          super.frame,
+          INCORRECT_PASSWORD_MESSAGE,
+          INCORRECT_PASSWORD_MESSAGE,
+          JOptionPane.ERROR_MESSAGE);
     }
   }
   /**

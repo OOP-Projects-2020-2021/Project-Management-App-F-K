@@ -20,7 +20,7 @@ public class SignUpFrame extends UserFrame implements ActionListener {
 
   public SignUpFrame(JFrame parentFrame) {
 
-    super("Sign up",400, 300);
+    super("Sign up", 400, 300);
 
     this.setLayout(new BorderLayout());
 
@@ -33,7 +33,7 @@ public class SignUpFrame extends UserFrame implements ActionListener {
 
     mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
 
-    GridLayout mainPanelLayout = new GridLayout(2,1);
+    GridLayout mainPanelLayout = new GridLayout(2, 1);
     mainPanelLayout.setVgap(40);
     mainPanel.setLayout(mainPanelLayout);
 
@@ -67,14 +67,14 @@ public class SignUpFrame extends UserFrame implements ActionListener {
     this.pack();
 
     this.addWindowFocusListener(new signUpWindowAdapter());
-
   }
+
   @Override
   public void actionPerformed(ActionEvent actionEvent) {
     if (actionEvent.getSource() == signUpButton) {
       String username = usernameTextField.getName();
       String password = Arrays.toString(passwordField.getPassword());
-      signUpController.signUp(username, password,parentFrame);
+      signUpController.signUp(username, password, parentFrame);
     }
   }
 

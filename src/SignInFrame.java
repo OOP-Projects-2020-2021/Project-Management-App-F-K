@@ -16,10 +16,9 @@ public class SignInFrame extends UserFrame {
 
   private SignInController signInController;
 
-
   public SignInFrame() {
 
-    super("Sign in",400, 300);
+    super("Sign in", 400, 300);
 
     this.setLayout(new BorderLayout());
 
@@ -78,7 +77,6 @@ public class SignInFrame extends UserFrame {
     this.pack();
 
     this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
   }
 
   private class ButtonListener implements ActionListener {
