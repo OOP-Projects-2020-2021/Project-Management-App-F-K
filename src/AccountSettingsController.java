@@ -6,30 +6,18 @@ import javax.swing.*;
  */
 public class AccountSettingsController extends FrameController {
 
-  /** Messages displayed to inform the user about the validation of the data. */
-  private static final String ASK_PASSWORD_MESSAGE = "Enter your current password:";
-
-  private static final String INCORRECT_PASSWORD_MESSAGE = "Incorrect password!";
-
   AccountSettingsController(JFrame accountSettingsFrame) {
     super(accountSettingsFrame);
   }
 
   public String getUsername() {
     // TODO!! get user's account information
-    // just a dummy user
     return "admin";
   }
 
-  /**
-   * Checks whether the password introduced is valid.
-   *
-   * @param password introduced in the input dialog by the user
-   * @return true if the password entered by the user is valid
-   */
-  private boolean validateCurrentPassword(String password) {
-    // TODO!! validate current password before changing it
-    return true;
+  public String getPassword() {
+    // TODO!! get user's account information
+    return "admin";
   }
 
   /**
@@ -38,36 +26,26 @@ public class AccountSettingsController extends FrameController {
    * In case the introduced password is correct it opens a new frame for Changing the password,
    * otherwise it displays an error message.
    */
-  public void askForUserPassword() {
-    String password = JOptionPane.showInputDialog(super.frame, ASK_PASSWORD_MESSAGE);
-    if (validateCurrentPassword(password)) {
-      enableChangingPassword();
-    } else {
-      JOptionPane.showMessageDialog(
-          super.frame,
-          INCORRECT_PASSWORD_MESSAGE,
-          INCORRECT_PASSWORD_MESSAGE,
-          JOptionPane.ERROR_MESSAGE);
-    }
+  public boolean isValidPassword(String password) {
+    //todo validate password
+    return true;
   }
   /**
    * Opens a frame which allows the user to change its password. The current frame will be disabled
    * until the ChangePasswordFrame is used. When the user closes the ChangePasswordFrame, the
    * AccountSettingsFrame will be enabled again.
    */
-  private void enableChangingPassword() {
-    new ChangePasswordFrame(super.frame);
-    super.frame.setEnabled(false);
-  }
 
+  public void saveAccountData(String username, String password) {
+    //todo save the changes
+  }
   /**
    * When this frame is closed, the user is redirected to the Main Frame.
    *
    * @param parentFrame the frame which will be enabled
    */
   public void onClose(JFrame parentFrame) {
-    closeFrame();
-    parentFrame.setVisible(true);
     parentFrame.setEnabled(true);
+    closeFrame();
   }
 }
