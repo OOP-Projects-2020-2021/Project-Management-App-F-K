@@ -38,6 +38,8 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     usernameLabel = UIFactory.createLabel("Username:", null);
     usernameLabel.setLabelFor(usernameTextField);
     usernameTextField = UIFactory.createTextField(accountSettingsController.getUsername(), null);
+    // todo: change to editable
+    usernameTextField.setEditable(false);
 
     userDataPanel.add(usernameLabel);
     userDataPanel.add(usernameTextField);
