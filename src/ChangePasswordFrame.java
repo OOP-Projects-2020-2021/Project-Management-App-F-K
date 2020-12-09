@@ -47,13 +47,11 @@ public class ChangePasswordFrame extends JFrame implements ActionListener {
 
     newPasswordLabel = UIFactory.createLabel("Enter new password:", null);
     newPasswordLabel.setLabelFor(newPasswordField);
-
-    newPasswordField = UIFactory.createPasswordField(null);
+    newPasswordField = UIFactory.createPasswordField();
 
     newPasswordAgainLabel = UIFactory.createLabel("Reenter new password:", null);
     newPasswordAgainLabel.setLabelFor(newPasswordAgainField);
-
-    newPasswordAgainField = UIFactory.createPasswordField(null);
+    newPasswordAgainField = UIFactory.createPasswordField();
 
     dataInputPanel.add(newPasswordLabel);
     dataInputPanel.add(newPasswordField);

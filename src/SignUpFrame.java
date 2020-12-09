@@ -45,11 +45,11 @@ public class SignUpFrame extends JFrame implements ActionListener {
 
     usernameLabel = UIFactory.createLabel("Username:", null);
     usernameLabel.setLabelFor(usernameTextField);
-    usernameTextField = UIFactory.createTextField(null, null);
+    usernameTextField = UIFactory.createTextField(null);
 
     passwordLabel = UIFactory.createLabel("Password:", null);
     passwordLabel.setLabelFor(passwordField);
-    passwordField = UIFactory.createPasswordField(null);
+    passwordField = UIFactory.createPasswordField();
 
     mainPanel.add(usernameLabel);
     mainPanel.add(usernameTextField);

@@ -32,7 +32,7 @@ public class CreateTeamFrame extends JFrame implements ActionListener {
     this.addWindowListener(new CreateTeamWindowAdapter());
 
     teamNameLabel = UIFactory.createLabel(TEAM_NAME_LABEL_TEXT, null);
-    teamNameTextField = UIFactory.createTextField(null, null);
+    teamNameTextField = UIFactory.createTextField(null);
 
     JPanel dataPanel = new JPanel(new GridLayout(1, 2));
     dataPanel.add(teamNameLabel);

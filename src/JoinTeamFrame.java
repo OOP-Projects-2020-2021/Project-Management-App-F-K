@@ -33,7 +33,7 @@ public class JoinTeamFrame extends JFrame implements ActionListener {
     this.addWindowListener(new JoinTeamWindowAdapter());
 
     teamCodeLabel = UIFactory.createLabel(TEAM_CODE_LABEL_TEXT, null);
-    teamCodeTextField = UIFactory.createTextField(null, null);
+    teamCodeTextField = UIFactory.createTextField(null);
     teamCodeLabel.setLabelFor(teamCodeTextField);
 
     JPanel dataPanel = new JPanel(new GridLayout(1, 2));
