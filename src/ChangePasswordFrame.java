@@ -33,7 +33,7 @@ public class ChangePasswordFrame extends JFrame implements ActionListener {
     changePasswordController = new ChangePasswordController(this);
 
     JPanel mainPanel = new JPanel();
-    mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight()* 3 / 4));
+    mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() * 3 / 4));
     mainPanel.setBorder(UIFactory.createCenterAlignmentPadding(this));
 
     this.setContentPane(mainPanel);

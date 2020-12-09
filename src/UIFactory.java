@@ -28,7 +28,7 @@ public class UIFactory {
     label.setSize(Objects.requireNonNullElse(dimension, LABEL_DIMENSION));
     label.setFont(NORMAL_TEXT_FONT);
     label.setHorizontalAlignment(SwingConstants.RIGHT);
-    label.setBorder(new EmptyBorder(0,0,0,10));//top,left,bottom,right
+    label.setBorder(new EmptyBorder(0, 0, 0, 10)); // top,left,bottom,right
     return label;
   }
 
@@ -41,41 +41,41 @@ public class UIFactory {
     return label;
   }
 
-    public static JTextField createTextField(@Nullable String text) {
-        JTextField textField = new JTextField();
-        if (text != null) {
-            textField.setText(text);
-        }
-        textField.setEditable(true);
-        textField.setFont(NORMAL_TEXT_FONT);
-        return textField;
+  public static JTextField createTextField(@Nullable String text) {
+    JTextField textField = new JTextField();
+    if (text != null) {
+      textField.setText(text);
     }
+    textField.setEditable(true);
+    textField.setFont(NORMAL_TEXT_FONT);
+    return textField;
+  }
 
-    public static JPasswordField createPasswordField() {
-        JPasswordField passwordField = new JPasswordField();
-        passwordField.setFont(NORMAL_TEXT_FONT);
-        passwordField.setEditable(true);
-        return passwordField;
-    }
+  public static JPasswordField createPasswordField() {
+    JPasswordField passwordField = new JPasswordField();
+    passwordField.setFont(NORMAL_TEXT_FONT);
+    passwordField.setEditable(true);
+    return passwordField;
+  }
 
-    public static JButton createButton(String text) {
-        JButton button = new JButton();
-        button.setText(text);
-        button.setFocusable(false);
-        return button;
-    }
+  public static JButton createButton(String text) {
+    JButton button = new JButton();
+    button.setText(text);
+    button.setFocusable(false);
+    return button;
+  }
 
-    public static Border createCenterAlignmentPadding(JFrame frame) {
-        int top_padding = getTopPadding(frame);
-        int side_padding = getSidePadding(frame);
-        return BorderFactory.createEmptyBorder(top_padding, side_padding, top_padding, side_padding);
-    }
+  public static Border createCenterAlignmentPadding(JFrame frame) {
+    int top_padding = getTopPadding(frame);
+    int side_padding = getSidePadding(frame);
+    return BorderFactory.createEmptyBorder(top_padding, side_padding, top_padding, side_padding);
+  }
 
-    public static int getTopPadding(Frame frame) {
-      return (int) (frame.getHeight() * UIFactory.TOP_PADDING_HEIGHT_RATIO);
-    }
+  public static int getTopPadding(Frame frame) {
+    return (int) (frame.getHeight() * UIFactory.TOP_PADDING_HEIGHT_RATIO);
+  }
 
-    public static int getSidePadding(Frame frame) {
-        return (int) (frame.getWidth() * UIFactory.SIDE_PADDING_WIDTH_RATIO);
-    }
+  public static int getSidePadding(Frame frame) {
+    return (int) (frame.getWidth() * UIFactory.SIDE_PADDING_WIDTH_RATIO);
+  }
 }
