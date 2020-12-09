@@ -6,6 +6,13 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Objects;
 
+
+/**
+ * UIFactory provides utility functions for creating generic UI components anywhere in the
+ * application, with the predefined attributes.
+ *
+ * @author Bori Fazakas
+ */
 public class UIFactory {
   public static final double SIDE_PADDING_WIDTH_RATIO = 0.1;
   public static final double TOP_PADDING_HEIGHT_RATIO = 0.05;
