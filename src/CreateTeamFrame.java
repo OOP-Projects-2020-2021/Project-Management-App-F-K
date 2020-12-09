@@ -19,10 +19,8 @@ public class CreateTeamFrame extends JFrame implements ActionListener {
 
   private JFrame parentFrame;
 
-  private static final Dimension FRAME_DIMENSION = new Dimension(380, 120);
-  private static final Dimension DATA_PANEL_DIMENSION = new Dimension(300, 50);
-  private static final Dimension TEAM_NAME_FIELD_DIMENSION = new Dimension(140, 20);
-  private static final int BORDER_WIDTH = 10;
+  private static final Dimension FRAME_DIMENSION = new Dimension(360, 120);
+  private static final Dimension DATA_PANEL_DIMENSION = new Dimension(320, 80);
 
   private static final String TEAM_NAME_LABEL_TEXT = "Enter the team name:";
   private static final String SUBMIT_BUTTON_TEXT = "Submit";
@@ -33,31 +31,35 @@ public class CreateTeamFrame extends JFrame implements ActionListener {
     parentFrame = parent;
     this.addWindowListener(new CreateTeamWindowAdapter());
 
-    teamNameLabel = new JLabel(TEAM_NAME_LABEL_TEXT);
-    teamNameTextField = new JTextField();
-    teamNameTextField.setPreferredSize(TEAM_NAME_FIELD_DIMENSION);
+    teamNameLabel = UIFactory.createLabel(TEAM_NAME_LABEL_TEXT, null);
+    teamNameTextField = UIFactory.createTextField(null, null);
 
     JPanel dataPanel = new JPanel(new GridLayout(1, 2));
     dataPanel.add(teamNameLabel);
     dataPanel.add(teamNameTextField);
-    dataPanel.setPreferredSize(DATA_PANEL_DIMENSION);
+    dataPanel.setSize(DATA_PANEL_DIMENSION);
 
-    submitBtn = new JButton(SUBMIT_BUTTON_TEXT);
+    JPanel buttonPanel = new JPanel();
+    submitBtn = UIFactory.createButton(SUBMIT_BUTTON_TEXT, null);
     submitBtn.addActionListener(this);
+    buttonPanel.add(submitBtn);
 
-    JPanel contentPannel = new JPanel();
+    JPanel contentPanel = new JPanel();
+    this.setContentPane(contentPanel);
+
     Border padding =
-        BorderFactory.createEmptyBorder(BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH);
+            BorderFactory.createEmptyBorder(10, 10, 10, 10);
     dataPanel.setBorder(padding);
-    this.setContentPane(contentPannel);
 
     this.setTitle(FRAME_TITLE);
     this.setLayout(new BorderLayout());
     this.setSize(FRAME_DIMENSION);
     this.add(dataPanel, BorderLayout.CENTER);
-    this.add(submitBtn, BorderLayout.SOUTH);
+    this.add(buttonPanel, BorderLayout.SOUTH);
     this.setResizable(false);
     this.setVisible(true);
+    System.out.println(teamNameTextField.getWidth());
+    System.out.println(teamNameTextField.getHeight());
   }
 
   @Override
