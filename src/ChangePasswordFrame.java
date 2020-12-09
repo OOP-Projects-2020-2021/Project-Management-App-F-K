@@ -7,7 +7,7 @@ import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 /** Using this frame the user can set a new password. */
-public class ChangePasswordFrame extends UserFrame implements ActionListener {
+public class ChangePasswordFrame extends JFrame implements ActionListener {
 
   private JLabel newPasswordLabel;
   private JPasswordField newPasswordField;
@@ -20,36 +20,38 @@ public class ChangePasswordFrame extends UserFrame implements ActionListener {
 
   private static final String WRONG_PASSWORD_MESSAGE = "Wrong password!";
 
-  public ChangePasswordFrame(JFrame parentFrame) {
+  private static final Dimension DIMENSION = new Dimension(500, 350);
 
-    super("Change password", 500, 350);
+  public ChangePasswordFrame(JFrame parentFrame) {
+    super("Change password");
+    this.setSize(DIMENSION);
+    this.setResizable(false);
+    this.setVisible(true);
 
     this.parentFrame = parentFrame;
 
     changePasswordController = new ChangePasswordController(this);
 
     JPanel mainPanel = new JPanel();
-    mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT * 3 / 4));
-    mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
+    mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() * 3 / 4));
+    mainPanel.setBorder(UIFactory.createCenterAlignmentPadding(this));
 
     this.setContentPane(mainPanel);
 
     JPanel dataInputPanel = new JPanel(new GridLayout(2, 1, 10, 10));
-    dataInputPanel.setPreferredSize(FRAME_DIMENSION);
-    dataInputPanel.setBorder(CENTER_ALIGNMENT_PADDING);
+    dataInputPanel.setPreferredSize(this.getSize());
+    dataInputPanel.setBorder(UIFactory.createCenterAlignmentPadding(this));
 
     BorderLayout dialogPanelLayout = new BorderLayout();
     mainPanel.setLayout(dialogPanelLayout);
 
-    newPasswordLabel = createLabel("Enter new password:");
+    newPasswordLabel = UIFactory.createLabel("Enter new password:", null);
     newPasswordLabel.setLabelFor(newPasswordField);
+    newPasswordField = UIFactory.createPasswordField();
 
-    newPasswordField = createPasswordField();
-
-    newPasswordAgainLabel = createLabel("Reenter new password:");
+    newPasswordAgainLabel = UIFactory.createLabel("Reenter new password:", null);
     newPasswordAgainLabel.setLabelFor(newPasswordAgainField);
-
-    newPasswordAgainField = createPasswordField();
+    newPasswordAgainField = UIFactory.createPasswordField();
 
     dataInputPanel.add(newPasswordLabel);
     dataInputPanel.add(newPasswordField);
@@ -57,13 +59,11 @@ public class ChangePasswordFrame extends UserFrame implements ActionListener {
     dataInputPanel.add(newPasswordAgainField);
 
     JPanel saveButtonPanel = new JPanel(new FlowLayout());
-
-    saveButton = createButton("Save");
-
+    saveButton = UIFactory.createButton("Save");
     saveButton.addActionListener(this);
     saveButtonPanel.add(saveButton);
 
-    wrongPasswordLabel = createErrorLabel(WRONG_PASSWORD_MESSAGE);
+    wrongPasswordLabel = UIFactory.createErrorLabel(WRONG_PASSWORD_MESSAGE, null);
     wrongPasswordLabel.setVisible(false);
     wrongPasswordLabel.setLabelFor(newPasswordField);
 

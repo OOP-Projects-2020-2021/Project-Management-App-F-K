@@ -13,10 +13,13 @@ public class MainMenuController extends FrameController {
 
   public void logoutUser() {
     // todo
+    new SignInFrame();
+    frame.setEnabled(false);
   }
 
   public void enableUserDataSettings() {
-    // todo
+    new AccountSettingsFrame(frame);
+    frame.setEnabled(false);
   }
 
   /** Provides access to the team creating functionality by opening the corresponding frame. */

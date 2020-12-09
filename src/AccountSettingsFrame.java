@@ -1,12 +1,12 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.*;
 
 /**
  * AccountSettingsFrame displays the account information of the user and allows changing the data.
  */
-public class AccountSettingsFrame extends UserFrame implements ActionListener {
+// todo: when this frame is closed, the main frame should be re-enabled
+public class AccountSettingsFrame extends JFrame implements ActionListener {
 
   private JLabel usernameLabel;
   private JTextField usernameTextField;
@@ -17,31 +17,28 @@ public class AccountSettingsFrame extends UserFrame implements ActionListener {
 
   private JFrame parentFrame;
 
+  private static final Dimension DIMENSION = new Dimension(400, 300);
+
   public AccountSettingsFrame(JFrame parentFrame) {
-
-    super("Account Settings", 400, 300);
-
+    super("Account Settings");
+    this.setSize(DIMENSION);
+    this.setResizable(false);
+    this.setVisible(true);
     this.parentFrame = parentFrame;
-
     this.accountSettingsController = new AccountSettingsController(this);
 
     JPanel mainPanel = new JPanel();
     this.setContentPane(mainPanel);
-
-    mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
-    mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT * 2 / 3));
+    mainPanel.setBorder(UIFactory.createCenterAlignmentPadding(this));
+    mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() * 2 / 3));
     mainPanel.setLayout(new BorderLayout());
 
     JPanel userDataPanel = new JPanel(new GridLayout(1, 2));
-    Border userDataPanelPadding =
-        BorderFactory.createEmptyBorder(
-            TOP_PADDING, SIDE_PADDING * 3, TOP_PADDING, SIDE_PADDING * 3);
-    userDataPanel.setBorder(userDataPanelPadding);
 
-    usernameLabel = createLabel("Username:");
+    usernameLabel = UIFactory.createLabel("Username:", null);
     usernameLabel.setLabelFor(usernameTextField);
-
-    usernameTextField = createTextField(accountSettingsController.getUsername());
+    usernameTextField = UIFactory.createTextField(accountSettingsController.getUsername());
+    // todo: change to editable
     usernameTextField.setEditable(false);
 
     userDataPanel.add(usernameLabel);
@@ -49,11 +46,10 @@ public class AccountSettingsFrame extends UserFrame implements ActionListener {
 
     mainPanel.add(userDataPanel, BorderLayout.CENTER);
 
-    changePasswordButton = createButton("Change password");
+    changePasswordButton = UIFactory.createButton("Change password");
     changePasswordButton.addActionListener(this);
 
-    goBackButton = createButton("Back");
-    goBackButton.setFocusable(false);
+    goBackButton = UIFactory.createButton("Back");
     goBackButton.addActionListener(this);
 
     JPanel buttonsPanel = new JPanel(new FlowLayout());

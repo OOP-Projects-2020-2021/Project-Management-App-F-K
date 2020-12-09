@@ -19,9 +19,8 @@ public class JoinTeamFrame extends JFrame implements ActionListener {
 
   private JFrame parentFrame;
 
-  private static final Dimension FRAME_DIMENSION = new Dimension(320, 120);
-  private static final Dimension DATA_PANEL_DIMENSION = new Dimension(240, 50);
-  private static final Dimension TEAM_CODE_FIELD_DIMENSION = new Dimension(80, 20);
+  private static final Dimension FRAME_DIMENSION = new Dimension(360, 120);
+  private static final Dimension DATA_PANEL_DIMENSION = new Dimension(320, 80);
   private static final int BORDER_WIDTH = 10;
 
   private static final String TEAM_CODE_LABEL_TEXT = "Enter the team code:";
@@ -33,9 +32,8 @@ public class JoinTeamFrame extends JFrame implements ActionListener {
     parentFrame = parent;
     this.addWindowListener(new JoinTeamWindowAdapter());
 
-    teamCodeLabel = new JLabel(TEAM_CODE_LABEL_TEXT);
-    teamCodeTextField = new JTextField();
-    teamCodeTextField.setPreferredSize(TEAM_CODE_FIELD_DIMENSION);
+    teamCodeLabel = UIFactory.createLabel(TEAM_CODE_LABEL_TEXT, null);
+    teamCodeTextField = UIFactory.createTextField(null);
     teamCodeLabel.setLabelFor(teamCodeTextField);
 
     JPanel dataPanel = new JPanel(new GridLayout(1, 2));
@@ -43,20 +41,22 @@ public class JoinTeamFrame extends JFrame implements ActionListener {
     dataPanel.add(teamCodeTextField);
     dataPanel.setPreferredSize(DATA_PANEL_DIMENSION);
 
-    submitBtn = new JButton(SUBMIT_BUTTON_TEXT);
+    JPanel buttonPanel = new JPanel();
+    submitBtn = UIFactory.createButton(SUBMIT_BUTTON_TEXT);
     submitBtn.addActionListener(this);
+    buttonPanel.add(submitBtn);
 
     JPanel contentPannel = new JPanel();
-    Border padding =
-        BorderFactory.createEmptyBorder(BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH, BORDER_WIDTH);
-    dataPanel.setBorder(padding);
     this.setContentPane(contentPannel);
 
+    Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
+    dataPanel.setBorder(padding);
+
     this.setTitle(FRAME_TITLE);
-    this.setLayout(new BorderLayout(0, 10));
+    this.setLayout(new BorderLayout());
     this.setSize(FRAME_DIMENSION);
     this.add(dataPanel, BorderLayout.CENTER);
-    this.add(submitBtn, BorderLayout.SOUTH);
+    this.add(buttonPanel, BorderLayout.SOUTH);
     this.setResizable(false);
     this.setVisible(true);
   }

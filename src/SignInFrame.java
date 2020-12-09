@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-public class SignInFrame extends UserFrame {
-
+public class SignInFrame extends JFrame {
+  // todo: after closing this frame, the app should not be shut down
   private JLabel usernameLabel;
   private JLabel passwordLabel;
   private JTextField usernameTextField;
@@ -16,32 +16,35 @@ public class SignInFrame extends UserFrame {
 
   private SignInController signInController;
 
-  public SignInFrame() {
+  private static final Dimension DIMENSION = new Dimension(400, 300);
 
-    super("Sign in", 400, 300);
+  public SignInFrame() {
+    super("Sign in");
+    this.setSize(DIMENSION);
+    this.setResizable(false);
+    this.setVisible(true);
 
     this.setLayout(new BorderLayout());
 
     this.signInController = new SignInController(this);
 
     JPanel mainPanel = new JPanel();
-    mainPanel.setPreferredSize(new Dimension(FRAME_WIDTH, FRAME_HEIGHT / 2));
-
-    mainPanel.setBorder(CENTER_ALIGNMENT_PADDING);
+    mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() / 2));
+    mainPanel.setBorder(UIFactory.createCenterAlignmentPadding(this));
 
     GridLayout mainPanelLayout = new GridLayout(2, 1);
     mainPanelLayout.setVgap(20);
     mainPanel.setLayout(mainPanelLayout);
 
-    usernameLabel = createLabel("Username:");
+    usernameLabel = UIFactory.createLabel("Username:", null);
     usernameLabel.setLabelFor(usernameTextField);
 
-    usernameTextField = createTextField(null);
+    usernameTextField = UIFactory.createTextField(null);
 
-    passwordLabel = createLabel("Password:");
+    passwordLabel = UIFactory.createLabel("Password:", null);
     passwordLabel.setLabelFor(passwordField);
 
-    passwordField = createPasswordField();
+    passwordField = UIFactory.createPasswordField();
 
     mainPanel.add(usernameLabel);
     mainPanel.add(usernameTextField);
@@ -52,8 +55,7 @@ public class SignInFrame extends UserFrame {
 
     ButtonListener buttonListener = new ButtonListener();
 
-    signInButton = createButton("Sign in");
-    signInButton.setAlignmentX(CENTER_ALIGNMENT);
+    signInButton = UIFactory.createButton("Sign in");
     signInButton.addActionListener(buttonListener);
 
     JPanel signInButtonPanel = new JPanel();
@@ -63,7 +65,7 @@ public class SignInFrame extends UserFrame {
     createAccountLabel.setText("Don't have an account yet?");
     createAccountLabel.setLabelFor(createAccountButton);
 
-    createAccountButton = createButton("Create account");
+    createAccountButton = UIFactory.createButton("Create account");
     createAccountButton.addActionListener(buttonListener);
 
     JPanel createAccountPanel = new JPanel(new FlowLayout());
