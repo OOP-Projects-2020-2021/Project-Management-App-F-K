@@ -34,19 +34,10 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     mainPanel.setLayout(new BorderLayout());
 
     JPanel userDataPanel = new JPanel(new GridLayout(1, 2));
-    Border userDataPanelPadding =
-        BorderFactory.createEmptyBorder(
-                UIFactory.getTopPadding(this),
-                UIFactory.getSidePadding(this) * 3,
-                UIFactory.getTopPadding(this),
-                UIFactory.getSidePadding(this) * 3);
-    userDataPanel.setBorder(userDataPanelPadding);
 
     usernameLabel = UIFactory.createLabel("Username:", null);
     usernameLabel.setLabelFor(usernameTextField);
-
     usernameTextField = UIFactory.createTextField(accountSettingsController.getUsername(), null);
-    usernameTextField.setEditable(false);
 
     userDataPanel.add(usernameLabel);
     userDataPanel.add(usernameTextField);
