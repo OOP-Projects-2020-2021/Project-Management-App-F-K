@@ -6,7 +6,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Objects;
 
-
 /**
  * UIFactory provides utility functions for creating generic UI components anywhere in the
  * application, with the predefined attributes.
