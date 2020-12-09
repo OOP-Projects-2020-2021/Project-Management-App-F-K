@@ -13,6 +13,8 @@ public class MainMenuController extends FrameController {
 
   public void logoutUser() {
     // todo
+    new SignInFrame();
+    frame.setEnabled(false);
   }
 
   public void enableUserDataSettings() {

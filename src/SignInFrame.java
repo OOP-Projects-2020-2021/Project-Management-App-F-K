@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
+// todo: after closing this frame, the app should not be shut down
 public class SignInFrame extends JFrame {
 
   private JLabel usernameLabel;
