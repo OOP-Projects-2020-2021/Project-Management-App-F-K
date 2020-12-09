@@ -47,8 +47,7 @@ public class CreateTeamFrame extends JFrame implements ActionListener {
     JPanel contentPanel = new JPanel();
     this.setContentPane(contentPanel);
 
-    Border padding =
-            BorderFactory.createEmptyBorder(10, 10, 10, 10);
+    Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
     dataPanel.setBorder(padding);
 
     this.setTitle(FRAME_TITLE);
