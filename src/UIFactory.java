@@ -2,6 +2,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import javax.swing.border.Border;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Objects;
 
@@ -14,16 +15,18 @@ public class UIFactory {
   public static final Font NORMAL_TEXT_FONT = new Font("Courier", Font.PLAIN, 15);
   public static final Font HIGHLIGHT_TEXT_FONT = new Font("Courier", Font.BOLD, 15);
 
-  public static final Dimension TEXT_FIELD_DIMENSION = new Dimension(30, 10);
-  public static final Dimension PASSWORD_FIELD_DIMENSION = new Dimension(30, 10);
-  public static final Dimension LABEL_DIMENSION = new Dimension(30, 10);
+  // todo remove: texfields size should be controlled by layout manager
+  public static final Dimension TEXT_FIELD_DIMENSION = new Dimension(100, 50);
+  public static final Dimension PASSWORD_FIELD_DIMENSION = new Dimension(100, 50);
+  public static final Dimension LABEL_DIMENSION = new Dimension(100, 50);
 
   public static JLabel createLabel(String text, @Nullable Dimension dimension) {
     JLabel label = new JLabel();
     label.setText(text);
-    label.setPreferredSize(Objects.requireNonNullElse(dimension, LABEL_DIMENSION));
+    label.setSize(Objects.requireNonNullElse(LABEL_DIMENSION, LABEL_DIMENSION));
     label.setFont(NORMAL_TEXT_FONT);
     label.setHorizontalAlignment(SwingConstants.RIGHT);
+    label.setBorder(new EmptyBorder(0,0,0,10));//top,left,bottom,right
     return label;
   }
 
@@ -41,8 +44,9 @@ public class UIFactory {
         if (text != null) {
             textField.setText(text);
         }
-        textField.setPreferredSize(Objects.requireNonNullElse(dimension, TEXT_FIELD_DIMENSION));
+        // textField.setSize(Objects.requireNonNullElse(dimension, TEXT_FIELD_DIMENSION));
         textField.setFont(NORMAL_TEXT_FONT);
+        textField.setColumns(100);
         textField.setEditable(true);
         return textField;
     }
@@ -55,11 +59,9 @@ public class UIFactory {
         return passwordField;
     }
 
-    public static JButton createButton(String text, @Nullable Dimension dimension) {
+    public static JButton createButton(String text) {
         JButton button = new JButton();
         button.setText(text);
-        button.setBorder(BUTTON_BORDER);
-        button.setAlignmentX(JFrame.CENTER_ALIGNMENT);
         button.setFocusable(false);
         return button;
     }

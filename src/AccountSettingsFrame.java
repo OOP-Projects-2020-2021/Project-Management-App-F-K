@@ -46,10 +46,10 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
 
     mainPanel.add(userDataPanel, BorderLayout.CENTER);
 
-    changePasswordButton = UIFactory.createButton("Change password", null);
+    changePasswordButton = UIFactory.createButton("Change password");
     changePasswordButton.addActionListener(this);
 
-    goBackButton = UIFactory.createButton("Back", null);
+    goBackButton = UIFactory.createButton("Back");
     goBackButton.addActionListener(this);
 
     JPanel buttonsPanel = new JPanel(new FlowLayout());

@@ -61,7 +61,7 @@ public class ChangePasswordFrame extends JFrame implements ActionListener {
     dataInputPanel.add(newPasswordAgainField);
 
     JPanel saveButtonPanel = new JPanel(new FlowLayout());
-    saveButton = UIFactory.createButton("Save", null);
+    saveButton = UIFactory.createButton("Save");
     saveButton.addActionListener(this);
     saveButtonPanel.add(saveButton);
 

@@ -55,7 +55,7 @@ public class SignInFrame extends JFrame {
 
     ButtonListener buttonListener = new ButtonListener();
 
-    signInButton = UIFactory.createButton("Sign in", null);
+    signInButton = UIFactory.createButton("Sign in");
     signInButton.addActionListener(buttonListener);
 
     JPanel signInButtonPanel = new JPanel();
@@ -65,7 +65,7 @@ public class SignInFrame extends JFrame {
     createAccountLabel.setText("Don't have an account yet?");
     createAccountLabel.setLabelFor(createAccountButton);
 
-    createAccountButton = UIFactory.createButton("Create account", null);
+    createAccountButton = UIFactory.createButton("Create account");
     createAccountButton.addActionListener(buttonListener);
 
     JPanel createAccountPanel = new JPanel(new FlowLayout());

@@ -58,7 +58,7 @@ public class SignUpFrame extends JFrame implements ActionListener {
 
     this.add(mainPanel, BorderLayout.NORTH);
 
-    signUpButton = UIFactory.createButton("Sign up", null);
+    signUpButton = UIFactory.createButton("Sign up");
     signUpButton.addActionListener(this);
 
     JPanel signUpButtonPanel = new JPanel();

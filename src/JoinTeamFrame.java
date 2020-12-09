@@ -42,7 +42,7 @@ public class JoinTeamFrame extends JFrame implements ActionListener {
     dataPanel.setPreferredSize(DATA_PANEL_DIMENSION);
 
     JPanel buttonPanel = new JPanel();
-    submitBtn = UIFactory.createButton(SUBMIT_BUTTON_TEXT, null);
+    submitBtn = UIFactory.createButton(SUBMIT_BUTTON_TEXT);
     submitBtn.addActionListener(this);
     buttonPanel.add(submitBtn);
 
