@@ -48,9 +48,7 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     initComponents();
 
   }
-  public static void main(String[] args) {
-    new SignInFrame();
-  }
+
 
   /**
    * Initializes the frame by adding its components.

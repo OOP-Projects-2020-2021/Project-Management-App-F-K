@@ -16,12 +16,15 @@ public class SignUpController extends FrameController {
   public void signUp(String username, String password) {
     // TODO!! save data introduced by the user
     new MainFrame();
-    closeFrame();
+    //closeFrame();
+    frame.setEnabled(false);
+    frame.setVisible(false);
   }
 
   public void onClose(JFrame parentFrame) {
     parentFrame.setVisible(true);
     parentFrame.setEnabled(true);
-    closeFrame();
+    frame.setEnabled(false);
+    frame.setVisible(false);
   }
 }

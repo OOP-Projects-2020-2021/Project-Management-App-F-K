@@ -46,6 +46,8 @@ public class AccountSettingsController extends FrameController {
    */
   public void onClose(JFrame parentFrame) {
     parentFrame.setEnabled(true);
-    closeFrame();
+    //closeFrame();
+    frame.setVisible(false);
+    frame.setEnabled(false);
   }
 }

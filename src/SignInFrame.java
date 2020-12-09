@@ -7,7 +7,7 @@ import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
 /**
- * @author Beata Keresztes
+ * SignInFrame allows the user to sign in to the application.
  */
 public class SignInFrame extends JFrame {
 
@@ -36,9 +36,15 @@ public class SignInFrame extends JFrame {
 
   }
 
-  /**
-   * Initializes the frame by adding its components.
-   */
+  public static void main(String[] args) {
+    new SignInFrame();
+  }
+
+
+   /**
+    Initializes the frame by adding its components.
+    */
+
   private void initComponents() {
 
     JPanel mainPanel = new JPanel();
@@ -89,6 +95,7 @@ public class SignInFrame extends JFrame {
     this.pack();
 
   }
+
   private class ButtonListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
@@ -96,17 +103,18 @@ public class SignInFrame extends JFrame {
       if (source == signInButton) {
         String username = usernameTextField.getName();
         String password = Arrays.toString(passwordField.getPassword());
-        signInController.signIn(username, password);
+        signInController.enableSigningIn(username, password);
       } else if (source == createAccountButton) {
         signInController.enableSigningUp();
       }
     }
   }
+
   private class SignInWindowAdapter extends WindowAdapter {
     @Override
     public void windowClosing(WindowEvent e) {
-      signInController.onClose();
+      signInController.closeFrame();
     }
   }
-
 }
+
