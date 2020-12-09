@@ -6,8 +6,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
-
-//todo
+// todo
 public class SignUpFrame extends JFrame implements ActionListener {
 
   private JLabel usernameLabel;

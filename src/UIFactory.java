@@ -40,6 +40,7 @@ public class UIFactory {
             textField.setText(text);
         }
         textField.setEditable(true);
+        textField.setFont(NORMAL_TEXT_FONT);
         return textField;
     }
 

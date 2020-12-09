@@ -4,9 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-// todo: after closing this frame, the app should not be shut down
-public class SignInFrame extends JFrame {
 
+public class SignInFrame extends JFrame {
+  // todo: after closing this frame, the app should not be shut down
   private JLabel usernameLabel;
   private JLabel passwordLabel;
   private JTextField usernameTextField;
