@@ -1,8 +1,10 @@
 package view.main;
 
+import controller.FrameController;
 import controller.MainMenuController;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -44,6 +46,9 @@ public class MainMenu extends JMenuBar implements ActionListener {
     setMnemonics();
   }
 
+  public MainMenuController getController() {
+    return controller;
+  }
   private void setMnemonics() {
     accountMenu.setMnemonic(KeyEvent.VK_A);
     teamsMenu.setMnemonic(KeyEvent.VK_T);

@@ -13,6 +13,8 @@ import javax.swing.*;
  */
 public class SignInController extends FrameController {
 
+  /** The signInFlag is used to notify the windowAdapter whether the frame is closing because of a
+   * successful sign-in or because the user exited the application. */
   private boolean signInFlag;
 
   public SignInController(JFrame signInFrame) {

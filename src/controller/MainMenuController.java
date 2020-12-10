@@ -14,13 +14,23 @@ import javax.swing.*;
  */
 public class MainMenuController extends FrameController {
 
+  /** The logOutFlag is used to notify the windowAdapter whether the main frame is closing because the
+   * user logged out or because he exited the application. */
+  private boolean logOutFlag;
+
   public MainMenuController(JFrame frame) {
     super(frame);
+    logOutFlag = false;
   }
 
   public void logoutUser() {
+    logOutFlag = true;
     new SignInFrame();
     closeFrame();
+  }
+
+  public boolean getLogOutFlag() {
+    return logOutFlag;
   }
 
   public void enableUserDataSettings() {
