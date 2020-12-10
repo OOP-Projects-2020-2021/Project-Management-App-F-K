@@ -1,6 +1,6 @@
-package controller.team;
+package main.java.controller.team;
 
-import controller.FrameController;
+import main.java.controller.FrameController;
 import javax.swing.*;
 
 /**

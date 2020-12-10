@@ -1,6 +1,6 @@
-package controller.user;
+package main.java.controller.user;
 
-import controller.FrameController;
+import main.java.controller.FrameController;
 import javax.swing.*;
 
 /**

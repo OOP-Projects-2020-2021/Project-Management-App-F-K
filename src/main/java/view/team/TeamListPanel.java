@@ -1,7 +1,7 @@
-package view.team;
+package main.java.view.team;
 
-import controller.team.TeamListController;
-import view.ModifiedFlowLayout;
+import main.java.controller.team.TeamListController;
+import main.java.view.ModifiedFlowLayout;
 import javax.swing.*;
 import java.util.List;
 

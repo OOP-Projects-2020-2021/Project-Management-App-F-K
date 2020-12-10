@@ -1,4 +1,4 @@
-package model;
+package main.java.model;
 
 /**
  * Represents a User and contains its account information.

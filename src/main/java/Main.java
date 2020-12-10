@@ -1,5 +1,7 @@
+package main.java;
+
 import javax.swing.*;
-import view.user.SignInFrame;
+import main.java.view.user.SignInFrame;
 
 public class Main {
   public static void main(String[] args) {

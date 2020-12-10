@@ -1,6 +1,6 @@
-package view.main;
+package main.java.view.main;
 
-import controller.MainMenuController;
+import main.java.controller.MainMenuController;
 
 import javax.swing.*;
 import java.awt.*;

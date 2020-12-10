@@ -1,8 +1,8 @@
-package controller.user;
+package main.java.controller.user;
 
-import controller.FrameController;
-import view.main.MainFrame;
-import view.user.SignUpFrame;
+import main.java.controller.FrameController;
+import main.java.view.main.MainFrame;
+import main.java.view.user.SignUpFrame;
 
 import javax.swing.*;
 
