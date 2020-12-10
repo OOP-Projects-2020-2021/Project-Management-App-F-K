@@ -1,4 +1,5 @@
 package controller;
+
 import view.MainFrame;
 import view.SignUpFrame;
 

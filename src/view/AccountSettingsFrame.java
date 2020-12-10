@@ -10,7 +10,6 @@ import java.util.Arrays;
 /**
  * AccountSettingsFrame displays the account information of the user and allows changing the data.
  */
-
 public class AccountSettingsFrame extends JFrame implements ActionListener {
 
   private JLabel accountInformationLabel;
@@ -33,11 +32,15 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
   private static final Dimension DIMENSION = new Dimension(500, 300);
   /** Messages displayed to inform the user about the validation of the data. */
   private static final String ASK_PASSWORD_MESSAGE = "Enter your current password:";
+
   private static final String INCORRECT_PASSWORD_MESSAGE = "Incorrect password!";
   private static final String ACCOUNT_INFORMATION_SAVED = "Saved.";
-  /** Messages displayed on the toggle button to show/hide the password.
-   * It works only when the password is being edited. */
+  /**
+   * Messages displayed on the toggle button to show/hide the password. It works only when the
+   * password is being edited.
+   */
   private static final String SHOW_PASSWORD = "Show";
+
   private static final String HIDE_PASSWORD = "Hide";
 
   public AccountSettingsFrame(JFrame parentFrame) {
@@ -50,15 +53,13 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     this.accountSettingsController = new AccountSettingsController(this);
     this.addWindowListener(new AccountSettingsWindowAdapter());
     initComponents();
-
   }
-public static void main(String[] args) {
-    new MainFrame();
-}
 
-  /**
-   * Initializes the frame by adding its components.
-   */
+  public static void main(String[] args) {
+    new MainFrame();
+  }
+
+  /** Initializes the frame by adding its components. */
   private void initComponents() {
 
     JPanel mainPanel = new JPanel();
@@ -136,7 +137,11 @@ public static void main(String[] args) {
           if (accountSettingsController.isValidPassword(password)) {
             passwordField.setEditable(true);
           } else {
-            JOptionPane.showMessageDialog(editPasswordButton, INCORRECT_PASSWORD_MESSAGE, INCORRECT_PASSWORD_MESSAGE, JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(
+                editPasswordButton,
+                INCORRECT_PASSWORD_MESSAGE,
+                INCORRECT_PASSWORD_MESSAGE,
+                JOptionPane.ERROR_MESSAGE);
           }
         }
       } else if (source == editUsernameButton) {
@@ -164,6 +169,7 @@ public static void main(String[] args) {
       showPasswordButton.setText(SHOW_PASSWORD);
     }
   }
+
   private void updateFieldsAfterSave() {
     dataSavedLabel.setVisible(true);
     usernameTextField.setEditable(false);

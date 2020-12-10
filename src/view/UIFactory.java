@@ -1,4 +1,5 @@
 package view;
+
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

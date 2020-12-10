@@ -1,4 +1,5 @@
 package controller;
+
 import view.AccountSettingsFrame;
 import view.CreateTeamFrame;
 import view.JoinTeamFrame;

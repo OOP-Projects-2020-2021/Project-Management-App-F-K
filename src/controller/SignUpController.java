@@ -1,4 +1,5 @@
 package controller;
+
 import view.MainFrame;
 
 import javax.swing.*;
@@ -21,6 +22,7 @@ public class SignUpController extends FrameController {
     new MainFrame();
     closeFrame();
   }
+
   public void goBack(JFrame parentFrame) {
     parentFrame.setVisible(true);
     parentFrame.setEnabled(true);

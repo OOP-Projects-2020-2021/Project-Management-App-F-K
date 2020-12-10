@@ -1,4 +1,5 @@
 package view;
+
 import controller.MainMenuController;
 
 import javax.swing.*;

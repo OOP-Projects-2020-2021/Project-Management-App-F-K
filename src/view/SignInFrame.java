@@ -6,13 +6,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
-/**
- * SignInFrame allows the user to sign in to the application.
- */
+/** SignInFrame allows the user to sign in to the application. */
 public class SignInFrame extends JFrame {
 
   private JLabel usernameLabel;
@@ -39,10 +35,7 @@ public class SignInFrame extends JFrame {
     this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
   }
 
-   /**
-    Initializes the frame by adding its components.
-    */
-
+  /** Initializes the frame by adding its components. */
   private void initComponents() {
 
     JPanel mainPanel = new JPanel();
@@ -91,7 +84,6 @@ public class SignInFrame extends JFrame {
     this.add(signInButtonPanel, BorderLayout.CENTER);
     this.add(createAccountPanel, BorderLayout.SOUTH);
     this.pack();
-
   }
 
   private class ButtonListener implements ActionListener {
@@ -108,4 +100,3 @@ public class SignInFrame extends JFrame {
     }
   }
 }
-

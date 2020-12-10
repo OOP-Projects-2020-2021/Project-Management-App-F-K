@@ -1,4 +1,5 @@
 package controller;
+
 import javax.swing.*;
 
 /**
@@ -28,7 +29,7 @@ public class AccountSettingsController extends FrameController {
    * otherwise it displays an error message.
    */
   public boolean isValidPassword(String password) {
-    //todo validate password
+    // todo validate password
     return true;
   }
   /**
@@ -36,9 +37,8 @@ public class AccountSettingsController extends FrameController {
    * until the ChangePasswordFrame is used. When the user closes the ChangePasswordFrame, the
    * AccountSettingsFrame will be enabled again.
    */
-
   public void saveAccountData(String username, String password) {
-    //todo save the changes
+    // todo save the changes
   }
   /**
    * When this frame is closed, the user is redirected to the Main Frame.
