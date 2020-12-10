@@ -1,4 +1,5 @@
 package controller.user;
+
 import controller.FrameController;
 import view.main.MainFrame;
 import view.user.SignUpFrame;
@@ -25,11 +26,12 @@ public class SignInController extends FrameController {
 
   /**
    * Check if the username and password introduced are correct.
+   *
    * @param username = the username introduced by the user
    * @param password = the password introduced by the user
    * @return boolean = true, if the username and password are correct
    */
-  public boolean validSignIn(String username,char[] password) {
+  public boolean validSignIn(String username, char[] password) {
     // TODO validate the user credentials
     // TODO transform password into String before passing it to the model
     //  set Max no of trials

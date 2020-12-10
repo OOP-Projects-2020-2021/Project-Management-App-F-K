@@ -1,4 +1,5 @@
 package view.main;
+
 import view.team.TeamListPanel;
 import javax.swing.*;
 

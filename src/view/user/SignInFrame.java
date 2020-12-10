@@ -29,7 +29,9 @@ public class SignInFrame extends JFrame {
   private static final Dimension DIMENSION = new Dimension(400, 300);
   /** Messages displayed to inform the user about the sign in's validation. */
   private static final String WRONG_SIGN_IN_CREDENTIALS_MESSAGE = "Wrong credentials!";
-  private static final String INVALID_SIGN_IN_MESSAGE= "Invalid sign in! \nCheck that the username and password\nthat you introduced are correct!";
+
+  private static final String INVALID_SIGN_IN_MESSAGE =
+      "Invalid sign in! \nCheck that the username and password\nthat you introduced are correct!";
 
   public SignInFrame() {
 
@@ -101,11 +103,15 @@ public class SignInFrame extends JFrame {
       if (source == signInButton) {
         String username = usernameTextField.getText();
         char[] password = passwordField.getPassword();
-        if(signInController.validSignIn(username,password)) {
-            signInController.enableSigningIn();
+        if (signInController.validSignIn(username, password)) {
+          signInController.enableSigningIn();
         } else {
           // clear fields and let the user try again
-          JOptionPane.showMessageDialog(signInButton,INVALID_SIGN_IN_MESSAGE,WRONG_SIGN_IN_CREDENTIALS_MESSAGE,JOptionPane.WARNING_MESSAGE);
+          JOptionPane.showMessageDialog(
+              signInButton,
+              INVALID_SIGN_IN_MESSAGE,
+              WRONG_SIGN_IN_CREDENTIALS_MESSAGE,
+              JOptionPane.WARNING_MESSAGE);
           usernameTextField.setText("");
           passwordField.setText("");
         }
@@ -119,7 +125,7 @@ public class SignInFrame extends JFrame {
   private class SignInWindowAdapter extends WindowAdapter {
     @Override
     public void windowClosing(WindowEvent e) {
-      if(!signInController.getSignInFlag()) {
+      if (!signInController.getSignInFlag()) {
         System.exit(0);
       }
     }
