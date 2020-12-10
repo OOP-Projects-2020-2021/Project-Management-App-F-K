@@ -1,6 +1,5 @@
 package view.main;
 
-import controller.FrameController;
 import controller.MainMenuController;
 
 import javax.swing.*;
@@ -49,6 +48,7 @@ public class MainMenu extends JMenuBar implements ActionListener {
   public MainMenuController getController() {
     return controller;
   }
+
   private void setMnemonics() {
     accountMenu.setMnemonic(KeyEvent.VK_A);
     teamsMenu.setMnemonic(KeyEvent.VK_T);

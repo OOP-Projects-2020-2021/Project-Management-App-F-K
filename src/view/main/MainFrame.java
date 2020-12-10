@@ -25,14 +25,17 @@ public class MainFrame extends JFrame {
 
   /** Returns a reference to the controller of the Main menu bar. */
   private MainMenuController getController() {
-    return ((MainMenu)this.getJMenuBar()).getController();
+    return ((MainMenu) this.getJMenuBar()).getController();
   }
 
-  /** When the main frame is closed but not because the user logged out, then the application stops running.*/
+  /**
+   * When the main frame is closed but not because the user logged out, then the application stops
+   * running.
+   */
   private class MainWindowAdapter extends WindowAdapter {
     @Override
     public void windowClosing(WindowEvent e) {
-      if(!getController().getLogOutFlag()) {
+      if (!getController().getLogOutFlag()) {
         System.exit(0);
       }
     }
