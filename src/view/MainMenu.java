@@ -1,3 +1,6 @@
+package view;
+import controller.MainMenuController;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

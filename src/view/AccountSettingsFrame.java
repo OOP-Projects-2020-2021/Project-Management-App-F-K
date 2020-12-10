@@ -1,3 +1,7 @@
+package view;
+
+import controller.AccountSettingsController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -48,7 +52,9 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     initComponents();
 
   }
-
+public static void main(String[] args) {
+    new MainFrame();
+}
 
   /**
    * Initializes the frame by adding its components.
@@ -153,9 +159,9 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     if (passwordField.isEditable() && model.isSelected()) {
       passwordField.setEchoChar((char) 0);
       showPasswordButton.setText(HIDE_PASSWORD);
-      showPasswordButton.setSelected(false);
     } else {
       passwordField.setEchoChar('*');
+      showPasswordButton.setText(SHOW_PASSWORD);
     }
   }
   private void updateFieldsAfterSave() {

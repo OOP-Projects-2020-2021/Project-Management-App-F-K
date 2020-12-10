@@ -1,3 +1,7 @@
+package view;
+
+import controller.SignInController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -31,15 +35,9 @@ public class SignInFrame extends JFrame {
     this.setVisible(true);
     this.setLayout(new BorderLayout());
     this.signInController = new SignInController(this);
-    this.addWindowListener(new SignInWindowAdapter());
     initComponents();
-
+    this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
   }
-
-  public static void main(String[] args) {
-    new SignInFrame();
-  }
-
 
    /**
     Initializes the frame by adding its components.
@@ -107,13 +105,6 @@ public class SignInFrame extends JFrame {
       } else if (source == createAccountButton) {
         signInController.enableSigningUp();
       }
-    }
-  }
-
-  private class SignInWindowAdapter extends WindowAdapter {
-    @Override
-    public void windowClosing(WindowEvent e) {
-      signInController.closeFrame();
     }
   }
 }

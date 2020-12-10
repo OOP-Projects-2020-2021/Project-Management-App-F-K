@@ -1,3 +1,6 @@
+package controller;
+import view.MainFrame;
+
 import javax.swing.*;
 
 public class SignUpController extends FrameController {
@@ -8,7 +11,7 @@ public class SignUpController extends FrameController {
 
   /**
    * Forward the data introduced by the user, to create a new account. Close the current frame and
-   * open the teamView frame instead.
+   * open a new main frame instead.
    *
    * @param username the username set by the user
    * @param password the password set by the user
@@ -16,15 +19,11 @@ public class SignUpController extends FrameController {
   public void signUp(String username, String password) {
     // TODO!! save data introduced by the user
     new MainFrame();
-    //closeFrame();
-    frame.setEnabled(false);
-    frame.setVisible(false);
+    closeFrame();
   }
-
-  public void onClose(JFrame parentFrame) {
+  public void goBack(JFrame parentFrame) {
     parentFrame.setVisible(true);
     parentFrame.setEnabled(true);
-    frame.setEnabled(false);
-    frame.setVisible(false);
+    closeFrame();
   }
 }

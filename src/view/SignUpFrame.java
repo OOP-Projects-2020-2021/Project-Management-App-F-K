@@ -1,3 +1,7 @@
+package view;
+
+import controller.SignUpController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -16,6 +20,7 @@ public class SignUpFrame extends JFrame implements ActionListener {
   private JTextField usernameTextField;
   private JPasswordField passwordField;
   private JButton signUpButton;
+  private JButton goBackButton;
 
   private SignUpController signUpController;
   private JFrame parentFrame;
@@ -31,8 +36,9 @@ public class SignUpFrame extends JFrame implements ActionListener {
     this.setLayout(new BorderLayout());
     this.parentFrame = parentFrame;
     this.signUpController = new SignUpController(this);
-    this.addWindowListener(new signUpWindowAdapter());
     initComponents();
+    this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+
   }
   /**
    * Initializes the frame by adding its components.
@@ -63,11 +69,13 @@ public class SignUpFrame extends JFrame implements ActionListener {
 
     signUpButton = UIFactory.createButton("Sign up");
     signUpButton.addActionListener(this);
+    goBackButton = UIFactory.createButton("Back");
+    goBackButton.addActionListener(this);
 
-    JPanel signUpButtonPanel = new JPanel();
-    signUpButtonPanel.add(signUpButton);
-    this.add(signUpButtonPanel, BorderLayout.CENTER);
-
+    JPanel buttonsPanel = new JPanel();
+    buttonsPanel.add(goBackButton);
+    buttonsPanel.add(signUpButton);
+    this.add(buttonsPanel, BorderLayout.CENTER);
     this.pack();
   }
   @Override
@@ -76,13 +84,9 @@ public class SignUpFrame extends JFrame implements ActionListener {
       String username = usernameTextField.getName();
       String password = Arrays.toString(passwordField.getPassword());
       signUpController.signUp(username, password);
+    } else if(actionEvent.getSource() == goBackButton) {
+      signUpController.goBack(parentFrame);
     }
   }
 
-  private class signUpWindowAdapter extends WindowAdapter {
-    @Override
-    public void windowClosing(WindowEvent e) {
-      signUpController.onClose(parentFrame);
-    }
-  }
 }

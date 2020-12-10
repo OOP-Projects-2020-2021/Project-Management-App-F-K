@@ -1,3 +1,4 @@
+package controller;
 import javax.swing.*;
 
 /**
@@ -6,7 +7,7 @@ import javax.swing.*;
  */
 public class AccountSettingsController extends FrameController {
 
-  AccountSettingsController(JFrame accountSettingsFrame) {
+  public AccountSettingsController(JFrame accountSettingsFrame) {
     super(accountSettingsFrame);
   }
 
@@ -46,8 +47,6 @@ public class AccountSettingsController extends FrameController {
    */
   public void onClose(JFrame parentFrame) {
     parentFrame.setEnabled(true);
-    //closeFrame();
-    frame.setVisible(false);
-    frame.setEnabled(false);
+    frame.dispose();
   }
 }
