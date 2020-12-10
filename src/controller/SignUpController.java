@@ -1,4 +1,5 @@
 package controller;
+
 import javax.swing.*;
 
 public class SignUpController extends FrameController {
@@ -8,8 +9,8 @@ public class SignUpController extends FrameController {
   }
 
   /**
-   * Forward the data introduced by the user, to create a new account.
-   * Close the current frame and open the SignIn Frame. The user has to introduce its new credentials to sign in.
+   * Forward the data introduced by the user, to create a new account. Close the current frame and
+   * open the SignIn Frame. The user has to introduce its new credentials to sign in.
    *
    * @param username = the username set by the user
    * @param password = the password set by the user

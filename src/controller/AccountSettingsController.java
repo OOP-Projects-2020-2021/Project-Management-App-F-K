@@ -1,4 +1,5 @@
 package controller;
+
 import javax.swing.*;
 
 /**
@@ -24,9 +25,10 @@ public class AccountSettingsController extends FrameController {
   /**
    * Represents a validation step, to ensure the security of the account, not allowing other people
    * to change the password. It asks the user to introduce its current password before changing it.
-   * In case the introduced password is correct it enables the user to edit the Password field, otherwise not.
+   * In case the introduced password is correct it enables the user to edit the Password field,
+   * otherwise not.
    *
-   * @param  password = the password introduced by the user
+   * @param password = the password introduced by the user
    */
   public boolean isValidPassword(String password) {
     // todo validate password
