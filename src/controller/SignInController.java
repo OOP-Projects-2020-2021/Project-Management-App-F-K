@@ -1,5 +1,4 @@
 package controller;
-
 import view.MainFrame;
 import view.SignUpFrame;
 
@@ -25,7 +24,7 @@ public class SignInController extends FrameController {
     closeFrame();
   }
 
-  /** Opens a new Frame for the User to sign up, and closes the current frame. */
+  /** Opens a new Frame for the User to sign up, also it disables and hides the current frame. */
   public void enableSigningUp() {
     new SignUpFrame(super.frame);
     frame.setVisible(false);

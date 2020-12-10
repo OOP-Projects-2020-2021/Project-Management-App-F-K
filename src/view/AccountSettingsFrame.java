@@ -1,7 +1,5 @@
 package view;
-
 import controller.AccountSettingsController;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -32,7 +30,6 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
   private static final Dimension DIMENSION = new Dimension(500, 300);
   /** Messages displayed to inform the user about the validation of the data. */
   private static final String ASK_PASSWORD_MESSAGE = "Enter your current password:";
-
   private static final String INCORRECT_PASSWORD_MESSAGE = "Incorrect password!";
   private static final String ACCOUNT_INFORMATION_SAVED = "Saved.";
   /**
@@ -53,10 +50,6 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     this.accountSettingsController = new AccountSettingsController(this);
     this.addWindowListener(new AccountSettingsWindowAdapter());
     initComponents();
-  }
-
-  public static void main(String[] args) {
-    new MainFrame();
   }
 
   /** Initializes the frame by adding its components. */
@@ -149,7 +142,7 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
         dataSavedLabel.setVisible(false);
       }
       if (source == goBackButton) {
-        accountSettingsController.onClose(parentFrame);
+        accountSettingsController.goBack();
       } else if (source == saveButton) {
         String username = usernameTextField.getText();
         String password = Arrays.toString(passwordField.getPassword());

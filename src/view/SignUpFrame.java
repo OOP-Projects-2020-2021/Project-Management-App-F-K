@@ -1,14 +1,18 @@
 package view;
-
 import controller.SignUpController;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.Arrays;
 
-/** SignUpFrame allows the user to create an account in the application. */
+/** SignUpFrame allows the user to create an account in the application.
+ * After the account was saved the user is asked to sign in with its new credentials to finalize the registration.
+ *
+ * @author Beata Keresztes
+ * */
 public class SignUpFrame extends JFrame implements ActionListener {
 
   private JLabel usernameLabel;
@@ -22,6 +26,9 @@ public class SignUpFrame extends JFrame implements ActionListener {
   private JFrame parentFrame;
 
   private static final Dimension DIMENSION = new Dimension(400, 300);
+  /** Messages displayed to inform the user about the steps of signing in. " */
+  private static final String SIGN_IN_MESSAGE = "Please sign in to your account to finalize the registration.";
+  private static final String FINALIZE_SIGN_UP_TITLE = "Finalize signing up";
 
   public SignUpFrame(JFrame parentFrame) {
 
@@ -33,7 +40,8 @@ public class SignUpFrame extends JFrame implements ActionListener {
     this.parentFrame = parentFrame;
     this.signUpController = new SignUpController(this);
     initComponents();
-    this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    this.addWindowListener(new SignUpWindowAdapter());
+
   }
   /** Initializes the frame by adding its components. */
   private void initComponents() {
@@ -78,8 +86,17 @@ public class SignUpFrame extends JFrame implements ActionListener {
       String username = usernameTextField.getName();
       String password = Arrays.toString(passwordField.getPassword());
       signUpController.signUp(username, password);
+      JOptionPane.showMessageDialog(this,SIGN_IN_MESSAGE,FINALIZE_SIGN_UP_TITLE,JOptionPane.PLAIN_MESSAGE);
+      signUpController.goBack();
     } else if (actionEvent.getSource() == goBackButton) {
-      signUpController.goBack(parentFrame);
+      signUpController.goBack();
+    }
+  }
+
+  private class SignUpWindowAdapter extends WindowAdapter {
+    @Override
+    public void windowClosing(WindowEvent e) {
+      signUpController.onClose(parentFrame);
     }
   }
 }

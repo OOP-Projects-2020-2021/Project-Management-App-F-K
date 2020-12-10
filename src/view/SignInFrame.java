@@ -1,14 +1,16 @@
 package view;
-
 import controller.SignInController;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
 
-/** SignInFrame allows the user to sign in to the application. */
+/**
+ * SignInFrame allows the user to sign in to the application.
+ *
+ * @author Beata Keresztes
+ */
 public class SignInFrame extends JFrame {
 
   private JLabel usernameLabel;
