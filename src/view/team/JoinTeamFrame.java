@@ -1,6 +1,7 @@
-package view;
+package view.team;
 
-import controller.JoinTeamController;
+import view.UIFactory;
+import controller.team.JoinTeamController;
 
 import javax.swing.*;
 import javax.swing.border.Border;

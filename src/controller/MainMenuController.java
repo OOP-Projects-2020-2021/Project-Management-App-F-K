@@ -1,9 +1,9 @@
 package controller;
 
-import view.AccountSettingsFrame;
-import view.CreateTeamFrame;
-import view.JoinTeamFrame;
-import view.SignInFrame;
+import view.user.AccountSettingsFrame;
+import view.user.SignInFrame;
+import view.team.CreateTeamFrame;
+import view.team.JoinTeamFrame;
 
 import javax.swing.*;
 
@@ -14,14 +14,14 @@ import javax.swing.*;
  */
 public class MainMenuController extends FrameController {
 
+
   public MainMenuController(JFrame frame) {
     super(frame);
   }
 
   public void logoutUser() {
-    // todo
     new SignInFrame();
-    frame.setEnabled(false);
+    closeFrame();
   }
 
   public void enableUserDataSettings() {

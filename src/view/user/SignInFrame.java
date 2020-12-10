@@ -1,11 +1,13 @@
-package view;
+package view.user;
 
-import controller.SignInController;
+import view.UIFactory;
+import controller.user.SignInController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 /**
  * SignInFrame allows the user to sign in to the application.
@@ -25,6 +27,9 @@ public class SignInFrame extends JFrame {
   private SignInController signInController;
 
   private static final Dimension DIMENSION = new Dimension(400, 300);
+  /** Messages displayed to inform the user about the sign in's validation. */
+  private static final String WRONG_SIGN_IN_CREDENTIALS_MESSAGE = "Wrong credentials!";
+  private static final String INVALID_SIGN_IN_MESSAGE= "Invalid sign in! \nCheck that the username and password\nthat you introduced are correct!";
 
   public SignInFrame() {
 
@@ -35,7 +40,7 @@ public class SignInFrame extends JFrame {
     this.setLayout(new BorderLayout());
     this.signInController = new SignInController(this);
     initComponents();
-    this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+    this.addWindowListener(new SignInWindowAdapter());
   }
 
   /** Initializes the frame by adding its components. */
@@ -94,11 +99,28 @@ public class SignInFrame extends JFrame {
     public void actionPerformed(ActionEvent actionEvent) {
       JButton source = (JButton) actionEvent.getSource();
       if (source == signInButton) {
-        String username = usernameTextField.getName();
-        String password = Arrays.toString(passwordField.getPassword());
-        signInController.enableSigningIn(username, password);
+        String username = usernameTextField.getText();
+        char[] password = passwordField.getPassword();
+        if(signInController.validSignIn(username,password)) {
+            signInController.enableSigningIn();
+        } else {
+          // clear fields and let the user try again
+          JOptionPane.showMessageDialog(signInButton,INVALID_SIGN_IN_MESSAGE,WRONG_SIGN_IN_CREDENTIALS_MESSAGE,JOptionPane.WARNING_MESSAGE);
+          usernameTextField.setText("");
+          passwordField.setText("");
+        }
+
       } else if (source == createAccountButton) {
         signInController.enableSigningUp();
+      }
+    }
+  }
+
+  private class SignInWindowAdapter extends WindowAdapter {
+    @Override
+    public void windowClosing(WindowEvent e) {
+      if(!signInController.getSignInFlag()) {
+        System.exit(0);
       }
     }
   }

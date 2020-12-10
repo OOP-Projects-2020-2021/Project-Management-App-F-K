@@ -9,7 +9,7 @@ import java.awt.event.WindowEvent;
  * @author Bori Fazakas
  */
 public abstract class FrameController {
-  JFrame frame;
+  protected JFrame frame;
 
   public FrameController(JFrame frame) {
     this.frame = frame;

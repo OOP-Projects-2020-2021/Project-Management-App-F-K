@@ -1,4 +1,4 @@
-package view;
+package view.team;
 /**
  * TeamViewModel holds the data required for the View (TeamListPanel) to display an icon for a team.
  * It is an immutable class.

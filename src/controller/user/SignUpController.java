@@ -1,7 +1,12 @@
-package controller;
-
+package controller.user;
+import controller.FrameController;
 import javax.swing.*;
 
+/**
+ * Controller for managing the SignUpFrame.
+ *
+ * @author Beata Keresztes
+ */
 public class SignUpController extends FrameController {
 
   public SignUpController(JFrame signUpFrame) {
@@ -15,8 +20,9 @@ public class SignUpController extends FrameController {
    * @param username = the username set by the user
    * @param password = the password set by the user
    */
-  public void signUp(String username, String password) {
+  public void signUp(String username, char[] password) {
     // TODO!! save data introduced by the user
+    // TODO transform the password into String before passing it to the model
   }
 
   /** It closes the current frame and returns to the parent Frame. */

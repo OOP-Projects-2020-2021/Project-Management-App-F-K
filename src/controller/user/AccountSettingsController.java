@@ -1,10 +1,14 @@
-package controller;
+package controller.user;
+
+import controller.FrameController;
 
 import javax.swing.*;
 
 /**
  * AccountSettingsController controls the AccountSettingsFrame, managing operations like gathering
  * the data for display, changing the data and updating the display.
+ *
+ * @author Beata Keresztes
  */
 public class AccountSettingsController extends FrameController {
 

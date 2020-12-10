@@ -1,6 +1,8 @@
-package view;
+package view.user;
 
-import controller.AccountSettingsController;
+import controller.user.AccountSettingsController;
+import view.UIFactory;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -8,6 +10,8 @@ import java.util.Arrays;
 
 /**
  * AccountSettingsFrame displays the account information of the user and allows changing the data.
+ *
+ * @author Beata Keresztes
  */
 public class AccountSettingsFrame extends JFrame implements ActionListener {
 

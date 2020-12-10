@@ -1,13 +1,13 @@
-package view;
+package view.user;
 
-import controller.SignUpController;
+import view.UIFactory;
+import controller.user.SignUpController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.util.Arrays;
 
 /**
  * SignUpFrame allows the user to create an account in the application. After the account was saved
@@ -86,8 +86,8 @@ public class SignUpFrame extends JFrame implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent actionEvent) {
     if (actionEvent.getSource() == signUpButton) {
-      String username = usernameTextField.getName();
-      String password = Arrays.toString(passwordField.getPassword());
+      String username = usernameTextField.getText();
+      char[] password = passwordField.getPassword();
       signUpController.signUp(username, password);
       JOptionPane.showMessageDialog(
           this, SIGN_IN_MESSAGE, FINALIZE_SIGN_UP_TITLE, JOptionPane.PLAIN_MESSAGE);
