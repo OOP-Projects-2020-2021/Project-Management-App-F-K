@@ -1,11 +1,21 @@
+package view.user;
+
+import view.UIFactory;
+import controller.user.SignInController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Arrays;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
+/**
+ * SignInFrame allows the user to sign in to the application.
+ *
+ * @author Beata Keresztes
+ */
 public class SignInFrame extends JFrame {
-  // todo: after closing this frame, the app should not be shut down
+
   private JLabel usernameLabel;
   private JLabel passwordLabel;
   private JTextField usernameTextField;
@@ -17,16 +27,26 @@ public class SignInFrame extends JFrame {
   private SignInController signInController;
 
   private static final Dimension DIMENSION = new Dimension(400, 300);
+  /** Messages displayed to inform the user about the sign in's validation. */
+  private static final String WRONG_SIGN_IN_CREDENTIALS_MESSAGE = "Wrong credentials!";
+
+  private static final String INVALID_SIGN_IN_MESSAGE =
+      "Invalid sign in! \nCheck that the username and password\nthat you introduced are correct!";
 
   public SignInFrame() {
+
     super("Sign in");
     this.setSize(DIMENSION);
     this.setResizable(false);
     this.setVisible(true);
-
     this.setLayout(new BorderLayout());
-
     this.signInController = new SignInController(this);
+    initComponents();
+    this.addWindowListener(new SignInWindowAdapter());
+  }
+
+  /** Initializes the frame by adding its components. */
+  private void initComponents() {
 
     JPanel mainPanel = new JPanel();
     mainPanel.setPreferredSize(new Dimension(this.getWidth(), this.getHeight() / 2));
@@ -50,7 +70,6 @@ public class SignInFrame extends JFrame {
     mainPanel.add(usernameTextField);
     mainPanel.add(passwordLabel);
     mainPanel.add(passwordField);
-
     this.add(mainPanel, BorderLayout.NORTH);
 
     ButtonListener buttonListener = new ButtonListener();
@@ -73,12 +92,8 @@ public class SignInFrame extends JFrame {
     createAccountPanel.add(createAccountButton);
 
     this.add(signInButtonPanel, BorderLayout.CENTER);
-
     this.add(createAccountPanel, BorderLayout.SOUTH);
-
     this.pack();
-
-    this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
   }
 
   private class ButtonListener implements ActionListener {
@@ -86,11 +101,32 @@ public class SignInFrame extends JFrame {
     public void actionPerformed(ActionEvent actionEvent) {
       JButton source = (JButton) actionEvent.getSource();
       if (source == signInButton) {
-        String username = usernameTextField.getName();
-        String password = Arrays.toString(passwordField.getPassword());
-        signInController.signIn(username, password);
+        String username = usernameTextField.getText();
+        char[] password = passwordField.getPassword();
+        if (signInController.validSignIn(username, password)) {
+          signInController.enableSigningIn();
+        } else {
+          // clear fields and let the user try again
+          JOptionPane.showMessageDialog(
+              signInButton,
+              INVALID_SIGN_IN_MESSAGE,
+              WRONG_SIGN_IN_CREDENTIALS_MESSAGE,
+              JOptionPane.WARNING_MESSAGE);
+          usernameTextField.setText("");
+          passwordField.setText("");
+        }
+
       } else if (source == createAccountButton) {
         signInController.enableSigningUp();
+      }
+    }
+  }
+
+  private class SignInWindowAdapter extends WindowAdapter {
+    @Override
+    public void windowClosing(WindowEvent e) {
+      if (!signInController.getSignInFlag()) {
+        System.exit(0);
       }
     }
   }

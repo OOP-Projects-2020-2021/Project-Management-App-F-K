@@ -1,4 +1,9 @@
+package view.main;
+
+import controller.MainMenuController;
+
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -38,6 +43,10 @@ public class MainMenu extends JMenuBar implements ActionListener {
 
     addListeners();
     setMnemonics();
+  }
+
+  public MainMenuController getController() {
+    return controller;
   }
 
   private void setMnemonics() {

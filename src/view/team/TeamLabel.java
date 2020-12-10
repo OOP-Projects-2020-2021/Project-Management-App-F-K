@@ -1,3 +1,5 @@
+package view.team;
+
 import javax.swing.*;
 import java.awt.*;
 

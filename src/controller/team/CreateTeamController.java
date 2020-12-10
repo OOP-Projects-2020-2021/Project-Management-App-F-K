@@ -1,3 +1,6 @@
+package controller.team;
+
+import controller.FrameController;
 import javax.swing.*;
 
 /**

@@ -1,3 +1,5 @@
+package model;
+
 /**
  * Represents a User and contains its account information.
  *

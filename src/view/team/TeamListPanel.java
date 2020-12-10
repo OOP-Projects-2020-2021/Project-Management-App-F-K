@@ -1,5 +1,8 @@
+package view.team;
+
+import controller.team.TeamListController;
+import view.ModifiedFlowLayout;
 import javax.swing.*;
-import java.awt.*;
 import java.util.List;
 
 /**
@@ -14,7 +17,7 @@ public class TeamListPanel extends JPanel {
   public TeamListPanel() {
     /**
      * In order to make this panel scrollable through a JScrollPane, and keep the number of teams
-     * flexible at tehe same time, ModifiedFlowLayout is required instead of the simpleFlowLayout.
+     * flexible at the same time, ModifiedFlowLayout is required instead of the simpleFlowLayout.
      */
     this.setLayout(new ModifiedFlowLayout());
     List<TeamViewModel> teams = controller.getUsersTeams();
