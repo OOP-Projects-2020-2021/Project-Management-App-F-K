@@ -1,0 +1,54 @@
+package main.java.controller;
+
+import main.java.view.user.AccountSettingsFrame;
+import main.java.view.user.SignInFrame;
+import main.java.view.team.CreateTeamFrame;
+import main.java.view.team.JoinTeamFrame;
+
+import javax.swing.*;
+
+/**
+ * The MainMenuController controls the actions linked to the items in the MainMenu.
+ *
+ * @author Bori Fazakas
+ */
+public class MainMenuController extends FrameController {
+
+  /**
+   * The logOutFlag is used to notify the windowAdapter whether the main frame is closing because
+   * the user logged out or because he exited the application.
+   */
+  private boolean logOutFlag;
+
+  public MainMenuController(JFrame frame) {
+    super(frame);
+    logOutFlag = false;
+  }
+
+  public void logoutUser() {
+    logOutFlag = true;
+    new SignInFrame();
+    closeFrame();
+  }
+
+  public boolean getLogOutFlag() {
+    return logOutFlag;
+  }
+
+  public void enableUserDataSettings() {
+    new AccountSettingsFrame(frame);
+    frame.setEnabled(false);
+  }
+
+  /** Provides access to the team creating functionality by opening the corresponding frame. */
+  public void enableCreatingNewTeam() {
+    new CreateTeamFrame(frame);
+    frame.setEnabled(false);
+  }
+
+  /** Provides access to the team joining functionality by opening the corresponding frame. */
+  public void enableJoiningNewTeam() {
+    new JoinTeamFrame(frame);
+    frame.setEnabled(false);
+  }
+}
