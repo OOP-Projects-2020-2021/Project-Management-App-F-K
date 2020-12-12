@@ -1,5 +1,7 @@
 package main.java.model;
 
+import java.util.Optional;
+
 /**
  * Represents a User and contains its account information.
  *
@@ -17,6 +19,13 @@ public class User {
   public User(String username, String password) {
     this.username = username;
     this.password = password;
+    this.id = null;
+  }
+
+  public User(int id, String username, String password) {
+    this.username = username;
+    this.password = password;
+    this.id = id;
   }
 
   public String getUsername() {
@@ -35,7 +44,7 @@ public class User {
     this.password = password;
   }
 
-  public Integer getId() {
-    return id;
+  public Optional<Integer> getId() {
+    return Optional.of(id);
   }
 }
