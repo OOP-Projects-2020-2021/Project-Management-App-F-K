@@ -14,10 +14,13 @@ public class SqliteUserRepository implements UserRepository {
     private static final String SAVE_USER_STATEMENT = "INSERT INTO User (UserName,Password) VALUES (?,?)";
     private static final String GET_USER_STATEMENT = "SELECT * FROM User WHERE (Username = ? and Password = ?);";
 
+    private static final String DATABASE_URL = "jdbc:sqlite:E:/CTI_2nd year/OOP/project_management_app/project_database/project_management_app.db";
+
     public SqliteUserRepository() {
         try {
             Class.forName("org.sqlite.JDBC");
-            connection = DriverManager.getConnection("jdbc:sqlite:project_management_app.db");
+            //String url = "jdbc:sqlite:project_management_app.db";
+            connection = DriverManager.getConnection(DATABASE_URL);
             prepareStatements();
         }catch (ClassNotFoundException | SQLException e) {
             System.out.println(e.getMessage());

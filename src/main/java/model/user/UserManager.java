@@ -13,7 +13,7 @@ public class UserManager {
     private static UserRepository userRepository;
     @Nullable private User currentUser;
 
-    private UserManager() {
+    public UserManager() {
         userRepository = new SqliteUserRepository();
         currentUser = null;
     }
@@ -33,15 +33,13 @@ public class UserManager {
      * Validates the sign-in, and sets the currentUser on successful sign-in.
      * @param username = username introduced by the user at sign-in
      * @param password = password introduced by the user at sign-in
-     * @return boolean = true on successful authentication
      * @throws SQLException if the data could not be accessed from the database
      */
-    public boolean signIn(String username,String password) throws SQLException {
-        //TODO add InvalidSignInException
+    public void signIn(String username,String password) throws SQLException, InvalidSignInException {
         currentUser = userRepository.getUser(username,password);
-        return (currentUser!=null);
+        if(currentUser == null) throw new InvalidSignInException();
     }
-    public User getCurrentUser() {
+    @Nullable public User getCurrentUser() {
         return currentUser;
     }
 
@@ -49,7 +47,7 @@ public class UserManager {
         currentUser = null;
     }
 
-    public List<Project> getUsersAssignments() throws SQLException{
+    public List<Project> getUsersAssignments(){
         if(currentUser != null) {
             // TODO access ProjectRepository of current user
             List<Project> assignmentsOfCurrentUser;
@@ -57,7 +55,7 @@ public class UserManager {
         return null;
     }
 
-    public List<Project> getUsersSupervisedProjects() throws SQLException{
+    public List<Project> getUsersSupervisedProjects(){
         List<Team> teamsOfCurrentUser;
         List<Project> projectsOfCurrentUser;
         if(currentUser!=null) {
@@ -66,4 +64,5 @@ public class UserManager {
         }
         return null;
     }
+
 }
