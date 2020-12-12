@@ -9,7 +9,7 @@ import java.util.*;
 /**
  * This represents a Team and holds data related to its members, projects and other components.
  *
- * @author Beata Keresztes
+ * @author Beata Keresztes, Bori Fazakas
  */
 public class Team {
 

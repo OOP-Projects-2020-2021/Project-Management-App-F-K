@@ -1,5 +1,10 @@
 package model.team;
 
+/**
+ * Exception thrown is the team with the specified id or code does not exist in the database.
+ *
+ * @author Bori Fazakas
+ */
 public class InexistentTeamException extends Exception {
   InexistentTeamException(String code) {
     super(
