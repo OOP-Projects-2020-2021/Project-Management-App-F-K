@@ -1,4 +1,4 @@
-package main.java.model;
+package model;
 
 import org.jetbrains.annotations.Nullable;
 

@@ -1,4 +1,4 @@
-package main.java.view.team;
+package view.team;
 
 import javax.swing.*;
 import java.awt.*;

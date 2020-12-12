@@ -1,4 +1,4 @@
-package main.java.controller;
+package controller;
 
 import javax.swing.*;
 import java.awt.event.WindowEvent;
