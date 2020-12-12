@@ -1,7 +1,5 @@
 package model.team;
 
-import model.Project;
-import model.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;

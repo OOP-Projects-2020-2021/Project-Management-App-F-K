@@ -12,7 +12,7 @@ import java.util.List;
  * TeamManager is responsible for executing all the commands needed for the application that are
  * related to teams.
  *
- * Remark that it is implemented with the singleton pattern, so only one instance of it exists.
+ * <p>Remark that it is implemented with the singleton pattern, so only one instance of it exists.
  *
  * @author Bori Fazakas
  */
@@ -28,8 +28,8 @@ public class TeamManager {
   }
 
   /**
-   * Creates a new team with the given name, and with the manager being the currently logged in
-   * user
+   * Creates a new team with the given name, and with the manager being the currently logged in user
+   *
    * @param name is the name of the new team.
    * @throws SQLException if the operation could not be performed in the database.
    */
@@ -51,8 +51,8 @@ public class TeamManager {
   }
 
   /**
-   * Generated a new, unique code for the team with the given id, and saves it.
-   * Remark that if no team with the given id exists, nothing happend, no exception is thrown.
+   * Generated a new, unique code for the team with the given id, and saves it. Remark that if no
+   * team with the given id exists, nothing happend, no exception is thrown.
    *
    * @param teamId is the id of the team for which the new code is generated.
    * @throws SQLException if the operation could not be performed in the database.
@@ -93,15 +93,15 @@ public class TeamManager {
   }
 
   /**
-   * Sets the manager of the team with the given id to be the user with the given name, but only
-   * if the current user is at the moment the manager of the team.
+   * Sets the manager of the team with the given id to be the user with the given name, but only if
+   * the current user is at the moment the manager of the team.
    *
    * @param teamId is the id of the team for which the manager is changes.
    * @param newManagerName is the nam eof the new manager as specified by the current one.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentTeamException if there is no team with id teamId.
-   * @throws UnauthorisedOperationException if the current user is not the manager of the team,
-   * so they are not authorised to change the manager.
+   * @throws UnauthorisedOperationException if the current user is not the manager of the team, so
+   *     they are not authorised to change the manager.
    */
   public void passManagerPosition(int teamId, String newManagerName)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException {
