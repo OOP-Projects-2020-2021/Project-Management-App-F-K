@@ -36,8 +36,9 @@ public class TeamManager {
         boolean found = false;
         String code = null;
         while (!found) {
-            int randomNumber = (int) (Math.random() * (int) Math.pow(10, Team.CODE_LENGTH) + 1);
-            code = Integer.toString(randomNumber);
+            int randomNumber =
+                    (int) (Math.random() * (int) (Math.pow(10, Team.CODE_LENGTH) - 1) + 1);
+            code = String.format("%06d", randomNumber);
             if (teamRepository.getTeam(code) == null) {
                 found = true;
             }
