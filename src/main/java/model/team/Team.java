@@ -14,7 +14,7 @@ import java.util.*;
 public class Team {
 
   /** The id that identifies the team in the database. */
-  private int id;
+  private Integer id;
   /** The name of the team. */
   private @NotNull String name;
   /** The code that uniquely identifies the team, but it can be modified. */
@@ -28,6 +28,13 @@ public class Team {
   /** A list of the projects belonging to the team. */
   private List<Project> projects = new ArrayList<>();
 
+  public Team(@NotNull String name, int managerId, @NotNull String code) {
+    this.id = null;
+    this.name = name;
+    this.managerId = managerId;
+    this.code = code;
+  }
+
   public Team(int id, @NotNull String name, int managerId, @NotNull String code) {
     this.id = id;
     this.name = name;
@@ -35,8 +42,8 @@ public class Team {
     this.code = code;
   }
 
-  public int getId() {
-    return id;
+  public Optional<Integer> getId() {
+    return Optional.of(id);
   }
 
   /**
