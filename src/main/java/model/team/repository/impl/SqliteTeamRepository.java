@@ -16,9 +16,7 @@ public class SqliteTeamRepository implements TeamRepository {
     SqliteTeamRepository() {
         try {
             Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:C:/Users/Bori/Documents/Egyetem" +
-                    "/year2_sem1/University_Courses/OOP/Project-Management/project_management_app" +
-                    ".db");
+            c = DriverManager.getConnection("jdbc:sqlite:project_management_app.db");
             statement = c.createStatement();
             System.out.println("Succesful database connection");
         } catch (ClassNotFoundException | SQLException e) {
