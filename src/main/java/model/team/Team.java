@@ -40,6 +40,10 @@ public class Team {
     return Optional.of(id);
   }
 
+  public void setId(int id) {
+    this.id = id;
+  }
+
   public @NotNull String getName() {
     return name;
   }
