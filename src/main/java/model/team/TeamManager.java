@@ -34,11 +34,11 @@ public class TeamManager {
     return newCode;
   }
 
-  public void joinTeam(String code) throws SQLException {
+  public void joinTeam(String code) throws SQLException, InexistentTeamException {
     Team team = teamRepository.getTeam(code);
     User currentUser = new User(2, "", ""); // todo get from UserManager
     if (team == null) {
-      // todo throw new InexistentTeamException()
+      throw new InexistentTeamException(code);
     } else {
       teamRepository.joinTeam(currentUser.getId().get(), team.getId().get());
     }
