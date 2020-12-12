@@ -55,10 +55,8 @@ public class SqliteTeamRepository implements TeamRepository {
         return new Team(id, teamName, new User("", ""), teamCode);
     }
 
-    @Override
-    public void deleteTeam(Team team) {
-
-    }
+  @Override
+  public void deleteTeam(Team team) {}
 
     @Override
     public void joinTeam(User user, String teamCode) throws SQLException {
