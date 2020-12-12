@@ -42,7 +42,7 @@ public class TeamManager {
   /**
    * Returns the teams in which the currently logged in user is a member.
    *
-   * @returns the list of teams having the current user as member.
+   * @return the list of teams having the current user as member.
    * @throws SQLException if the operation could not be performed in the database.
    */
   public List<Team> getTeamsOfCurrentUser() throws SQLException {
@@ -52,6 +52,7 @@ public class TeamManager {
 
   /**
    * Generated a new, unique code for the team with the given id, and saves it.
+   * Remark that if no team with the given id exists, nothing happend, no exception is thrown.
    *
    * @param teamId is the id of the team for which the new code is generated.
    * @throws SQLException if the operation could not be performed in the database.
