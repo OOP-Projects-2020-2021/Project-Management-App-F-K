@@ -4,13 +4,13 @@ import main.java.model.User;
 import main.java.model.team.Team;
 
 public interface TeamRepository {
-    void createTeam(Team team);
+  void createTeam(Team team);
 
-    void getTeam(String code);
+  void getTeam(String code);
 
-    void deleteTeam(Team team);
+  void deleteTeam(Team team);
 
-    void joinTeam(User user, String teamCode);
+  void joinTeam(User user, String teamCode);
 
-    void leaveTeam(User user, Team team);
+  void leaveTeam(User user, Team team);
 }
