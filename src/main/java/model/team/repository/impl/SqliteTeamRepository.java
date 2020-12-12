@@ -17,16 +17,24 @@ public class SqliteTeamRepository implements TeamRepository {
     private static final String SAVE_TEAM_STATEMENT = "INSERT INTO Team (TeamName, ManagerId, " +
             "Code) VALUES (?, ?, ?)";
     private PreparedStatement saveTeamSt;
+
     private static final String GET_TEAM_WITH_CODE_QUERY = "SELECT * from Team WHERE Code = ?";
     private PreparedStatement getTeamWithCodeSt;
+
     private static final String GET_TEAM_OF_USER_QUERY = "SELECT t.TeamId, t.TeamName, t" +
             ".ManagerId, t.Code FROM Team t JOIN MemberToTeam mt ON mt.TeamId = t.TeamId WHERE mt" +
             ".MemberId = ?";
     private PreparedStatement getTeamsOfUserSt;
+
+    private static final String SET_NEW_TEAMCODE_STATEMENT = "UPDATE team SET Code = ? WHERE " +
+            "TeamId = ?";
+    private PreparedStatement setNewCodeSt;
+
     private static final String ADD_TEAM_MEMBERSHIP_QUERY = "INSERT Into MemberToTeam (MemberId, " +
             "TeamId) VALUES (?, (SELECT TeamId " +
             "FROM Team WHERE Code = ?))";
     private PreparedStatement addTeamMembershipSt;
+
     private static final String REMOVE_TEAM_MEMBERSHIP_QUERY = "DELETE FROM MemberToTeam WHERE  " +
             "MemberId = ? AND TeamId = (SELECT TeamId " +
             "FROM Team WHERE Code = ?)";
@@ -47,6 +55,7 @@ public class SqliteTeamRepository implements TeamRepository {
         saveTeamSt = c.prepareStatement(SAVE_TEAM_STATEMENT);
         getTeamWithCodeSt = c.prepareStatement(GET_TEAM_WITH_CODE_QUERY);
         getTeamsOfUserSt = c.prepareStatement(GET_TEAM_OF_USER_QUERY);
+        setNewCodeSt = c.prepareStatement(SET_NEW_TEAMCODE_STATEMENT);
         addTeamMembershipSt = c.prepareStatement(ADD_TEAM_MEMBERSHIP_QUERY);
         removeTeamMembershipSt = c.prepareStatement(REMOVE_TEAM_MEMBERSHIP_QUERY);
     }
@@ -119,8 +128,10 @@ public class SqliteTeamRepository implements TeamRepository {
     }
 
     @Override
-    public void setNewCode(Team team) {
-
+    public void setNewCode(int teamId, String newCode) throws SQLException {
+        setNewCodeSt.setString(1, newCode);
+        setNewCodeSt.setInt(2, teamId);
+        setNewCodeSt.execute();
     }
 
     public static void main(String[] args) throws SQLException {
@@ -132,11 +143,12 @@ public class SqliteTeamRepository implements TeamRepository {
 //                "895621"));
 
         TeamManager manager = new TeamManager();
-        manager.createNewTeam("DBteam");
+        // manager.createNewTeam("DBteam");
         List<Team> teamsOfUser1 = manager.getTeamsOfCurrentUser();
         System.out.println("Teams of user 1:");
         for (Team team : teamsOfUser1) {
             System.out.println(team.getName() + " " + team.getId().get());
         }
+        manager.regenerateTeamCode(2);
     }
 }

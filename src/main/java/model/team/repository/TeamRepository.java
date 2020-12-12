@@ -24,6 +24,13 @@ public interface TeamRepository {
 
     void leaveTeam(User user, Team team) throws SQLException;
 
-    void setNewCode(Team team);
+    /**
+     * Sets the new code for the specified team.
+     *
+     * @param teamId is the id of the team to update. requirement: The team must exist in the
+     *               database.
+     * @param newCode is the new code to set.
+     */
+    void setNewCode(int teamId, String newCode) throws SQLException;
 
 }

@@ -26,6 +26,12 @@ public class TeamManager {
         return teamRepository.getTeamsOfUser(currentUser);
     }
 
+    public String regenerateTeamCode(int teamId) throws SQLException {
+        String newCode = generateTeamCode();
+        teamRepository.setNewCode(teamId, newCode);
+        return newCode;
+    }
+
     private String generateTeamCode() throws SQLException {
         boolean found = false;
         String code = null;
