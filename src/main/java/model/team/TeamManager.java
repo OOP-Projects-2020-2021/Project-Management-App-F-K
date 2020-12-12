@@ -4,7 +4,6 @@ import model.UnauthorisedOperationException;
 import model.User;
 import model.team.repository.TeamRepository;
 import model.team.repository.TeamRepositoryFactory;
-import model.team.repository.impl.SqliteTeamRepository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -12,7 +11,7 @@ import java.util.List;
 public class TeamManager {
   private static TeamManager instance = new TeamManager();
   private TeamRepository teamRepository =
-          TeamRepositoryFactory.getTeamRepository(TeamRepositoryFactory.RepositoryType.SQLITE);
+      TeamRepositoryFactory.getTeamRepository(TeamRepositoryFactory.RepositoryType.SQLITE);
 
   private TeamManager() {}
 
@@ -52,21 +51,24 @@ public class TeamManager {
     teamRepository.leaveTeam(currentUser.getId().get(), teamId);
   }
 
-  public void passManagerPosition(int teamId, String newManagerName) throws SQLException, InexistentTeamException, UnauthorisedOperationException {
-      Team team = teamRepository.getTeam(teamId);
-      if (team == null) {
-          throw new InexistentTeamException(teamId);
-      }
-      User currentUser = new User(1, "", ""); // todo get from UserManager
-      if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
-        throw new UnauthorisedOperationException(currentUser.getId().get(), " pass manager " +
-                "position", "this user is not the manager of the project");
-      }
-      User newManager = new User(2, newManagerName, ""); // todo get user with name UserManager
-      if (newManager == null) {
-        // todo throw new InexistentUserException
-      }
-      teamRepository.setNewManagerPosition(teamId, newManager.getId().get());
+  public void passManagerPosition(int teamId, String newManagerName)
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException {
+    Team team = teamRepository.getTeam(teamId);
+    if (team == null) {
+      throw new InexistentTeamException(teamId);
+    }
+    User currentUser = new User(1, "", ""); // todo get from UserManager
+    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
+      throw new UnauthorisedOperationException(
+          currentUser.getId().get(),
+          " pass manager " + "position",
+          "this user is not the manager of the project");
+    }
+    User newManager = new User(2, newManagerName, ""); // todo get user with name UserManager
+    if (newManager == null) {
+      // todo throw new InexistentUserException
+    }
+    teamRepository.setNewManagerPosition(teamId, newManager.getId().get());
   }
 
   private String generateTeamCode() throws SQLException {

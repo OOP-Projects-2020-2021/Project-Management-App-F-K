@@ -20,9 +20,9 @@ public class SqliteTeamRepository implements TeamRepository {
       "INSERT INTO Team (TeamName, ManagerId, " + "Code) VALUES (?, ?, ?)";
   private PreparedStatement saveTeamSt;
 
-    // Get a team with a given id.
-    private static final String GET_TEAM_WITH_CODE_QUERY = "SELECT * from Team WHERE Code = ?";
-    private PreparedStatement getTeamWithCodeSt;
+  // Get a team with a given id.
+  private static final String GET_TEAM_WITH_CODE_QUERY = "SELECT * from Team WHERE Code = ?";
+  private PreparedStatement getTeamWithCodeSt;
 
   // Get a team with a given code.
   private static final String GET_TEAM_WITH_ID_QUERY = "SELECT * from Team WHERE TeamId = ?";
@@ -52,7 +52,7 @@ public class SqliteTeamRepository implements TeamRepository {
 
   // Set new manager for team.
   private static final String SET_MANAGER_STATEMENT =
-          "UPDATE team SET ManagerId = ? WHERE TeamId = ?";
+      "UPDATE team SET ManagerId = ? WHERE TeamId = ?";
   private PreparedStatement setManagerSt;
 
   public SqliteTeamRepository() {
@@ -90,21 +90,21 @@ public class SqliteTeamRepository implements TeamRepository {
     }
   }
 
-    @Nullable
-    @Override
-    public Team getTeam(int teamId) throws SQLException {
-      getTeamWithIdSt.setInt(1, teamId);
-      ResultSet result = getTeamWithIdSt.executeQuery();
-      if (result.next()) {
-        int id = result.getInt("TeamId");
-        String teamName = result.getString("TeamName");
-        int managerId = result.getInt("ManagerId");
-        String teamCode = result.getString("Code");
-        return new Team(id, teamName, managerId, teamCode);
-      } else {
-        return null;
-      }
+  @Nullable
+  @Override
+  public Team getTeam(int teamId) throws SQLException {
+    getTeamWithIdSt.setInt(1, teamId);
+    ResultSet result = getTeamWithIdSt.executeQuery();
+    if (result.next()) {
+      int id = result.getInt("TeamId");
+      String teamName = result.getString("TeamName");
+      int managerId = result.getInt("ManagerId");
+      String teamCode = result.getString("Code");
+      return new Team(id, teamName, managerId, teamCode);
+    } else {
+      return null;
     }
+  }
 
   @Nullable
   @Override
@@ -122,7 +122,7 @@ public class SqliteTeamRepository implements TeamRepository {
     }
   }
 
-    @Override
+  @Override
   public List<Team> getTeamsOfUser(User user) throws SQLException {
     if (user.getId().isPresent()) {
       getTeamsOfUserSt.setInt(1, user.getId().get());
@@ -166,13 +166,14 @@ public class SqliteTeamRepository implements TeamRepository {
   }
 
   @Override
-   public void setNewManagerPosition(int teamId, int managerId) throws SQLException {
-      setManagerSt.setInt(1, managerId);
-      setManagerSt.setInt(2, teamId);
-      setManagerSt.execute();
-    }
+  public void setNewManagerPosition(int teamId, int managerId) throws SQLException {
+    setManagerSt.setInt(1, managerId);
+    setManagerSt.setInt(2, teamId);
+    setManagerSt.execute();
+  }
 
-  public static void main(String[] args) throws SQLException, InexistentTeamException, UnauthorisedOperationException {
+  public static void main(String[] args)
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException {
     //        TeamRepository repository = new SqliteTeamRepository();
     //        Team team = repository.getTeam("895621");
     //        System.out.println("Team with name " + team.getName() + " and id " + team.getId());
@@ -188,8 +189,8 @@ public class SqliteTeamRepository implements TeamRepository {
     //            System.out.println(team.getName() + " " + team.getId().get());
     //        }
     //        manager.regenerateTeamCode(2);
-//    manager.joinTeam("019404");
-//    manager.leaveTeam(3);
+    //    manager.joinTeam("019404");
+    //    manager.leaveTeam(3);
     manager.passManagerPosition(2, "maria22");
   }
 }

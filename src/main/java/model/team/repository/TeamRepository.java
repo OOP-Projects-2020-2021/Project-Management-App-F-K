@@ -14,8 +14,8 @@ public interface TeamRepository {
   @Nullable
   Team getTeam(String code) throws SQLException;
 
-    @Nullable
-    Team getTeam(int teamId) throws SQLException;
+  @Nullable
+  Team getTeam(int teamId) throws SQLException;
 
   List<Team> getTeamsOfUser(User user) throws SQLException;
 
@@ -48,11 +48,11 @@ public interface TeamRepository {
    */
   void setNewCode(int teamId, String newCode) throws SQLException;
 
-    /**
-     * Sets the manager of a team to be another existing user.
-     *
-     * @param teamId is the id of the team which gets a new manager.
-     * @param managerId is the id of the new manager. It must exist in the database.
-     */
-    void setNewManagerPosition(int teamId, int managerId) throws SQLException;
+  /**
+   * Sets the manager of a team to be another existing user.
+   *
+   * @param teamId is the id of the team which gets a new manager.
+   * @param managerId is the id of the new manager. It must exist in the database.
+   */
+  void setNewManagerPosition(int teamId, int managerId) throws SQLException;
 }
