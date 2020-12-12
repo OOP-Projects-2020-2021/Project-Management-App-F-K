@@ -11,6 +11,8 @@ public class TeamManager {
     private static TeamManager instance = new TeamManager();
     private TeamRepository teamRepository = new SqliteTeamRepository();
 
+    private TeamManager() {}
+
     public static TeamManager getInstance() {
         return instance;
     }

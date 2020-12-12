@@ -142,7 +142,7 @@ public class SqliteTeamRepository implements TeamRepository {
 //        repository.leaveTeam(new User("Anna", "pass"), new Team(1, "aa", 5,
 //                "895621"));
 
-        TeamManager manager = new TeamManager();
+        TeamManager manager = TeamManager.getInstance();
         // manager.createNewTeam("DBteam");
         List<Team> teamsOfUser1 = manager.getTeamsOfCurrentUser();
         System.out.println("Teams of user 1:");
