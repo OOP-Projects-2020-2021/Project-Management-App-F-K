@@ -14,24 +14,24 @@ import java.util.*;
 public class Team {
 
   /** The id that identifies the team in the database. */
-  private @NotNull int id;
+  private int id;
   /** The name of the team. */
   private @NotNull String name;
   /** The code that uniquely identifies the team, but it can be modified. */
   private @NotNull String code;
   /** The number of characters the code must consist of. */
-  private static final int CODE_LENGTH = 6;
+  public static final int CODE_LENGTH = 6;
   /** The team manager. */
-  private @NotNull User manager;
+  private int managerId;
   /** A set of the members of the team. */
   private HashSet<User> members = new HashSet<>();
   /** A list of the projects belonging to the team. */
   private List<Project> projects = new ArrayList<>();
 
-  public Team(@NotNull int id, @NotNull String name, @NotNull User manager, @NotNull String code) {
+  public Team(int id, @NotNull String name, int managerId, @NotNull String code) {
     this.id = id;
     this.name = name;
-    this.manager = manager;
+    this.managerId = managerId;
     this.code = code;
   }
 
@@ -87,16 +87,16 @@ public class Team {
     return code;
   }
 
-  public void setCode(String code) {
+  public void setCode(@NotNull String code) {
     this.code = code;
   }
 
-  public @NotNull User getManager() {
-    return manager;
+  public int getManagerId() {
+    return managerId;
   }
 
-  public void setManager(User manager) {
-    this.manager = Objects.requireNonNull(manager);
+  public void setManagerId(int managerId) {
+    this.managerId = managerId;
   }
 
   public Set<User> getMembers() {

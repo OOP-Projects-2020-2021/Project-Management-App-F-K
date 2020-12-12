@@ -3,9 +3,11 @@ package main.java.model.team.repository.impl;
 import main.java.model.User;
 import main.java.model.team.Team;
 import main.java.model.team.repository.TeamRepository;
+import org.jetbrains.annotations.Nullable;
 
 import javax.print.DocFlavor;
 import java.sql.*;
+import java.util.List;
 
 public class SqliteTeamRepository implements TeamRepository {
     private Connection c;
@@ -22,7 +24,7 @@ public class SqliteTeamRepository implements TeamRepository {
     private PreparedStatement removeTeamMembership;
 
 
-    SqliteTeamRepository() {
+    public SqliteTeamRepository() {
         try {
             Class.forName("org.sqlite.JDBC");
             c = DriverManager.getConnection("jdbc:sqlite:project_management_app.db");
@@ -43,19 +45,28 @@ public class SqliteTeamRepository implements TeamRepository {
 
     }
 
+    @Nullable
     @Override
     public Team getTeam(String code) throws SQLException {
         getTeamWithCode.setString(1, code);
         ResultSet result = getTeamWithCode.executeQuery();
-        result.next();
-        int id = result.getInt("TeamId");
-        String teamName = result.getString("TeamName");
-        int managerId = result.getInt("ManagerId");
-        String teamCode = result.getString("Code");
-        return new Team(id, teamName, new User("", ""), teamCode);
+        if (result.next()) {
+            int id = result.getInt("TeamId");
+            String teamName = result.getString("TeamName");
+            int managerId = result.getInt("ManagerId");
+            String teamCode = result.getString("Code");
+            return new Team(id, teamName, managerId, teamCode);
+        } else {
+            return null;
+        }
     }
 
-  @Override
+    @Override
+    public List<Team> getTeamsOfUser(User user) {
+        return null;
+    }
+
+    @Override
   public void deleteTeam(Team team) {}
 
     @Override
@@ -72,12 +83,17 @@ public class SqliteTeamRepository implements TeamRepository {
         removeTeamMembership.execute();
     }
 
+    @Override
+    public void setNewCode(Team team) {
+
+    }
+
     public static void main(String[] args) throws SQLException {
         TeamRepository repository = new SqliteTeamRepository();
         Team team = repository.getTeam("895621");
         System.out.println("Team with name " + team.getName() + " and id " + team.getId());
         repository.joinTeam(new User("Anna", "pass"), "895621");
-        repository.leaveTeam(new User("Anna", "pass"), new Team(1, "aa", new User("", ""),
+        repository.leaveTeam(new User("Anna", "pass"), new Team(1, "aa", 5,
                 "895621"));
     }
 }
