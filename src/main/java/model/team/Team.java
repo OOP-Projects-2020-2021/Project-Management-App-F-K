@@ -1,6 +1,9 @@
-package main.java.model;
+package main.java.model.team;
 
+import main.java.model.Project;
+import main.java.model.User;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
 
 /**
