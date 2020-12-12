@@ -1,4 +1,6 @@
-package main.java.model;
+package model.user;
+
+import java.util.Optional;
 
 /**
  * Represents a User and contains its account information.
@@ -7,6 +9,8 @@ package main.java.model;
  */
 public class User {
 
+  /** The id identifies the user in the database. */
+  private Integer id;
   /** Each user has a unique username. */
   private String username;
   /** Each user has a password used for authentication. */
@@ -15,6 +19,13 @@ public class User {
   public User(String username, String password) {
     this.username = username;
     this.password = password;
+    this.id = null;
+  }
+
+  public User(int id, String username, String password) {
+    this.username = username;
+    this.password = password;
+    this.id = id;
   }
 
   public String getUsername() {
@@ -31,5 +42,9 @@ public class User {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public Optional<Integer> getId() {
+    return Optional.of(id);
   }
 }
