@@ -17,7 +17,7 @@ public class Team {
   private @NotNull int id;
   /** The name of the team. */
   private @NotNull String name;
-  /** The code that uniquely identifies the team. */
+  /** The code that uniquely identifies the team, but it can be modified. */
   private @NotNull String code;
   /** The number of characters the code must consist of. */
   private static final int CODE_LENGTH = 6;
