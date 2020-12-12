@@ -23,20 +23,10 @@ public class Team {
   /** A list of the projects belonging to the team. */
   private List<Project> projects = new ArrayList<>();
 
-  public Team(@NotNull String name, @NotNull User manager) {
+  public Team(@NotNull String name, @NotNull User manager, @NotNull String code) {
     this.name = name;
     this.manager = manager;
-    this.code = generateCode();
-  }
-
-  /**
-   * Generate a unique, fixed-length identification code for the team.
-   *
-   * @return String generated code
-   */
-  public String generateCode() {
-    int randomNumber = (int) (Math.random() * (int) Math.pow(10, CODE_LENGTH) + 1);
-    return Integer.toString(randomNumber);
+    this.code = code;
   }
 
   /**
@@ -85,6 +75,10 @@ public class Team {
 
   public @NotNull String getCode() {
     return code;
+  }
+
+  public void setCode(String code) {
+    this.code = code;
   }
 
   public @NotNull User getManager() {
