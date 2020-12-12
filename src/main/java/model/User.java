@@ -7,6 +7,8 @@ package main.java.model;
  */
 public class User {
 
+  /** The id identifies the user in the database. */
+  private Integer id;
   /** Each user has a unique username. */
   private String username;
   /** Each user has a password used for authentication. */
@@ -31,5 +33,9 @@ public class User {
 
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public Integer getId() {
+    return id;
   }
 }
