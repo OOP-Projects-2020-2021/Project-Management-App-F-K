@@ -13,6 +13,8 @@ import java.util.*;
  */
 public class Team {
 
+  /** The id that identifies the team in the database. */
+  private @NotNull int id;
   /** The name of the team. */
   private @NotNull String name;
   /** The code that uniquely identifies the team. */
@@ -26,10 +28,15 @@ public class Team {
   /** A list of the projects belonging to the team. */
   private List<Project> projects = new ArrayList<>();
 
-  public Team(@NotNull String name, @NotNull User manager, @NotNull String code) {
+  public Team(@NotNull int id, @NotNull String name, @NotNull User manager, @NotNull String code) {
+    this.id = id;
     this.name = name;
     this.manager = manager;
     this.code = code;
+  }
+
+  public int getId() {
+    return id;
   }
 
   /**
