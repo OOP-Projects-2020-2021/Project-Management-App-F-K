@@ -20,7 +20,7 @@ public class SqliteTeamRepository implements TeamRepository {
   private static final String GET_TEAM_WITH_CODE_QUERY = "SELECT * from Team WHERE Code = ?";
   private PreparedStatement getTeamWithCodeSt;
 
-  private static final String GET_TEAM_OF_USER_QUERY =
+  private static final String GET_TEAMS_OF_USER_QUERY =
       "SELECT t.TeamId, t.TeamName, t"
           + ".ManagerId, t.Code FROM Team t JOIN MemberToTeam mt ON mt.TeamId = t.TeamId WHERE mt"
           + ".MemberId = ?";
@@ -51,7 +51,7 @@ public class SqliteTeamRepository implements TeamRepository {
   private void prepareStatements() throws SQLException {
     saveTeamSt = c.prepareStatement(SAVE_TEAM_STATEMENT);
     getTeamWithCodeSt = c.prepareStatement(GET_TEAM_WITH_CODE_QUERY);
-    getTeamsOfUserSt = c.prepareStatement(GET_TEAM_OF_USER_QUERY);
+    getTeamsOfUserSt = c.prepareStatement(GET_TEAMS_OF_USER_QUERY);
     setNewCodeSt = c.prepareStatement(SET_NEW_TEAMCODE_STATEMENT);
     addTeamMembershipSt = c.prepareStatement(ADD_TEAM_MEMBERSHIP_QUERY);
     removeTeamMembershipSt = c.prepareStatement(REMOVE_TEAM_MEMBERSHIP_QUERY);
@@ -73,11 +73,10 @@ public class SqliteTeamRepository implements TeamRepository {
 
   @Nullable
   @Override
-  // todo bug: team not found despite existing
   public Team getTeam(String code) throws SQLException {
     getTeamWithCodeSt.setString(1, code);
     ResultSet result = getTeamWithCodeSt.executeQuery();
-    if (result.next() || true) {
+    if (result.next()) {
       int id = result.getInt("TeamId");
       String teamName = result.getString("TeamName");
       int managerId = result.getInt("ManagerId");
@@ -147,7 +146,7 @@ public class SqliteTeamRepository implements TeamRepository {
     //            System.out.println(team.getName() + " " + team.getId().get());
     //        }
     //        manager.regenerateTeamCode(2);
-    manager.joinTeam("488524");
+    manager.joinTeam("019404");
     manager.leaveTeam(3);
   }
 }
