@@ -16,7 +16,7 @@ public interface TeamRepository {
     @Nullable
     Team getTeam(String code) throws SQLException;
 
-    List<Team> getTeamsOfUser(User user);
+    List<Team> getTeamsOfUser(User user) throws SQLException;
 
     void deleteTeam(Team team);
 

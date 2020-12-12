@@ -1,9 +1,11 @@
 package main.java.model.team;
 
+import main.java.model.User;
 import main.java.model.team.repository.TeamRepository;
 import main.java.model.team.repository.impl.SqliteTeamRepository;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class TeamManager {
     private static TeamManager instance = new TeamManager();
@@ -13,14 +15,15 @@ public class TeamManager {
         return instance;
     }
 
-    public void createNewTeam(String name) {
+    public void createNewTeam(String name) throws SQLException {
         // todo: get managerId from UserManager
         int managerId = 2;
-        try {
-            teamRepository.saveTeam(new Team(name, managerId, generateTeamCode()));
-        } catch (SQLException e) {
-            // todo: send message to user
-        }
+        teamRepository.saveTeam(new Team(name, managerId, generateTeamCode()));
+    }
+
+    public List<Team> getTeamsOfCurrentUser() throws SQLException{
+        User currentUser = new User(1, "", ""); //todo get from UserManager
+        return teamRepository.getTeamsOfUser(currentUser);
     }
 
     private String generateTeamCode() throws SQLException {

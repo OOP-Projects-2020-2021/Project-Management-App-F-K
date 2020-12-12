@@ -8,6 +8,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.print.DocFlavor;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SqliteTeamRepository implements TeamRepository {
@@ -16,8 +17,12 @@ public class SqliteTeamRepository implements TeamRepository {
     private static final String SAVE_TEAM_STATEMENT = "INSERT INTO Team (TeamName, ManagerId, " +
             "Code) VALUES (?, ?, ?)";
     private PreparedStatement saveTeamSt;
-    private static final String GET_TEAM_WITH_CODE_QUERY = "Select * from Team WHERE Code = ?";
+    private static final String GET_TEAM_WITH_CODE_QUERY = "SELECT * from Team WHERE Code = ?";
     private PreparedStatement getTeamWithCodeSt;
+    private static final String GET_TEAM_OF_USER_QUERY = "SELECT t.TeamId, t.TeamName, t" +
+            ".ManagerId, t.Code FROM Team t JOIN MemberToTeam mt ON mt.TeamId = t.TeamId WHERE mt" +
+            ".MemberId = ?";
+    private PreparedStatement getTeamsOfUserSt;
     private static final String ADD_TEAM_MEMBERSHIP_QUERY = "INSERT Into MemberToTeam (MemberId, " +
             "TeamId) VALUES (?, (SELECT TeamId " +
             "FROM Team WHERE Code = ?))";
@@ -41,6 +46,7 @@ public class SqliteTeamRepository implements TeamRepository {
     private void prepareStatements() throws SQLException {
         saveTeamSt = c.prepareStatement(SAVE_TEAM_STATEMENT);
         getTeamWithCodeSt = c.prepareStatement(GET_TEAM_WITH_CODE_QUERY);
+        getTeamsOfUserSt = c.prepareStatement(GET_TEAM_OF_USER_QUERY);
         addTeamMembershipSt = c.prepareStatement(ADD_TEAM_MEMBERSHIP_QUERY);
         removeTeamMembershipSt = c.prepareStatement(REMOVE_TEAM_MEMBERSHIP_QUERY);
     }
@@ -76,8 +82,23 @@ public class SqliteTeamRepository implements TeamRepository {
     }
 
     @Override
-    public List<Team> getTeamsOfUser(User user) {
-        return null;
+    public List<Team> getTeamsOfUser(User user) throws SQLException {
+        if (user.getId().isPresent()) {
+            getTeamsOfUserSt.setInt(1, user.getId().get());
+            ResultSet result = getTeamsOfUserSt.executeQuery();
+            List<Team> usersTeams = new ArrayList<>();
+            while (result.next()) {
+                int id = result.getInt("TeamId");
+                String teamName = result.getString("TeamName");
+                int managerId = result.getInt("ManagerId");
+                String teamCode = result.getString("Code");
+                usersTeams.add(new Team(id, teamName, managerId, teamCode));
+            }
+            return usersTeams;
+        } else {
+            throw new IllegalArgumentException("The user whose teams are queried should have an " +
+                    "id");
+        }
     }
 
     @Override
@@ -112,5 +133,10 @@ public class SqliteTeamRepository implements TeamRepository {
 
         TeamManager manager = new TeamManager();
         manager.createNewTeam("DBteam");
+        List<Team> teamsOfUser1 = manager.getTeamsOfCurrentUser();
+        System.out.println("Teams of user 1:");
+        for (Team team : teamsOfUser1) {
+            System.out.println(team.getName() + " " + team.getId().get());
+        }
     }
 }
