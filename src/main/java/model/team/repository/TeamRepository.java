@@ -20,9 +20,23 @@ public interface TeamRepository {
 
     void deleteTeam(Team team);
 
-    void joinTeam(User user, String teamCode) throws SQLException;
+    /**
+     * Adds user to the members of the team with id teamID
+     *
+     * @param teamId is the id of the team which user wants to join.
+     *               Requirement: The team must exist in the database.
+     * @param userId is the new member's id.
+     */
+    void joinTeam(int userId, int teamId) throws SQLException;
 
-    void leaveTeam(User user, Team team) throws SQLException;
+    /**
+     * Removes user from the members of the team with id teamID
+     *
+     * @param teamId is the id of the team which user wants to leave.
+     *               Requirement: The team must exist in the database.
+     * @param userId is the new member's id.
+     */
+    void leaveTeam(int userId, int teamId) throws SQLException;
 
     /**
      * Sets the new code for the specified team.

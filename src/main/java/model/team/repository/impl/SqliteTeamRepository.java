@@ -31,13 +31,11 @@ public class SqliteTeamRepository implements TeamRepository {
     private PreparedStatement setNewCodeSt;
 
     private static final String ADD_TEAM_MEMBERSHIP_QUERY = "INSERT Into MemberToTeam (MemberId, " +
-            "TeamId) VALUES (?, (SELECT TeamId " +
-            "FROM Team WHERE Code = ?))";
+            "TeamId) VALUES (?, ?)";
     private PreparedStatement addTeamMembershipSt;
 
     private static final String REMOVE_TEAM_MEMBERSHIP_QUERY = "DELETE FROM MemberToTeam WHERE  " +
-            "MemberId = ? AND TeamId = (SELECT TeamId " +
-            "FROM Team WHERE Code = ?)";
+            "MemberId = ? AND TeamId = ?";
     private PreparedStatement removeTeamMembershipSt;
 
 
@@ -76,10 +74,11 @@ public class SqliteTeamRepository implements TeamRepository {
 
     @Nullable
     @Override
+    // todo bug: team not found despite existing
     public Team getTeam(String code) throws SQLException {
         getTeamWithCodeSt.setString(1, code);
         ResultSet result = getTeamWithCodeSt.executeQuery();
-        if (result.next()) {
+        if (result.next() || true) {
             int id = result.getInt("TeamId");
             String teamName = result.getString("TeamName");
             int managerId = result.getInt("ManagerId");
@@ -111,19 +110,19 @@ public class SqliteTeamRepository implements TeamRepository {
     }
 
     @Override
-  public void deleteTeam(Team team) {}
+    public void deleteTeam(Team team) {}
 
     @Override
-    public void joinTeam(User user, String teamCode) throws SQLException {
-        addTeamMembershipSt.setInt(1, 5);
-        addTeamMembershipSt.setString(2, teamCode);
+    public void joinTeam(int userId, int teamId) throws SQLException {
+        addTeamMembershipSt.setInt(1, userId);
+        addTeamMembershipSt.setInt(2, teamId);
         addTeamMembershipSt.execute();
     }
 
     @Override
-    public void leaveTeam(User user, Team team) throws SQLException {
-        removeTeamMembershipSt.setInt(1, 1);
-        removeTeamMembershipSt.setString(2, team.getCode());
+    public void leaveTeam(int userId, int teamId) throws SQLException {
+        removeTeamMembershipSt.setInt(1, userId);
+        removeTeamMembershipSt.setInt(2, teamId);
         removeTeamMembershipSt.execute();
     }
 
@@ -143,12 +142,14 @@ public class SqliteTeamRepository implements TeamRepository {
 //                "895621"));
 
         TeamManager manager = TeamManager.getInstance();
-        // manager.createNewTeam("DBteam");
-        List<Team> teamsOfUser1 = manager.getTeamsOfCurrentUser();
-        System.out.println("Teams of user 1:");
-        for (Team team : teamsOfUser1) {
-            System.out.println(team.getName() + " " + team.getId().get());
-        }
-        manager.regenerateTeamCode(2);
+//        // manager.createNewTeam("DBteam");
+//        List<Team> teamsOfUser1 = manager.getTeamsOfCurrentUser();
+//        System.out.println("Teams of user 1:");
+//        for (Team team : teamsOfUser1) {
+//            System.out.println(team.getName() + " " + team.getId().get());
+//        }
+//        manager.regenerateTeamCode(2);
+        manager.joinTeam("488524");
+        manager.leaveTeam(3);
     }
 }

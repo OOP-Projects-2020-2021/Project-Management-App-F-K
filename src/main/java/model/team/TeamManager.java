@@ -34,6 +34,21 @@ public class TeamManager {
         return newCode;
     }
 
+    public void joinTeam(String code) throws SQLException {
+        Team team = teamRepository.getTeam(code);
+        User currentUser = new User(2, "", ""); //todo get from UserManager
+        if (team == null) {
+            // todo throw new InexistentTeamException()
+        } else {
+            teamRepository.joinTeam(currentUser.getId().get(), team.getId().get());
+        }
+    }
+
+    public void leaveTeam(int teamId) throws SQLException {
+        User currentUser = new User(1, "", ""); //todo get from UserManager
+        teamRepository.leaveTeam(currentUser.getId().get(), teamId);
+    }
+
     private String generateTeamCode() throws SQLException {
         boolean found = false;
         String code = null;
