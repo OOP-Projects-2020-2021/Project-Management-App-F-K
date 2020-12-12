@@ -1,4 +1,5 @@
 package model;
+
 import model.user.User;
 
 import org.jetbrains.annotations.Nullable;
