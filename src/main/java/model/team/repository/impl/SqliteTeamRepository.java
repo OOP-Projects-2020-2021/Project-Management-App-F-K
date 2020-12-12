@@ -44,18 +44,31 @@ public class SqliteTeamRepository implements TeamRepository {
     }
 
     @Override
-    public void joinTeam(User user, String teamCode) {
-
+    public void joinTeam(User user, String teamCode) throws SQLException {
+        String query = "INSERT Into MemberToTeam (MemberId, TeamId) VALUES (?, (SELECT TeamId " +
+                "FROM Team WHERE Code = ?))";
+        PreparedStatement statement = c.prepareStatement(query);
+        // todo
+        statement.setInt(1, 4);
+        statement.setString(2, teamCode);
+        statement.execute();
     }
 
     @Override
-    public void leaveTeam(User user, Team team) {
-
+    public void leaveTeam(User user, Team team) throws SQLException {
+        String query = "DELETE FROM MemberToTeam WHERE MemberId = ? AND TeamId = (SELECT TeamId " +
+                "FROM Team WHERE Code = ?)";
+        PreparedStatement statement = c.prepareStatement(query);
+        // todo
+        statement.setInt(1, 3);
+        statement.setString(2, team.getCode());
+        statement.execute();
     }
 
     public static void main(String[] args) throws SQLException {
         TeamRepository repository = new SqliteTeamRepository();
         Team team = repository.getTeam("895621");
         System.out.println("Team with name " + team.getName() + " and id " + team.getId());
+        repository.joinTeam(new User("Anna", "pass"), "895621");
     }
 }
