@@ -1,7 +1,7 @@
-package main.java.view.user;
+package view.user;
 
-import main.java.view.UIFactory;
-import main.java.controller.user.SignInController;
+import view.UIFactory;
+import controller.user.SignInController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;

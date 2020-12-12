@@ -1,7 +1,8 @@
-package main.java.model;
+package model;
 
 import org.jetbrains.annotations.NotNull;
 import java.util.*;
+import model.user.User;
 
 /**
  * This represents a Team and holds data related to its members, projects and other components.

@@ -1,9 +1,9 @@
-package main.java.controller;
+package controller;
 
-import main.java.view.user.AccountSettingsFrame;
-import main.java.view.user.SignInFrame;
-import main.java.view.team.CreateTeamFrame;
-import main.java.view.team.JoinTeamFrame;
+import view.user.AccountSettingsFrame;
+import view.user.SignInFrame;
+import view.team.CreateTeamFrame;
+import view.team.JoinTeamFrame;
 
 import javax.swing.*;
 

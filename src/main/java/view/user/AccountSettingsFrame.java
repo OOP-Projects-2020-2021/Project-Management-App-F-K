@@ -1,7 +1,7 @@
-package main.java.view.user;
+package view.user;
 
-import main.java.controller.user.AccountSettingsController;
-import main.java.view.UIFactory;
+import controller.user.AccountSettingsController;
+import view.UIFactory;
 
 import javax.swing.*;
 import java.awt.*;

@@ -11,6 +11,7 @@ import java.util.List;
 public class UserManager {
 
     private static UserRepository userRepository;
+    /** The current user which has signed in to the application. */
     @Nullable private User currentUser;
 
     public UserManager() {
