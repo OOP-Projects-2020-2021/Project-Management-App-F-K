@@ -16,8 +16,8 @@ import java.util.List;
 public interface TeamRepository {
 
   /**
-   * Saves the new team in the database and returns the id of the team in the database. It also
-   * sets the id of the team object.
+   * Saves the new team in the database and returns the id of the team in the database. It also sets
+   * the id of the team object.
    *
    * @param team holds the data of the new team to be saved. The id of team should be null.
    * @return the id of the newly saved team.
@@ -26,8 +26,8 @@ public interface TeamRepository {
   int saveTeam(Team team) throws SQLException;
 
   /**
-   * Returns the Team with the specified code from the database, if it exists. Othwerwise it
-   * returns null.
+   * Returns the Team with the specified code from the database, if it exists. Othwerwise it returns
+   * null.
    *
    * @param code is the code of the searched team.
    * @return the team with the given code, or null if it doesn't exist.
@@ -37,8 +37,8 @@ public interface TeamRepository {
   Team getTeam(String code) throws SQLException;
 
   /**
-   * Returns the Team with the specified id from the database, if it exists. Othwerwise it
-   * returns null.
+   * Returns the Team with the specified id from the database, if it exists. Othwerwise it returns
+   * null.
    *
    * @param teamId is the id of the searched team.
    * @return the team with the given code, or null if it doesn't exist.
@@ -88,8 +88,8 @@ public interface TeamRepository {
   void setNewCode(int teamId, String newCode) throws SQLException;
 
   /**
-   * Sets the manager of a team to be another existing user, if the team exists.
-   * The existence of the user with managerId is not checked.
+   * Sets the manager of a team to be another existing user, if the team exists. The existence of
+   * the user with managerId is not checked.
    *
    * @param teamId is the id of the team which gets a new manager.
    * @param managerId is the id of the new manager. REMARK: It must exist in the database.
