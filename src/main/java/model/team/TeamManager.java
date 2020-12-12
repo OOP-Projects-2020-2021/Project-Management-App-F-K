@@ -1,8 +1,9 @@
-package main.java.model.team;
+package model.team;
 
-import main.java.model.User;
-import main.java.model.team.repository.TeamRepository;
-import main.java.model.team.repository.impl.SqliteTeamRepository;
+import model.UnauthorisedOperationException;
+import model.User;
+import model.team.repository.TeamRepository;
+import model.team.repository.impl.SqliteTeamRepository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -47,6 +48,23 @@ public class TeamManager {
   public void leaveTeam(int teamId) throws SQLException {
     User currentUser = new User(1, "", ""); // todo get from UserManager
     teamRepository.leaveTeam(currentUser.getId().get(), teamId);
+  }
+
+  public void passManagerPosition(int teamId, String newManagerName) throws SQLException, InexistentTeamException, UnauthorisedOperationException {
+      Team team = teamRepository.getTeam(teamId);
+      if (team == null) {
+          throw new InexistentTeamException(teamId);
+      }
+      User currentUser = new User(2, "", ""); // todo get from UserManager
+      if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
+        throw new UnauthorisedOperationException(currentUser.getId().get(), " pass manager " +
+                "position", "this user is not the manager of the project");
+      }
+      User newManager = new User(1, newManagerName, ""); // todo get user with name UserManager
+      if (newManager == null) {
+        // todo throw new InexistentUserException
+      }
+      teamRepository.setNewManagerPosition(teamId, newManager.getId().get());
   }
 
   private String generateTeamCode() throws SQLException {
