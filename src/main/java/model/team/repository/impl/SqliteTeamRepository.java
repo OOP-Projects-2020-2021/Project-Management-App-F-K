@@ -21,8 +21,7 @@ public class SqliteTeamRepository implements TeamRepository {
   private PreparedStatement saveTeamSt;
 
   // Delete a team.
-  private static final String DELETE_TEAM_STATEMENT =
-          "DELETE from Team WHERE TeamId = ?";
+  private static final String DELETE_TEAM_STATEMENT = "DELETE from Team WHERE TeamId = ?";
   private PreparedStatement deleteTeamSt;
 
   // Get a team with a given id.
@@ -57,7 +56,7 @@ public class SqliteTeamRepository implements TeamRepository {
 
   // Remove all members of a team.
   private static final String REMOVE_ALL_TEAM_MEMBERS_STATEMENT =
-          "DELETE FROM MemberToTeam WHERE TeamId = ?";
+      "DELETE FROM MemberToTeam WHERE TeamId = ?";
   private PreparedStatement removeAllTeamMembersSt;
 
   // Set new manager for team.
@@ -214,7 +213,7 @@ public class SqliteTeamRepository implements TeamRepository {
     // manager.regenerateTeamCode(2);
     //    manager.joinTeam("019404");
     //    manager.leaveTeam(3);
-   //  manager.passManagerPosition(2, "maria22");
+    //  manager.passManagerPosition(2, "maria22");
     manager.deleteTeam(3);
   }
 }

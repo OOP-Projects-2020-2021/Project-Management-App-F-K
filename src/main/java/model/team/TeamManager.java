@@ -41,16 +41,17 @@ public class TeamManager {
   }
 
   /**
-   * Deletes the team with the specified id from the database, but only if the current user is
-   * its manager.
+   * Deletes the team with the specified id from the database, but only if the current user is its
+   * manager.
    *
    * @param teamId is the id of the team to delete.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentTeamException if no team with teamId exists in the database.
-   * @throws UnauthorisedOperationException if the current user is not allowed to delete the
-   * team, because the user is not the manager of the team.
+   * @throws UnauthorisedOperationException if the current user is not allowed to delete the team,
+   *     because the user is not the manager of the team.
    */
-  public void deleteTeam(int teamId) throws SQLException, InexistentTeamException, UnauthorisedOperationException {
+  public void deleteTeam(int teamId)
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException {
     Team team = teamRepository.getTeam(teamId);
     if (team == null) {
       throw new InexistentTeamException(teamId);
@@ -58,9 +59,9 @@ public class TeamManager {
     User currentUser = new User(1, "", ""); // todo get from UserManager
     if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
-              currentUser.getId().get(),
-              " delete the team",
-              "this user is not the manager of the project");
+          currentUser.getId().get(),
+          " delete the team",
+          "this user is not the manager of the project");
     }
     teamRepository.deleteTeam(teamId);
   }

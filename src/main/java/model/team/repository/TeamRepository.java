@@ -26,9 +26,8 @@ public interface TeamRepository {
   int saveTeam(Team team) throws SQLException;
 
   /**
-   * Deletes the team with the specified id from the database. It also deletes all the
-   * memberships related to it.
-   * // todo: delet projects of the team too
+   * Deletes the team with the specified id from the database. It also deletes all the memberships
+   * related to it. // todo: delet projects of the team too
    *
    * @param teamId is the id of the team to delete.
    * @throws SQLException if the operation could not be performed in the database.
