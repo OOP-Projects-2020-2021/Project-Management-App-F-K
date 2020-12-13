@@ -1,4 +1,5 @@
 package model.user;
+
 import model.Project;
 import model.Team;
 import model.user.repository.UserRepository;
@@ -8,15 +9,26 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.SQLException;
 import java.util.List;
 
+/**
+ * Singleton class UserManager.
+ */
 public class UserManager {
 
-    private static UserRepository userRepository;
+    private static UserManager instance;
+    private static UserRepository userRepository = new SqliteUserRepository();
     /** The current user which has signed in to the application. */
     @Nullable private User currentUser;
 
-    public UserManager() {
-        userRepository = new SqliteUserRepository();
-        currentUser = null;
+    private UserManager() {}
+
+    /**
+     * The instance of the UserManager class is only created when it is required.
+     */
+    public static UserManager getInstance() {
+        if(instance == null) {
+            instance = new UserManager();
+        }
+        return instance;
     }
 
     /**
@@ -34,11 +46,16 @@ public class UserManager {
      * Validates the sign-in, and sets the currentUser on successful sign-in.
      * @param username = username introduced by the user at sign-in
      * @param password = password introduced by the user at sign-in
+     * @return boolean = true if the username and password were found in the database.
      * @throws SQLException if the data could not be accessed from the database
      */
-    public void signIn(String username,String password) throws SQLException, InvalidSignInException {
-        currentUser = userRepository.getUser(username,password);
-        if(currentUser == null) throw new InvalidSignInException();
+    public boolean signIn(String username,String password) throws SQLException {
+        int id = userRepository.getUserId(username,password);
+        if(id >= 0) {
+            currentUser = userRepository.getUserById(id);
+            return true;
+        }
+        return false;
     }
     @Nullable public User getCurrentUser() {
         return currentUser;
@@ -59,10 +76,8 @@ public class UserManager {
     public List<Project> getUsersSupervisedProjects(){
         List<Team> teamsOfCurrentUser;
         List<Project> projectsOfCurrentUser;
-        if(currentUser!=null) {
-            //TODO first get the teams in which the user is in,
-            // then get the projects where the current user is the supervisor, from the above listed teams
-        }
+        //TODO first get the teams in which the user is in,
+        // then get the projects where the current user is the supervisor, from the above listed teams
         return null;
     }
 
