@@ -20,6 +20,11 @@ public class SqliteTeamRepository implements TeamRepository {
       "INSERT INTO Team (TeamName, ManagerId, " + "Code) VALUES (?, ?, ?)";
   private PreparedStatement saveTeamSt;
 
+  // Delete a team.
+  private static final String DELETE_TEAM_STATEMENT =
+          "DELETE from Team WHERE TeamId = ?";
+  private PreparedStatement deleteTeamSt;
+
   // Get a team with a given id.
   private static final String GET_TEAM_WITH_CODE_QUERY = "SELECT * from Team WHERE Code = ?";
   private PreparedStatement getTeamWithCodeSt;
@@ -50,6 +55,11 @@ public class SqliteTeamRepository implements TeamRepository {
       "DELETE FROM MemberToTeam WHERE  " + "MemberId = ? AND TeamId = ?";
   private PreparedStatement removeTeamMembershipSt;
 
+  // Remove all members of a team.
+  private static final String REMOVE_ALL_TEAM_MEMBERS_STATEMENT =
+          "DELETE FROM MemberToTeam WHERE TeamId = ?";
+  private PreparedStatement removeAllTeamMembersSt;
+
   // Set new manager for team.
   private static final String SET_MANAGER_STATEMENT =
       "UPDATE team SET ManagerId = ? WHERE TeamId = ?";
@@ -62,17 +72,20 @@ public class SqliteTeamRepository implements TeamRepository {
       prepareStatements();
     } catch (ClassNotFoundException | SQLException e) {
       e.printStackTrace();
+      System.exit(1);
     }
   }
 
   private void prepareStatements() throws SQLException {
     saveTeamSt = c.prepareStatement(SAVE_TEAM_STATEMENT);
+    deleteTeamSt = c.prepareStatement(DELETE_TEAM_STATEMENT);
     getTeamWithCodeSt = c.prepareStatement(GET_TEAM_WITH_CODE_QUERY);
     getTeamWithIdSt = c.prepareStatement(GET_TEAM_WITH_ID_QUERY);
     getTeamsOfUserSt = c.prepareStatement(GET_TEAMS_OF_USER_QUERY);
     setNewCodeSt = c.prepareStatement(SET_NEW_TEAMCODE_STATEMENT);
     addTeamMembershipSt = c.prepareStatement(ADD_TEAM_MEMBERSHIP_QUERY);
     removeTeamMembershipSt = c.prepareStatement(REMOVE_TEAM_MEMBERSHIP_QUERY);
+    removeAllTeamMembersSt = c.prepareStatement(REMOVE_ALL_TEAM_MEMBERS_STATEMENT);
     setManagerSt = c.prepareStatement(SET_MANAGER_STATEMENT);
   }
 
@@ -84,6 +97,7 @@ public class SqliteTeamRepository implements TeamRepository {
     saveTeamSt.execute();
     Team savedTeam = getTeam(team.getCode());
     if (savedTeam != null) {
+      team.setId(savedTeam.getId().get());
       return savedTeam.getId().get();
     } else {
       throw new SQLException("Saving team was unsuccesful");
@@ -142,7 +156,16 @@ public class SqliteTeamRepository implements TeamRepository {
   }
 
   @Override
-  public void deleteTeam(Team team) {}
+  public void deleteTeam(int teamId) throws SQLException {
+    deleteAllMembersOfTeam(teamId);
+    deleteTeamSt.setInt(1, teamId);
+    deleteTeamSt.execute();
+  }
+
+  private void deleteAllMembersOfTeam(int teamId) throws SQLException {
+    removeAllTeamMembersSt.setInt(1, teamId);
+    removeAllTeamMembersSt.execute();
+  }
 
   @Override
   public void joinTeam(int userId, int teamId) throws SQLException {
@@ -188,9 +211,10 @@ public class SqliteTeamRepository implements TeamRepository {
     //        for (Team team : teamsOfUser1) {
     //            System.out.println(team.getName() + " " + team.getId().get());
     //        }
-    //        manager.regenerateTeamCode(2);
+    // manager.regenerateTeamCode(2);
     //    manager.joinTeam("019404");
     //    manager.leaveTeam(3);
-    manager.passManagerPosition(2, "maria22");
+   //  manager.passManagerPosition(2, "maria22");
+    manager.deleteTeam(3);
   }
 }
