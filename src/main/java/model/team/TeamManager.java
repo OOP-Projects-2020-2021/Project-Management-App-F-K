@@ -125,7 +125,7 @@ public class TeamManager {
    * the current user is at the moment the manager of the team.
    *
    * @param teamId is the id of the team for which the manager is changes.
-   * @param newManagerName is the nam eof the new manager as specified by the current one.
+   * @param newManagerName is the name of the new manager as specified by the current one.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentTeamException if there is no team with id teamId.
    * @throws UnauthorisedOperationException if the current user is not the manager of the team, so
@@ -149,6 +149,33 @@ public class TeamManager {
       // todo throw new InexistentUserException
     }
     teamRepository.setNewManagerPosition(teamId, newManager.getId().get());
+  }
+
+  /**
+   * Sets a new name for the team with the given code, but only if
+   * the current user is the manager of the team.
+   *
+   * @param teamId is the id of the team whose name is changed.
+   * @param newTeamName is the new name of the team to set.
+   * @throws SQLException if the operation could not be performed in the database.
+   * @throws InexistentTeamException if there is no team with id teamId.
+   * @throws UnauthorisedOperationException if the current user is not the manager of the team, so
+   *     they are not authorised to change the name.
+   */
+  public void setNewName(int teamId, String newTeamName)
+          throws SQLException, InexistentTeamException, UnauthorisedOperationException {
+    Optional<Team> team = teamRepository.getTeam(teamId);
+    if (team.isEmpty()) {
+      throw new InexistentTeamException(teamId);
+    }
+    User currentUser = new User(1, "", ""); // todo get from UserManager
+    if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
+      throw new UnauthorisedOperationException(
+              currentUser.getId().get(),
+              " set new name for team",
+              "this user is not the manager of the project");
+    }
+    teamRepository.setNewName(teamId, newTeamName);
   }
 
   /**

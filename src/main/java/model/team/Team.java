@@ -13,7 +13,7 @@ public class Team {
 
   /** The id that identifies the team in the database. */
   private Integer id;
-  /** The name of the team. */
+  /** The name of the team. Doesn't need to be unique. */
   private @NotNull String name;
   /** The code that uniquely identifies the team, but it can be modified. */
   private @NotNull String code;

@@ -70,6 +70,11 @@ public class SqliteTeamRepository implements TeamRepository {
       "UPDATE team SET ManagerId = ? WHERE TeamId = ?";
   private PreparedStatement setManagerSt;
 
+  // Set new name for team.
+  private static final String SET_NAME_STATEMENT =
+          "UPDATE team SET TeamName = ? WHERE TeamId = ?";
+  private PreparedStatement setNameSt;
+
   public SqliteTeamRepository() {
     try {
       Class.forName("org.sqlite.JDBC");
@@ -96,6 +101,7 @@ public class SqliteTeamRepository implements TeamRepository {
     removeTeamMembershipSt = c.prepareStatement(REMOVE_TEAM_MEMBERSHIP_STATEMENT);
     removeAllTeamMembersSt = c.prepareStatement(REMOVE_ALL_TEAM_MEMBERS_STATEMENT);
     setManagerSt = c.prepareStatement(SET_MANAGER_STATEMENT);
+    setNameSt = c.prepareStatement(SET_NAME_STATEMENT);
   }
 
   @Override
@@ -200,5 +206,12 @@ public class SqliteTeamRepository implements TeamRepository {
     setManagerSt.setInt(1, managerId);
     setManagerSt.setInt(2, teamId);
     setManagerSt.execute();
+  }
+
+  @Override
+  public void setNewName(int teamId, String newTeamName) throws SQLException {
+    setNameSt.setString(1, newTeamName);
+    setNameSt.setInt(2, teamId);
+    setNameSt.execute();
   }
 }

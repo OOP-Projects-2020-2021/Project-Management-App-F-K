@@ -100,4 +100,13 @@ public interface TeamRepository {
    * @throws SQLException if the operation could not be performed in the database.
    */
   void setNewManagerPosition(int teamId, int managerId) throws SQLException;
+
+  /**
+   * Change the name of the team with the given id to the new name.
+   *
+   * @param teamId is the id of the team which gets a new team.
+   * @param newTeamName is the new name of the team.
+   * @throws SQLException if the operation could not be performed in the database.
+   */
+  void setNewName(int teamId, String newTeamName) throws SQLException;
 }
