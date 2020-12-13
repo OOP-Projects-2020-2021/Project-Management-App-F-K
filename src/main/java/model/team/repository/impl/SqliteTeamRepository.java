@@ -45,12 +45,12 @@ public class SqliteTeamRepository implements TeamRepository {
   private PreparedStatement setNewCodeSt;
 
   // Add a new member to a team.
-  private static final String ADD_TEAM_MEMBERSHIP_QUERY =
+  private static final String ADD_TEAM_MEMBERSHIP_STATEMENT =
       "INSERT Into MemberToTeam (MemberId, " + "TeamId) VALUES (?, ?)";
   private PreparedStatement addTeamMembershipSt;
 
   // Remove a member from a team.
-  private static final String REMOVE_TEAM_MEMBERSHIP_QUERY =
+  private static final String REMOVE_TEAM_MEMBERSHIP_STATEMENT =
       "DELETE FROM MemberToTeam WHERE  " + "MemberId = ? AND TeamId = ?";
   private PreparedStatement removeTeamMembershipSt;
 
@@ -82,8 +82,8 @@ public class SqliteTeamRepository implements TeamRepository {
     getTeamWithIdSt = c.prepareStatement(GET_TEAM_WITH_ID_QUERY);
     getTeamsOfUserSt = c.prepareStatement(GET_TEAMS_OF_USER_QUERY);
     setNewCodeSt = c.prepareStatement(SET_NEW_TEAMCODE_STATEMENT);
-    addTeamMembershipSt = c.prepareStatement(ADD_TEAM_MEMBERSHIP_QUERY);
-    removeTeamMembershipSt = c.prepareStatement(REMOVE_TEAM_MEMBERSHIP_QUERY);
+    addTeamMembershipSt = c.prepareStatement(ADD_TEAM_MEMBERSHIP_STATEMENT);
+    removeTeamMembershipSt = c.prepareStatement(REMOVE_TEAM_MEMBERSHIP_STATEMENT);
     removeAllTeamMembersSt = c.prepareStatement(REMOVE_ALL_TEAM_MEMBERS_STATEMENT);
     setManagerSt = c.prepareStatement(SET_MANAGER_STATEMENT);
   }
