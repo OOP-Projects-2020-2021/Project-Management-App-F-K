@@ -181,14 +181,14 @@ public class SqliteTeamRepository implements TeamRepository {
   }
 
   @Override
-  public void joinTeam(int userId, int teamId) throws SQLException {
+  public void addTeamMember(int userId, int teamId) throws SQLException {
     addTeamMembershipSt.setInt(1, userId);
     addTeamMembershipSt.setInt(2, teamId);
     addTeamMembershipSt.execute();
   }
 
   @Override
-  public void leaveTeam(int userId, int teamId) throws SQLException {
+  public void removeTeamMember(int userId, int teamId) throws SQLException {
     removeTeamMembershipSt.setInt(1, userId);
     removeTeamMembershipSt.setInt(2, teamId);
     removeTeamMembershipSt.execute();
