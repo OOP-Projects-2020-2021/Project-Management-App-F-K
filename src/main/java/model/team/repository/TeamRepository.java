@@ -70,7 +70,7 @@ public interface TeamRepository {
    * @param userId is the new member's id. Requirement: the user must exist in the database.
    * @throws SQLException if the operation could not be performed in the database.
    */
-  void addTeamMember(int userId, int teamId) throws SQLException;
+  void addTeamMember(int teamId, int userId) throws SQLException;
 
   /**
    * Removes user from the members of the team with id teamID, if the user was a member previously.
@@ -80,7 +80,7 @@ public interface TeamRepository {
    * @param userId is the member's id who leaves the team.
    * @throws SQLException if the operation could not be performed in the database.
    */
-  void removeTeamMember(int userId, int teamId) throws SQLException;
+  void removeTeamMember(int teamId, int userId) throws SQLException;
 
   /**
    * Sets the new code for the specified team, if it exists.
