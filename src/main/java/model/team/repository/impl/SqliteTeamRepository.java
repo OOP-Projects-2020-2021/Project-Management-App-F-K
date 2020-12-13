@@ -197,9 +197,11 @@ public class SqliteTeamRepository implements TeamRepository {
   }
 
   @Override
-  public void isMemberOfTeam(int teamId, int userId) throws SQLException {
+  public boolean isMemberOfTeam(int teamId, int userId) throws SQLException {
     isMemberSt.setInt(1, teamId);
     isMemberSt.setInt(2, userId);
+    ResultSet result = isMemberSt.executeQuery();
+    return result.next();
   }
 
   @Override
