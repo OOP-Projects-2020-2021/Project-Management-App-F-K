@@ -1,6 +1,5 @@
 package model.team.repository;
 
-import model.User;
 import model.team.Team;
 
 import java.sql.SQLException;

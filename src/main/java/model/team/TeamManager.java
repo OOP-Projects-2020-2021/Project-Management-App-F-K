@@ -121,8 +121,8 @@ public class TeamManager {
   }
 
   /**
-   * Adds the user with userName to the team with teamId if they both exist and the current user
-   * is the manager of the team.
+   * Adds the user with userName to the team with teamId if they both exist and the current user is
+   * the manager of the team.
    *
    * @param teamId is the id of the team with the new member.
    * @param userName is the name of the user to be added to the team.
@@ -130,8 +130,8 @@ public class TeamManager {
    * @throws InexistentTeamException if no team with this teamId exists.
    * @throws UnauthorisedOperationException if the current user is no the manager of the team.
    */
-  public void addMemberToTeam(int teamId, String userName) throws SQLException,
-          InexistentTeamException, UnauthorisedOperationException {
+  public void addMemberToTeam(int teamId, String userName)
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException {
     Optional<Team> team = teamRepository.getTeam(teamId);
     if (team.isEmpty()) {
       throw new InexistentTeamException(teamId);
@@ -139,18 +139,18 @@ public class TeamManager {
     User currentUser = new User(1, "", ""); // todo get from UserManager
     if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
-              currentUser.getId().get(),
-              " add a new team to the project",
-              "this user is not the manager of the project");
+          currentUser.getId().get(),
+          " add a new team to the project",
+          "this user is not the manager of the project");
     }
-    User newMember = new User(3, userName, ""); //todo get from UserManager
+    User newMember = new User(3, userName, ""); // todo get from UserManager
     teamRepository.addTeamMember(team.get().getId().get(), newMember.getId().get());
   }
 
   /**
    * Removes the user with userName from the team with teamId if they both exist and the current
-   * user is the manager of the team. Remark that if the user is not the member of the team,
-   * nothing happens.
+   * user is the manager of the team. Remark that if the user is not the member of the team, nothing
+   * happens.
    *
    * @param teamId is the id of the team which looses a member.
    * @param userName is the name of the user to be removed from the team.
@@ -158,7 +158,8 @@ public class TeamManager {
    * @throws InexistentTeamException if no team with this teamId exists.
    * @throws UnauthorisedOperationException if the current user is no the manager of the team.
    */
-  public void removeTeamMember(int teamId, String userName) throws SQLException, InexistentTeamException, UnauthorisedOperationException {
+  public void removeTeamMember(int teamId, String userName)
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException {
     Optional<Team> team = teamRepository.getTeam(teamId);
     if (team.isEmpty()) {
       throw new InexistentTeamException(teamId);
@@ -166,11 +167,11 @@ public class TeamManager {
     User currentUser = new User(1, "", ""); // todo get from UserManager
     if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
-              currentUser.getId().get(),
-              " add a new team to the project",
-              "this user is not the manager of the project");
+          currentUser.getId().get(),
+          " add a new team to the project",
+          "this user is not the manager of the project");
     }
-    User toRemoveMember = new User(3, userName, ""); //todo get from UserManager
+    User toRemoveMember = new User(3, userName, ""); // todo get from UserManager
     teamRepository.removeTeamMember(team.get().getId().get(), toRemoveMember.getId().get());
   }
 
@@ -184,8 +185,8 @@ public class TeamManager {
    * @throws InexistentTeamException if there is no team with id teamId.
    * @throws UnauthorisedOperationException if the current user is not the manager of the team, so
    *     they are not authorised to change the manager.
-   * @throws IllegalArgumentException if the user with newManagerName is not the member of the
-   * team in which he/she should become a manager.
+   * @throws IllegalArgumentException if the user with newManagerName is not the member of the team
+   *     in which he/she should become a manager.
    */
   public void passManagerPosition(int teamId, String newManagerName)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException {
@@ -205,15 +206,18 @@ public class TeamManager {
       // todo throw new InexistentUserException
     }
     if (!teamRepository.isMemberOfTeam(teamId, newManager.getId().get())) {
-      throw new IllegalArgumentException("The user with name " + newManagerName + " can't be the " +
-              "manager of a team he/she is not a member of");
+      throw new IllegalArgumentException(
+          "The user with name "
+              + newManagerName
+              + " can't be the "
+              + "manager of a team he/she is not a member of");
     }
     teamRepository.setNewManagerPosition(teamId, newManager.getId().get());
   }
 
   /**
-   * Sets a new name for the team with the given code, but only if
-   * the current user is the manager of the team.
+   * Sets a new name for the team with the given code, but only if the current user is the manager
+   * of the team.
    *
    * @param teamId is the id of the team whose name is changed.
    * @param newTeamName is the new name of the team to set.
@@ -223,7 +227,7 @@ public class TeamManager {
    *     they are not authorised to change the name.
    */
   public void setNewName(int teamId, String newTeamName)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException {
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException {
     Optional<Team> team = teamRepository.getTeam(teamId);
     if (team.isEmpty()) {
       throw new InexistentTeamException(teamId);
@@ -231,9 +235,9 @@ public class TeamManager {
     User currentUser = new User(1, "", ""); // todo get from UserManager
     if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
-              currentUser.getId().get(),
-              " set new name for team",
-              "this user is not the manager of the project");
+          currentUser.getId().get(),
+          " set new name for team",
+          "this user is not the manager of the project");
     }
     teamRepository.setNewName(teamId, newTeamName);
   }

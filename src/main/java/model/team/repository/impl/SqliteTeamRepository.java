@@ -1,6 +1,5 @@
 package model.team.repository.impl;
 
-import model.User;
 import model.team.Team;
 import model.team.repository.TeamRepository;
 
@@ -68,13 +67,12 @@ public class SqliteTeamRepository implements TeamRepository {
   private PreparedStatement setManagerSt;
 
   // Set new name for team.
-  private static final String SET_NAME_STATEMENT =
-          "UPDATE team SET TeamName = ? WHERE TeamId = ?";
+  private static final String SET_NAME_STATEMENT = "UPDATE team SET TeamName = ? WHERE TeamId = ?";
   private PreparedStatement setNameSt;
 
   // Check user's membership in team.
   private static final String IS_MEMBER_QUERY =
-          "Select * from MemberToTeam WHERE TeamId = ? and MemberId = ?";
+      "Select * from MemberToTeam WHERE TeamId = ? and MemberId = ?";
   private PreparedStatement isMemberSt;
 
   public SqliteTeamRepository() {
