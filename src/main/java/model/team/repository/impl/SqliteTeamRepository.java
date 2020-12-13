@@ -1,10 +1,7 @@
 package model.team.repository.impl;
 
-import model.UnauthorisedOperationException;
 import model.User;
-import model.team.InexistentTeamException;
 import model.team.Team;
-import model.team.TeamManager;
 import model.team.repository.TeamRepository;
 
 import java.sql.*;
@@ -13,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * SqliteTeamRepository is an implementation of TeamRepository which provides database access to
- * an sqlite database holding team-related data.
+ * SqliteTeamRepository is an implementation of TeamRepository which provides database access to an
+ * sqlite database holding team-related data.
  *
  * @author Bori Fazakas
  */
@@ -82,8 +79,8 @@ public class SqliteTeamRepository implements TeamRepository {
   }
 
   /**
-   * The statements are prepared only once, when the reposiroy is constructed, because this way
-   * sql parsing and creating a query plan is created only once, so query execution is faster.
+   * The statements are prepared only once, when the reposiroy is constructed, because this way sql
+   * parsing and creating a query plan is created only once, so query execution is faster.
    */
   private void prepareStatements() throws SQLException {
     saveTeamSt = c.prepareStatement(SAVE_TEAM_STATEMENT);
