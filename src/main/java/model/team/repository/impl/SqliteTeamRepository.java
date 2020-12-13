@@ -6,7 +6,6 @@ import model.team.InexistentTeamException;
 import model.team.Team;
 import model.team.TeamManager;
 import model.team.repository.TeamRepository;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
