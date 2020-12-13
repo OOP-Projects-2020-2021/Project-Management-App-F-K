@@ -184,6 +184,8 @@ public class TeamManager {
    * @throws InexistentTeamException if there is no team with id teamId.
    * @throws UnauthorisedOperationException if the current user is not the manager of the team, so
    *     they are not authorised to change the manager.
+   * @throws IllegalArgumentException if the user with newManagerName is not the member of the
+   * team in which he/she should become a manager.
    */
   public void passManagerPosition(int teamId, String newManagerName)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException {
@@ -198,9 +200,13 @@ public class TeamManager {
           " pass manager " + "position",
           "this user is not the manager of the project");
     }
-    User newManager = new User(2, newManagerName, ""); // todo get user with name UserManager
+    User newManager = new User(3, newManagerName, ""); // todo get user with name UserManager
     if (newManager == null) {
       // todo throw new InexistentUserException
+    }
+    if (!teamRepository.isMemberOfTeam(teamId, newManager.getId().get())) {
+      throw new IllegalArgumentException("The user with name " + newManagerName + " can't be the " +
+              "manager of a team he/she is not a member of");
     }
     teamRepository.setNewManagerPosition(teamId, newManager.getId().get());
   }

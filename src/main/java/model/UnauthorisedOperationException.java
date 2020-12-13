@@ -11,7 +11,7 @@ public class UnauthorisedOperationException extends Exception {
     super(
         "The user with id "
             + userId
-            + " is not authorised to perform "
+            + " is not authorised to "
             + operation
             + " "
             + "because "
