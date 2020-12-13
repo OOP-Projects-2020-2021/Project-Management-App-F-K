@@ -2,7 +2,6 @@ package model.team.repository;
 
 import model.User;
 import model.team.Team;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -43,7 +42,7 @@ public interface TeamRepository {
    * @return the team with the given code, or null if it doesn't exist.
    * @throws SQLException if the operation could not be performed in the database.
    */
-   Optional<Team> getTeam(String code) throws SQLException;
+  Optional<Team> getTeam(String code) throws SQLException;
 
   /**
    * Returns the Team with the specified id from the database, if it exists, wrapped in an Optional.
