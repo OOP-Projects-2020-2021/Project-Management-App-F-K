@@ -56,11 +56,11 @@ public interface TeamRepository {
   /**
    * Searches for and returns all the teams in which the user is a member.
    *
-   * @param user is the member whose teams are searched.
+   * @param userId is the id of the user whose teams are listed.
    * @return the list of teams in which the user is a member.
    * @throws SQLException if the operation could not be performed in the database.
    */
-  List<Team> getTeamsOfUser(User user) throws SQLException;
+  List<Team> getTeamsOfUser(int userId) throws SQLException;
 
   /**
    * Adds user to the members of the team with id teamID

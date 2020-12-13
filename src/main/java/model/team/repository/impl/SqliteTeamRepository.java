@@ -150,22 +150,18 @@ public class SqliteTeamRepository implements TeamRepository {
   }
 
   @Override
-  public List<Team> getTeamsOfUser(User user) throws SQLException {
-    if (user.getId().isPresent()) {
-      getTeamsOfUserSt.setInt(1, user.getId().get());
-      ResultSet result = getTeamsOfUserSt.executeQuery();
-      List<Team> usersTeams = new ArrayList<>();
-      while (result.next()) {
-        int id = result.getInt("TeamId");
-        String teamName = result.getString("TeamName");
-        int managerId = result.getInt("ManagerId");
-        String teamCode = result.getString("Code");
-        usersTeams.add(new Team(id, teamName, managerId, teamCode));
-      }
-      return usersTeams;
-    } else {
-      throw new IllegalArgumentException("The user whose teams are queried should have an " + "id");
+  public List<Team> getTeamsOfUser(int userId) throws SQLException {
+    getTeamsOfUserSt.setInt(1, userId);
+    ResultSet result = getTeamsOfUserSt.executeQuery();
+    List<Team> usersTeams = new ArrayList<>();
+    while (result.next()) {
+      int id = result.getInt("TeamId");
+      String teamName = result.getString("TeamName");
+      int managerId = result.getInt("ManagerId");
+      String teamCode = result.getString("Code");
+      usersTeams.add(new Team(id, teamName, managerId, teamCode));
     }
+    return usersTeams;
   }
 
   @Override
