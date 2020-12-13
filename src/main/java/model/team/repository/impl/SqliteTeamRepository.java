@@ -201,27 +201,4 @@ public class SqliteTeamRepository implements TeamRepository {
     setManagerSt.setInt(2, teamId);
     setManagerSt.execute();
   }
-
-  public static void main(String[] args)
-      throws SQLException, InexistentTeamException, UnauthorisedOperationException {
-    //        TeamRepository repository = new SqliteTeamRepository();
-    //        Team team = repository.getTeam("895621");
-    //        System.out.println("Team with name " + team.getName() + " and id " + team.getId());
-    //        repository.joinTeam(new User("Anna", "pass"), "895621");
-    //        repository.leaveTeam(new User("Anna", "pass"), new Team(1, "aa", 5,
-    //                "895621"));
-
-    TeamManager manager = TeamManager.getInstance();
-    //        // manager.createNewTeam("DBteam");
-    //        List<Team> teamsOfUser1 = manager.getTeamsOfCurrentUser();
-    //        System.out.println("Teams of user 1:");
-    //        for (Team team : teamsOfUser1) {
-    //            System.out.println(team.getName() + " " + team.getId().get());
-    //        }
-    // manager.regenerateTeamCode(2);
-    //    manager.joinTeam("019404");
-    //    manager.leaveTeam(3);
-    //  manager.passManagerPosition(2, "maria22");
-    manager.deleteTeam(3);
-  }
 }
