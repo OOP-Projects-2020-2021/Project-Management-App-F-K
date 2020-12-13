@@ -1,7 +1,6 @@
 package model.user;
 
 import model.Project;
-import model.Team;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
 import org.jetbrains.annotations.Nullable;
@@ -65,19 +64,15 @@ public class UserManager {
     currentUser = null;
   }
 
-  public List<Project> getUsersAssignments() {
-    if (currentUser != null) {
-      // TODO access ProjectRepository of current user
-      List<Project> assignmentsOfCurrentUser;
-    }
+  public List<Project> getCurrentUsersAssignments() {
+    // TODO move to ProjectRepository
+    List<Project> assignmentsOfCurrentUser;
     return null;
   }
 
-  public List<Project> getUsersSupervisedProjects() {
-    List<Team> teamsOfCurrentUser;
+  public List<Project> getCurrentUsersSupervisedProjects() {
+    // TODO move to ProjectRepository
     List<Project> projectsOfCurrentUser;
-    // TODO first get the teams in which the user is in,
-    // then get the projects where the current user is the supervisor, from the above listed teams
     return null;
   }
 }
