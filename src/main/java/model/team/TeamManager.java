@@ -7,6 +7,7 @@ import model.team.repository.TeamRepositoryFactory;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * TeamManager is responsible for executing all the commands needed for the application that are
@@ -52,12 +53,12 @@ public class TeamManager {
    */
   public void deleteTeam(int teamId)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException {
-    Team team = teamRepository.getTeam(teamId);
-    if (team == null) {
+    Optional<Team> team = teamRepository.getTeam(teamId);
+    if (team.isEmpty()) {
       throw new InexistentTeamException(teamId);
     }
     User currentUser = new User(1, "", ""); // todo get from UserManager
-    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
+    if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
           " delete the team",
@@ -98,12 +99,12 @@ public class TeamManager {
    * @throws InexistentTeamException if no team with this code exists.
    */
   public void joinTeam(String code) throws SQLException, InexistentTeamException {
-    Team team = teamRepository.getTeam(code);
+    Optional<Team> team = teamRepository.getTeam(code);
     User currentUser = new User(2, "", ""); // todo get from UserManager
-    if (team == null) {
+    if (team.isEmpty()) {
       throw new InexistentTeamException(code);
     } else {
-      teamRepository.joinTeam(currentUser.getId().get(), team.getId().get());
+      teamRepository.joinTeam(currentUser.getId().get(), team.get().getId().get());
     }
   }
 
@@ -132,12 +133,12 @@ public class TeamManager {
    */
   public void passManagerPosition(int teamId, String newManagerName)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException {
-    Team team = teamRepository.getTeam(teamId);
-    if (team == null) {
+    Optional<Team> team = teamRepository.getTeam(teamId);
+    if (team.isEmpty()) {
       throw new InexistentTeamException(teamId);
     }
     User currentUser = new User(1, "", ""); // todo get from UserManager
-    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
+    if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
           " pass manager " + "position",
@@ -164,7 +165,7 @@ public class TeamManager {
       int randomNumber = (int) (Math.random() * (int) (Math.pow(10, Team.CODE_LENGTH) - 1) + 1);
       String format = "%0" + Team.CODE_LENGTH + "d";
       code = String.format(format, randomNumber);
-      if (teamRepository.getTeam(code) == null) {
+      if (teamRepository.getTeam(code).isEmpty()) {
         found = true;
       }
     }

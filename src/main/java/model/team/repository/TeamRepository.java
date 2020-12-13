@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * TeamRepository specifies the methods required from any class implementing database access for
@@ -35,26 +36,23 @@ public interface TeamRepository {
   void deleteTeam(int teamId) throws SQLException;
 
   /**
-   * Returns the Team with the specified code from the database, if it exists. Othwerwise it returns
-   * null.
+   * Returns the Team with the specified code from the database, if it exists, wrapped in an
+   * Optional.
    *
    * @param code is the code of the searched team.
    * @return the team with the given code, or null if it doesn't exist.
    * @throws SQLException if the operation could not be performed in the database.
    */
-  @Nullable
-  Team getTeam(String code) throws SQLException;
+   Optional<Team> getTeam(String code) throws SQLException;
 
   /**
-   * Returns the Team with the specified id from the database, if it exists. Othwerwise it returns
-   * null.
+   * Returns the Team with the specified id from the database, if it exists, wrapped in an Optional.
    *
    * @param teamId is the id of the searched team.
    * @return the team with the given code, or null if it doesn't exist.
    * @throws SQLException if the operation could not be performed in the database.
    */
-  @Nullable
-  Team getTeam(int teamId) throws SQLException;
+  Optional<Team> getTeam(int teamId) throws SQLException;
 
   /**
    * Searches for and returns all the teams in which the user is a member.

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SqliteTeamRepository implements TeamRepository {
   private Connection c;
@@ -94,18 +95,17 @@ public class SqliteTeamRepository implements TeamRepository {
     saveTeamSt.setInt(2, team.getManagerId());
     saveTeamSt.setString(3, team.getCode());
     saveTeamSt.execute();
-    Team savedTeam = getTeam(team.getCode());
-    if (savedTeam != null) {
-      team.setId(savedTeam.getId().get());
-      return savedTeam.getId().get();
+    Optional<Team> savedTeam = getTeam(team.getCode());
+    if (savedTeam.isPresent()) {
+      team.setId(savedTeam.get().getId().get());
+      return savedTeam.get().getId().get();
     } else {
       throw new SQLException("Saving team was unsuccesful");
     }
   }
 
-  @Nullable
   @Override
-  public Team getTeam(int teamId) throws SQLException {
+  public Optional<Team> getTeam(int teamId) throws SQLException {
     getTeamWithIdSt.setInt(1, teamId);
     ResultSet result = getTeamWithIdSt.executeQuery();
     if (result.next()) {
@@ -113,15 +113,14 @@ public class SqliteTeamRepository implements TeamRepository {
       String teamName = result.getString("TeamName");
       int managerId = result.getInt("ManagerId");
       String teamCode = result.getString("Code");
-      return new Team(id, teamName, managerId, teamCode);
+      return Optional.of(new Team(id, teamName, managerId, teamCode));
     } else {
-      return null;
+      return Optional.empty();
     }
   }
 
-  @Nullable
   @Override
-  public Team getTeam(String code) throws SQLException {
+  public Optional<Team> getTeam(String code) throws SQLException {
     getTeamWithCodeSt.setString(1, code);
     ResultSet result = getTeamWithCodeSt.executeQuery();
     if (result.next()) {
@@ -129,9 +128,9 @@ public class SqliteTeamRepository implements TeamRepository {
       String teamName = result.getString("TeamName");
       int managerId = result.getInt("ManagerId");
       String teamCode = result.getString("Code");
-      return new Team(id, teamName, managerId, teamCode);
+      return Optional.of(new Team(id, teamName, managerId, teamCode));
     } else {
-      return null;
+      return Optional.empty();
     }
   }
 
