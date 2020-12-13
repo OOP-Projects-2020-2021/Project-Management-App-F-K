@@ -83,6 +83,16 @@ public interface TeamRepository {
   void removeTeamMember(int teamId, int userId) throws SQLException;
 
   /**
+   * Chekcs whether a particular user is the member of a particular team.
+   *
+   * @param teamId is the id of the team.
+   * @param userId is the id of the user whose membership is checked.
+   * @return true if and only if the user with userId is member of team with teamId.
+   * @throws SQLException if the operation could not be performed in the database.
+   */
+  boolean isMemberOfTeam(int teamId, int userId) throws SQLException;
+
+  /**
    * Sets the new code for the specified team, if it exists.
    *
    * @param teamId is the id of the team to update.

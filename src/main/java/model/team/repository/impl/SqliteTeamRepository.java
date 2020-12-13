@@ -75,6 +75,11 @@ public class SqliteTeamRepository implements TeamRepository {
           "UPDATE team SET TeamName = ? WHERE TeamId = ?";
   private PreparedStatement setNameSt;
 
+  // Check user's membership in team.
+  private static final String IS_MEMBER_QUERY =
+          "Select * from MemberToTeam WHERE TeamId = ? and MemberId = ?";
+  private PreparedStatement isMemberSt;
+
   public SqliteTeamRepository() {
     try {
       Class.forName("org.sqlite.JDBC");
@@ -102,6 +107,7 @@ public class SqliteTeamRepository implements TeamRepository {
     removeAllTeamMembersSt = c.prepareStatement(REMOVE_ALL_TEAM_MEMBERS_STATEMENT);
     setManagerSt = c.prepareStatement(SET_MANAGER_STATEMENT);
     setNameSt = c.prepareStatement(SET_NAME_STATEMENT);
+    isMemberSt = c.prepareStatement(IS_MEMBER_QUERY);
   }
 
   @Override
@@ -188,6 +194,12 @@ public class SqliteTeamRepository implements TeamRepository {
     removeTeamMembershipSt.setInt(1, userId);
     removeTeamMembershipSt.setInt(2, teamId);
     removeTeamMembershipSt.execute();
+  }
+
+  @Override
+  public void isMemberOfTeam(int teamId, int userId) throws SQLException {
+    isMemberSt.setInt(1, teamId);
+    isMemberSt.setInt(2, userId);
   }
 
   @Override
