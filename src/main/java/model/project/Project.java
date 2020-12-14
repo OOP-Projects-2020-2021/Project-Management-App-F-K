@@ -4,6 +4,7 @@ import model.InexistentDatabaseEntityException;
 import model.user.User;
 import org.jetbrains.annotations.Nullable;
 
+import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -24,8 +25,8 @@ public class Project {
    * but does not have a valid id yet.
    */
   public class SavableProject extends Project {
-    public SavableProject(String title, int teamId) {
-      super (-1, title, teamId);
+    public SavableProject(String title, int teamId, LocalDate deadline) {
+      super (-1, title, teamId, deadline);
     }
 
     @Override
@@ -40,6 +41,8 @@ public class Project {
   private String title;
   /** Id of the team. */
   private int teamId;
+  /** The deadline of the project until which it should be finished. */
+  private LocalDate deadline;
   /** Optional. */
   private @Nullable String description;
   /** Optional. The id of the person who is responsible for the project. */
@@ -48,14 +51,15 @@ public class Project {
   private @Nullable Integer supervisorId;
   private ProjectStatus status;
 
-  private Project(int id, String title, int teamId) {
-    this(id, title, teamId, ProjectStatus.TO_DO);
+  private Project(int id, String title, int teamId, LocalDate deadline) {
+    this(id, title, teamId, deadline, ProjectStatus.TO_DO);
   }
 
-  private Project(int id, String title, int teamId, ProjectStatus status) {
+  private Project(int id, String title, int teamId, LocalDate deadline, ProjectStatus status) {
     this.id = id;
     this.title = title;
     this.teamId = teamId;
+    this.deadline = deadline;
     this.status = status;
   }
 
@@ -69,6 +73,14 @@ public class Project {
 
   public void setTeamId(int teamId) {
     this.teamId = teamId;
+  }
+
+  public LocalDate getDeadline() {
+    return deadline;
+  }
+
+  public void setDeadline(LocalDate deadline) {
+    this.deadline = deadline;
   }
 
   public String getTitle() {
