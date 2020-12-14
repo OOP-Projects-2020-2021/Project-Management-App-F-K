@@ -39,11 +39,7 @@ public class TeamManager {
    * @throws NoSignedInUserException if the user is not signed in.
    */
   public void createNewTeam(String name) throws SQLException, NoSignedInUserException {
-    if (UserManager.getInstance().getCurrentUser().isEmpty()) {
-      throw new NoSignedInUserException("create new team");
-    }
-    User currentUser = UserManager.getInstance().getCurrentUser().get();
-    teamRepository.saveTeam(new Team(name, currentUser.getId().get(), generateTeamCode()));
+    teamRepository.saveTeam(new Team(name, getCurrentUser().getId().get(), generateTeamCode()));
   }
 
   /**
@@ -63,10 +59,7 @@ public class TeamManager {
     if (team.isEmpty()) {
       throw new InexistentTeamException(teamId);
     }
-    if (UserManager.getInstance().getCurrentUser().isEmpty()) {
-      throw new NoSignedInUserException("delete team");
-    }
-    User currentUser = UserManager.getInstance().getCurrentUser().get();
+    User currentUser = getCurrentUser();
     if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
@@ -84,10 +77,7 @@ public class TeamManager {
    * @throws NoSignedInUserException if the user is not signed in.
    */
   public List<Team> getTeamsOfCurrentUser() throws SQLException, NoSignedInUserException {
-    if (UserManager.getInstance().getCurrentUser().isEmpty()) {
-      throw new NoSignedInUserException("see teams");
-    }
-    User currentUser = UserManager.getInstance().getCurrentUser().get();
+    User currentUser = getCurrentUser();
     return teamRepository.getTeamsOfUser(currentUser.getId().get());
   }
 
@@ -115,10 +105,7 @@ public class TeamManager {
    */
   public void joinTeam(String code) throws SQLException, InexistentTeamException, NoSignedInUserException {
     Optional<Team> team = teamRepository.getTeam(code);
-    if (UserManager.getInstance().getCurrentUser().isEmpty()) {
-      throw new NoSignedInUserException("join team");
-    }
-    User currentUser = UserManager.getInstance().getCurrentUser().get();
+    User currentUser = getCurrentUser();
     if (team.isEmpty()) {
       throw new InexistentTeamException(code);
     } else {
@@ -135,10 +122,7 @@ public class TeamManager {
    * @throws NoSignedInUserException if the user is not signed in.
    */
   public void leaveTeam(int teamId) throws SQLException, NoSignedInUserException {
-    if (UserManager.getInstance().getCurrentUser().isEmpty()) {
-      throw new NoSignedInUserException("leave team");
-    }
-    User currentUser = UserManager.getInstance().getCurrentUser().get();
+    User currentUser = getCurrentUser();
     teamRepository.removeTeamMember(teamId, currentUser.getId().get());
   }
 
@@ -159,10 +143,7 @@ public class TeamManager {
     if (team.isEmpty()) {
       throw new InexistentTeamException(teamId);
     }
-    if (UserManager.getInstance().getCurrentUser().isEmpty()) {
-      throw new NoSignedInUserException("add team member");
-    }
-    User currentUser = UserManager.getInstance().getCurrentUser().get();
+    User currentUser = getCurrentUser();
     if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
@@ -191,10 +172,7 @@ public class TeamManager {
     if (team.isEmpty()) {
       throw new InexistentTeamException(teamId);
     }
-    if (UserManager.getInstance().getCurrentUser().isEmpty()) {
-      throw new NoSignedInUserException("remove team member");
-    }
-    User currentUser = UserManager.getInstance().getCurrentUser().get();
+    User currentUser = getCurrentUser();
     if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
@@ -225,10 +203,7 @@ public class TeamManager {
     if (team.isEmpty()) {
       throw new InexistentTeamException(teamId);
     }
-    if (UserManager.getInstance().getCurrentUser().isEmpty()) {
-      throw new NoSignedInUserException("pass manager position of team");
-    }
-    User currentUser = UserManager.getInstance().getCurrentUser().get();
+    User currentUser = getCurrentUser();
     if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
@@ -267,10 +242,7 @@ public class TeamManager {
     if (team.isEmpty()) {
       throw new InexistentTeamException(teamId);
     }
-    if (UserManager.getInstance().getCurrentUser().isEmpty()) {
-      throw new NoSignedInUserException("set new name for team");
-    }
-    User currentUser = UserManager.getInstance().getCurrentUser().get();
+    User currentUser = getCurrentUser();
     if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
@@ -299,5 +271,13 @@ public class TeamManager {
       }
     }
     return code;
+  }
+
+  /** Returns the current user if it exists, and throws NoSignedInUserException otherwise. */
+  private User getCurrentUser() throws NoSignedInUserException {
+    if (UserManager.getInstance().getCurrentUser().isEmpty()) {
+      throw new NoSignedInUserException();
+    }
+    return UserManager.getInstance().getCurrentUser().get();
   }
 }
