@@ -6,6 +6,8 @@ import model.user.User;
 import model.team.repository.TeamRepository;
 import model.team.repository.TeamRepositoryFactory;
 import model.user.UserManager;
+import model.user.repository.UserRepository;
+import model.user.repository.impl.SqliteUserRepository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -23,6 +25,7 @@ public class TeamManager {
   private static TeamManager instance = new TeamManager();
   private TeamRepository teamRepository =
       TeamRepositoryFactory.getTeamRepository(TeamRepositoryFactory.RepositoryType.SQLITE);
+  private UserRepository userRepository = new SqliteUserRepository();
 
   private TeamManager() {}
 
@@ -136,7 +139,7 @@ public class TeamManager {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
     guaranteeUserIsManager(team, currentUser, "add member to the team");
-    User newMember = new User(3, userName, ""); // todo get from UserManager
+    User newMember = userRepository.getUserByUsername(userName); //todo check existence
     teamRepository.addTeamMember(team.getId().get(), newMember.getId().get());
   }
 
@@ -157,7 +160,7 @@ public class TeamManager {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
     guaranteeUserIsManager(team, currentUser, "remove a member from the team");
-    User toRemoveMember = new User(3, userName, ""); // todo get from UserManager
+    User toRemoveMember = userRepository.getUserByUsername(userName); //todo check existence
     teamRepository.removeTeamMember(team.getId().get(), toRemoveMember.getId().get());
   }
 
@@ -180,7 +183,7 @@ public class TeamManager {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
     guaranteeUserIsManager(team, currentUser, "pass manager position of team to someone else");
-    User newManager = new User(3, newManagerName, ""); // todo get user with name UserManager
+    User newManager = userRepository.getUserByUsername(newManagerName); //todo check existence
     if (newManager == null) {
       // todo throw new InexistentUserException
     }
