@@ -271,11 +271,15 @@ public class TeamManager {
 
   /** Throws UnauthorisedOperationException if user is not the manager of team. */
   private void guaranteeUserIsManager(Team team, User user, String operation) throws UnauthorisedOperationException {
-    if (team.getManagerId() != user.getId().get()) {
+    if (!userIsManager(team, user)) {
       throw new UnauthorisedOperationException(
               user.getId().get(),
               operation,
               "this user is not the manager of the project");
     }
+  }
+
+  private boolean userIsManager(Team team, User user) {
+    return team.getManagerId() == user.getId().get();
   }
 }
