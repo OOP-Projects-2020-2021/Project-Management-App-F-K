@@ -1,5 +1,6 @@
 package model.project;
 
+import model.InexistentDatabaseEntityException;
 import model.user.User;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,6 +17,21 @@ public class Project {
     IN_PROGRESS,
     MARKED_AS_DONE,
     FINISHED
+  }
+
+  /**
+   * This class is used only when the project instance is created to be saved in the database,
+   * but does not have a valid id yet.
+   */
+  public class SavableProject extends Project {
+    public SavableProject(String title) {
+      super (-1, title);
+    }
+
+    @Override
+    public int getId() throws InexistentDatabaseEntityException {
+      throw new InexistentDatabaseEntityException(this);
+    }
   }
 
   /** Unique identifier of the project in the database. */
@@ -40,6 +56,10 @@ public class Project {
     this.id = id;
     this.title = title;
     this.status = status;
+  }
+
+  public int getId() throws InexistentDatabaseEntityException {
+    return this.id;
   }
 
   public String getTitle() {
