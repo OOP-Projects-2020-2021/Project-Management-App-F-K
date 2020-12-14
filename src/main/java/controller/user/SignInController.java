@@ -25,10 +25,6 @@ public class SignInController extends FrameController {
   private static final String WRONG_SIGN_IN_CREDENTIALS_MESSAGE = "Wrong credentials!";
   private static final String INVALID_SIGN_IN_MESSAGE =
       "Invalid sign in! \nCheck that the username and password\nthat you introduced are correct!";
-  /** Messages that inform the user of a database related failure. */
-  private static final String DATABASE_FAILURE_MESSAGE = "Database failure";
-  private static final String UNABLE_TO_READ_DATABASE_MESSAGE =
-          "Database failure! \nUnable to reach the requested data.";
 
   public SignInController(JFrame signInFrame) {
     super(signInFrame);
@@ -53,7 +49,7 @@ public class SignInController extends FrameController {
           return userManager.signIn(username, password);
         }
       }catch(SQLException sqlException) {
-        displayDatabaseErrorDialog();
+        super.displayDatabaseErrorDialog();
       }
       return false;
   }
@@ -85,12 +81,5 @@ public class SignInController extends FrameController {
         WRONG_SIGN_IN_CREDENTIALS_MESSAGE,
         JOptionPane.WARNING_MESSAGE);
   }
-  /** Display an error message in case the data stored in the database could not be accessed. */
-  public void displayDatabaseErrorDialog() {
-    JOptionPane.showMessageDialog(
-            frame,
-            DATABASE_FAILURE_MESSAGE,
-            UNABLE_TO_READ_DATABASE_MESSAGE,
-            JOptionPane.ERROR_MESSAGE);
-  }
+
 }

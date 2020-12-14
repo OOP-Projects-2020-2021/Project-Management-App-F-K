@@ -28,11 +28,6 @@ public class SignUpFrame extends JFrame implements ActionListener {
   private JFrame parentFrame;
 
   private static final Dimension DIMENSION = new Dimension(400, 300);
-  /** Messages displayed to inform the user about the steps of signing in. " */
-  private static final String SIGN_IN_MESSAGE =
-      "Please sign in to your account to finalize the registration.";
-
-  private static final String FINALIZE_SIGN_UP_TITLE = "Finalize signing up";
 
   public SignUpFrame(JFrame parentFrame) {
 
@@ -87,11 +82,15 @@ public class SignUpFrame extends JFrame implements ActionListener {
   public void actionPerformed(ActionEvent actionEvent) {
     if (actionEvent.getSource() == signUpButton) {
       String username = usernameTextField.getText();
-      char[] password = passwordField.getPassword();
-      signUpController.signUp(username, password);
-      JOptionPane.showMessageDialog(
-          this, SIGN_IN_MESSAGE, FINALIZE_SIGN_UP_TITLE, JOptionPane.PLAIN_MESSAGE);
-      signUpController.goBack();
+      String password = String.valueOf(passwordField.getPassword());
+      if(signUpController.signUp(username, password)) {
+        signUpController.displayFinalizeSignUpDialog();
+        signUpController.goBack();
+      }else {
+        // clear fields and let the user try again
+        usernameTextField.setText("");
+        passwordField.setText("");
+      }
     } else if (actionEvent.getSource() == goBackButton) {
       signUpController.goBack();
     }
