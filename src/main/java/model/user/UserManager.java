@@ -1,20 +1,18 @@
 package model.user;
-
 import model.Project;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
-import org.jetbrains.annotations.Nullable;
-
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 /** Singleton class UserManager. */
 public class UserManager {
 
   private static UserManager instance;
-  private static UserRepository userRepository = new SqliteUserRepository();
+  private UserRepository userRepository = new SqliteUserRepository();
   /** The current user which has signed in to the application. */
-  @Nullable private User currentUser;
+  private User currentUser;
 
   private UserManager() {}
 
@@ -55,9 +53,8 @@ public class UserManager {
     return false;
   }
 
-  @Nullable
-  public User getCurrentUser() {
-    return currentUser;
+  public Optional<User> getCurrentUser() {
+    return Optional.of(currentUser);
   }
 
   public void logOut() {
