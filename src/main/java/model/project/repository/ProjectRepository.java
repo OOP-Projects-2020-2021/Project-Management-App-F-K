@@ -2,10 +2,11 @@ package model.project.repository;
 
 import model.project.Project;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface ProjectRepository {
-    void saveProject(Project.SavableProject project);
+    void saveProject(Project.SavableProject project) throws SQLException;
 
     Project getProject(int projectId);
 
