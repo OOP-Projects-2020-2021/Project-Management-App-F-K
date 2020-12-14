@@ -7,16 +7,39 @@ import java.sql.SQLException;
 /** Interface to manage the user data in the database. */
 public interface UserRepository {
 
-  /** Saves a new user in the database. */
+
+  /**
+   * When saving the user, only the username and the password are specified. The user's id is
+   * automatically generated when the record is added to the User table.
+   *
+   * @param user = the user to be saved
+   * @throws SQLException if the user could not be saved
+   */
   void saveUser(User user) throws SQLException;
-  /** Get the user's id based on the username and password, used for validating the sign-in. */
+  /**
+   * Gets the user's id when validating the sign-in operation.
+   *
+   * @param username = introduced by the user at sign-in
+   * @param password = password introduced by the user at sign-in
+   * @return teh user's id when the sign-in was successful, otherwise a negative integer.
+   * @throws SQLException if the data could not be rea from the database.
+   */
   int getUserId(String username, String password) throws SQLException;
-  /** Access the user's data based on the id of the user. */
+  /**
+   * Finds the user in the database based on its id.
+   *
+   * @param id = the id of the user
+   * @return the User who has that id
+   * @throws SQLException if the data could not be accessed in the database.
+   */
   @Nullable
   User getUserById(int id) throws SQLException;
   /**
-   * Access the user's data based on the username of the user, used when managing the members of a
-   * team
+   * Finds the user in the database based on its username, used when managing the members of a team.
+   *
+   * @param username = username of the user
+   * @return User who has that username
+   * @throws SQLException if the data could not be accessed in the database.
    */
   @Nullable
   User getUserByUsername(String username) throws SQLException;
