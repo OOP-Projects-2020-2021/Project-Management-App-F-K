@@ -1,7 +1,7 @@
 package model.team;
 
 import model.UnauthorisedOperationException;
-import model.User;
+import model.user.User;
 import model.team.repository.TeamRepository;
 import model.team.repository.TeamRepositoryFactory;
 
