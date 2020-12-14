@@ -18,6 +18,7 @@ public class Project {
     FINISHED
   }
 
+  /** The title must be unique inside the team, but not overall. */
   private String title;
   /** Optional. */
   private @Nullable String description;
@@ -25,8 +26,6 @@ public class Project {
   private @Nullable User assignee;
   /** Optional. The person who checks whether the project is properly finished. */
   private @Nullable User supervisor;
-  /** The list of users who contributed in any way to the project. */
-  private List<User> contributors;
 
   private ProjectStatus status;
 
@@ -35,31 +34,7 @@ public class Project {
     this.description = builder.description;
     this.assignee = builder.assignee;
     this.supervisor = builder.supervisor;
-    this.contributors = new ArrayList<>();
     this.status = ProjectStatus.TO_DO;
-  }
-
-  /**
-   * Marks the given user as a contributor, and also sets the project's status to IN_PROGRESS. The
-   * IN_PROGRESS status should never be manually set.
-   */
-  public void addContributor(User contributor) {
-    if (this.status == ProjectStatus.TO_DO) {
-      this.status = ProjectStatus.IN_PROGRESS;
-    }
-    this.contributors.add(contributor);
-  }
-
-  public void removeContributor(User user) {
-    this.contributors.remove(user);
-  }
-
-  public boolean isContributor(User user) {
-    return contributors.contains(user);
-  }
-
-  public List<User> getContributors() {
-    return Collections.unmodifiableList(contributors);
   }
 
   public String getTitle() {
