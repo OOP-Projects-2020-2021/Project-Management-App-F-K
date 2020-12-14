@@ -1,5 +1,4 @@
 import javax.swing.*;
-
 import view.user.SignInFrame;
 
 public class Main {
