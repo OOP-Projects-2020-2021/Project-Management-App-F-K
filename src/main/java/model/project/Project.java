@@ -18,6 +18,8 @@ public class Project {
     FINISHED
   }
 
+  /** Unique identifier of the project in the database. */
+  private int id;
   /** The title must be unique inside the team, but not overall. */
   private String title;
   /** Optional. */
@@ -26,15 +28,18 @@ public class Project {
   private @Nullable User assignee;
   /** Optional. The person who checks whether the project is properly finished. */
   private @Nullable User supervisor;
-
   private ProjectStatus status;
 
-  private Project(Builder builder) {
-    this.title = builder.title;
-    this.description = builder.description;
-    this.assignee = builder.assignee;
-    this.supervisor = builder.supervisor;
+  private Project(int id, String title) {
+    this.id = id;
+    this.title = title;
     this.status = ProjectStatus.TO_DO;
+  }
+
+  private Project(int id, String title, ProjectStatus status) {
+    this.id = id;
+    this.title = title;
+    this.status = status;
   }
 
   public String getTitle() {
