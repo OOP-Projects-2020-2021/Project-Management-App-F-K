@@ -20,8 +20,8 @@ public class Project {
   }
 
   /**
-   * This class is used only when the project instance is created to be saved in the database,
-   * but does not have a valid id yet.
+   * This class is used only when the project instance is created to be saved in the database, but
+   * does not have a valid id yet.
    */
   public static class SavableProject extends Project {
     public SavableProject(String title, int teamId, LocalDate deadline) {
