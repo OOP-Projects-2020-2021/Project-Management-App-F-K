@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 public interface ProjectRepository {
-    void saveProject(Project.SavableProject project) throws SQLException;
+  void saveProject(Project.SavableProject project) throws SQLException;
 
   Project getProject(int projectId);
 

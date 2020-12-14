@@ -25,7 +25,7 @@ public class Project {
    */
   public static class SavableProject extends Project {
     public SavableProject(String title, int teamId, LocalDate deadline) {
-      super (-1, title, teamId, deadline);
+      super(-1, title, teamId, deadline);
     }
 
     @Override
@@ -48,6 +48,7 @@ public class Project {
   private @Nullable Integer assigneeId;
   /** Optional. The id of the person who checks whether the project is properly finished. */
   private @Nullable Integer supervisorId;
+
   private ProjectStatus status;
 
   private Project(int id, String title, int teamId, LocalDate deadline) {
