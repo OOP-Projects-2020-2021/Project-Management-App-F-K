@@ -79,9 +79,15 @@ public class TeamManager {
    *
    * @param teamId is the id of the team for which the new code is generated.
    * @throws SQLException if the operation could not be performed in the database.
+   * @throws InexistentTeamException if no team with teamId exists in the database.
+   * @throws UnauthorisedOperationException if the current user is not allowed to delete the team,
+   *     because the user is not the manager of the team.
+   * @throws NoSignedInUserException if the user is not signed in.
    */
-  public String regenerateTeamCode(int teamId) throws SQLException {
-    // todo check if the user is the manager
+  public String regenerateTeamCode(int teamId) throws SQLException, InexistentTeamException, NoSignedInUserException, UnauthorisedOperationException {
+    Team team = getTeam(teamId);
+    User currentUser = getCurrentUser();
+    guaranteeUserIsManager(team, currentUser, "regenerate team code");
     String newCode = generateTeamCode();
     teamRepository.setNewCode(teamId, newCode);
     return newCode;
