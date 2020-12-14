@@ -98,16 +98,16 @@ public class SignInFrame extends JFrame {
       if (source == signInButton) {
         String username = usernameTextField.getText();
         String password = String.valueOf(passwordField.getPassword());
-        if (signInController.isValidSignIn(username, password)) {
+          if(signInController.validateSignIn(username, password)) {
           signInController.enableSigningIn();
-        } else {
-          // clear fields and let the user try again
+          }
+          else {
           signInController.displayInvalidSignInDialog();
+          // clear fields and let the user try again
           usernameTextField.setText("");
           passwordField.setText("");
-        }
-
-      } else if (source == createAccountButton) {
+          }
+        } else if (source == createAccountButton) {
         signInController.enableSigningUp();
       }
     }

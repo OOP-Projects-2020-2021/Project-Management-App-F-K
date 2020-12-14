@@ -23,9 +23,12 @@ public class SignInController extends FrameController {
   private boolean signInFlag;
   /** Messages displayed to inform the user about the sign in's validation. */
   private static final String WRONG_SIGN_IN_CREDENTIALS_MESSAGE = "Wrong credentials!";
-
   private static final String INVALID_SIGN_IN_MESSAGE =
       "Invalid sign in! \nCheck that the username and password\nthat you introduced are correct!";
+  /** Messages that inform the user of a database related failure. */
+  private static final String DATABASE_FAILURE_MESSAGE = "Database failure";
+  private static final String UNABLE_TO_READ_DATABASE_MESSAGE =
+          "Database failure! \nUnable to reach the requested data.";
 
   public SignInController(JFrame signInFrame) {
     super(signInFrame);
@@ -44,18 +47,18 @@ public class SignInController extends FrameController {
    * @param password = the password introduced by the user
    * @return boolean = true, if the username and password are correct
    */
-  public boolean isValidSignIn(String username, String password) {
-    if(isNotEmptyText(username) && !isNotEmptyText(password)) {
+  public boolean validateSignIn(String username, String password) {
       try {
-        return userManager.signIn(username,password);
+        if(isNotEmptyText(username) && isNotEmptyText(password)) {
+          return userManager.signIn(username, password);
+        }
       }catch(SQLException sqlException) {
-        return false;
+        displayDatabaseErrorDialog();
       }
-    }
-    return false;
+      return false;
   }
   /**
-   * Checks if the text from the text-field is empty.
+   * Checks if the text from the text-field is not empty.
    */
   private boolean isNotEmptyText(String text) {
     return !(text == null || text.isEmpty());
@@ -81,5 +84,13 @@ public class SignInController extends FrameController {
         INVALID_SIGN_IN_MESSAGE,
         WRONG_SIGN_IN_CREDENTIALS_MESSAGE,
         JOptionPane.WARNING_MESSAGE);
+  }
+  /** Display an error message in case the data stored in the database could not be accessed. */
+  public void displayDatabaseErrorDialog() {
+    JOptionPane.showMessageDialog(
+            frame,
+            DATABASE_FAILURE_MESSAGE,
+            UNABLE_TO_READ_DATABASE_MESSAGE,
+            JOptionPane.ERROR_MESSAGE);
   }
 }
