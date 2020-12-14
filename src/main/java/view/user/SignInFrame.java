@@ -97,12 +97,12 @@ public class SignInFrame extends JFrame {
       JButton source = (JButton) actionEvent.getSource();
       if (source == signInButton) {
         String username = usernameTextField.getText();
-        char[] password = passwordField.getPassword();
-        if (signInController.validSignIn(username, password)) {
+        String password = String.valueOf(passwordField.getPassword());
+        if (signInController.isValidSignIn(username, password)) {
           signInController.enableSigningIn();
         } else {
-          signInController.displayInvalidSignInDialog();
           // clear fields and let the user try again
+          signInController.displayInvalidSignInDialog();
           usernameTextField.setText("");
           passwordField.setText("");
         }

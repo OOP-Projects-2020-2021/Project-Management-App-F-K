@@ -1,10 +1,11 @@
 package controller.user;
-
 import controller.FrameController;
+import model.user.UserManager;
 import view.main.MainFrame;
 import view.user.SignUpFrame;
 
 import javax.swing.*;
+import java.sql.SQLException;
 
 /**
  * Controller for managing the SignInFrame.
@@ -13,6 +14,8 @@ import javax.swing.*;
  */
 public class SignInController extends FrameController {
 
+  /** An instance of the UserManager which manages the data in the model User.*/
+  UserManager userManager;
   /**
    * The signInFlag is used to notify the windowAdapter whether the frame is closing because of a
    * successful sign-in or because the user exited the application.
@@ -28,6 +31,7 @@ public class SignInController extends FrameController {
   public SignInController(JFrame signInFrame) {
     super(signInFrame);
     signInFlag = false;
+    userManager = UserManager.getInstance();
   }
 
   public boolean getSignInFlag() {
@@ -41,12 +45,21 @@ public class SignInController extends FrameController {
    * @param password = the password introduced by the user
    * @return boolean = true, if the username and password are correct
    */
-  public boolean validSignIn(String username, char[] password) {
-    // TODO validate the user credentials
-    // TODO transform password into String before passing it to the model
-    //  set Max no of trials
-    // just for testing: empty fields result in invalid sign-in
-    return ((username != null && !username.isEmpty()) && (password.length != 0));
+  public boolean isValidSignIn(String username, String password) {
+    if(isNotEmptyText(username) && !isNotEmptyText(password)) {
+      try {
+        return userManager.signIn(username,password);
+      }catch(SQLException sqlException) {
+        return false;
+      }
+    }
+    return false;
+  }
+  /**
+   * Checks if the text from the text-field is empty.
+   */
+  private boolean isNotEmptyText(String text) {
+    return !(text == null || text.isEmpty());
   }
 
   /** Opens the main menu on successful sign-in. */
