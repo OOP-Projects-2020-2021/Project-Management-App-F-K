@@ -1,4 +1,5 @@
 package controller.user;
+
 import controller.FrameController;
 import model.user.UserManager;
 import view.main.MainFrame;
@@ -14,7 +15,7 @@ import java.sql.SQLException;
  */
 public class SignInController extends FrameController {
 
-  /** An instance of the UserManager which manages the data in the model User.*/
+  /** An instance of the UserManager which manages the data in the model User. */
   UserManager userManager;
   /**
    * The signInFlag is used to notify the windowAdapter whether the frame is closing because of a
@@ -45,18 +46,16 @@ public class SignInController extends FrameController {
    * @return boolean = true, if the username and password are correct
    */
   public boolean isValidSignIn(String username, String password) {
-    if(isNotEmptyText(username) && !isNotEmptyText(password)) {
+    if (isNotEmptyText(username) && !isNotEmptyText(password)) {
       try {
-        return userManager.signIn(username,password);
-      }catch(SQLException sqlException) {
+        return userManager.signIn(username, password);
+      } catch (SQLException sqlException) {
         return false;
       }
     }
     return false;
   }
-  /**
-   * Checks if the text from the text-field is empty.
-   */
+  /** Checks if the text from the text-field is empty. */
   private boolean isNotEmptyText(String text) {
     return !(text == null || text.isEmpty());
   }
