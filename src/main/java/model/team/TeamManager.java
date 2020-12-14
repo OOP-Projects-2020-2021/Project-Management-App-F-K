@@ -55,12 +55,9 @@ public class TeamManager {
    */
   public void deleteTeam(int teamId)
           throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
-    Optional<Team> team = teamRepository.getTeam(teamId);
-    if (team.isEmpty()) {
-      throw new InexistentTeamException(teamId);
-    }
+    Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
-    if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
+    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
           " delete the team",
@@ -104,13 +101,9 @@ public class TeamManager {
    * @throws NoSignedInUserException if the user is not signed in.
    */
   public void joinTeam(String code) throws SQLException, InexistentTeamException, NoSignedInUserException {
-    Optional<Team> team = teamRepository.getTeam(code);
+    Team team = getTeam(code);
     User currentUser = getCurrentUser();
-    if (team.isEmpty()) {
-      throw new InexistentTeamException(code);
-    } else {
-      teamRepository.removeTeamMember(team.get().getId().get(), currentUser.getId().get());
-    }
+    teamRepository.removeTeamMember(team.getId().get(), currentUser.getId().get());
   }
 
   /**
@@ -139,19 +132,16 @@ public class TeamManager {
    */
   public void addMemberToTeam(int teamId, String userName)
           throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
-    Optional<Team> team = teamRepository.getTeam(teamId);
-    if (team.isEmpty()) {
-      throw new InexistentTeamException(teamId);
-    }
+    Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
-    if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
+    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
           "add a new team to the project",
           "this user is not the manager of the project");
     }
     User newMember = new User(3, userName, ""); // todo get from UserManager
-    teamRepository.addTeamMember(team.get().getId().get(), newMember.getId().get());
+    teamRepository.addTeamMember(team.getId().get(), newMember.getId().get());
   }
 
   /**
@@ -168,19 +158,16 @@ public class TeamManager {
    */
   public void removeTeamMember(int teamId, String userName)
           throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
-    Optional<Team> team = teamRepository.getTeam(teamId);
-    if (team.isEmpty()) {
-      throw new InexistentTeamException(teamId);
-    }
+    Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
-    if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
+    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
           " add a new team to the project",
           "this user is not the manager of the project");
     }
     User toRemoveMember = new User(3, userName, ""); // todo get from UserManager
-    teamRepository.removeTeamMember(team.get().getId().get(), toRemoveMember.getId().get());
+    teamRepository.removeTeamMember(team.getId().get(), toRemoveMember.getId().get());
   }
 
   /**
@@ -199,12 +186,9 @@ public class TeamManager {
    */
   public void passManagerPosition(int teamId, String newManagerName)
           throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
-    Optional<Team> team = teamRepository.getTeam(teamId);
-    if (team.isEmpty()) {
-      throw new InexistentTeamException(teamId);
-    }
+    Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
-    if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
+    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
           " pass manager " + "position",
@@ -238,12 +222,9 @@ public class TeamManager {
    */
   public void setNewName(int teamId, String newTeamName)
           throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
-    Optional<Team> team = teamRepository.getTeam(teamId);
-    if (team.isEmpty()) {
-      throw new InexistentTeamException(teamId);
-    }
+    Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
-    if (currentUser.getId().isEmpty() || team.get().getManagerId() != currentUser.getId().get()) {
+    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
       throw new UnauthorisedOperationException(
           currentUser.getId().get(),
           " set new name for team",
@@ -279,5 +260,31 @@ public class TeamManager {
       throw new NoSignedInUserException();
     }
     return UserManager.getInstance().getCurrentUser().get();
+  }
+
+  /**
+   * Returns the team with the given id if it exists in the database, and throws
+   * InexistentTeamException otherwise.
+   * The returned team is guaranteed to have an id.
+   */
+  private Team getTeam(int teamId) throws InexistentTeamException, SQLException {
+    Optional<Team> team = teamRepository.getTeam(teamId);
+    if (team.isEmpty()) {
+      throw new InexistentTeamException(teamId);
+    }
+    return team.get();
+  }
+
+  /**
+   * Returns the team with the given code if it exists in the database, and throws
+   * InexistentTeamException otherwise.
+   * The returned team is guaranteed to have an id.
+   */
+  private Team getTeam(String teamCode) throws InexistentTeamException, SQLException {
+    Optional<Team> team = teamRepository.getTeam(teamCode);
+    if (team.isEmpty()) {
+      throw new InexistentTeamException(teamCode);
+    }
+    return team.get();
   }
 }
