@@ -58,7 +58,8 @@ public class TeamManager {
    * @throws NoSignedInUserException if the user is not signed in.
    */
   public void deleteTeam(int teamId)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
     guaranteeUserIsManager(team, currentUser, "delete the team");
@@ -88,7 +89,9 @@ public class TeamManager {
    *     because the user is not the manager of the team.
    * @throws NoSignedInUserException if the user is not signed in.
    */
-  public String regenerateTeamCode(int teamId) throws SQLException, InexistentTeamException, NoSignedInUserException, UnauthorisedOperationException {
+  public String regenerateTeamCode(int teamId)
+      throws SQLException, InexistentTeamException, NoSignedInUserException,
+          UnauthorisedOperationException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
     guaranteeUserIsManager(team, currentUser, "regenerate team code");
@@ -105,7 +108,8 @@ public class TeamManager {
    * @throws InexistentTeamException if no team with this code exists.
    * @throws NoSignedInUserException if the user is not signed in.
    */
-  public void joinTeam(String code) throws SQLException, InexistentTeamException, NoSignedInUserException {
+  public void joinTeam(String code)
+      throws SQLException, InexistentTeamException, NoSignedInUserException {
     Team team = getTeam(code);
     User currentUser = getCurrentUser();
     teamRepository.removeTeamMember(team.getId().get(), currentUser.getId().get());
@@ -137,7 +141,8 @@ public class TeamManager {
    * @throws InexistentUserException if the requested new member with userName does not exist.
    */
   public void addMemberToTeam(int teamId, String userName)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException, InexistentUserException {
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException, InexistentUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
     guaranteeUserIsManager(team, currentUser, "add member to the team");
@@ -159,7 +164,7 @@ public class TeamManager {
    * @throws InexistentUserException if the requested new member with userName does not exist.
    */
   public void removeTeamMember(int teamId, String userName)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
           NoSignedInUserException, InexistentUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
@@ -184,7 +189,7 @@ public class TeamManager {
    * @throws InexistentUserException if the requested new member with userName does not exist.
    */
   public void passManagerPosition(int teamId, String newManagerName)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
           NoSignedInUserException, InexistentUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
@@ -213,7 +218,8 @@ public class TeamManager {
    * @throws NoSignedInUserException if the user is not signed in.
    */
   public void setNewName(int teamId, String newTeamName)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
     guaranteeUserIsManager(team, currentUser, "change the name of the team");
@@ -251,8 +257,7 @@ public class TeamManager {
 
   /**
    * Returns the team with the given id if it exists in the database, and throws
-   * InexistentTeamException otherwise.
-   * The returned team is guaranteed to have an id.
+   * InexistentTeamException otherwise. The returned team is guaranteed to have an id.
    */
   private Team getTeam(int teamId) throws InexistentTeamException, SQLException {
     Optional<Team> team = teamRepository.getTeam(teamId);
@@ -264,8 +269,7 @@ public class TeamManager {
 
   /**
    * Returns the team with the given code if it exists in the database, and throws
-   * InexistentTeamException otherwise.
-   * The returned team is guaranteed to have an id.
+   * InexistentTeamException otherwise. The returned team is guaranteed to have an id.
    */
   private Team getTeam(String teamCode) throws InexistentTeamException, SQLException {
     Optional<Team> team = teamRepository.getTeam(teamCode);
@@ -275,11 +279,9 @@ public class TeamManager {
     return team.get();
   }
 
-  /**
-   * Returns the user with the given id if it exists, otherwise throws InexistentUserEXception.
-   */
+  /** Returns the user with the given id if it exists, otherwise throws InexistentUserEXception. */
   private User getUser(int userId) throws SQLException, InexistentUserException {
-   User user = userRepository.getUserById(userId);
+    User user = userRepository.getUserById(userId);
     if (user == null) {
       throw new InexistentUserException(userId);
     }
@@ -298,12 +300,11 @@ public class TeamManager {
   }
 
   /** Throws UnauthorisedOperationException if user is not the manager of team. */
-  private void guaranteeUserIsManager(Team team, User user, String operation) throws UnauthorisedOperationException {
+  private void guaranteeUserIsManager(Team team, User user, String operation)
+      throws UnauthorisedOperationException {
     if (!userIsManager(team, user)) {
       throw new UnauthorisedOperationException(
-              user.getId().get(),
-              operation,
-              "this user is not the manager of the project");
+          user.getId().get(), operation, "this user is not the manager of the project");
     }
   }
 
