@@ -1,10 +1,8 @@
 package model.user;
 
-import model.Project;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Optional;
 
 /** Singleton class UserManager. */
@@ -54,7 +52,18 @@ public class UserManager {
     return false;
   }
 
-  public Optional<User> getCurrentUser() {
+  /**
+   * Validates the password introduced by the user when attempting to change the password.
+   * This is an additional security step, to protect the account information of the user.
+   *
+   * @param password = password introduced by the user that will be compared to the current password
+   * @return boolean = true if the password matches
+   */
+  public boolean validatePassword(String password) {
+    return currentUser.getPassword().equals(password);
+  }
+
+  public Optional<User> getCurrentUser(){
     return Optional.of(currentUser);
   }
 
@@ -62,15 +71,4 @@ public class UserManager {
     currentUser = null;
   }
 
-  public List<Project> getCurrentUsersAssignments() {
-    // TODO move to ProjectRepository
-    List<Project> assignmentsOfCurrentUser;
-    return null;
-  }
-
-  public List<Project> getCurrentUsersSupervisedProjects() {
-    // TODO move to ProjectRepository
-    List<Project> projectsOfCurrentUser;
-    return null;
-  }
 }
