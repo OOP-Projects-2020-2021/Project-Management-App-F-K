@@ -57,12 +57,7 @@ public class TeamManager {
           throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
-    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
-      throw new UnauthorisedOperationException(
-          currentUser.getId().get(),
-          " delete the team",
-          "this user is not the manager of the project");
-    }
+    guaranteeUserIsManager(team, currentUser, "delete the team");
     teamRepository.deleteTeam(teamId);
   }
 
@@ -134,12 +129,7 @@ public class TeamManager {
           throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
-    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
-      throw new UnauthorisedOperationException(
-          currentUser.getId().get(),
-          "add a new team to the project",
-          "this user is not the manager of the project");
-    }
+    guaranteeUserIsManager(team, currentUser, "add member to the team");
     User newMember = new User(3, userName, ""); // todo get from UserManager
     teamRepository.addTeamMember(team.getId().get(), newMember.getId().get());
   }
@@ -160,12 +150,7 @@ public class TeamManager {
           throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
-    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
-      throw new UnauthorisedOperationException(
-          currentUser.getId().get(),
-          " add a new team to the project",
-          "this user is not the manager of the project");
-    }
+    guaranteeUserIsManager(team, currentUser, "remove a member from the team");
     User toRemoveMember = new User(3, userName, ""); // todo get from UserManager
     teamRepository.removeTeamMember(team.getId().get(), toRemoveMember.getId().get());
   }
@@ -188,12 +173,7 @@ public class TeamManager {
           throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
-    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
-      throw new UnauthorisedOperationException(
-          currentUser.getId().get(),
-          " pass manager " + "position",
-          "this user is not the manager of the project");
-    }
+    guaranteeUserIsManager(team, currentUser, "pass manager position of team to someone else");
     User newManager = new User(3, newManagerName, ""); // todo get user with name UserManager
     if (newManager == null) {
       // todo throw new InexistentUserException
@@ -224,12 +204,7 @@ public class TeamManager {
           throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
-    if (currentUser.getId().isEmpty() || team.getManagerId() != currentUser.getId().get()) {
-      throw new UnauthorisedOperationException(
-          currentUser.getId().get(),
-          " set new name for team",
-          "this user is not the manager of the project");
-    }
+    guaranteeUserIsManager(team, currentUser, "change the name of the team");
     teamRepository.setNewName(teamId, newTeamName);
   }
 
@@ -286,5 +261,15 @@ public class TeamManager {
       throw new InexistentTeamException(teamCode);
     }
     return team.get();
+  }
+
+  /** Throws UnauthorisedOperationException if user is not the manager of team. */
+  private void guaranteeUserIsManager(Team team, User user, String operation) throws UnauthorisedOperationException {
+    if (team.getManagerId() != user.getId().get()) {
+      throw new UnauthorisedOperationException(
+              user.getId().get(),
+              operation,
+              "this user is not the manager of the project");
+    }
   }
 }
