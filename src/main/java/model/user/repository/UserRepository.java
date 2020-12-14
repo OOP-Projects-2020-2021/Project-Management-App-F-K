@@ -7,7 +7,6 @@ import java.sql.SQLException;
 /** Interface to manage the user data in the database. */
 public interface UserRepository {
 
-
   /**
    * When saving the user, only the username and the password are specified. The user's id is
    * automatically generated when the record is added to the User table.

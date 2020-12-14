@@ -3,7 +3,6 @@ package model.user;
 import model.Project;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.util.List;
