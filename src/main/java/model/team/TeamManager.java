@@ -1,6 +1,7 @@
 package model.team;
 
 import model.UnauthorisedOperationException;
+import model.user.InexistentUserException;
 import model.user.NoSignedInUserException;
 import model.user.User;
 import model.team.repository.TeamRepository;
@@ -133,13 +134,14 @@ public class TeamManager {
    * @throws InexistentTeamException if no team with this teamId exists.
    * @throws UnauthorisedOperationException if the current user is no the manager of the team.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentUserException if the requested new member with userName does not exist.
    */
   public void addMemberToTeam(int teamId, String userName)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
+          throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException, InexistentUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
     guaranteeUserIsManager(team, currentUser, "add member to the team");
-    User newMember = userRepository.getUserByUsername(userName); //todo check existence
+    User newMember = getUser(userName);
     teamRepository.addTeamMember(team.getId().get(), newMember.getId().get());
   }
 
@@ -154,13 +156,15 @@ public class TeamManager {
    * @throws InexistentTeamException if no team with this teamId exists.
    * @throws UnauthorisedOperationException if the current user is no the manager of the team.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentUserException if the requested new member with userName does not exist.
    */
   public void removeTeamMember(int teamId, String userName)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
+          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException, InexistentUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
     guaranteeUserIsManager(team, currentUser, "remove a member from the team");
-    User toRemoveMember = userRepository.getUserByUsername(userName); //todo check existence
+    User toRemoveMember = getUser(userName);
     teamRepository.removeTeamMember(team.getId().get(), toRemoveMember.getId().get());
   }
 
@@ -177,16 +181,15 @@ public class TeamManager {
    * @throws IllegalArgumentException if the user with newManagerName is not the member of the team
    *     in which he/she should become a manager.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentUserException if the requested new member with userName does not exist.
    */
   public void passManagerPosition(int teamId, String newManagerName)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException, NoSignedInUserException {
+          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException, InexistentUserException {
     Team team = getTeam(teamId);
     User currentUser = getCurrentUser();
     guaranteeUserIsManager(team, currentUser, "pass manager position of team to someone else");
-    User newManager = userRepository.getUserByUsername(newManagerName); //todo check existence
-    if (newManager == null) {
-      // todo throw new InexistentUserException
-    }
+    User newManager = getUser(newManagerName);
     if (!teamRepository.isMemberOfTeam(teamId, newManager.getId().get())) {
       throw new IllegalArgumentException(
           "The user with name "
@@ -270,6 +273,28 @@ public class TeamManager {
       throw new InexistentTeamException(teamCode);
     }
     return team.get();
+  }
+
+  /**
+   * Returns the user with the given id if it exists, otherwise throws InexistentUserEXception.
+   */
+  private User getUser(int userId) throws SQLException, InexistentUserException {
+   User user = userRepository.getUserById(userId);
+    if (user == null) {
+      throw new InexistentUserException(userId);
+    }
+    return user;
+  }
+
+  /**
+   * Returns the user with the given name if it exists, otherwise throws InexistentUserEXception.
+   */
+  private User getUser(String userName) throws SQLException, InexistentUserException {
+    User user = userRepository.getUserByUsername(userName);
+    if (user == null) {
+      throw new InexistentUserException(userName);
+    }
+    return user;
   }
 
   /** Throws UnauthorisedOperationException if user is not the manager of team. */
