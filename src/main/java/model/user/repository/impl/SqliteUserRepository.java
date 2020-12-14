@@ -24,9 +24,9 @@ public class SqliteUserRepository implements UserRepository {
   private static final String GET_USER_BY_USERNAME_STATEMENT =
       "SELECT * FROM User WHERE Username = ?;";
   private static final String GET_USERS_ASSIGNMENTS_STATEMENT =
-          "SELECT * FROM Project WHERE AssigneeId = ?;";
+      "SELECT * FROM Project WHERE AssigneeId = ?;";
   private static final String GET_USERS_SUPERVISED_PROJECTS_STATEMENT =
-          "SELECT * FROM Project WHERE SupervisorId = ?;";
+      "SELECT * FROM Project WHERE SupervisorId = ?;";
 
   public SqliteUserRepository() {
     try {
@@ -46,12 +46,11 @@ public class SqliteUserRepository implements UserRepository {
     getUserByIdStatement = connection.prepareStatement(GET_USER_BY_ID_STATEMENT);
     getUserByUsernameStatement = connection.prepareStatement(GET_USER_BY_USERNAME_STATEMENT);
     getUsersAssignments = connection.prepareStatement(GET_USERS_ASSIGNMENTS_STATEMENT);
-    getUsersSupervisedProjects = connection.prepareStatement(GET_USERS_SUPERVISED_PROJECTS_STATEMENT);
+    getUsersSupervisedProjects =
+        connection.prepareStatement(GET_USERS_SUPERVISED_PROJECTS_STATEMENT);
   }
 
-  /**
-   * Saves the user in the database.
-   */
+  /** Saves the user in the database. */
   public void saveUser(User user) throws SQLException {
     saveUserStatement.setString(1, user.getUsername());
     saveUserStatement.setString(2, user.getPassword());
@@ -75,10 +74,7 @@ public class SqliteUserRepository implements UserRepository {
     }
   }
 
-
-  /**
-   *  Access the user's data based on the id of the user.
-   */
+  /** Access the user's data based on the id of the user. */
   @Nullable
   public User getUserById(int id) throws SQLException {
     getUserByIdStatement.setInt(1, id);
@@ -92,9 +88,9 @@ public class SqliteUserRepository implements UserRepository {
     }
   }
 
-
   /**
-   * Access the user's data based on the username of the user, used when managing the members of a team.
+   * Access the user's data based on the username of the user, used when managing the members of a
+   * team.
    */
   @Nullable
   public User getUserByUsername(String username) throws SQLException {
@@ -108,5 +104,4 @@ public class SqliteUserRepository implements UserRepository {
       return null;
     }
   }
-
 }
