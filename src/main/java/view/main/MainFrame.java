@@ -1,7 +1,7 @@
-package main.java.view.main;
+package view.main;
 
-import main.java.controller.MainMenuController;
-import main.java.view.team.TeamListPanel;
+import controller.MainMenuController;
+import view.team.TeamListPanel;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;

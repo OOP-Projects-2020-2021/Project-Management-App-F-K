@@ -1,7 +1,7 @@
-package main.java.view.team;
+package view.team;
 
-import main.java.view.UIFactory;
-import main.java.controller.team.CreateTeamController;
+import view.UIFactory;
+import controller.team.CreateTeamController;
 
 import javax.swing.*;
 import javax.swing.border.Border;

@@ -1,6 +1,6 @@
-package main.java.controller.team;
+package controller.team;
 
-import main.java.view.team.TeamViewModel;
+import view.team.TeamViewModel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
