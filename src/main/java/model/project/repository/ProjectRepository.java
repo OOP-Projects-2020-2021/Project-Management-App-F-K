@@ -5,13 +5,13 @@ import model.project.Project;
 import java.util.List;
 
 public interface ProjectRepository {
-    void saveProject(Project.SavableProject project);
+  void saveProject(Project.SavableProject project);
 
-    Project getProject(int projectId);
+  Project getProject(int projectId);
 
-    List<Project> getProjectsOfTeam(int teamId);
+  List<Project> getProjectsOfTeam(int teamId);
 
-    List<Project> getProjectsSupervisedByUser(int userId);
+  List<Project> getProjectsSupervisedByUser(int userId);
 
-    List<Project> getProjectsAssignedToUser(int userId);
+  List<Project> getProjectsAssignedToUser(int userId);
 }

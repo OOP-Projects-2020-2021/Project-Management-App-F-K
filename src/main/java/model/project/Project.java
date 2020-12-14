@@ -20,12 +20,12 @@ public class Project {
   }
 
   /**
-   * This class is used only when the project instance is created to be saved in the database,
-   * but does not have a valid id yet.
+   * This class is used only when the project instance is created to be saved in the database, but
+   * does not have a valid id yet.
    */
   public class SavableProject extends Project {
     public SavableProject(String title) {
-      super (-1, title);
+      super(-1, title);
     }
 
     @Override
@@ -44,6 +44,7 @@ public class Project {
   private @Nullable User assignee;
   /** Optional. The person who checks whether the project is properly finished. */
   private @Nullable User supervisor;
+
   private ProjectStatus status;
 
   private Project(int id, String title) {
