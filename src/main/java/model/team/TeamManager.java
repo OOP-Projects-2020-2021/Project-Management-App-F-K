@@ -112,7 +112,7 @@ public class TeamManager {
       throws SQLException, InexistentTeamException, NoSignedInUserException {
     Team team = getTeam(code);
     User currentUser = getCurrentUser();
-    teamRepository.removeTeamMember(team.getId().get(), currentUser.getId().get());
+    teamRepository.addTeamMember(team.getId().get(), currentUser.getId().get());
   }
 
   /**
