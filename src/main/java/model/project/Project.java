@@ -76,34 +76,4 @@ public class Project {
   public ProjectStatus getStatus() {
     return status;
   }
-
-  public static final class Builder {
-    private String title;
-    private @Nullable String description;
-    private @Nullable User assignee;
-    private @Nullable User supervisor;
-
-    public Builder(String title) {
-      this.title = Objects.requireNonNull(title);
-    }
-
-    public Builder setDescription(String description) {
-      this.description = description;
-      return this;
-    }
-
-    public Builder setAssignee(User assignee) {
-      this.assignee = assignee;
-      return this;
-    }
-
-    public Builder setSupervisor(User supervisor) {
-      this.supervisor = supervisor;
-      return this;
-    }
-
-    public Project build() {
-      return new Project(this);
-    }
-  }
 }
