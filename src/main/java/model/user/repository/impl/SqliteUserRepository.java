@@ -76,9 +76,7 @@ public class SqliteUserRepository implements UserRepository {
   }
 
 
-  /**
-   *  Access the user's data based on the id of the user.
-   */
+  /** Access the user's data based on the id of the user. */
   @Nullable
   public User getUserById(int id) throws SQLException {
     getUserByIdStatement.setInt(1, id);
