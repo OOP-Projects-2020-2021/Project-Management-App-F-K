@@ -42,10 +42,10 @@ public class Project {
   private int teamId;
   /** Optional. */
   private @Nullable String description;
-  /** Optional. The person who is responsible for the project. */
-  private @Nullable User assignee;
-  /** Optional. The person who checks whether the project is properly finished. */
-  private @Nullable User supervisor;
+  /** Optional. The id of the person who is responsible for the project. */
+  private @Nullable Integer assigneeId;
+  /** Optional. The id of the person who checks whether the project is properly finished. */
+  private @Nullable Integer supervisorId;
   private ProjectStatus status;
 
   private Project(int id, String title, int teamId) {
@@ -87,20 +87,20 @@ public class Project {
     this.description = description;
   }
 
-  public Optional<User> getAssignee() {
-    return Optional.ofNullable(assignee);
+  public Optional<Integer> getAssigneeId() {
+    return Optional.ofNullable(assigneeId);
   }
 
-  public void setAssignee(@Nullable User assignee) {
-    this.assignee = assignee;
+  public void setAssigneeId(@Nullable Integer assigneeId) {
+    this.assigneeId = assigneeId;
   }
 
-  public Optional<User> getSupervisor() {
-    return Optional.ofNullable(supervisor);
+  public Optional<Integer> getSupervisorId() {
+    return Optional.ofNullable(supervisorId);
   }
 
-  public void setSupervisor(@Nullable User supervisor) {
-    this.supervisor = supervisor;
+  public void setSupervisorId(@Nullable Integer supervisorId) {
+    this.supervisorId = supervisorId;
   }
 
   public void setStatus(ProjectStatus status) {
