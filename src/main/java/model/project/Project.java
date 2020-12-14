@@ -24,8 +24,8 @@ public class Project {
    * but does not have a valid id yet.
    */
   public class SavableProject extends Project {
-    public SavableProject(String title) {
-      super (-1, title);
+    public SavableProject(String title, int teamId) {
+      super (-1, title, teamId);
     }
 
     @Override
@@ -38,6 +38,8 @@ public class Project {
   private int id;
   /** The title must be unique inside the team, but not overall. */
   private String title;
+  /** Id of the team. */
+  private int teamId;
   /** Optional. */
   private @Nullable String description;
   /** Optional. The person who is responsible for the project. */
@@ -46,20 +48,27 @@ public class Project {
   private @Nullable User supervisor;
   private ProjectStatus status;
 
-  private Project(int id, String title) {
-    this.id = id;
-    this.title = title;
-    this.status = ProjectStatus.TO_DO;
+  private Project(int id, String title, int teamId) {
+    this(id, title, teamId, ProjectStatus.TO_DO);
   }
 
-  private Project(int id, String title, ProjectStatus status) {
+  private Project(int id, String title, int teamId, ProjectStatus status) {
     this.id = id;
     this.title = title;
+    this.teamId = teamId;
     this.status = status;
   }
 
   public int getId() throws InexistentDatabaseEntityException {
     return this.id;
+  }
+
+  public int getTeamId() {
+    return teamId;
+  }
+
+  public void setTeamId(int teamId) {
+    this.teamId = teamId;
   }
 
   public String getTitle() {
