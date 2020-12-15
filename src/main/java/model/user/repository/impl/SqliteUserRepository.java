@@ -1,6 +1,5 @@
 package model.user.repository.impl;
 
-import model.user.InexistentUserException;
 import model.user.repository.UserRepository;
 import model.user.User;
 import org.jetbrains.annotations.Nullable;
@@ -23,8 +22,10 @@ public class SqliteUserRepository implements UserRepository {
   private static final String GET_USER_BY_ID_STATEMENT = "SELECT * FROM User WHERE UserId = ?;";
   private static final String GET_USER_BY_USERNAME_STATEMENT =
       "SELECT * FROM User WHERE Username = ?;";
-  private static final String UPDATE_USER_STATEMENT = "UPDATE User SET UserName = ?, Password = ? WHERE UserId = ?;";
-  private static final String GET_USER_STATEMENT = "SELECT * FROM User WHERE UserName = ?, Password = ?;";
+  private static final String UPDATE_USER_STATEMENT =
+      "UPDATE User SET UserName = ?, Password = ? WHERE UserId = ?;";
+  private static final String GET_USER_STATEMENT =
+      "SELECT * FROM User WHERE UserName = ?, Password = ?;";
 
   public SqliteUserRepository() {
     try {
@@ -58,12 +59,11 @@ public class SqliteUserRepository implements UserRepository {
     }
   }
   /** Updates information about an existing user. */
-  public void updateUser(int id,String username,String password) throws SQLException {
-    updateUserStatement.setString(1,username);
-    updateUserStatement.setString(2,password);
-    updateUserStatement.setInt(3,id);
+  public void updateUser(int id, String username, String password) throws SQLException {
+    updateUserStatement.setString(1, username);
+    updateUserStatement.setString(2, password);
+    updateUserStatement.setInt(3, id);
     updateUserStatement.execute();
-
   }
 
   /** Get the user's id based on the username and password, used for validating the sign-in. */
