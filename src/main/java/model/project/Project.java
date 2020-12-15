@@ -51,13 +51,13 @@ public class Project {
   private int supervisorId;
   private ProjectStatus status;
 
-  private Project(int id, String title, int teamId, LocalDate deadline, int supervisorId,
+  public Project(int id, String title, int teamId, LocalDate deadline, int supervisorId,
                   int assigneeId) {
     this(id, title, teamId, deadline, ProjectStatus.TO_DO, supervisorId, assigneeId);
   }
 
-  private Project(int id, String title, int teamId, LocalDate deadline, ProjectStatus status,
-                  int supervisorId, int assigneeId) {
+  public Project(int id, String title, int teamId, LocalDate deadline, ProjectStatus status,
+                 int supervisorId, int assigneeId) {
     this.id = id;
     this.title = title;
     this.teamId = teamId;
@@ -84,7 +84,7 @@ public class Project {
   }
 
   public void setDeadline(LocalDate deadline) {
-    this.deadline = deadline;
+    this.deadline = Objects.requireNonNull(deadline);
   }
 
   public String getTitle() {
@@ -120,7 +120,7 @@ public class Project {
   }
 
   public void setStatus(ProjectStatus status) {
-    this.status = status;
+    this.status = Objects.requireNonNull(status);
   }
 
   public ProjectStatus getStatus() {
