@@ -2,18 +2,12 @@ package model.team;
 
 import model.Manager;
 import model.UnauthorisedOperationException;
-import model.team.repository.impl.SqliteTeamRepository;
 import model.user.InexistentUserException;
 import model.user.NoSignedInUserException;
 import model.user.User;
-import model.team.repository.TeamRepository;
-import model.user.UserManager;
-import model.user.repository.UserRepository;
-import model.user.repository.impl.SqliteUserRepository;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * TeamManager is responsible for executing all the commands needed for the application that are
@@ -41,7 +35,8 @@ public class TeamManager extends Manager {
    * @throws NoSignedInUserException if the user is not signed in.
    */
   public void createNewTeam(String name) throws SQLException, NoSignedInUserException {
-    teamRepository.saveTeam(new Team(name, getMandatoryCurrentUser().getId().get(), generateTeamCode()));
+    teamRepository.saveTeam(
+        new Team(name, getMandatoryCurrentUser().getId().get(), generateTeamCode()));
   }
 
   /**
