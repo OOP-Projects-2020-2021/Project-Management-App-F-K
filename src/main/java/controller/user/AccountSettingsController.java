@@ -70,7 +70,7 @@ public class AccountSettingsController extends FrameController {
       return true;
     } catch (SQLException sqlException) {
       displayDatabaseErrorDialog();
-    } catch (InexistentUserException | NoSignedInUserException e) {
+    } catch (NoSignedInUserException e) {
       displayFailedUpdateDialog();
     }
     return false;
@@ -78,12 +78,12 @@ public class AccountSettingsController extends FrameController {
 
   public void displayFailedUpdateDialog() {
     JOptionPane.showMessageDialog(
-        frame, FAILED_UPDATE_TITLE, FAILED_UPDATE_MESSAGE, JOptionPane.WARNING_MESSAGE);
+        frame, FAILED_UPDATE_MESSAGE, FAILED_UPDATE_TITLE, JOptionPane.WARNING_MESSAGE);
   }
 
   public void displayIncorrectPasswordDialog() {
     JOptionPane.showMessageDialog(
-        frame, INCORRECT_PASSWORD_TITLE, INCORRECT_PASSWORD_MESSAGE, JOptionPane.ERROR_MESSAGE);
+        frame, INCORRECT_PASSWORD_MESSAGE,INCORRECT_PASSWORD_TITLE, JOptionPane.ERROR_MESSAGE);
   }
   /** On going back, it closes the current frame. */
   public void goBack() {

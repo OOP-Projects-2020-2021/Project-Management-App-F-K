@@ -58,6 +58,6 @@ public class SignUpController extends FrameController {
   /** Display message to inform the user about the final step of signing up. */
   public void displayFinalizeSignUpDialog() {
     JOptionPane.showMessageDialog(
-        frame, FINALIZE_SIGN_UP_TITLE, FINALIZE_SIGN_UP_MESSAGE, JOptionPane.PLAIN_MESSAGE);
+        frame, FINALIZE_SIGN_UP_MESSAGE, FINALIZE_SIGN_UP_TITLE, JOptionPane.PLAIN_MESSAGE);
   }
 }

@@ -75,6 +75,6 @@ public class SignInController extends FrameController {
   /** Display an error message in case of an unsuccessful sign-in attempt. */
   public void displayInvalidSignInDialog() {
     JOptionPane.showMessageDialog(
-        frame, INVALID_SIGN_IN_TITLE, INVALID_SIGN_IN_MESSAGE, JOptionPane.WARNING_MESSAGE);
+        frame, INVALID_SIGN_IN_MESSAGE,INVALID_SIGN_IN_TITLE, JOptionPane.WARNING_MESSAGE);
   }
 }
