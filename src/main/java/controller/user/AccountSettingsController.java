@@ -1,8 +1,11 @@
 package controller.user;
 
 import controller.FrameController;
-
+import model.user.InexistentUserException;
+import model.user.NoSignedInUserException;
+import model.user.UserManager;
 import javax.swing.*;
+import java.sql.SQLException;
 
 /**
  * AccountSettingsController controls the AccountSettingsFrame, managing operations like gathering
@@ -12,18 +15,21 @@ import javax.swing.*;
  */
 public class AccountSettingsController extends FrameController {
 
+  /** Instance of a UserManager, which accesses and modifies data related to the user. */
+  private UserManager userManager;
+  /** Error messages shown to the user when the update of the fields is unsuccessful. */
+  private static final String FAILED_UPDATE_TITLE = "Update failed!";
+
+  private static final String FAILED_UPDATE_MESSAGE =
+      "An error occurred and the changes could not be saved.";
+  /** Messages displayed to inform the user about the validation of the data. */
+  private static final String INCORRECT_PASSWORD_TITLE = "Incorrect password!";
+
+  private static final String INCORRECT_PASSWORD_MESSAGE = "The password introduced is incorrect!";
+
   public AccountSettingsController(JFrame accountSettingsFrame) {
     super(accountSettingsFrame);
-  }
-
-  public String getUsername() {
-    // TODO!! get user's account information
-    return "admin";
-  }
-
-  public String getPassword() {
-    // TODO!! get user's account information
-    return "admin";
+    userManager = UserManager.getInstance();
   }
 
   /**
@@ -33,19 +39,51 @@ public class AccountSettingsController extends FrameController {
    * otherwise not.
    *
    * @param password = the password introduced by the user
+   * @return boolean = true if the password matches, false if it doesn't match or if nothing was
+   *     introduced
    */
   public boolean isValidPassword(String password) {
-    // todo validate password
-    return true;
+    if (password != null && !password.isEmpty()) {
+      return userManager.validatePassword(password);
+    }
+    return false;
+  }
+
+  public String getUsername() {
+    return userManager.getCurrentUser().get().getUsername();
+  }
+
+  public String getPassword() {
+    return userManager.getCurrentUser().get().getPassword();
   }
   /**
    * Saves all the information related to the user's account, which might have been changed.
    *
    * @param username = the username of the user
    * @param password = the password of the user
+   * @return boolean = true if changes to the account could be saved
    */
-  public void saveAccountData(String username, String password) {
-    // todo save the changes
+  public boolean saveAccountData(String username, String password) {
+    // todo restore the old data if the update failed
+    try {
+      userManager.updateUser(username, password);
+      return true;
+    } catch (SQLException sqlException) {
+      displayDatabaseErrorDialog();
+    } catch (InexistentUserException | NoSignedInUserException e) {
+      displayFailedUpdateDialog();
+    }
+    return false;
+  }
+
+  public void displayFailedUpdateDialog() {
+    JOptionPane.showMessageDialog(
+        frame, FAILED_UPDATE_TITLE, FAILED_UPDATE_MESSAGE, JOptionPane.WARNING_MESSAGE);
+  }
+
+  public void displayIncorrectPasswordDialog() {
+    JOptionPane.showMessageDialog(
+        frame, INCORRECT_PASSWORD_TITLE, INCORRECT_PASSWORD_MESSAGE, JOptionPane.ERROR_MESSAGE);
   }
   /** On going back, it closes the current frame. */
   public void goBack() {

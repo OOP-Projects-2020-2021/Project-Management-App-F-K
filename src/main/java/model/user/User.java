@@ -6,7 +6,7 @@ import model.InexistentDatabaseEntityException;
 /**
  * Represents a User and contains its account information.
  *
- * @author Beata Keresztes
+ * @author Beata Keresztes, Bori Fazakas
  */
 public class User {
 

@@ -1,10 +1,10 @@
 package model.user.repository.impl;
 
+import model.InexistentDatabaseEntityException;
 import model.database.Repository;
 import model.user.repository.UserRepository;
 import model.user.User;
 import org.jetbrains.annotations.Nullable;
-
 import java.sql.*;
 
 public class SqliteUserRepository extends Repository implements UserRepository {
@@ -14,8 +14,7 @@ public class SqliteUserRepository extends Repository implements UserRepository {
   private PreparedStatement getUserIdStatement;
   private PreparedStatement getUserByIdStatement;
   private PreparedStatement getUserByUsernameStatement;
-  private PreparedStatement getUsersAssignments;
-  private PreparedStatement getUsersSupervisedProjects;
+  private PreparedStatement updateUserStatement;
 
   private static final String SAVE_USER_STATEMENT =
       "INSERT INTO User (UserName,Password) VALUES (?,?)";
@@ -24,10 +23,8 @@ public class SqliteUserRepository extends Repository implements UserRepository {
   private static final String GET_USER_BY_ID_STATEMENT = "SELECT * FROM User WHERE UserId = ?;";
   private static final String GET_USER_BY_USERNAME_STATEMENT =
       "SELECT * FROM User WHERE Username = ?;";
-  private static final String GET_USERS_ASSIGNMENTS_STATEMENT =
-      "SELECT * FROM Project WHERE AssigneeId = ?;";
-  private static final String GET_USERS_SUPERVISED_PROJECTS_STATEMENT =
-      "SELECT * FROM Project WHERE SupervisorId = ?;";
+  private static final String UPDATE_USER_STATEMENT =
+      "UPDATE User SET UserName = ?, Password = ? WHERE UserId = ?;";
 
   private SqliteUserRepository() {}
 
@@ -37,14 +34,13 @@ public class SqliteUserRepository extends Repository implements UserRepository {
     }
     return instance;
   }
-
+  
   protected void prepareStatements() throws SQLException {
     saveUserStatement = c.prepareStatement(SAVE_USER_STATEMENT);
     getUserIdStatement = c.prepareStatement(GET_USER_ID_STATEMENT);
     getUserByIdStatement = c.prepareStatement(GET_USER_BY_ID_STATEMENT);
     getUserByUsernameStatement = c.prepareStatement(GET_USER_BY_USERNAME_STATEMENT);
-    getUsersAssignments = c.prepareStatement(GET_USERS_ASSIGNMENTS_STATEMENT);
-    getUsersSupervisedProjects = c.prepareStatement(GET_USERS_SUPERVISED_PROJECTS_STATEMENT);
+    updateUserStatement = c.prepareStatement(UPDATE_USER_STATEMENT);
   }
 
   /** Saves the user in the database. */
@@ -58,6 +54,13 @@ public class SqliteUserRepository extends Repository implements UserRepository {
       throw new SQLException("User could not be saved.");
     }
   }
+  /** Updates information about an existing user. */
+  public void updateUser(User user) throws SQLException, InexistentDatabaseEntityException {
+    updateUserStatement.setString(1, user.getUsername());
+    updateUserStatement.setString(2, user.getPassword());
+    updateUserStatement.setInt(3, user.getId());
+    updateUserStatement.execute();
+  }
 
   /** Get the user's id based on the username and password, used for validating the sign-in. */
   public int getUserId(String username, String password) throws SQLException {
@@ -66,9 +69,8 @@ public class SqliteUserRepository extends Repository implements UserRepository {
     ResultSet result = getUserIdStatement.executeQuery();
     if (result.next()) {
       return result.getInt("UserId");
-    } else {
-      return -1;
     }
+    return -1;
   }
 
   /** Access the user's data based on the id of the user. */
