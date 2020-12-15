@@ -31,7 +31,7 @@ public class UserManager extends Manager {
    * @throws SQLException = in case the user could not be saved
    */
   public void signUp(String username, String password) throws SQLException {
-    User user = new User(username, password);
+    User user = new User.SavableUser(username, password);
     userRepository.saveUser(user);
   }
 

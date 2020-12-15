@@ -36,7 +36,7 @@ public class ProjectManager extends Manager {
     // save project
     Project.SavableProject project =
         new Project.SavableProject(
-            projectName, teamId, deadline, currentUser.getId().get(), assignee.getId().get());
+            projectName, teamId, deadline, currentUser.getId(), assignee.getId());
     projectRepository.saveProject(project);
   }
 }
