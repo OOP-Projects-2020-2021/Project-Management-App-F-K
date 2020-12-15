@@ -64,7 +64,7 @@ public class SqliteProjectRepository implements ProjectRepository {
         }
         saveProjectSt.setString(4, project.getDeadline().toString());
         saveProjectSt.setInt(5, project.getAssigneeId());
-        saveProjectSt.setInt(6, project.getAssigneeId());
+        saveProjectSt.setInt(6, project.getSupervisorId());
         saveProjectSt.setInt(7, getProjectStatusId(project));
         saveProjectSt.execute();
     }
