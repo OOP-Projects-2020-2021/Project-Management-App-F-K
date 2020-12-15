@@ -24,8 +24,9 @@ public class Project {
    * does not have a valid id yet.
    */
   public static class SavableProject extends Project {
-    public SavableProject(String title, int teamId, LocalDate deadline) {
-      super (-1, title, teamId, deadline);
+    public SavableProject(String title, int teamId, LocalDate deadline, int supervisorId,
+                          int assigneeId) {
+      super (-1, title, teamId, deadline, supervisorId, assigneeId);
     }
 
     @Override
@@ -44,17 +45,19 @@ public class Project {
   private LocalDate deadline;
   /** Optional. */
   private @Nullable String description;
-  /** Optional. The id of the person who is responsible for the project. */
-  private @Nullable Integer assigneeId;
-  /** Optional. The id of the person who checks whether the project is properly finished. */
-  private @Nullable Integer supervisorId;
+  /** The id of the person who is responsible for the project. */
+  private int assigneeId;
+  /** The id of the person who checks whether the project is properly finished. */
+  private int supervisorId;
   private ProjectStatus status;
 
-  private Project(int id, String title, int teamId, LocalDate deadline) {
-    this(id, title, teamId, deadline, ProjectStatus.TO_DO);
+  private Project(int id, String title, int teamId, LocalDate deadline, int supervisorId,
+                  int assigneeId) {
+    this(id, title, teamId, deadline, ProjectStatus.TO_DO, supervisorId, assigneeId);
   }
 
-  private Project(int id, String title, int teamId, LocalDate deadline, ProjectStatus status) {
+  private Project(int id, String title, int teamId, LocalDate deadline, ProjectStatus status,
+                  int supervisorId, int assigneeId) {
     this.id = id;
     this.title = title;
     this.teamId = teamId;
@@ -98,19 +101,19 @@ public class Project {
     this.description = description;
   }
 
-  public Optional<Integer> getAssigneeId() {
-    return Optional.ofNullable(assigneeId);
+  public int getAssigneeId() {
+    return assigneeId;
   }
 
-  public void setAssigneeId(@Nullable Integer assigneeId) {
+  public void setAssigneeId(int assigneeId) {
     this.assigneeId = assigneeId;
   }
 
-  public Optional<Integer> getSupervisorId() {
-    return Optional.ofNullable(supervisorId);
+  public int getSupervisorId() {
+    return supervisorId;
   }
 
-  public void setSupervisorId(@Nullable Integer supervisorId) {
+  public void setSupervisorId(int supervisorId) {
     this.supervisorId = supervisorId;
   }
 
