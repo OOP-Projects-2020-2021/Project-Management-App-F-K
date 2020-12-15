@@ -4,7 +4,6 @@ import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
-import java.util.Objects;
 import java.util.Optional;
 
 /** Singleton class UserManager. */
