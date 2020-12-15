@@ -26,6 +26,13 @@ public class CreateTeamController extends FrameController {
     teamManager = TeamManager.getInstance();
   }
 
+  /**
+   * When the user wants to create a new team, a request to the model is sent.
+   * The user is notified about the outcome of the operation.
+   * If succesful, a new team with the given name is created.
+   *
+   * @param teamName is the name of the new team.
+   */
   public void createTeam(String teamName) {
     try {
       teamManager.createNewTeam(teamName);
