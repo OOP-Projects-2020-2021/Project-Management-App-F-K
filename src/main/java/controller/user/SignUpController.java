@@ -15,8 +15,9 @@ public class SignUpController extends FrameController {
 
   /** Messages displayed to inform the user about the steps of signing in. " */
   private static final String FINALIZE_SIGN_UP_TITLE = "Finalize signing up";
+
   private static final String FINALIZE_SIGN_UP_MESSAGE =
-          "Please sign in to your account to finalize the registration.";
+      "Please sign in to your account to finalize the registration.";
 
   private UserManager userManager;
 

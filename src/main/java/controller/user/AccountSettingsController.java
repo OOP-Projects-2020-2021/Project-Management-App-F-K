@@ -19,10 +19,12 @@ public class AccountSettingsController extends FrameController {
   private UserManager userManager;
   /** Error messages shown to the user when the update of the fields is unsuccessful. */
   private static final String FAILED_UPDATE_TITLE = "Update failed!";
+
   private static final String FAILED_UPDATE_MESSAGE =
       "An error occurred and the changes could not be saved.";
   /** Messages displayed to inform the user about the validation of the data. */
   private static final String INCORRECT_PASSWORD_TITLE = "Incorrect password!";
+
   private static final String INCORRECT_PASSWORD_MESSAGE = "The password introduced is incorrect!";
 
   public AccountSettingsController(JFrame accountSettingsFrame) {
@@ -76,7 +78,7 @@ public class AccountSettingsController extends FrameController {
 
   public void displayFailedUpdateDialog() {
     JOptionPane.showMessageDialog(
-        frame, FAILED_UPDATE_TITLE,FAILED_UPDATE_MESSAGE, JOptionPane.WARNING_MESSAGE);
+        frame, FAILED_UPDATE_TITLE, FAILED_UPDATE_MESSAGE, JOptionPane.WARNING_MESSAGE);
   }
 
   public void displayIncorrectPasswordDialog() {

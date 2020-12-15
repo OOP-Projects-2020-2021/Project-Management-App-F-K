@@ -23,6 +23,7 @@ public class SignInController extends FrameController {
   private boolean signInFlag;
   /** Messages displayed to inform the user about the sign in's validation. */
   private static final String INVALID_SIGN_IN_TITLE = "Invalid sign in!";
+
   private static final String INVALID_SIGN_IN_MESSAGE =
       "Check that the username and password\nthat you introduced are correct!";
 
@@ -74,9 +75,6 @@ public class SignInController extends FrameController {
   /** Display an error message in case of an unsuccessful sign-in attempt. */
   public void displayInvalidSignInDialog() {
     JOptionPane.showMessageDialog(
-        frame,
-        INVALID_SIGN_IN_TITLE,
-        INVALID_SIGN_IN_MESSAGE,
-        JOptionPane.WARNING_MESSAGE);
+        frame, INVALID_SIGN_IN_TITLE, INVALID_SIGN_IN_MESSAGE, JOptionPane.WARNING_MESSAGE);
   }
 }
