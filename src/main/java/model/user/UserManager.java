@@ -2,8 +2,6 @@ package model.user;
 
 import model.Manager;
 import model.project.Project;
-import model.user.repository.UserRepository;
-import model.user.repository.impl.SqliteUserRepository;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;

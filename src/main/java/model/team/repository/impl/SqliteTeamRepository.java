@@ -1,8 +1,6 @@
 package model.team.repository.impl;
 
 import model.database.Repository;
-import model.database.SqliteDatabaseConnectionFactory;
-import model.project.repository.impl.SqliteProjectRepository;
 import model.team.Team;
 import model.team.repository.TeamRepository;
 

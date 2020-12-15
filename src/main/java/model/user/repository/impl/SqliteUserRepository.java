@@ -1,7 +1,6 @@
 package model.user.repository.impl;
 
 import model.database.Repository;
-import model.team.repository.impl.SqliteTeamRepository;
 import model.user.repository.UserRepository;
 import model.user.User;
 import org.jetbrains.annotations.Nullable;
@@ -45,8 +44,7 @@ public class SqliteUserRepository extends Repository implements UserRepository {
     getUserByIdStatement = c.prepareStatement(GET_USER_BY_ID_STATEMENT);
     getUserByUsernameStatement = c.prepareStatement(GET_USER_BY_USERNAME_STATEMENT);
     getUsersAssignments = c.prepareStatement(GET_USERS_ASSIGNMENTS_STATEMENT);
-    getUsersSupervisedProjects =
-        c.prepareStatement(GET_USERS_SUPERVISED_PROJECTS_STATEMENT);
+    getUsersSupervisedProjects = c.prepareStatement(GET_USERS_SUPERVISED_PROJECTS_STATEMENT);
   }
 
   /** Saves the user in the database. */

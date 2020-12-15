@@ -24,9 +24,9 @@ public class Project {
    * does not have a valid id yet.
    */
   public static class SavableProject extends Project {
-    public SavableProject(String title, int teamId, LocalDate deadline, int supervisorId,
-                          int assigneeId) {
-      super (-1, title, teamId, deadline, supervisorId, assigneeId);
+    public SavableProject(
+        String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId) {
+      super(-1, title, teamId, deadline, supervisorId, assigneeId);
     }
 
     @Override
@@ -49,15 +49,22 @@ public class Project {
   private int assigneeId;
   /** The id of the person who checks whether the project is properly finished. */
   private int supervisorId;
+
   private ProjectStatus status;
 
-  public Project(int id, String title, int teamId, LocalDate deadline, int supervisorId,
-                 int assigneeId) {
+  public Project(
+      int id, String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId) {
     this(id, title, teamId, deadline, ProjectStatus.TO_DO, supervisorId, assigneeId);
   }
 
-  public Project(int id, String title, int teamId, LocalDate deadline, ProjectStatus status,
-                 int supervisorId, int assigneeId) {
+  public Project(
+      int id,
+      String title,
+      int teamId,
+      LocalDate deadline,
+      ProjectStatus status,
+      int supervisorId,
+      int assigneeId) {
     this.id = id;
     this.title = title;
     this.teamId = teamId;
