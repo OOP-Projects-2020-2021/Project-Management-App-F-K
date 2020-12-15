@@ -1,12 +1,11 @@
 package model.database;
 
-
 import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * Repository is an abstract class which constructs a repository by getting the database
- * connection and preparing all the statements.
+ * Repository is an abstract class which constructs a repository by getting the database connection
+ * and preparing all the statements.
  *
  * @author Bori Fazakas
  */
