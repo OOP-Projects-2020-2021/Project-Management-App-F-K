@@ -106,7 +106,8 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
   }
 
   @Override
-  public int saveTeam(Team.SavableTeam team) throws SQLException, InexistentDatabaseEntityException {
+  public int saveTeam(Team.SavableTeam team)
+      throws SQLException, InexistentDatabaseEntityException {
     saveTeamSt.setString(1, team.getName());
     saveTeamSt.setInt(2, team.getManagerId());
     saveTeamSt.setString(3, team.getCode());

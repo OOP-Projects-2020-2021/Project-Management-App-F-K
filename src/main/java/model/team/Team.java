@@ -1,10 +1,8 @@
 package model.team;
 
 import model.InexistentDatabaseEntityException;
-import model.project.Project;
 import org.jetbrains.annotations.NotNull;
 
-import java.time.LocalDate;
 import java.util.*;
 
 /**
@@ -26,8 +24,8 @@ public class Team {
   private int managerId;
 
   /**
-   * This class is used only when the team instance is created to be saved in the database, but
-   * does not have a valid id yet.
+   * This class is used only when the team instance is created to be saved in the database, but does
+   * not have a valid id yet.
    */
   public static class SavableTeam extends Team {
     public SavableTeam(@NotNull String name, int managerId, @NotNull String code) {

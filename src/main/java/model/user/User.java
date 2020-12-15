@@ -1,10 +1,7 @@
 package model.user;
 
 import model.InexistentDatabaseEntityException;
-import model.project.Project;
 
-import java.time.LocalDate;
-import java.util.Optional;
 
 /**
  * Represents a User and contains its account information.
@@ -21,8 +18,8 @@ public class User {
   private String password;
 
   /**
-   * This class is used only when the user instance is created to be saved in the database, but
-   * does not have a valid id yet.
+   * This class is used only when the user instance is created to be saved in the database, but does
+   * not have a valid id yet.
    */
   public static class SavableUser extends User {
     public SavableUser(String username, String password) {
