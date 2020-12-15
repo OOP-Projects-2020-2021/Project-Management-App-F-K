@@ -40,6 +40,7 @@ public class TeamManager extends Manager {
       throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException {
     teamRepository.saveTeam(
         new Team.SavableTeam(name, getMandatoryCurrentUser().getId(), generateTeamCode()));
+    // todo  joinTeam();
   }
 
   /**
