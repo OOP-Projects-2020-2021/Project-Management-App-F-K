@@ -1,6 +1,6 @@
 package model.user.repository.impl;
 
-import model.SqliteDatabaseConnectionFactory;
+import model.database.Repository;
 import model.team.repository.impl.SqliteTeamRepository;
 import model.user.repository.UserRepository;
 import model.user.User;
@@ -8,10 +8,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 
-public class SqliteUserRepository implements UserRepository {
-  private static SqliteUserRepository instance;
+public class SqliteUserRepository extends Repository implements UserRepository {
+  protected static SqliteUserRepository instance;
 
-  private Connection connection;
   private PreparedStatement saveUserStatement;
   private PreparedStatement getUserIdStatement;
   private PreparedStatement getUserByIdStatement;
@@ -31,15 +30,7 @@ public class SqliteUserRepository implements UserRepository {
   private static final String GET_USERS_SUPERVISED_PROJECTS_STATEMENT =
       "SELECT * FROM Project WHERE SupervisorId = ?;";
 
-  private SqliteUserRepository() {
-    connection = SqliteDatabaseConnectionFactory.getConnection();
-    try {
-      prepareStatements();
-    } catch (SQLException e) {
-      e.printStackTrace();
-      System.exit(1);
-    }
-  }
+  private SqliteUserRepository() {}
 
   public static SqliteUserRepository getInstance() {
     if (instance == null) {
@@ -48,14 +39,14 @@ public class SqliteUserRepository implements UserRepository {
     return instance;
   }
 
-  private void prepareStatements() throws SQLException {
-    saveUserStatement = connection.prepareStatement(SAVE_USER_STATEMENT);
-    getUserIdStatement = connection.prepareStatement(GET_USER_ID_STATEMENT);
-    getUserByIdStatement = connection.prepareStatement(GET_USER_BY_ID_STATEMENT);
-    getUserByUsernameStatement = connection.prepareStatement(GET_USER_BY_USERNAME_STATEMENT);
-    getUsersAssignments = connection.prepareStatement(GET_USERS_ASSIGNMENTS_STATEMENT);
+  protected void prepareStatements() throws SQLException {
+    saveUserStatement = c.prepareStatement(SAVE_USER_STATEMENT);
+    getUserIdStatement = c.prepareStatement(GET_USER_ID_STATEMENT);
+    getUserByIdStatement = c.prepareStatement(GET_USER_BY_ID_STATEMENT);
+    getUserByUsernameStatement = c.prepareStatement(GET_USER_BY_USERNAME_STATEMENT);
+    getUsersAssignments = c.prepareStatement(GET_USERS_ASSIGNMENTS_STATEMENT);
     getUsersSupervisedProjects =
-        connection.prepareStatement(GET_USERS_SUPERVISED_PROJECTS_STATEMENT);
+        c.prepareStatement(GET_USERS_SUPERVISED_PROJECTS_STATEMENT);
   }
 
   /** Saves the user in the database. */

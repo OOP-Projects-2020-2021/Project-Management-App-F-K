@@ -1,6 +1,7 @@
 package model.team.repository.impl;
 
-import model.SqliteDatabaseConnectionFactory;
+import model.database.Repository;
+import model.database.SqliteDatabaseConnectionFactory;
 import model.project.repository.impl.SqliteProjectRepository;
 import model.team.Team;
 import model.team.repository.TeamRepository;
@@ -16,9 +17,8 @@ import java.util.Optional;
  *
  * @author Bori Fazakas
  */
-public class SqliteTeamRepository implements TeamRepository {
-  private static SqliteTeamRepository instance;
-  private Connection c;
+public class SqliteTeamRepository extends Repository implements TeamRepository {
+  protected static SqliteTeamRepository instance;
 
   // Save a new team.
   private static final String SAVE_TEAM_STATEMENT =
@@ -78,15 +78,7 @@ public class SqliteTeamRepository implements TeamRepository {
       "Select * from MemberToTeam WHERE TeamId = ? and MemberId = ?";
   private PreparedStatement isMemberSt;
 
-  private SqliteTeamRepository() {
-    c = SqliteDatabaseConnectionFactory.getConnection();
-    try {
-      prepareStatements();
-    } catch (SQLException e) {
-      e.printStackTrace();
-      System.exit(1);
-    }
-  }
+  private SqliteTeamRepository() {}
 
   public static SqliteTeamRepository getInstance() {
     if (instance == null) {
@@ -99,7 +91,7 @@ public class SqliteTeamRepository implements TeamRepository {
    * The statements are prepared only once, when the reposiroy is constructed, because this way sql
    * parsing and creating a query plan is created only once, so query execution is faster.
    */
-  private void prepareStatements() throws SQLException {
+  protected void prepareStatements() throws SQLException {
     saveTeamSt = c.prepareStatement(SAVE_TEAM_STATEMENT);
     deleteTeamSt = c.prepareStatement(DELETE_TEAM_STATEMENT);
     getTeamWithCodeSt = c.prepareStatement(GET_TEAM_WITH_CODE_QUERY);

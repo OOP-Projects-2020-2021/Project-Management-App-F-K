@@ -1,6 +1,7 @@
 package model.project.repository.impl;
 
-import model.SqliteDatabaseConnectionFactory;
+import model.database.Repository;
+import model.database.SqliteDatabaseConnectionFactory;
 import model.project.Project;
 import model.project.repository.ProjectRepository;
 
@@ -9,9 +10,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-public class SqliteProjectRepository implements ProjectRepository {
-    private static SqliteProjectRepository instance;
-    private Connection c;
+public class SqliteProjectRepository extends Repository implements ProjectRepository {
+    protected static SqliteProjectRepository instance;
 
     // Save a new team.
     private static final String SAVE_PROJECT_STATEMENT =
@@ -32,15 +32,7 @@ public class SqliteProjectRepository implements ProjectRepository {
             "SELECT StatusId from ProjectStatus WHERE StatusName = ?";
     private PreparedStatement getProjectStatusIdSt;
 
-    private SqliteProjectRepository() {
-        c = SqliteDatabaseConnectionFactory.getConnection();
-        try {
-            prepareStatements();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            System.exit(1);
-        }
-    }
+    private SqliteProjectRepository() {}
 
     public static SqliteProjectRepository getInstance() {
         if (instance == null) {
@@ -53,7 +45,7 @@ public class SqliteProjectRepository implements ProjectRepository {
      * The statements are prepared only once, when the reposiroy is constructed, because this way sql
      * parsing and creating a query plan is created only once, so query execution is faster.
      */
-    private void prepareStatements() throws SQLException {
+    protected void prepareStatements() throws SQLException {
         saveProjectSt = c.prepareStatement(SAVE_PROJECT_STATEMENT);
         getProjectBTitleTeamSt = c.prepareStatement(GET_PROJECT_B_TEAM_TITLE_STATEMENT);
         getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
