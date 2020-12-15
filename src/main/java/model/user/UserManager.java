@@ -1,5 +1,6 @@
 package model.user;
 
+import model.Manager;
 import model.project.Project;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
@@ -8,10 +9,9 @@ import java.util.List;
 import java.util.Optional;
 
 /** Singleton class UserManager. */
-public class UserManager {
+public class UserManager extends Manager {
 
   private static UserManager instance;
-  private UserRepository userRepository = SqliteUserRepository.getInstance();
   /** The current user which has signed in to the application. */
   private User currentUser;
 
