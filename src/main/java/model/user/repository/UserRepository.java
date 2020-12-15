@@ -46,10 +46,8 @@ public interface UserRepository {
   /**
    * Updates the fields of an existing user.
    *
-   * @param id = which identifies the user in the database
-   * @param username = new username to be set
-   * @param password = new password to be set
+   * @param user = the user with the new attributes
    * @throws SQLException if an error occurs at reading from the database
    */
-  void updateUser(int id, String username, String password) throws SQLException;
+  void updateUser(User user) throws SQLException;
 }

@@ -43,7 +43,7 @@ public class UserManager {
    * @param username = username introduced by the user at sign-in
    * @param password = password introduced by the user at sign-in
    * @return boolean = true if the username and password were found in the database.
-   * @throws SQLException if the data could not be accessed from the database
+   * @throws SQLException if a database error occurred
    */
   public boolean signIn(String username, String password) throws SQLException {
     int id = userRepository.getUserId(username, password);
@@ -76,7 +76,7 @@ public class UserManager {
       throws SQLException, NoSignedInUserException, InexistentUserException {
     try {
       int id = currentUser.getId().get();
-      userRepository.updateUser(id, username, password);
+      userRepository.updateUser(new User(id, username, password));
       setCurrentUser(id);
     } catch (NoSuchElementException noSuchElementException) {
       throw new NoSignedInUserException();
@@ -88,16 +88,15 @@ public class UserManager {
    * changes.
    *
    * @param id = uniquely identifies the user
-   * @throws SQLException if the data could not be read from the database
+   * @throws SQLException if a database error occurred
    * @throws InexistentUserException = if the id cannot be found in the database
    */
   private void setCurrentUser(int id) throws SQLException, InexistentUserException {
-    try {
-      currentUser.setUsername(Objects.requireNonNull(userRepository.getUserById(id)).getUsername());
-      currentUser.setPassword(Objects.requireNonNull(userRepository.getUserById(id)).getPassword());
-    } catch (NoSuchElementException | NullPointerException e) {
-      throw new InexistentUserException(id);
-    }
+      try {
+        currentUser = Objects.requireNonNull(userRepository.getUserById(id));
+      }catch(NullPointerException nullPointerException) {
+        throw new InexistentUserException(id);
+      }
   }
 
   public Optional<User> getCurrentUser() {

@@ -18,12 +18,12 @@ public class AccountSettingsController extends FrameController {
   /** Instance of a UserManager, which accesses and modifies data related to the user. */
   private UserManager userManager;
   /** Error messages shown to the user when the update of the fields is unsuccessful. */
-  private static final String FAILED_UPDATE_MESSAGE = "Update failed!";
-
-  private static final String CHANGES_LOST_MESSAGE =
+  private static final String FAILED_UPDATE_TITLE = "Update failed!";
+  private static final String FAILED_UPDATE_MESSAGE =
       "An error occurred and the changes could not be saved.";
   /** Messages displayed to inform the user about the validation of the data. */
-  private static final String INCORRECT_PASSWORD_MESSAGE = "Incorrect password!";
+  private static final String INCORRECT_PASSWORD_TITLE = "Incorrect password!";
+  private static final String INCORRECT_PASSWORD_MESSAGE = "The password introduced is incorrect!";
 
   public AccountSettingsController(JFrame accountSettingsFrame) {
     super(accountSettingsFrame);
@@ -76,12 +76,12 @@ public class AccountSettingsController extends FrameController {
 
   public void displayFailedUpdateDialog() {
     JOptionPane.showMessageDialog(
-        frame, FAILED_UPDATE_MESSAGE, CHANGES_LOST_MESSAGE, JOptionPane.WARNING_MESSAGE);
+        frame, FAILED_UPDATE_TITLE,FAILED_UPDATE_MESSAGE, JOptionPane.WARNING_MESSAGE);
   }
 
   public void displayIncorrectPasswordDialog() {
     JOptionPane.showMessageDialog(
-        frame, INCORRECT_PASSWORD_MESSAGE, INCORRECT_PASSWORD_MESSAGE, JOptionPane.ERROR_MESSAGE);
+        frame, INCORRECT_PASSWORD_TITLE, INCORRECT_PASSWORD_MESSAGE, JOptionPane.ERROR_MESSAGE);
   }
   /** On going back, it closes the current frame. */
   public void goBack() {

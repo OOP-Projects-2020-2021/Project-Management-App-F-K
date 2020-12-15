@@ -20,17 +20,17 @@ public abstract class FrameController {
   }
 
   /** Messages that inform the user of a database related failure. */
-  private static final String DATABASE_FAILURE_MESSAGE = "Database failure";
+  private static final String DATABASE_ERROR_TITLE = "Database failure";
 
-  private static final String UNABLE_TO_READ_DATABASE_MESSAGE =
-      "Database failure! \nUnable to reach the requested data.";
+  private static final String DATABASE_ERROR_MESSAGE =
+      "An error occurred during an interaction with the data source.";
 
   /** Display an error message in case the data stored in the database could not be accessed. */
   public void displayDatabaseErrorDialog() {
     JOptionPane.showMessageDialog(
         frame,
-        DATABASE_FAILURE_MESSAGE,
-        UNABLE_TO_READ_DATABASE_MESSAGE,
+        DATABASE_ERROR_TITLE,
+        DATABASE_ERROR_MESSAGE,
         JOptionPane.ERROR_MESSAGE);
   }
 }

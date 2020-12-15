@@ -13,7 +13,6 @@ public class SqliteUserRepository implements UserRepository {
   private PreparedStatement getUserByIdStatement;
   private PreparedStatement getUserByUsernameStatement;
   private PreparedStatement updateUserStatement;
-  private PreparedStatement getUserStatement;
 
   private static final String SAVE_USER_STATEMENT =
       "INSERT INTO User (UserName,Password) VALUES (?,?)";
@@ -24,8 +23,6 @@ public class SqliteUserRepository implements UserRepository {
       "SELECT * FROM User WHERE Username = ?;";
   private static final String UPDATE_USER_STATEMENT =
       "UPDATE User SET UserName = ?, Password = ? WHERE UserId = ?;";
-  private static final String GET_USER_STATEMENT =
-      "SELECT * FROM User WHERE UserName = ?, Password = ?;";
 
   public SqliteUserRepository() {
     try {
@@ -59,10 +56,10 @@ public class SqliteUserRepository implements UserRepository {
     }
   }
   /** Updates information about an existing user. */
-  public void updateUser(int id, String username, String password) throws SQLException {
-    updateUserStatement.setString(1, username);
-    updateUserStatement.setString(2, password);
-    updateUserStatement.setInt(3, id);
+  public void updateUser(User user) throws SQLException {
+    updateUserStatement.setString(1, user.getUsername());
+    updateUserStatement.setString(2, user.getPassword());
+    updateUserStatement.setInt(3, user.getId().get());
     updateUserStatement.execute();
   }
 

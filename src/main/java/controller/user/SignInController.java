@@ -22,10 +22,9 @@ public class SignInController extends FrameController {
    */
   private boolean signInFlag;
   /** Messages displayed to inform the user about the sign in's validation. */
-  private static final String WRONG_SIGN_IN_CREDENTIALS_MESSAGE = "Wrong credentials!";
-
+  private static final String INVALID_SIGN_IN_TITLE = "Invalid sign in!";
   private static final String INVALID_SIGN_IN_MESSAGE =
-      "Invalid sign in! \nCheck that the username and password\nthat you introduced are correct!";
+      "Check that the username and password\nthat you introduced are correct!";
 
   public SignInController(JFrame signInFrame) {
     super(signInFrame);
@@ -76,8 +75,8 @@ public class SignInController extends FrameController {
   public void displayInvalidSignInDialog() {
     JOptionPane.showMessageDialog(
         frame,
+        INVALID_SIGN_IN_TITLE,
         INVALID_SIGN_IN_MESSAGE,
-        WRONG_SIGN_IN_CREDENTIALS_MESSAGE,
         JOptionPane.WARNING_MESSAGE);
   }
 }
