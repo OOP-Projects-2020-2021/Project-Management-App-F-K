@@ -15,7 +15,8 @@ public class SignUpController extends FrameController {
 
   /** Messages displayed to inform the user about the steps of signing in. " */
   private static final String SIGN_IN_MESSAGE =
-          "Please sign in to your account to finalize the registration.";
+      "Please sign in to your account to finalize the registration.";
+
   private static final String FINALIZE_SIGN_UP_TITLE = "Finalize signing up";
 
   private UserManager userManager;
@@ -35,8 +36,8 @@ public class SignUpController extends FrameController {
    */
   public boolean signUp(String username, String password) {
     try {
-      userManager.signUp(username,password);
-    }catch(SQLException sqlException) {
+      userManager.signUp(username, password);
+    } catch (SQLException sqlException) {
       super.displayDatabaseErrorDialog();
       return false;
     }
@@ -57,7 +58,6 @@ public class SignUpController extends FrameController {
   /** Display message to inform the user about the final step of signing up. */
   public void displayFinalizeSignUpDialog() {
     JOptionPane.showMessageDialog(
-            frame, SIGN_IN_MESSAGE, FINALIZE_SIGN_UP_TITLE, JOptionPane.PLAIN_MESSAGE);
+        frame, SIGN_IN_MESSAGE, FINALIZE_SIGN_UP_TITLE, JOptionPane.PLAIN_MESSAGE);
   }
-
 }

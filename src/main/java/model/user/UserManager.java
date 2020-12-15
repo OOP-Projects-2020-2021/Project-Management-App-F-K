@@ -54,8 +54,8 @@ public class UserManager {
   }
 
   /**
-   * Validates the password introduced by the user when attempting to change the password.
-   * This is an additional security step, to protect the account information of the user.
+   * Validates the password introduced by the user when attempting to change the password. This is
+   * an additional security step, to protect the account information of the user.
    *
    * @param password = password introduced by the user that will be compared to the current password
    * @return boolean = true if the password matches
@@ -66,33 +66,34 @@ public class UserManager {
 
   /**
    * Updates the user's account information, saving the new username and password.
+   *
    * @param username = new username
    * @param password = new password
    */
-  public void updateUser(String username,String password) throws SQLException,NoSignedInUserException,InexistentUserException{
+  public void updateUser(String username, String password)
+      throws SQLException, NoSignedInUserException, InexistentUserException {
     try {
       int id = currentUser.getId().get();
       userRepository.updateUser(id, username, password);
       setCurrentUser(id);
-    }catch(NoSuchElementException noSuchElementException) {
+    } catch (NoSuchElementException noSuchElementException) {
       throw new NoSignedInUserException();
     }
   }
 
-  private void setCurrentUser(int id) throws SQLException,InexistentUserException {
+  private void setCurrentUser(int id) throws SQLException, InexistentUserException {
     try {
       currentUser = userRepository.getUserById(id);
-    }catch(NoSuchElementException noSuchElementException) {
+    } catch (NoSuchElementException noSuchElementException) {
       throw new InexistentUserException(id);
     }
   }
 
-  public Optional<User> getCurrentUser(){
+  public Optional<User> getCurrentUser() {
     return Optional.of(currentUser);
   }
 
   public void logOut() {
     currentUser = null;
   }
-
 }

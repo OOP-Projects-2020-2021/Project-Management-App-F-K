@@ -33,12 +33,14 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
   private static final Dimension DIMENSION = new Dimension(500, 300);
   /** Messages displayed to inform the user about the validation of the data. */
   private static final String ASK_PASSWORD_MESSAGE = "Enter your current password:";
+
   private static final String ACCOUNT_INFORMATION_SAVED = "Saved.";
   /**
    * Messages displayed on the toggle button to show/hide the password. It works only when the
    * password is being edited.
    */
   private static final String SHOW_PASSWORD = "Show";
+
   private static final String HIDE_PASSWORD = "Hide";
 
   public AccountSettingsFrame(JFrame parentFrame) {
@@ -143,7 +145,7 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
       } else if (source == saveButton) {
         String username = usernameTextField.getText();
         String password = String.valueOf(passwordField.getPassword());
-        if(accountSettingsController.saveAccountData(username, password)) {
+        if (accountSettingsController.saveAccountData(username, password)) {
           updateFieldsAfterSave();
         }
       }
@@ -170,7 +172,6 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     passwordField.setEchoChar('*');
     showPasswordButton.setText(SHOW_PASSWORD);
   }
-
 
   private class AccountSettingsWindowAdapter extends WindowAdapter {
     @Override

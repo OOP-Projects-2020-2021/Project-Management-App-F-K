@@ -1,4 +1,5 @@
 package controller.user;
+
 import controller.FrameController;
 import model.user.UserManager;
 import view.main.MainFrame;
@@ -22,6 +23,7 @@ public class SignInController extends FrameController {
   private boolean signInFlag;
   /** Messages displayed to inform the user about the sign in's validation. */
   private static final String WRONG_SIGN_IN_CREDENTIALS_MESSAGE = "Wrong credentials!";
+
   private static final String INVALID_SIGN_IN_MESSAGE =
       "Invalid sign in! \nCheck that the username and password\nthat you introduced are correct!";
 
@@ -43,18 +45,16 @@ public class SignInController extends FrameController {
    * @return boolean = true, if the username and password are correct
    */
   public boolean validateSignIn(String username, String password) {
-      try {
-        if(isNotEmptyText(username) && isNotEmptyText(password)) {
-          return userManager.signIn(username, password);
-        }
-      }catch(SQLException sqlException) {
-        super.displayDatabaseErrorDialog();
+    try {
+      if (isNotEmptyText(username) && isNotEmptyText(password)) {
+        return userManager.signIn(username, password);
       }
-      return false;
+    } catch (SQLException sqlException) {
+      super.displayDatabaseErrorDialog();
+    }
+    return false;
   }
-  /**
-   * Checks if the text from the text-field is not empty.
-   */
+  /** Checks if the text from the text-field is not empty. */
   private boolean isNotEmptyText(String text) {
     return !(text == null || text.isEmpty());
   }
@@ -80,5 +80,4 @@ public class SignInController extends FrameController {
         WRONG_SIGN_IN_CREDENTIALS_MESSAGE,
         JOptionPane.WARNING_MESSAGE);
   }
-
 }
