@@ -26,7 +26,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
                     "From Project p JOIN ProjectStatus st ON p" +
                     ".StatusId = st.StatusId WHERE Name = ? and TeamId = ? ";
     private PreparedStatement getProjectBTitleTeamSt;
-    
+
     // Get status id
     private static final String GET_PROJECTS_STATUS_ID =
             "SELECT StatusId from ProjectStatus WHERE StatusName = ?";

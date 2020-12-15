@@ -30,8 +30,8 @@ public class ProjectManager {
     }
 
     public void createProject(String projectName, int teamId, String assigneeName,
-                             LocalDate deadline,
-                       String description) throws Exception {
+                              LocalDate deadline,
+                              String description) throws Exception {
         User currentUser = getCurrentUser();
         User assignee = getUser(assigneeName);
         Team team = getTeam(teamId);

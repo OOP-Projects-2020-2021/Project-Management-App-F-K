@@ -52,7 +52,7 @@ public class Project {
   private ProjectStatus status;
 
   public Project(int id, String title, int teamId, LocalDate deadline, int supervisorId,
-                  int assigneeId) {
+                 int assigneeId) {
     this(id, title, teamId, deadline, ProjectStatus.TO_DO, supervisorId, assigneeId);
   }
 
