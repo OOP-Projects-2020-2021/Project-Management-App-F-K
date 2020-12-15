@@ -71,7 +71,7 @@ public class TeamManager extends Manager {
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentDatabaseEntityException - should never occur.
    */
-  public List<Team> getMandatoryTeamsOfCurrentUser()
+  public List<Team> getTeamsOfCurrentUser()
       throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException {
     User currentUser = getMandatoryCurrentUser();
     return teamRepository.getTeamsOfUser(currentUser.getId());
@@ -102,18 +102,23 @@ public class TeamManager extends Manager {
 
   /**
    * Adds the current user as a member to the team with the given code, if it exists.
+   * Requirement: The user should not alrady be a member of the team.
    *
    * @param code is the code provided by the user of the team to join.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentTeamException if no team with this code exists.
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentDatabaseEntityException - should never occur.
+   * @throws AlreadyMemberException if the current user is already a member of the team.
    */
   public void joinTeam(String code)
-      throws SQLException, InexistentTeamException, NoSignedInUserException,
-          InexistentDatabaseEntityException {
+          throws SQLException, InexistentTeamException, NoSignedInUserException,
+          InexistentDatabaseEntityException, AlreadyMemberException {
     Team team = getMandatoryTeam(code);
     User currentUser = getMandatoryCurrentUser();
+    if (teamRepository.isMemberOfTeam(team.getId(), currentUser.getId())) {
+      throw new AlreadyMemberException(currentUser.getUsername(), team.getName());
+    }
     teamRepository.addTeamMember(team.getId(), currentUser.getId());
   }
 
@@ -144,14 +149,18 @@ public class TeamManager extends Manager {
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentUserException if the requested new member with userName does not exist.
    * @throws InexistentDatabaseEntityException - should never occur.
+   * @throws AlreadyMemberException if the user with userName is already a member of the team.
    */
   public void addMemberToTeam(int teamId, String userName)
-      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException {
+          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException, AlreadyMemberException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "add member to the team");
     User newMember = getMandatoryUser(userName);
+    if (teamRepository.isMemberOfTeam(team.getId(), newMember.getId())) {
+      throw new AlreadyMemberException(newMember.getUsername(), team.getName());
+    }
     teamRepository.addTeamMember(team.getId(), newMember.getId());
   }
 

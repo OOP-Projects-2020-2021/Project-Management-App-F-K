@@ -2,6 +2,7 @@ package controller.team;
 
 import controller.FrameController;
 import model.InexistentDatabaseEntityException;
+import model.team.AlreadyMemberException;
 import model.team.InexistentTeamException;
 import model.team.TeamManager;
 import model.user.NoSignedInUserException;
@@ -42,6 +43,10 @@ public class JoinTeamController extends FrameController {
     } catch (InexistentTeamException | NoSignedInUserException | SQLException | InexistentDatabaseEntityException e) {
       e.printStackTrace();
       ErrorDialogFactory.createErrorDialog(e, frame, "You can't join team with code " + teamCode);
+    } catch (AlreadyMemberException e) {
+      e.printStackTrace();
+      ErrorDialogFactory.createErrorDialog(e, frame,
+              "You already are a member of team with code " + teamCode);
     }
     closeFrame();
   }

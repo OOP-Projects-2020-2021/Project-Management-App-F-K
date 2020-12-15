@@ -1,6 +1,7 @@
 package view;
 
 import model.InexistentDatabaseEntityException;
+import model.team.AlreadyMemberException;
 import model.team.InexistentTeamException;
 import model.user.NoSignedInUserException;
 
@@ -31,6 +32,14 @@ public class ErrorDialogFactory {
     private static final String REQUESTED_TEAM_NOT_EXISTING_MESSAGE =
             "An error occurred. The team that you requested was not found.";
 
+    /**
+     * Messages that inform the user that the operation is invalid because the requested user is
+     * already a member of the requested team*.
+     */
+    private static final String ALREADY_MEMBER_ERROR_TITLE = "Already member";
+    private static final String ALREADY_MEMBER_ERROR_MESSAGE =
+            "This team membership has already been registered, you can't add it again";
+
     public static void createErrorDialog(Exception exception, Frame frame, String message) {
         if (message == null) {
             message = "";
@@ -43,6 +52,9 @@ public class ErrorDialogFactory {
         }
         if (exception instanceof InexistentTeamException) {
             displayInexistentTeamErrorDialog(frame, message);
+        }
+        if (exception instanceof AlreadyMemberException) {
+            displayAlreadyMemberErrorDialog(frame, message);
         }
     }
 
@@ -65,13 +77,23 @@ public class ErrorDialogFactory {
     }
 
     /**
-     * Display an error message in case the functionality should have been aceesed by signed in
+     * Display an error message in case the functionality should have been accessed by signed in
      * users only.
      */
     private static void displayInexistentTeamErrorDialog(Frame frame, String message) {
         JOptionPane.showMessageDialog(
                 frame, REQUESTED_TEAM_NOT_EXISTING_MESSAGE + "\n" + message,
                 REQUESTED_TEAM_NOT_EXISTING_TITLE,
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Display an error message in case the user to join the team was already a member.
+     */
+    private static void displayAlreadyMemberErrorDialog(Frame frame, String message) {
+        JOptionPane.showMessageDialog(
+                frame, ALREADY_MEMBER_ERROR_MESSAGE + "\n" + message,
+                ALREADY_MEMBER_ERROR_TITLE,
                 JOptionPane.ERROR_MESSAGE);
     }
 }
