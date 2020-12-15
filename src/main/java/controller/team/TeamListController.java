@@ -11,7 +11,6 @@ import view.team.TeamViewModel;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -29,8 +28,8 @@ public class TeamListController {
       List<Team> usersTeams = teamManager.getTeamsOfCurrentUser();
       for (Team team : usersTeams) {
         User manager = userManager.getUserById(team.getManagerId());
-        teamsViewModels.add(new TeamViewModel(team.getName(), team.getCode(),
-                manager.getUsername()));
+        teamsViewModels.add(
+            new TeamViewModel(team.getName(), team.getCode(), manager.getUsername()));
       }
     } catch (SQLException | NoSignedInUserException | InexistentDatabaseEntityException e) {
       e.printStackTrace();
