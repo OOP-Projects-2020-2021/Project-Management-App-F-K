@@ -1,6 +1,15 @@
 package controller.team;
 
+import model.InexistentDatabaseEntityException;
+import model.team.Team;
+import model.team.TeamManager;
+import model.user.NoSignedInUserException;
+import model.user.User;
+import model.user.UserManager;
+import view.ErrorDialogFactory;
 import view.team.TeamViewModel;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -11,23 +20,24 @@ import java.util.List;
  * @author Bori Fazakas
  */
 public class TeamListController {
+  TeamManager teamManager = TeamManager.getInstance();
+  UserManager userManager = UserManager.getInstance();
+
   public List<TeamViewModel> getUsersTeams() {
-    // todo: get list of users teams, exract data for ViewModels and then pass to Panel
-    // dummy data
-    List<TeamViewModel> teams =
-        new ArrayList<>(
-            Arrays.asList(
-                new TeamViewModel("IT Team", "456238", "Andrew Smith"),
-                new TeamViewModel("HR Team", "654236", "Maria Spencer"),
-                new TeamViewModel("Entire Team", "656325", "Margaret Grant"),
-                new TeamViewModel("Football team", "452238", "Greta Williams"),
-                new TeamViewModel("Basketball Team", "123236", "Adrian Brown"),
-                new TeamViewModel("Street Dance Team", "965525", "Abigail Johnson"),
-                new TeamViewModel("Ballet team", "456628", "Bailey Miller"),
-                new TeamViewModel("Handball team", "634236", "Casey Lewis"),
-                new TeamViewModel("Volleyball team", "614125", "Edmund Robinson"),
-                new TeamViewModel("Kayaking Team", "695625", "Howard Young"),
-                new TeamViewModel("Rugby Team", "236325", "Katherine Phillips")));
-    return teams;
+    List<TeamViewModel> teamsViewModels = new ArrayList<>();
+    try {
+      List<Team> usersTeams = teamManager.getTeamsOfCurrentUser();
+      for (Team team : usersTeams) {
+        User manager = userManager.getUserById(team.getManagerId());
+        teamsViewModels.add(new TeamViewModel(team.getName(), team.getCode(),
+                manager.getUsername()));
+      }
+    } catch (SQLException | NoSignedInUserException | InexistentDatabaseEntityException e) {
+      e.printStackTrace();
+      ErrorDialogFactory.createErrorDialog(e, null, "Your teams cannot be displayed.");
+    } catch (NullPointerException e) {
+      // todo
+    }
+    return teamsViewModels;
   }
 }

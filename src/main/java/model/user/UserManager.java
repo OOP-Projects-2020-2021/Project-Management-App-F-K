@@ -2,6 +2,8 @@ package model.user;
 
 import model.InexistentDatabaseEntityException;
 import model.Manager;
+import org.jetbrains.annotations.Nullable;
+
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -81,6 +83,18 @@ public class UserManager extends Manager {
     } catch (NoSuchElementException | InexistentDatabaseEntityException noSuchElementException) {
       throw new NoSignedInUserException();
     }
+  }
+
+  /**
+   * Finds and returns the user with the specified id from the database.
+   *
+   * @param id is the id of the user to search for.
+   * @return the user with the given id.
+   * @throws SQLException if the data could not be retrieved from the database.
+   */
+  @Nullable
+  public User getUserById(int id) throws SQLException {
+    return userRepository.getUserById(id);
   }
 
   public void logOut() {
