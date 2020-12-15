@@ -74,6 +74,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   @Override
   public Optional<Project> getProject(int projectId) {
+    // todo
     return null;
   }
 
@@ -91,16 +92,19 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   @Override
   public List<Project> getProjectsOfTeam(int teamId) {
+    // todo
     return null;
   }
 
   @Override
   public List<Project> getProjectsSupervisedByUser(int userId) {
+    // todo
     return null;
   }
 
   @Override
   public List<Project> getProjectsAssignedToUser(int userId) {
+    // todo
     return null;
   }
 

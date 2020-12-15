@@ -13,6 +13,9 @@ import java.util.Optional;
  * @author Bori Fazakas
  */
 public interface ProjectRepository {
+  // todo: javadoc
+  // todo: extend with further methods
+
   void saveProject(Project.SavableProject project) throws SQLException;
 
   Optional<Project> getProject(int projectId);
