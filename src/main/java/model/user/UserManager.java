@@ -100,7 +100,7 @@ public class UserManager {
   }
 
   public Optional<User> getCurrentUser() {
-    return Optional.of(currentUser);
+    return Optional.ofNullable(currentUser);
   }
 
   public void logOut() {
