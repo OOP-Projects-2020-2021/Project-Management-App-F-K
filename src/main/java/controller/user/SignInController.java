@@ -42,7 +42,6 @@ public class SignInController extends FrameController {
    * @param password = the password introduced by the user
    * @return boolean = true, if the username and password are correct
    */
-<<<<<<< HEAD
   public boolean validateSignIn(String username, String password) {
       try {
         if(isNotEmptyText(username) && isNotEmptyText(password)) {
@@ -50,24 +49,12 @@ public class SignInController extends FrameController {
         }
       }catch(SQLException sqlException) {
         super.displayDatabaseErrorDialog();
-=======
-  public boolean isValidSignIn(String username, String password) {
-    if (isNotEmptyText(username) && !isNotEmptyText(password)) {
-      try {
-        return userManager.signIn(username, password);
-      } catch (SQLException sqlException) {
-        return false;
->>>>>>> b1b4c0df00f32dfd17af508a5ad978a0cf65a26a
       }
       return false;
   }
-<<<<<<< HEAD
   /**
    * Checks if the text from the text-field is not empty.
    */
-=======
-  /** Checks if the text from the text-field is empty. */
->>>>>>> b1b4c0df00f32dfd17af508a5ad978a0cf65a26a
   private boolean isNotEmptyText(String text) {
     return !(text == null || text.isEmpty());
   }
