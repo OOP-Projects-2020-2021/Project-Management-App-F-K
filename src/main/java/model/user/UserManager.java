@@ -1,10 +1,9 @@
 package model.user;
 
-import model.Project;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
 import java.sql.SQLException;
-import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /** Singleton class UserManager. */
@@ -38,39 +37,54 @@ public class UserManager {
   }
 
   /**
-   * Validates the sign-in, and sets the currentUser on successful sign-in.
+   * Validates the sign-in, by searching for the username in the database, then comparing the
+   * corresponding password with the one introduced by the user, and it sets the currentUser on
+   * successful sign-in, otherwise currentUser will be null.
    *
    * @param username = username introduced by the user at sign-in
    * @param password = password introduced by the user at sign-in
    * @return boolean = true if the username and password were found in the database.
-   * @throws SQLException if the data could not be accessed from the database
+   * @throws SQLException if a database error occurred
    */
   public boolean signIn(String username, String password) throws SQLException {
-    int id = userRepository.getUserId(username, password);
-    if (id >= 0) {
-      currentUser = userRepository.getUserById(id);
-      return true;
+    currentUser = userRepository.getUserByUsername(username);
+    return (currentUser != null && currentUser.getPassword().equals(password));
+  }
+
+  /**
+   * Validates the password introduced by the user when attempting to change the password. This is
+   * an additional security step, to protect the account information of the user.
+   *
+   * @param password = password introduced by the user that will be compared to the current password
+   * @return boolean = true if the password matches
+   */
+  public boolean validatePassword(String password) {
+    return currentUser.getPassword().equals(password);
+  }
+
+  /**
+   * Updates the user's account information, saving the new username and password. Whenever the user
+   * changes the account data from the settings view, the currentUser instance is updated as well.
+   *
+   * @param username = new username
+   * @param password = new password
+   */
+  public void updateUser(String username, String password)
+      throws SQLException, NoSignedInUserException {
+    try {
+      int id = currentUser.getId().get();
+      currentUser = new User(id, username, password);
+      userRepository.updateUser(currentUser);
+    } catch (NoSuchElementException noSuchElementException) {
+      throw new NoSignedInUserException();
     }
-    return false;
   }
 
   public Optional<User> getCurrentUser() {
-    return Optional.of(currentUser);
+    return Optional.ofNullable(currentUser);
   }
 
   public void logOut() {
     currentUser = null;
-  }
-
-  public List<Project> getCurrentUsersAssignments() {
-    // TODO move to ProjectRepository
-    List<Project> assignmentsOfCurrentUser;
-    return null;
-  }
-
-  public List<Project> getCurrentUsersSupervisedProjects() {
-    // TODO move to ProjectRepository
-    List<Project> projectsOfCurrentUser;
-    return null;
   }
 }
