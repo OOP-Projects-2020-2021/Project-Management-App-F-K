@@ -1,5 +1,6 @@
 package model.user.repository.impl;
 
+import model.SqliteDatabaseConnectionFactory;
 import model.user.repository.UserRepository;
 import model.user.User;
 import org.jetbrains.annotations.Nullable;
@@ -29,13 +30,11 @@ public class SqliteUserRepository implements UserRepository {
       "SELECT * FROM Project WHERE SupervisorId = ?;";
 
   public SqliteUserRepository() {
+    connection = SqliteDatabaseConnectionFactory.getConnection();
     try {
-      Class.forName("org.sqlite.JDBC");
-      connection = DriverManager.getConnection("jdbc:sqlite:project_management_app.db");
       prepareStatements();
-    } catch (ClassNotFoundException | SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
-      // if the connection to the database fails exit the program
       System.exit(1);
     }
   }

@@ -1,5 +1,6 @@
 package model.team.repository.impl;
 
+import model.SqliteDatabaseConnectionFactory;
 import model.team.Team;
 import model.team.repository.TeamRepository;
 
@@ -75,12 +76,11 @@ public class SqliteTeamRepository implements TeamRepository {
       "Select * from MemberToTeam WHERE TeamId = ? and MemberId = ?";
   private PreparedStatement isMemberSt;
 
-  public SqliteTeamRepository() {
+  public SqliteTeamRepository() throws SQLException {
+    c = SqliteDatabaseConnectionFactory.getConnection();
     try {
-      Class.forName("org.sqlite.JDBC");
-      c = DriverManager.getConnection("jdbc:sqlite:project_management_app.db");
       prepareStatements();
-    } catch (ClassNotFoundException | SQLException e) {
+    } catch (SQLException e) {
       e.printStackTrace();
       System.exit(1);
     }

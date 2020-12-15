@@ -1,10 +1,13 @@
 package model.project.repository.impl;
 
+import model.SqliteDatabaseConnectionFactory;
 import model.project.Project;
 import model.project.repository.ProjectRepository;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public class SqliteProjectRepository implements ProjectRepository {
     private Connection c;
@@ -14,6 +17,14 @@ public class SqliteProjectRepository implements ProjectRepository {
             "INSERT INTO Project (Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, " +
                     "StatusId) VALUES (?, ?, ?, ?, ?, ?, ?)";
     private PreparedStatement saveProjectSt;
+
+    // Get projects based on team and title.
+    private static final String GET_PROJECT_B_TEAM_TITLE_STATEMENT =
+            "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, " +
+                    "StatusName " +
+                    "From Project p JOIN ProjectStatus st ON p" +
+                    ".StatusId = st.StatusId WHERE Name = ? and TeamId = ? ";
+    private PreparedStatement getProjectBTitleTeamSt;
     
     // Get status id
     private static final String GET_PROJECTS_STATUS_ID =
@@ -21,12 +32,11 @@ public class SqliteProjectRepository implements ProjectRepository {
     private PreparedStatement getProjectStatusIdSt;
 
 
-    public SqliteProjectRepository() {
+    public SqliteProjectRepository() throws SQLException {
+        c = SqliteDatabaseConnectionFactory.getConnection();
         try {
-            Class.forName("org.sqlite.JDBC");
-            c = DriverManager.getConnection("jdbc:sqlite:project_management_app.db");
             prepareStatements();
-        } catch (ClassNotFoundException | SQLException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
             System.exit(1);
         }
@@ -38,6 +48,7 @@ public class SqliteProjectRepository implements ProjectRepository {
      */
     private void prepareStatements() throws SQLException {
         saveProjectSt = c.prepareStatement(SAVE_PROJECT_STATEMENT);
+        getProjectBTitleTeamSt = c.prepareStatement(GET_PROJECT_B_TEAM_TITLE_STATEMENT);
         getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
     }
 
@@ -63,6 +74,19 @@ public class SqliteProjectRepository implements ProjectRepository {
         return null;
     }
 
+
+    @Override
+    public Optional<Project> getProject(int teamId, String name) throws SQLException {
+        getProjectBTitleTeamSt.setString(1, name);
+        getProjectBTitleTeamSt.setInt(2, teamId);
+        ResultSet result = getProjectBTitleTeamSt.executeQuery();
+        if (result.next()) {
+            return Optional.of(getProjectFromResult(result));
+        } else {
+            return Optional.empty();
+        }
+    }
+
     @Override
     public List<Project> getProjectsOfTeam(int teamId) {
         return null;
@@ -83,5 +107,20 @@ public class SqliteProjectRepository implements ProjectRepository {
         ResultSet result = getProjectStatusIdSt.executeQuery();
         result.next();
         return result.getInt("StatusId");
+    }
+
+    private Project getProjectFromResult(ResultSet result) throws SQLException {
+        int id = result.getInt("ProjectId");
+        String title = result.getString("Name");
+        int teamId = result.getInt("TeamId");
+        String description = result.getString("Description");
+        LocalDate deadline = LocalDate.parse(result.getString("Deadline"));
+        int supervisorId = result.getInt("SupervisorId");
+        int assigneeId = result.getInt("AssigneeId");
+        Project.ProjectStatus status = Project.ProjectStatus.valueOf(result.getString("StatusName"));
+        Project project = new Project(id, title, teamId, deadline, status, supervisorId,
+                assigneeId);
+        project.setDescription(description);
+        return project;
     }
 }
