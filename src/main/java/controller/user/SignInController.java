@@ -15,7 +15,7 @@ import java.sql.SQLException;
 public class SignInController extends FrameController {
 
   /** An instance of the UserManager which manages the data in the model User. */
-  UserManager userManager;
+  private UserManager userManager;
   /**
    * The signInFlag is used to notify the windowAdapter whether the frame is closing because of a
    * successful sign-in or because the user exited the application.
