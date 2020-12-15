@@ -28,9 +28,8 @@ public class JoinTeamController extends FrameController {
   }
 
   /**
-   * When the user wants to join team, a request to the model is sent.
-   * The user is notified about the outcome of the operation.
-   * If successful, a new team with the given name is created.
+   * When the user wants to join team, a request to the model is sent. The user is notified about
+   * the outcome of the operation. If successful, a new team with the given name is created.
    *
    * @param teamCode is the code of the team to join.
    */
@@ -38,15 +37,20 @@ public class JoinTeamController extends FrameController {
     try {
       teamManager.joinTeam(teamCode);
       JOptionPane.showMessageDialog(
-              frame, SUCCESSFUL_TEAM_JOINING_MESSAGE, SUCCESFUL_TEAM_JOINING_TITLE,
-              JOptionPane.PLAIN_MESSAGE);
-    } catch (InexistentTeamException | NoSignedInUserException | SQLException | InexistentDatabaseEntityException e) {
+          frame,
+          SUCCESSFUL_TEAM_JOINING_MESSAGE,
+          SUCCESFUL_TEAM_JOINING_TITLE,
+          JOptionPane.PLAIN_MESSAGE);
+    } catch (InexistentTeamException
+        | NoSignedInUserException
+        | SQLException
+        | InexistentDatabaseEntityException e) {
       e.printStackTrace();
       ErrorDialogFactory.createErrorDialog(e, frame, "You can't join team with code " + teamCode);
     } catch (AlreadyMemberException e) {
       e.printStackTrace();
-      ErrorDialogFactory.createErrorDialog(e, frame,
-              "You already are a member of team with code " + teamCode);
+      ErrorDialogFactory.createErrorDialog(
+          e, frame, "You already are a member of team with code " + teamCode);
     }
     closeFrame();
   }
