@@ -2,7 +2,6 @@ package controller.team;
 
 import controller.FrameController;
 import model.InexistentDatabaseEntityException;
-import model.team.Team;
 import model.team.TeamManager;
 import model.user.NoSignedInUserException;
 import view.ErrorDialogFactory;
@@ -27,9 +26,8 @@ public class CreateTeamController extends FrameController {
   }
 
   /**
-   * When the user wants to create a new team, a request to the model is sent.
-   * The user is notified about the outcome of the operation.
-   * If succesful, a new team with the given name is created.
+   * When the user wants to create a new team, a request to the model is sent. The user is notified
+   * about the outcome of the operation. If succesful, a new team with the given name is created.
    *
    * @param teamName is the name of the new team.
    */
@@ -37,8 +35,10 @@ public class CreateTeamController extends FrameController {
     try {
       teamManager.createNewTeam(teamName);
       JOptionPane.showMessageDialog(
-              frame, SUCCESSFUL_TEAM_CREATION_MESSAGE, SUCCESFUL_TEAM_CREATION_TITLE,
-              JOptionPane.PLAIN_MESSAGE);
+          frame,
+          SUCCESSFUL_TEAM_CREATION_MESSAGE,
+          SUCCESFUL_TEAM_CREATION_TITLE,
+          JOptionPane.PLAIN_MESSAGE);
     } catch (SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
       e.printStackTrace();
       ErrorDialogFactory.createErrorDialog(e, frame, null);

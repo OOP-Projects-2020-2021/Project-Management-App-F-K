@@ -102,8 +102,8 @@ public class TeamManager extends Manager {
   }
 
   /**
-   * Adds the current user as a member to the team with the given code, if it exists.
-   * Requirement: The user should not alrady be a member of the team.
+   * Adds the current user as a member to the team with the given code, if it exists. Requirement:
+   * The user should not alrady be a member of the team.
    *
    * @param code is the code provided by the user of the team to join.
    * @throws SQLException if the operation could not be performed in the database.
@@ -113,7 +113,7 @@ public class TeamManager extends Manager {
    * @throws AlreadyMemberException if the current user is already a member of the team.
    */
   public void joinTeam(String code)
-          throws SQLException, InexistentTeamException, NoSignedInUserException,
+      throws SQLException, InexistentTeamException, NoSignedInUserException,
           InexistentDatabaseEntityException, AlreadyMemberException {
     Team team = getMandatoryTeam(code);
     User currentUser = getMandatoryCurrentUser();
@@ -153,8 +153,9 @@ public class TeamManager extends Manager {
    * @throws AlreadyMemberException if the user with userName is already a member of the team.
    */
   public void addMemberToTeam(int teamId, String userName)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException, AlreadyMemberException {
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException,
+          AlreadyMemberException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "add member to the team");
