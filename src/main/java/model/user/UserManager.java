@@ -3,6 +3,7 @@ package model.user;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
 import java.sql.SQLException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /** Singleton class UserManager. */
@@ -61,6 +62,29 @@ public class UserManager {
    */
   public boolean validatePassword(String password) {
     return currentUser.getPassword().equals(password);
+  }
+
+  /**
+   * Updates the user's account information, saving the new username and password.
+   * @param username = new username
+   * @param password = new password
+   */
+  public void updateUser(String username,String password) throws SQLException,NoSignedInUserException,InexistentUserException{
+    try {
+      int id = currentUser.getId().get();
+      userRepository.updateUser(id, username, password);
+      setCurrentUser(id);
+    }catch(NoSuchElementException noSuchElementException) {
+      throw new NoSignedInUserException();
+    }
+  }
+
+  private void setCurrentUser(int id) throws SQLException,InexistentUserException {
+    try {
+      currentUser = userRepository.getUserById(id);
+    }catch(NoSuchElementException noSuchElementException) {
+      throw new InexistentUserException(id);
+    }
   }
 
   public Optional<User> getCurrentUser(){

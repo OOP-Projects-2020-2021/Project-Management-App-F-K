@@ -1,5 +1,6 @@
 package model.user.repository;
 
+import model.user.InexistentUserException;
 import model.user.User;
 import org.jetbrains.annotations.Nullable;
 import java.sql.SQLException;
@@ -42,4 +43,14 @@ public interface UserRepository {
    */
   @Nullable
   User getUserByUsername(String username) throws SQLException;
+
+  /**
+   * Updates the fields of an existing user.
+   * @param id = which identifies the user in the database
+   * @param username = new username to be set
+   * @param password = new password to be set
+   * @throws SQLException if an error occurs at reading from the database
+   */
+  void updateUser(int id,String username,String password) throws SQLException;
+
 }

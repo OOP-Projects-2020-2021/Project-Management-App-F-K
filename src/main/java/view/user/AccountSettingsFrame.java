@@ -2,11 +2,9 @@ package view.user;
 
 import controller.user.AccountSettingsController;
 import view.UIFactory;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Arrays;
 
 /**
  * AccountSettingsFrame displays the account information of the user and allows changing the data.
@@ -35,15 +33,12 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
   private static final Dimension DIMENSION = new Dimension(500, 300);
   /** Messages displayed to inform the user about the validation of the data. */
   private static final String ASK_PASSWORD_MESSAGE = "Enter your current password:";
-
-  private static final String INCORRECT_PASSWORD_MESSAGE = "Incorrect password!";
   private static final String ACCOUNT_INFORMATION_SAVED = "Saved.";
   /**
    * Messages displayed on the toggle button to show/hide the password. It works only when the
    * password is being edited.
    */
   private static final String SHOW_PASSWORD = "Show";
-
   private static final String HIDE_PASSWORD = "Hide";
 
   public AccountSettingsFrame(JFrame parentFrame) {
@@ -136,11 +131,7 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
           if (accountSettingsController.isValidPassword(password)) {
             passwordField.setEditable(true);
           } else {
-            JOptionPane.showMessageDialog(
-                editPasswordButton,
-                INCORRECT_PASSWORD_MESSAGE,
-                INCORRECT_PASSWORD_MESSAGE,
-                JOptionPane.ERROR_MESSAGE);
+            accountSettingsController.displayIncorrectPasswordDialog();
           }
         }
       } else if (source == editUsernameButton) {
@@ -151,9 +142,10 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
         accountSettingsController.goBack();
       } else if (source == saveButton) {
         String username = usernameTextField.getText();
-        String password = Arrays.toString(passwordField.getPassword());
-        accountSettingsController.saveAccountData(username, password);
-        updateFieldsAfterSave();
+        String password = String.valueOf(passwordField.getPassword());
+        if(accountSettingsController.saveAccountData(username, password)) {
+          updateFieldsAfterSave();
+        }
       }
     }
   }
@@ -171,11 +163,14 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
 
   private void updateFieldsAfterSave() {
     dataSavedLabel.setVisible(true);
+    usernameTextField.setText(accountSettingsController.getUsername());
     usernameTextField.setEditable(false);
+    passwordField.setText(accountSettingsController.getPassword());
     passwordField.setEditable(false);
     passwordField.setEchoChar('*');
     showPasswordButton.setText(SHOW_PASSWORD);
   }
+
 
   private class AccountSettingsWindowAdapter extends WindowAdapter {
     @Override
