@@ -38,7 +38,9 @@ public class UserManager {
   }
 
   /**
-   * Validates the sign-in, and sets the currentUser on successful sign-in.
+   * Validates the sign-in, by searching for the username in the database, then comparing the
+   * corresponding password with the one introduced by the user, and it sets the currentUser on
+   * successful sign-in, otherwise currentUser will be null.
    *
    * @param username = username introduced by the user at sign-in
    * @param password = password introduced by the user at sign-in
@@ -46,12 +48,8 @@ public class UserManager {
    * @throws SQLException if a database error occurred
    */
   public boolean signIn(String username, String password) throws SQLException {
-    int id = userRepository.getUserId(username, password);
-    if (id >= 0) {
-      currentUser = userRepository.getUserById(id);
-      return true;
-    }
-    return false;
+    currentUser = userRepository.getUserByUsername(username);
+    return (currentUser != null && currentUser.getPassword().equals(password));
   }
 
   /**
@@ -67,35 +65,19 @@ public class UserManager {
 
   /**
    * Updates the user's account information, saving the new username and password. Whenever the user
-   * changes the account data from the settings view, the currentUser instance is updates as well.
+   * changes the account data from the settings view, the currentUser instance is updated as well.
    *
    * @param username = new username
    * @param password = new password
    */
   public void updateUser(String username, String password)
-      throws SQLException, NoSignedInUserException, InexistentUserException {
+      throws SQLException, NoSignedInUserException {
     try {
       int id = currentUser.getId().get();
-      userRepository.updateUser(new User(id, username, password));
-      setCurrentUser(id);
+      currentUser = new User(id, username, password);
+      userRepository.updateUser(currentUser);
     } catch (NoSuchElementException noSuchElementException) {
       throw new NoSignedInUserException();
-    }
-  }
-
-  /**
-   * Update the current User with the data gathered from the database based on the id, which never
-   * changes.
-   *
-   * @param id = uniquely identifies the user
-   * @throws SQLException if a database error occurred
-   * @throws InexistentUserException = if the id cannot be found in the database
-   */
-  private void setCurrentUser(int id) throws SQLException, InexistentUserException {
-    try {
-      currentUser = Objects.requireNonNull(userRepository.getUserById(id));
-    } catch (NullPointerException nullPointerException) {
-      throw new InexistentUserException(id);
     }
   }
 
