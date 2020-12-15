@@ -1,5 +1,6 @@
 package model.team;
 
+import model.InexistentDatabaseEntityException;
 import model.Manager;
 import model.UnauthorisedOperationException;
 import model.user.InexistentUserException;
@@ -33,10 +34,11 @@ public class TeamManager extends Manager {
    * @param name is the name of the new team.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
-  public void createNewTeam(String name) throws SQLException, NoSignedInUserException {
+  public void createNewTeam(String name) throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException {
     teamRepository.saveTeam(
-        new Team(name, getMandatoryCurrentUser().getId().get(), generateTeamCode()));
+        new Team.SavableTeam(name, getMandatoryCurrentUser().getId().get(), generateTeamCode()));
   }
 
   /**
@@ -100,12 +102,13 @@ public class TeamManager extends Manager {
    * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentTeamException if no team with this code exists.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
   public void joinTeam(String code)
-      throws SQLException, InexistentTeamException, NoSignedInUserException {
+          throws SQLException, InexistentTeamException, NoSignedInUserException, InexistentDatabaseEntityException {
     Team team = getMandatoryTeam(code);
     User currentUser = getMandatoryCurrentUser();
-    teamRepository.addTeamMember(team.getId().get(), currentUser.getId().get());
+    teamRepository.addTeamMember(team.getId(), currentUser.getId().get());
   }
 
   /**
@@ -132,15 +135,16 @@ public class TeamManager extends Manager {
    * @throws UnauthorisedOperationException if the current user is no the manager of the team.
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentUserException if the requested new member with userName does not exist.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
   public void addMemberToTeam(int teamId, String userName)
-      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException {
+          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "add member to the team");
     User newMember = getMandatoryUser(userName);
-    teamRepository.addTeamMember(team.getId().get(), newMember.getId().get());
+    teamRepository.addTeamMember(team.getId(), newMember.getId().get());
   }
 
   /**
@@ -155,15 +159,16 @@ public class TeamManager extends Manager {
    * @throws UnauthorisedOperationException if the current user is no the manager of the team.
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentUserException if the requested new member with userName does not exist.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
   public void removeTeamMember(int teamId, String userName)
-      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException {
+          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "remove a member from the team");
     User toRemoveMember = getMandatoryUser(userName);
-    teamRepository.removeTeamMember(team.getId().get(), toRemoveMember.getId().get());
+    teamRepository.removeTeamMember(team.getId(), toRemoveMember.getId().get());
   }
 
   /**

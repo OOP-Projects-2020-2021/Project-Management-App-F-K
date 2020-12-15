@@ -1,5 +1,6 @@
 package model.team.repository.impl;
 
+import model.InexistentDatabaseEntityException;
 import model.database.Repository;
 import model.team.Team;
 import model.team.repository.TeamRepository;
@@ -105,15 +106,14 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
   }
 
   @Override
-  public int saveTeam(Team team) throws SQLException {
+  public int saveTeam(Team.SavableTeam team) throws SQLException, InexistentDatabaseEntityException {
     saveTeamSt.setString(1, team.getName());
     saveTeamSt.setInt(2, team.getManagerId());
     saveTeamSt.setString(3, team.getCode());
     saveTeamSt.execute();
     Optional<Team> savedTeam = getTeam(team.getCode());
     if (savedTeam.isPresent()) {
-      team.setId(savedTeam.get().getId().get());
-      return savedTeam.get().getId().get();
+      return savedTeam.get().getId();
     } else {
       throw new SQLException("Saving team was unsuccesful");
     }
