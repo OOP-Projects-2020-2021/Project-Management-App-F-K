@@ -32,7 +32,7 @@ public class SqliteProjectRepository implements ProjectRepository {
     private PreparedStatement getProjectStatusIdSt;
 
 
-    public SqliteProjectRepository() throws SQLException {
+    public SqliteProjectRepository() {
         c = SqliteDatabaseConnectionFactory.getConnection();
         try {
             prepareStatements();

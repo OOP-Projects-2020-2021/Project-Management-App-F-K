@@ -76,7 +76,7 @@ public class SqliteTeamRepository implements TeamRepository {
       "Select * from MemberToTeam WHERE TeamId = ? and MemberId = ?";
   private PreparedStatement isMemberSt;
 
-  public SqliteTeamRepository() throws SQLException {
+  public SqliteTeamRepository() {
     c = SqliteDatabaseConnectionFactory.getConnection();
     try {
       prepareStatements();
