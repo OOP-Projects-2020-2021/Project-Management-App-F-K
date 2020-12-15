@@ -2,7 +2,6 @@ package model.user;
 
 import model.InexistentDatabaseEntityException;
 
-
 /**
  * Represents a User and contains its account information.
  *

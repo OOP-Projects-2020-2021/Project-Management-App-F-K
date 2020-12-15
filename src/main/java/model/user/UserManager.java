@@ -2,7 +2,6 @@ package model.user;
 
 import model.InexistentDatabaseEntityException;
 import model.Manager;
-import model.project.Project;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.Optional;

@@ -34,7 +34,7 @@ public class SqliteUserRepository extends Repository implements UserRepository {
     }
     return instance;
   }
-  
+
   protected void prepareStatements() throws SQLException {
     saveUserStatement = c.prepareStatement(SAVE_USER_STATEMENT);
     getUserIdStatement = c.prepareStatement(GET_USER_ID_STATEMENT);
