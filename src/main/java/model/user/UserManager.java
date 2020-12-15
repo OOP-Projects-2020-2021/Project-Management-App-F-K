@@ -1,4 +1,5 @@
 package model.user;
+
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
 import java.sql.SQLException;
@@ -54,8 +55,8 @@ public class UserManager {
   }
 
   /**
-   * Validates the password introduced by the user when attempting to change the password.
-   * This is an additional security step, to protect the account information of the user.
+   * Validates the password introduced by the user when attempting to change the password. This is
+   * an additional security step, to protect the account information of the user.
    *
    * @param password = password introduced by the user that will be compared to the current password
    * @return boolean = true if the password matches
@@ -65,45 +66,45 @@ public class UserManager {
   }
 
   /**
-   * Updates the user's account information, saving the new username and password.
-   * Whenever the user changes the account data from  the settings view, the currentUser instance is
-   * updates as well.
+   * Updates the user's account information, saving the new username and password. Whenever the user
+   * changes the account data from the settings view, the currentUser instance is updates as well.
    *
    * @param username = new username
    * @param password = new password
    */
-  public void updateUser(String username,String password) throws SQLException,NoSignedInUserException,InexistentUserException{
+  public void updateUser(String username, String password)
+      throws SQLException, NoSignedInUserException, InexistentUserException {
     try {
       int id = currentUser.getId().get();
       userRepository.updateUser(id, username, password);
       setCurrentUser(id);
-    }catch(NoSuchElementException noSuchElementException) {
+    } catch (NoSuchElementException noSuchElementException) {
       throw new NoSignedInUserException();
     }
   }
 
   /**
-   * Update the current User with the data gathered from the database based on the id, which never changes.
+   * Update the current User with the data gathered from the database based on the id, which never
+   * changes.
    *
    * @param id = uniquely identifies the user
    * @throws SQLException if the data could not be read from the database
    * @throws InexistentUserException = if the id cannot be found in the database
    */
-  private void setCurrentUser(int id) throws SQLException,InexistentUserException {
+  private void setCurrentUser(int id) throws SQLException, InexistentUserException {
     try {
       currentUser.setUsername(Objects.requireNonNull(userRepository.getUserById(id)).getUsername());
       currentUser.setPassword(Objects.requireNonNull(userRepository.getUserById(id)).getPassword());
-    }catch(NoSuchElementException | NullPointerException e) {
+    } catch (NoSuchElementException | NullPointerException e) {
       throw new InexistentUserException(id);
     }
   }
 
-  public Optional<User> getCurrentUser(){
+  public Optional<User> getCurrentUser() {
     return Optional.of(currentUser);
   }
 
   public void logOut() {
     currentUser = null;
   }
-
 }

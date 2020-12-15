@@ -1,4 +1,5 @@
 package controller.user;
+
 import controller.FrameController;
 import model.user.InexistentUserException;
 import model.user.NoSignedInUserException;
@@ -18,7 +19,9 @@ public class AccountSettingsController extends FrameController {
   private UserManager userManager;
   /** Error messages shown to the user when the update of the fields is unsuccessful. */
   private static final String FAILED_UPDATE_MESSAGE = "Update failed!";
-  private static final String CHANGES_LOST_MESSAGE = "An error occurred and the changes could not be saved.";
+
+  private static final String CHANGES_LOST_MESSAGE =
+      "An error occurred and the changes could not be saved.";
   /** Messages displayed to inform the user about the validation of the data. */
   private static final String INCORRECT_PASSWORD_MESSAGE = "Incorrect password!";
 
@@ -34,7 +37,8 @@ public class AccountSettingsController extends FrameController {
    * otherwise not.
    *
    * @param password = the password introduced by the user
-   * @return boolean = true if the password matches, false if it doesn't match or if nothing was introduced
+   * @return boolean = true if the password matches, false if it doesn't match or if nothing was
+   *     introduced
    */
   public boolean isValidPassword(String password) {
     if (password != null && !password.isEmpty()) {
@@ -42,9 +46,11 @@ public class AccountSettingsController extends FrameController {
     }
     return false;
   }
+
   public String getUsername() {
     return userManager.getCurrentUser().get().getUsername();
   }
+
   public String getPassword() {
     return userManager.getCurrentUser().get().getPassword();
   }
@@ -56,13 +62,13 @@ public class AccountSettingsController extends FrameController {
    * @return boolean = true if changes to the account could be saved
    */
   public boolean saveAccountData(String username, String password) {
-    //todo restore the old data if the update failed
+    // todo restore the old data if the update failed
     try {
-      userManager.updateUser(username,password);
+      userManager.updateUser(username, password);
       return true;
-    }catch(SQLException sqlException) {
+    } catch (SQLException sqlException) {
       displayDatabaseErrorDialog();
-    }catch(InexistentUserException | NoSignedInUserException e) {
+    } catch (InexistentUserException | NoSignedInUserException e) {
       displayFailedUpdateDialog();
     }
     return false;
@@ -70,14 +76,12 @@ public class AccountSettingsController extends FrameController {
 
   public void displayFailedUpdateDialog() {
     JOptionPane.showMessageDialog(
-            frame, FAILED_UPDATE_MESSAGE,CHANGES_LOST_MESSAGE, JOptionPane.WARNING_MESSAGE);
+        frame, FAILED_UPDATE_MESSAGE, CHANGES_LOST_MESSAGE, JOptionPane.WARNING_MESSAGE);
   }
+
   public void displayIncorrectPasswordDialog() {
     JOptionPane.showMessageDialog(
-            frame,
-            INCORRECT_PASSWORD_MESSAGE,
-            INCORRECT_PASSWORD_MESSAGE,
-            JOptionPane.ERROR_MESSAGE);
+        frame, INCORRECT_PASSWORD_MESSAGE, INCORRECT_PASSWORD_MESSAGE, JOptionPane.ERROR_MESSAGE);
   }
   /** On going back, it closes the current frame. */
   public void goBack() {

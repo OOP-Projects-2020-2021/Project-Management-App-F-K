@@ -129,19 +129,18 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
       if (source == editPasswordButton) {
         String password = JOptionPane.showInputDialog(this, ASK_PASSWORD_MESSAGE);
         dataSavedLabel.setVisible(false);
-          if (accountSettingsController.isValidPassword(password)) {
-            passwordField.setEditable(true);
-          } else {
-            accountSettingsController.displayIncorrectPasswordDialog();
-          }
+        if (accountSettingsController.isValidPassword(password)) {
+          passwordField.setEditable(true);
+        } else {
+          accountSettingsController.displayIncorrectPasswordDialog();
+        }
       } else if (source == editUsernameButton) {
         usernameTextField.setEditable(true);
         dataSavedLabel.setVisible(false);
       }
       if (source == goBackButton) {
         accountSettingsController.goBack();
-      }
-      else if (source == saveButton) {
+      } else if (source == saveButton) {
         String username = usernameTextField.getText();
         String password = String.valueOf(passwordField.getPassword());
         if (accountSettingsController.saveAccountData(username, password)) {
