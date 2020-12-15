@@ -1,9 +1,9 @@
 package model.user;
-
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
+import java.util.Objects;
 import java.util.Optional;
 
 /** Singleton class UserManager. */
@@ -66,6 +66,9 @@ public class UserManager {
 
   /**
    * Updates the user's account information, saving the new username and password.
+   * Whenever the user changes the account data from  the settings view, the currentUser instance is
+   * updates as well.
+   *
    * @param username = new username
    * @param password = new password
    */
@@ -79,10 +82,18 @@ public class UserManager {
     }
   }
 
+  /**
+   * Update the current User with the data gathered from the database based on the id, which never changes.
+   *
+   * @param id = uniquely identifies the user
+   * @throws SQLException if the data could not be read from the database
+   * @throws InexistentUserException = if the id cannot be found in the database
+   */
   private void setCurrentUser(int id) throws SQLException,InexistentUserException {
     try {
-      currentUser = userRepository.getUserById(id);
-    }catch(NoSuchElementException noSuchElementException) {
+      currentUser.setUsername(Objects.requireNonNull(userRepository.getUserById(id)).getUsername());
+      currentUser.setPassword(Objects.requireNonNull(userRepository.getUserById(id)).getPassword());
+    }catch(NoSuchElementException | NullPointerException e) {
       throw new InexistentUserException(id);
     }
   }

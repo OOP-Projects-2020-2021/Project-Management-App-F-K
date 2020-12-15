@@ -127,20 +127,19 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
       if (source == editPasswordButton) {
         String password = JOptionPane.showInputDialog(this, ASK_PASSWORD_MESSAGE);
         dataSavedLabel.setVisible(false);
-        if (password != null && !password.isEmpty()) {
           if (accountSettingsController.isValidPassword(password)) {
             passwordField.setEditable(true);
           } else {
             accountSettingsController.displayIncorrectPasswordDialog();
           }
-        }
       } else if (source == editUsernameButton) {
         usernameTextField.setEditable(true);
         dataSavedLabel.setVisible(false);
       }
       if (source == goBackButton) {
         accountSettingsController.goBack();
-      } else if (source == saveButton) {
+      }
+      else if (source == saveButton) {
         String username = usernameTextField.getText();
         String password = String.valueOf(passwordField.getPassword());
         if(accountSettingsController.saveAccountData(username, password)) {
@@ -161,7 +160,7 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     }
   }
 
-  private void updateFieldsAfterSave() {
+  public void updateFieldsAfterSave() {
     dataSavedLabel.setVisible(true);
     usernameTextField.setText(accountSettingsController.getUsername());
     usernameTextField.setEditable(false);
@@ -170,7 +169,6 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     passwordField.setEchoChar('*');
     showPasswordButton.setText(SHOW_PASSWORD);
   }
-
 
   private class AccountSettingsWindowAdapter extends WindowAdapter {
     @Override

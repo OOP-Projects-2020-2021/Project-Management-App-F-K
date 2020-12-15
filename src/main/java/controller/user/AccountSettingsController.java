@@ -5,7 +5,6 @@ import model.user.NoSignedInUserException;
 import model.user.UserManager;
 import javax.swing.*;
 import java.sql.SQLException;
-import java.util.NoSuchElementException;
 
 /**
  * AccountSettingsController controls the AccountSettingsFrame, managing operations like gathering
@@ -17,8 +16,7 @@ public class AccountSettingsController extends FrameController {
 
   /** Instance of a UserManager, which accesses and modifies data related to the user. */
   private UserManager userManager;
-  /** Error messages shown to the user when the update of the fields is unsuccessfuul. */
-  private static final String UNAVAILABLE_DATA = "Data unavailable";
+  /** Error messages shown to the user when the update of the fields is unsuccessful. */
   private static final String FAILED_UPDATE_MESSAGE = "Update failed!";
   private static final String CHANGES_LOST_MESSAGE = "An error occurred and the changes could not be saved.";
   /** Messages displayed to inform the user about the validation of the data. */
@@ -55,6 +53,7 @@ public class AccountSettingsController extends FrameController {
    *
    * @param username = the username of the user
    * @param password = the password of the user
+   * @return boolean = true if changes to the account could be saved
    */
   public boolean saveAccountData(String username, String password) {
     //todo restore the old data if the update failed
