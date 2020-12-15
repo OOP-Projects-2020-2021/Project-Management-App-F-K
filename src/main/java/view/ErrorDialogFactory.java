@@ -1,6 +1,7 @@
 package view;
 
 import model.InexistentDatabaseEntityException;
+import model.team.InexistentTeamException;
 import model.user.NoSignedInUserException;
 
 import javax.swing.*;
@@ -25,6 +26,11 @@ public class ErrorDialogFactory {
     private static final String SIGNIN_REQUIRED_ERROR_MESSAGE =
             "An error occurred. To access this functionality, you must sign in first";
 
+    /** Messages that inform the user that the requested team does not exist. */
+    private static final String REQUESTED_TEAM_NOT_EXISTING_TITLE = "Team not found";
+    private static final String REQUESTED_TEAM_NOT_EXISTING_MESSAGE =
+            "An error occurred. The team that you requested was not found.";
+
     public static void createErrorDialog(Exception exception, Frame frame, String message) {
         if (message == null) {
             message = "";
@@ -34,6 +40,9 @@ public class ErrorDialogFactory {
         }
         if (exception instanceof NoSignedInUserException) {
             displaySigninRequiredErrorDialog(frame, message);
+        }
+        if (exception instanceof InexistentTeamException) {
+            displayInexistentTeamErrorDialog(frame, message);
         }
     }
 
@@ -52,6 +61,17 @@ public class ErrorDialogFactory {
         JOptionPane.showMessageDialog(
                 frame, SIGNIN_REQUIRED_ERROR_MESSAGE + "\n" + message,
                 SIGNIN_REQUIRED_ERROR_TITLE,
+                JOptionPane.ERROR_MESSAGE);
+    }
+
+    /**
+     * Display an error message in case the functionality should have been aceesed by signed in
+     * users only.
+     */
+    private static void displayInexistentTeamErrorDialog(Frame frame, String message) {
+        JOptionPane.showMessageDialog(
+                frame, REQUESTED_TEAM_NOT_EXISTING_MESSAGE + "\n" + message,
+                REQUESTED_TEAM_NOT_EXISTING_TITLE,
                 JOptionPane.ERROR_MESSAGE);
     }
 }
