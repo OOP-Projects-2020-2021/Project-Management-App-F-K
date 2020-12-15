@@ -44,7 +44,7 @@ public class User {
     this.password = password;
   }
 
-  //todo
+  // todo
   public Optional<Integer> getId() {
     return Optional.of(id);
   }
