@@ -1,16 +1,15 @@
 package model.user;
 
-import model.user.repository.UserRepository;
-import model.user.repository.impl.SqliteUserRepository;
+import model.InexistentDatabaseEntityException;
+import model.Manager;
 import java.sql.SQLException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /** Singleton class UserManager. */
-public class UserManager {
+public class UserManager extends Manager {
 
   private static UserManager instance;
-  private UserRepository userRepository = new SqliteUserRepository();
   /** The current user which has signed in to the application. */
   private User currentUser;
 
@@ -32,7 +31,7 @@ public class UserManager {
    * @throws SQLException = in case the user could not be saved
    */
   public void signUp(String username, String password) throws SQLException {
-    User user = new User(username, password);
+    User user = new User.SavableUser(username, password);
     userRepository.saveUser(user);
   }
 
@@ -49,6 +48,10 @@ public class UserManager {
   public boolean signIn(String username, String password) throws SQLException {
     currentUser = userRepository.getUserByUsername(username);
     return (currentUser != null && currentUser.getPassword().equals(password));
+  }
+
+  public Optional<User> getCurrentUser() {
+    return Optional.ofNullable(currentUser);
   }
 
   /**
@@ -72,16 +75,12 @@ public class UserManager {
   public void updateUser(String username, String password)
       throws SQLException, NoSignedInUserException {
     try {
-      int id = currentUser.getId().get();
+      int id = currentUser.getId();
       currentUser = new User(id, username, password);
       userRepository.updateUser(currentUser);
-    } catch (NoSuchElementException noSuchElementException) {
+    } catch (NoSuchElementException | InexistentDatabaseEntityException noSuchElementException) {
       throw new NoSignedInUserException();
     }
-  }
-
-  public Optional<User> getCurrentUser() {
-    return Optional.ofNullable(currentUser);
   }
 
   public void logOut() {

@@ -1,5 +1,6 @@
 package model.user.repository;
 
+import model.InexistentDatabaseEntityException;
 import model.user.User;
 import org.jetbrains.annotations.Nullable;
 import java.sql.SQLException;
@@ -49,5 +50,5 @@ public interface UserRepository {
    * @param user = the user with the new attributes
    * @throws SQLException if an error occurs at reading from the database
    */
-  void updateUser(User user) throws SQLException;
+  void updateUser(User user) throws SQLException, InexistentDatabaseEntityException;
 }

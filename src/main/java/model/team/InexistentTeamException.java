@@ -6,7 +6,7 @@ package model.team;
  * @author Bori Fazakas
  */
 public class InexistentTeamException extends Exception {
-  InexistentTeamException(String code) {
+  public InexistentTeamException(String code) {
     super(
         "This operation is illegal because the requested team with code "
             + code
@@ -14,7 +14,7 @@ public class InexistentTeamException extends Exception {
             + "not exist");
   }
 
-  InexistentTeamException(int teamId) {
+  public InexistentTeamException(int teamId) {
     super(
         "This operation is illegal because the requested team with id "
             + teamId
