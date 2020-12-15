@@ -5,9 +5,8 @@ import model.team.Team;
 import model.user.User;
 
 /**
- * Exception used when a savable object's id is accessed.
- * Remark that savable objects should be used only befroe saving them in the database. Thus, they
- * don't have an id.
+ * Exception used when a savable object's id is accessed. Remark that savable objects should be used
+ * only befroe saving them in the database. Thus, they don't have an id.
  *
  * @author Bori Fazakas
  */

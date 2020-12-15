@@ -10,8 +10,8 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * SqliteTeamRepository is an implementation of ProjectRepository which provides database access
- * to an sqlite database holding project-related data.
+ * SqliteTeamRepository is an implementation of ProjectRepository which provides database access to
+ * an sqlite database holding project-related data.
  *
  * @author Bori Fazakas
  */

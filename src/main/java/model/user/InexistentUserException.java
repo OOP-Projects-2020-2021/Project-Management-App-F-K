@@ -1,8 +1,8 @@
 package model.user;
 
 /**
- * InexistentUserException is thrown when a user with a name/id is requested who does not exist
- * in the database.
+ * InexistentUserException is thrown when a user with a name/id is requested who does not exist in
+ * the database.
  *
  * @author Bori Fazakas
  */
