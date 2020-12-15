@@ -35,7 +35,6 @@ public class TeamFrame extends JFrame implements ActionListener {
 
     private TeamController teamController;
 
-
     private static final Dimension DIMENSION = new Dimension(400, 400);
 
     public TeamFrame() {
@@ -46,7 +45,7 @@ public class TeamFrame extends JFrame implements ActionListener {
         this.setJMenuBar(teamMenuBar);
         this.teamController = new TeamController(this);
         this.setLayout(new BorderLayout());
-        initmainPanel();
+        initMainPanel();
         this.addWindowListener(new TeamWindowAdapter());
         this.setVisible(true);
     }
@@ -80,7 +79,7 @@ public class TeamFrame extends JFrame implements ActionListener {
         teamMenuBar.add(teamMenu);
     }
 
-    private void initmainPanel() {
+    private void initMainPanel() {
 
         JPanel headerPanel = new JPanel(new GridLayout(3,1));
         headerPanel.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
@@ -136,18 +135,17 @@ public class TeamFrame extends JFrame implements ActionListener {
     private void initLists() {
         // todo get members and projects from team/project repo
         String[] Strings = { "Bird", "Cat", "Dog", "Rabbit", "Pig", "Hamster", "Parrot", "Goldfish"};
-        memberList = new JList(Strings);
+        memberList = new JList<>(Strings);
 
     }
-
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
         Object source = actionEvent.getSource();
         if(source == teamSettingsItem) {
-
+            teamController.enableTeamSettings();
         }else if(source == projectListItem) {
-
+            //todo link this with the project frame
         }
     }
     private class TeamWindowAdapter extends WindowAdapter {

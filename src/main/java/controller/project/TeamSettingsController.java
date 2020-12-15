@@ -16,4 +16,8 @@ public class TeamSettingsController extends FrameController {
     public void saveTeamName(String name) {
 
     }
+    public void onClose(JFrame parentFrame) {
+        parentFrame.setEnabled(true);
+        parentFrame.setVisible(true);
+    }
 }

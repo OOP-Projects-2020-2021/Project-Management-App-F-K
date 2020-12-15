@@ -8,6 +8,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 public class TeamSettingsFrame extends JFrame implements ActionListener {
+
     private JLabel nameLabel;
     private JLabel codeLabel;
     private JLabel managerLabel;
@@ -24,12 +25,15 @@ public class TeamSettingsFrame extends JFrame implements ActionListener {
     private JButton changeCodeButton;
     private JButton addMemberButton;
     private JButton removeMemberButton;
+
     private TeamSettingsController teamSettingsController;
+    private JFrame parentFrame;
 
     private static final Dimension DIMENSION = new Dimension(500, 300);
 
-    public TeamSettingsFrame() {
+    public TeamSettingsFrame(JFrame parentFrame) {
         super("Team Settings");
+        this.parentFrame = parentFrame;
         this.setSize(DIMENSION);
         this.setResizable(false);
         this.setLayout(new BorderLayout());
@@ -127,7 +131,8 @@ public class TeamSettingsFrame extends JFrame implements ActionListener {
     private class TeamSettingsWindowAdapter extends WindowAdapter {
         @Override
         public void windowClosing(WindowEvent e) {
-            System.exit(0);
+            //System.exit(0);
+            teamSettingsController.onClose(parentFrame);
         }
     }
 }
