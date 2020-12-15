@@ -63,6 +63,8 @@ public class Project {
     this.teamId = teamId;
     this.deadline = deadline;
     this.status = status;
+    this.supervisorId = supervisorId;
+    this.assigneeId = assigneeId;
   }
 
   public int getId() throws InexistentDatabaseEntityException {

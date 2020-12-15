@@ -11,10 +11,15 @@ public class SqliteProjectRepository implements ProjectRepository {
 
     // Save a new team.
     private static final String SAVE_PROJECT_STATEMENT =
-//            "INSERT INTO Project (Name, TeamId) VALUES (?, ?)";
             "INSERT INTO Project (Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, " +
                     "StatusId) VALUES (?, ?, ?, ?, ?, ?, ?)";
-    private PreparedStatement saveProjecSt;
+    private PreparedStatement saveProjectSt;
+    
+    // Get status id
+    private static final String GET_PROJECTS_STATUS_ID =
+            "SELECT StatusId from ProjectStatus WHERE StatusName = ?";
+    private PreparedStatement getProjectStatusIdSt;
+
 
     public SqliteProjectRepository() {
         try {
@@ -32,37 +37,25 @@ public class SqliteProjectRepository implements ProjectRepository {
      * parsing and creating a query plan is created only once, so query execution is faster.
      */
     private void prepareStatements() throws SQLException {
-        saveProjecSt = c.prepareStatement(SAVE_PROJECT_STATEMENT);
+        saveProjectSt = c.prepareStatement(SAVE_PROJECT_STATEMENT);
+        getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
     }
 
     @Override
     public void saveProject(Project.SavableProject project) throws SQLException {
-        saveProjecSt.setString(1, project.getTitle());
-        saveProjecSt.setInt(2, project.getTeamId());
+        saveProjectSt.setString(1, project.getTitle());
+        saveProjectSt.setInt(2, project.getTeamId());
         if (project.getDescription().isPresent()) {
-            saveProjecSt.setString(3,
+            saveProjectSt.setString(3,
                     project.getDescription().get());
         } else {
-            saveProjecSt.setNull(3, Types.NVARCHAR);
+            saveProjectSt.setNull(3, Types.NVARCHAR);
         }
-        saveProjecSt.setString(4, project.getDeadline().toString());
-        // todoL issue - assigneeId and supervisorId is notnull in database
-        if (project.getAssigneeId().isPresent()) {
-            saveProjecSt.setInt(5,
-                    project.getAssigneeId().get());
-        } else {
-            saveProjecSt.setNull(5, Types.INTEGER);
-        }
-//        if (project.getSupervisorId().isPresent()) {
-//            saveProjecSt.setInt(6,
-//                    project.getSupervisorId().get());
-//        } else {
-//            saveProjecSt.setNull(6, Types.INTEGER);
-//        }
-        saveProjecSt.setInt(5, 1);
-        saveProjecSt.setInt(6, 1);
-        saveProjecSt.setInt(7, 1);
-        saveProjecSt.execute();
+        saveProjectSt.setString(4, project.getDeadline().toString());
+        saveProjectSt.setInt(5, project.getAssigneeId());
+        saveProjectSt.setInt(6, project.getAssigneeId());
+        saveProjectSt.setInt(7, getProjectStatusId(project));
+        saveProjectSt.execute();
     }
 
     @Override
@@ -83,5 +76,12 @@ public class SqliteProjectRepository implements ProjectRepository {
     @Override
     public List<Project> getProjectsAssignedToUser(int userId) {
         return null;
+    }
+
+    private int getProjectStatusId(Project.SavableProject project) throws SQLException {
+        getProjectStatusIdSt.setString(1, project.getStatus().toString());
+        ResultSet result = getProjectStatusIdSt.executeQuery();
+        result.next();
+        return result.getInt("StatusId");
     }
 }
