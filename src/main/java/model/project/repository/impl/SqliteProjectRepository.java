@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class SqliteProjectRepository implements ProjectRepository {
+    private static SqliteProjectRepository instance;
     private Connection c;
 
     // Save a new team.
@@ -31,8 +32,7 @@ public class SqliteProjectRepository implements ProjectRepository {
             "SELECT StatusId from ProjectStatus WHERE StatusName = ?";
     private PreparedStatement getProjectStatusIdSt;
 
-
-    public SqliteProjectRepository() {
+    private SqliteProjectRepository() {
         c = SqliteDatabaseConnectionFactory.getConnection();
         try {
             prepareStatements();
@@ -40,6 +40,13 @@ public class SqliteProjectRepository implements ProjectRepository {
             e.printStackTrace();
             System.exit(1);
         }
+    }
+
+    public static SqliteProjectRepository getInstance() {
+        if (instance == null) {
+            instance = new SqliteProjectRepository();
+        }
+        return instance;
     }
 
     /**
@@ -70,7 +77,7 @@ public class SqliteProjectRepository implements ProjectRepository {
     }
 
     @Override
-    public Project getProject(int projectId) {
+    public Optional<Project> getProject(int projectId) {
         return null;
     }
 

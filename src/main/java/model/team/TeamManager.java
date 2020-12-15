@@ -1,11 +1,11 @@
 package model.team;
 
 import model.UnauthorisedOperationException;
+import model.team.repository.impl.SqliteTeamRepository;
 import model.user.InexistentUserException;
 import model.user.NoSignedInUserException;
 import model.user.User;
 import model.team.repository.TeamRepository;
-import model.team.repository.TeamRepositoryFactory;
 import model.user.UserManager;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
@@ -24,9 +24,8 @@ import java.util.Optional;
  */
 public class TeamManager {
   private static TeamManager instance = new TeamManager();
-  private TeamRepository teamRepository =
-      TeamRepositoryFactory.getTeamRepository(TeamRepositoryFactory.RepositoryType.SQLITE);
-  private UserRepository userRepository = new SqliteUserRepository();
+  private TeamRepository teamRepository = SqliteTeamRepository.getInstance();
+  private UserRepository userRepository = SqliteUserRepository.getInstance();
 
   private TeamManager() {}
 

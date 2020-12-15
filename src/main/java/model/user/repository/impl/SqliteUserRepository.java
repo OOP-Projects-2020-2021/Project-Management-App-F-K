@@ -1,6 +1,7 @@
 package model.user.repository.impl;
 
 import model.SqliteDatabaseConnectionFactory;
+import model.team.repository.impl.SqliteTeamRepository;
 import model.user.repository.UserRepository;
 import model.user.User;
 import org.jetbrains.annotations.Nullable;
@@ -8,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.sql.*;
 
 public class SqliteUserRepository implements UserRepository {
+  private static SqliteUserRepository instance;
 
   private Connection connection;
   private PreparedStatement saveUserStatement;
@@ -29,7 +31,7 @@ public class SqliteUserRepository implements UserRepository {
   private static final String GET_USERS_SUPERVISED_PROJECTS_STATEMENT =
       "SELECT * FROM Project WHERE SupervisorId = ?;";
 
-  public SqliteUserRepository() {
+  private SqliteUserRepository() {
     connection = SqliteDatabaseConnectionFactory.getConnection();
     try {
       prepareStatements();
@@ -37,6 +39,13 @@ public class SqliteUserRepository implements UserRepository {
       e.printStackTrace();
       System.exit(1);
     }
+  }
+
+  public static SqliteUserRepository getInstance() {
+    if (instance == null) {
+      instance = new SqliteUserRepository();
+    }
+    return instance;
   }
 
   private void prepareStatements() throws SQLException {

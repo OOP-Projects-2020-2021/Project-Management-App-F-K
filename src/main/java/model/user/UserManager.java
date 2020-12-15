@@ -1,6 +1,6 @@
 package model.user;
 
-import model.Project;
+import model.project.Project;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
 import java.sql.SQLException;
@@ -11,7 +11,7 @@ import java.util.Optional;
 public class UserManager {
 
   private static UserManager instance;
-  private UserRepository userRepository = new SqliteUserRepository();
+  private UserRepository userRepository = SqliteUserRepository.getInstance();
   /** The current user which has signed in to the application. */
   private User currentUser;
 
@@ -55,7 +55,8 @@ public class UserManager {
   }
 
   public Optional<User> getCurrentUser() {
-    return Optional.of(currentUser);
+    // todo ofNullable
+    return Optional.ofNullable(currentUser);
   }
 
   public void logOut() {

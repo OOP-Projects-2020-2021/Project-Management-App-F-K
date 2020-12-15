@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProjectRepository {
-    void saveProject(Project.SavableProject project) throws SQLException;
+  void saveProject(Project.SavableProject project) throws SQLException;
 
-  Project getProject(int projectId);
+  Optional<Project> getProject(int projectId);
 
   Optional<Project> getProject(int teamId, String name) throws SQLException;
 

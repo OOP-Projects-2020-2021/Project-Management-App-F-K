@@ -19,9 +19,9 @@ import java.util.Optional;
 
 public class ProjectManager {
     private static ProjectManager instance = new ProjectManager();
-    private ProjectRepository projectRepository = new SqliteProjectRepository();
-    private UserRepository userRepository = new SqliteUserRepository();
-    private TeamRepository teamRepository = new SqliteTeamRepository();
+    private ProjectRepository projectRepository = SqliteProjectRepository.getInstance();
+    private UserRepository userRepository = SqliteUserRepository.getInstance();
+    private TeamRepository teamRepository = SqliteTeamRepository.getInstance();
 
     private ProjectManager() {}
 

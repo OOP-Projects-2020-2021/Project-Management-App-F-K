@@ -1,6 +1,7 @@
 package model.team.repository.impl;
 
 import model.SqliteDatabaseConnectionFactory;
+import model.project.repository.impl.SqliteProjectRepository;
 import model.team.Team;
 import model.team.repository.TeamRepository;
 
@@ -16,6 +17,7 @@ import java.util.Optional;
  * @author Bori Fazakas
  */
 public class SqliteTeamRepository implements TeamRepository {
+  private static SqliteTeamRepository instance;
   private Connection c;
 
   // Save a new team.
@@ -76,7 +78,7 @@ public class SqliteTeamRepository implements TeamRepository {
       "Select * from MemberToTeam WHERE TeamId = ? and MemberId = ?";
   private PreparedStatement isMemberSt;
 
-  public SqliteTeamRepository() {
+  private SqliteTeamRepository() {
     c = SqliteDatabaseConnectionFactory.getConnection();
     try {
       prepareStatements();
@@ -84,6 +86,13 @@ public class SqliteTeamRepository implements TeamRepository {
       e.printStackTrace();
       System.exit(1);
     }
+  }
+
+  public static SqliteTeamRepository getInstance() {
+    if (instance == null) {
+      instance = new SqliteTeamRepository();
+    }
+    return instance;
   }
 
   /**
