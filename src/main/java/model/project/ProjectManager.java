@@ -18,6 +18,14 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
+/**
+ * ProjectManager is responsible for executing all the commands needed for the application that are
+ * related to projects.
+ *
+ * <p>Remark that it is implemented with the singleton pattern, so only one instance of it exists.
+ *
+ * @author Bori Fazakas
+ */
 public class ProjectManager extends Manager {
     private static ProjectManager instance = new ProjectManager();
 

@@ -6,6 +6,12 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * ProjectRepository specifies the methods required from any class implementing database access for
+ * project-related updates, insertions, deletions and queries.
+ *
+ * @author Bori Fazakas
+ */
 public interface ProjectRepository {
   void saveProject(Project.SavableProject project) throws SQLException;
 

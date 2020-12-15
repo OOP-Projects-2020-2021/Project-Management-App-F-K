@@ -10,6 +10,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * SqliteTeamRepository is an implementation of ProjectRepository which provides database access
+ * to an sqlite database holding project-related data.
+ *
+ * @author Bori Fazakas
+ */
 public class SqliteProjectRepository extends Repository implements ProjectRepository {
     protected static SqliteProjectRepository instance;
 
