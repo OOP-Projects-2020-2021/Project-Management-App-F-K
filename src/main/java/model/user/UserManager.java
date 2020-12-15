@@ -92,11 +92,11 @@ public class UserManager {
    * @throws InexistentUserException = if the id cannot be found in the database
    */
   private void setCurrentUser(int id) throws SQLException, InexistentUserException {
-      try {
-        currentUser = Objects.requireNonNull(userRepository.getUserById(id));
-      }catch(NullPointerException nullPointerException) {
-        throw new InexistentUserException(id);
-      }
+    try {
+      currentUser = Objects.requireNonNull(userRepository.getUserById(id));
+    } catch (NullPointerException nullPointerException) {
+      throw new InexistentUserException(id);
+    }
   }
 
   public Optional<User> getCurrentUser() {

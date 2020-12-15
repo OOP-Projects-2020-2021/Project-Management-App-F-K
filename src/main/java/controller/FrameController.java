@@ -28,9 +28,6 @@ public abstract class FrameController {
   /** Display an error message in case the data stored in the database could not be accessed. */
   public void displayDatabaseErrorDialog() {
     JOptionPane.showMessageDialog(
-        frame,
-        DATABASE_ERROR_TITLE,
-        DATABASE_ERROR_MESSAGE,
-        JOptionPane.ERROR_MESSAGE);
+        frame, DATABASE_ERROR_TITLE, DATABASE_ERROR_MESSAGE, JOptionPane.ERROR_MESSAGE);
   }
 }
