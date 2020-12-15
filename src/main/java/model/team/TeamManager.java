@@ -1,18 +1,14 @@
 package model.team;
 
+import model.InexistentDatabaseEntityException;
+import model.Manager;
 import model.UnauthorisedOperationException;
 import model.user.InexistentUserException;
 import model.user.NoSignedInUserException;
 import model.user.User;
-import model.team.repository.TeamRepository;
-import model.team.repository.TeamRepositoryFactory;
-import model.user.UserManager;
-import model.user.repository.UserRepository;
-import model.user.repository.impl.SqliteUserRepository;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * TeamManager is responsible for executing all the commands needed for the application that are
@@ -22,11 +18,8 @@ import java.util.Optional;
  *
  * @author Bori Fazakas
  */
-public class TeamManager {
+public class TeamManager extends Manager {
   private static TeamManager instance = new TeamManager();
-  private TeamRepository teamRepository =
-      TeamRepositoryFactory.getTeamRepository(TeamRepositoryFactory.RepositoryType.SQLITE);
-  private UserRepository userRepository = new SqliteUserRepository();
 
   private TeamManager() {}
 
@@ -41,9 +34,12 @@ public class TeamManager {
    * @param name is the name of the new team.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
-  public void createNewTeam(String name) throws SQLException, NoSignedInUserException {
-    teamRepository.saveTeam(new Team(name, getCurrentUser().getId().get(), generateTeamCode()));
+  public void createNewTeam(String name)
+      throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException {
+    teamRepository.saveTeam(
+        new Team.SavableTeam(name, getMandatoryCurrentUser().getId(), generateTeamCode()));
   }
 
   /**
@@ -56,12 +52,13 @@ public class TeamManager {
    * @throws UnauthorisedOperationException if the current user is not allowed to delete the team,
    *     because the user is not the manager of the team.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
   public void deleteTeam(int teamId)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException {
-    Team team = getTeam(teamId);
-    User currentUser = getCurrentUser();
+          NoSignedInUserException, InexistentDatabaseEntityException {
+    Team team = getMandatoryTeam(teamId);
+    User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "delete the team");
     teamRepository.deleteTeam(teamId);
   }
@@ -72,10 +69,12 @@ public class TeamManager {
    * @return the list of teams having the current user as member.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
-  public List<Team> getTeamsOfCurrentUser() throws SQLException, NoSignedInUserException {
-    User currentUser = getCurrentUser();
-    return teamRepository.getTeamsOfUser(currentUser.getId().get());
+  public List<Team> getMandatoryTeamsOfCurrentUser()
+      throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException {
+    User currentUser = getMandatoryCurrentUser();
+    return teamRepository.getTeamsOfUser(currentUser.getId());
   }
 
   /**
@@ -88,12 +87,13 @@ public class TeamManager {
    * @throws UnauthorisedOperationException if the current user is not allowed to delete the team,
    *     because the user is not the manager of the team.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
   public String regenerateTeamCode(int teamId)
       throws SQLException, InexistentTeamException, NoSignedInUserException,
-          UnauthorisedOperationException {
-    Team team = getTeam(teamId);
-    User currentUser = getCurrentUser();
+          UnauthorisedOperationException, InexistentDatabaseEntityException {
+    Team team = getMandatoryTeam(teamId);
+    User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "regenerate team code");
     String newCode = generateTeamCode();
     teamRepository.setNewCode(teamId, newCode);
@@ -107,12 +107,14 @@ public class TeamManager {
    * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentTeamException if no team with this code exists.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
   public void joinTeam(String code)
-      throws SQLException, InexistentTeamException, NoSignedInUserException {
-    Team team = getTeam(code);
-    User currentUser = getCurrentUser();
-    teamRepository.addTeamMember(team.getId().get(), currentUser.getId().get());
+      throws SQLException, InexistentTeamException, NoSignedInUserException,
+          InexistentDatabaseEntityException {
+    Team team = getMandatoryTeam(code);
+    User currentUser = getMandatoryCurrentUser();
+    teamRepository.addTeamMember(team.getId(), currentUser.getId());
   }
 
   /**
@@ -122,10 +124,12 @@ public class TeamManager {
    * @param teamId is the id of the team to join.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
-  public void leaveTeam(int teamId) throws SQLException, NoSignedInUserException {
-    User currentUser = getCurrentUser();
-    teamRepository.removeTeamMember(teamId, currentUser.getId().get());
+  public void leaveTeam(int teamId)
+      throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException {
+    User currentUser = getMandatoryCurrentUser();
+    teamRepository.removeTeamMember(teamId, currentUser.getId());
   }
 
   /**
@@ -139,15 +143,16 @@ public class TeamManager {
    * @throws UnauthorisedOperationException if the current user is no the manager of the team.
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentUserException if the requested new member with userName does not exist.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
   public void addMemberToTeam(int teamId, String userName)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException {
-    Team team = getTeam(teamId);
-    User currentUser = getCurrentUser();
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException {
+    Team team = getMandatoryTeam(teamId);
+    User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "add member to the team");
-    User newMember = getUser(userName);
-    teamRepository.addTeamMember(team.getId().get(), newMember.getId().get());
+    User newMember = getMandatoryUser(userName);
+    teamRepository.addTeamMember(team.getId(), newMember.getId());
   }
 
   /**
@@ -162,15 +167,16 @@ public class TeamManager {
    * @throws UnauthorisedOperationException if the current user is no the manager of the team.
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentUserException if the requested new member with userName does not exist.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
   public void removeTeamMember(int teamId, String userName)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException {
-    Team team = getTeam(teamId);
-    User currentUser = getCurrentUser();
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException {
+    Team team = getMandatoryTeam(teamId);
+    User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "remove a member from the team");
-    User toRemoveMember = getUser(userName);
-    teamRepository.removeTeamMember(team.getId().get(), toRemoveMember.getId().get());
+    User toRemoveMember = getMandatoryUser(userName);
+    teamRepository.removeTeamMember(team.getId(), toRemoveMember.getId());
   }
 
   /**
@@ -190,19 +196,19 @@ public class TeamManager {
    */
   public void passManagerPosition(int teamId, String newManagerName)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException {
-    Team team = getTeam(teamId);
-    User currentUser = getCurrentUser();
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException {
+    Team team = getMandatoryTeam(teamId);
+    User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "pass manager position of team to someone else");
-    User newManager = getUser(newManagerName);
-    if (!teamRepository.isMemberOfTeam(teamId, newManager.getId().get())) {
+    User newManager = getMandatoryUser(newManagerName);
+    if (!teamRepository.isMemberOfTeam(teamId, newManager.getId())) {
       throw new IllegalArgumentException(
           "The user with name "
               + newManagerName
               + " can't be the "
               + "manager of a team he/she is not a member of");
     }
-    teamRepository.setNewManagerPosition(teamId, newManager.getId().get());
+    teamRepository.setNewManagerPosition(teamId, newManager.getId());
   }
 
   /**
@@ -216,12 +222,13 @@ public class TeamManager {
    * @throws UnauthorisedOperationException if the current user is not the manager of the team, so
    *     they are not authorised to change the name.
    * @throws NoSignedInUserException if the user is not signed in.
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
   public void setNewName(int teamId, String newTeamName)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException {
-    Team team = getTeam(teamId);
-    User currentUser = getCurrentUser();
+          NoSignedInUserException, InexistentDatabaseEntityException {
+    Team team = getMandatoryTeam(teamId);
+    User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "change the name of the team");
     teamRepository.setNewName(teamId, newTeamName);
   }
@@ -247,68 +254,21 @@ public class TeamManager {
     return code;
   }
 
-  /** Returns the current user if it exists, and throws NoSignedInUserException otherwise. */
-  private User getCurrentUser() throws NoSignedInUserException {
-    if (UserManager.getInstance().getCurrentUser().isEmpty()) {
-      throw new NoSignedInUserException();
-    }
-    return UserManager.getInstance().getCurrentUser().get();
-  }
-
   /**
-   * Returns the team with the given id if it exists in the database, and throws
-   * InexistentTeamException otherwise. The returned team is guaranteed to have an id.
+   * Throws UnauthorisedOperationException if user is not the manager of team.
+   *
+   * @throws InexistentDatabaseEntityException - should never occur.
    */
-  private Team getTeam(int teamId) throws InexistentTeamException, SQLException {
-    Optional<Team> team = teamRepository.getTeam(teamId);
-    if (team.isEmpty()) {
-      throw new InexistentTeamException(teamId);
-    }
-    return team.get();
-  }
-
-  /**
-   * Returns the team with the given code if it exists in the database, and throws
-   * InexistentTeamException otherwise. The returned team is guaranteed to have an id.
-   */
-  private Team getTeam(String teamCode) throws InexistentTeamException, SQLException {
-    Optional<Team> team = teamRepository.getTeam(teamCode);
-    if (team.isEmpty()) {
-      throw new InexistentTeamException(teamCode);
-    }
-    return team.get();
-  }
-
-  /** Returns the user with the given id if it exists, otherwise throws InexistentUserEXception. */
-  private User getUser(int userId) throws SQLException, InexistentUserException {
-    User user = userRepository.getUserById(userId);
-    if (user == null) {
-      throw new InexistentUserException(userId);
-    }
-    return user;
-  }
-
-  /**
-   * Returns the user with the given name if it exists, otherwise throws InexistentUserEXception.
-   */
-  private User getUser(String userName) throws SQLException, InexistentUserException {
-    User user = userRepository.getUserByUsername(userName);
-    if (user == null) {
-      throw new InexistentUserException(userName);
-    }
-    return user;
-  }
-
-  /** Throws UnauthorisedOperationException if user is not the manager of team. */
   private void guaranteeUserIsManager(Team team, User user, String operation)
-      throws UnauthorisedOperationException {
+      throws UnauthorisedOperationException, InexistentDatabaseEntityException {
     if (!userIsManager(team, user)) {
       throw new UnauthorisedOperationException(
-          user.getId().get(), operation, "this user is not the manager of the project");
+          user.getId(), operation, "this user is not the manager of the project");
     }
   }
 
-  private boolean userIsManager(Team team, User user) {
-    return team.getManagerId() == user.getId().get();
+  /** @throws InexistentDatabaseEntityException - should never occur. */
+  private boolean userIsManager(Team team, User user) throws InexistentDatabaseEntityException {
+    return team.getManagerId() == user.getId();
   }
 }

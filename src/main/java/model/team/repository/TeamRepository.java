@@ -1,5 +1,6 @@
 package model.team.repository;
 
+import model.InexistentDatabaseEntityException;
 import model.team.Team;
 
 import java.sql.SQLException;
@@ -22,7 +23,7 @@ public interface TeamRepository {
    * @return the id of the newly saved team.
    * @throws SQLException if the operation could not be performed in the database.
    */
-  int saveTeam(Team team) throws SQLException;
+  int saveTeam(Team.SavableTeam team) throws SQLException, InexistentDatabaseEntityException;
 
   /**
    * Deletes the team with the specified id from the database. It also deletes all the memberships

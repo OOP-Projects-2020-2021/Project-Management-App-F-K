@@ -1,13 +1,15 @@
 package model.user.repository.impl;
 
+import model.InexistentDatabaseEntityException;
+import model.database.Repository;
 import model.user.repository.UserRepository;
 import model.user.User;
 import org.jetbrains.annotations.Nullable;
 import java.sql.*;
 
-public class SqliteUserRepository implements UserRepository {
+public class SqliteUserRepository extends Repository implements UserRepository {
+  protected static SqliteUserRepository instance;
 
-  private Connection connection;
   private PreparedStatement saveUserStatement;
   private PreparedStatement getUserIdStatement;
   private PreparedStatement getUserByIdStatement;
@@ -24,24 +26,21 @@ public class SqliteUserRepository implements UserRepository {
   private static final String UPDATE_USER_STATEMENT =
       "UPDATE User SET UserName = ?, Password = ? WHERE UserId = ?;";
 
-  public SqliteUserRepository() {
-    try {
-      Class.forName("org.sqlite.JDBC");
-      connection = DriverManager.getConnection("jdbc:sqlite:project_management_app.db");
-      prepareStatements();
-    } catch (ClassNotFoundException | SQLException e) {
-      e.printStackTrace();
-      // if the connection to the database fails exit the program
-      System.exit(1);
+  private SqliteUserRepository() {}
+
+  public static SqliteUserRepository getInstance() {
+    if (instance == null) {
+      instance = new SqliteUserRepository();
     }
+    return instance;
   }
 
-  private void prepareStatements() throws SQLException {
-    saveUserStatement = connection.prepareStatement(SAVE_USER_STATEMENT);
-    getUserIdStatement = connection.prepareStatement(GET_USER_ID_STATEMENT);
-    getUserByIdStatement = connection.prepareStatement(GET_USER_BY_ID_STATEMENT);
-    getUserByUsernameStatement = connection.prepareStatement(GET_USER_BY_USERNAME_STATEMENT);
-    updateUserStatement = connection.prepareStatement(UPDATE_USER_STATEMENT);
+  protected void prepareStatements() throws SQLException {
+    saveUserStatement = c.prepareStatement(SAVE_USER_STATEMENT);
+    getUserIdStatement = c.prepareStatement(GET_USER_ID_STATEMENT);
+    getUserByIdStatement = c.prepareStatement(GET_USER_BY_ID_STATEMENT);
+    getUserByUsernameStatement = c.prepareStatement(GET_USER_BY_USERNAME_STATEMENT);
+    updateUserStatement = c.prepareStatement(UPDATE_USER_STATEMENT);
   }
 
   /** Saves the user in the database. */
@@ -56,10 +55,10 @@ public class SqliteUserRepository implements UserRepository {
     }
   }
   /** Updates information about an existing user. */
-  public void updateUser(User user) throws SQLException {
+  public void updateUser(User user) throws SQLException, InexistentDatabaseEntityException {
     updateUserStatement.setString(1, user.getUsername());
     updateUserStatement.setString(2, user.getPassword());
-    updateUserStatement.setInt(3, user.getId().get());
+    updateUserStatement.setInt(3, user.getId());
     updateUserStatement.execute();
   }
 

@@ -1,5 +1,7 @@
 package model.team.repository.impl;
 
+import model.InexistentDatabaseEntityException;
+import model.database.Repository;
 import model.team.Team;
 import model.team.repository.TeamRepository;
 
@@ -14,8 +16,8 @@ import java.util.Optional;
  *
  * @author Bori Fazakas
  */
-public class SqliteTeamRepository implements TeamRepository {
-  private Connection c;
+public class SqliteTeamRepository extends Repository implements TeamRepository {
+  protected static SqliteTeamRepository instance;
 
   // Save a new team.
   private static final String SAVE_TEAM_STATEMENT =
@@ -75,22 +77,20 @@ public class SqliteTeamRepository implements TeamRepository {
       "Select * from MemberToTeam WHERE TeamId = ? and MemberId = ?";
   private PreparedStatement isMemberSt;
 
-  public SqliteTeamRepository() {
-    try {
-      Class.forName("org.sqlite.JDBC");
-      c = DriverManager.getConnection("jdbc:sqlite:project_management_app.db");
-      prepareStatements();
-    } catch (ClassNotFoundException | SQLException e) {
-      e.printStackTrace();
-      System.exit(1);
+  private SqliteTeamRepository() {}
+
+  public static SqliteTeamRepository getInstance() {
+    if (instance == null) {
+      instance = new SqliteTeamRepository();
     }
+    return instance;
   }
 
   /**
    * The statements are prepared only once, when the reposiroy is constructed, because this way sql
    * parsing and creating a query plan is created only once, so query execution is faster.
    */
-  private void prepareStatements() throws SQLException {
+  protected void prepareStatements() throws SQLException {
     saveTeamSt = c.prepareStatement(SAVE_TEAM_STATEMENT);
     deleteTeamSt = c.prepareStatement(DELETE_TEAM_STATEMENT);
     getTeamWithCodeSt = c.prepareStatement(GET_TEAM_WITH_CODE_QUERY);
@@ -106,15 +106,15 @@ public class SqliteTeamRepository implements TeamRepository {
   }
 
   @Override
-  public int saveTeam(Team team) throws SQLException {
+  public int saveTeam(Team.SavableTeam team)
+      throws SQLException, InexistentDatabaseEntityException {
     saveTeamSt.setString(1, team.getName());
     saveTeamSt.setInt(2, team.getManagerId());
     saveTeamSt.setString(3, team.getCode());
     saveTeamSt.execute();
     Optional<Team> savedTeam = getTeam(team.getCode());
     if (savedTeam.isPresent()) {
-      team.setId(savedTeam.get().getId().get());
-      return savedTeam.get().getId().get();
+      return savedTeam.get().getId();
     } else {
       throw new SQLException("Saving team was unsuccesful");
     }

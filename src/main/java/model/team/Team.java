@@ -1,5 +1,6 @@
 package model.team;
 
+import model.InexistentDatabaseEntityException;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -12,7 +13,7 @@ import java.util.*;
 public class Team {
 
   /** The id that identifies the team in the database. */
-  private Integer id;
+  private int id;
   /** The name of the team. Doesn't need to be unique. */
   private @NotNull String name;
   /** The code that uniquely identifies the team, but it can be modified. */
@@ -22,11 +23,19 @@ public class Team {
   /** The team manager. */
   private int managerId;
 
-  public Team(@NotNull String name, int managerId, @NotNull String code) {
-    this.id = null;
-    this.name = name;
-    this.managerId = managerId;
-    this.code = code;
+  /**
+   * This class is used only when the team instance is created to be saved in the database, but does
+   * not have a valid id yet.
+   */
+  public static class SavableTeam extends Team {
+    public SavableTeam(@NotNull String name, int managerId, @NotNull String code) {
+      super(-1, name, managerId, code);
+    }
+
+    @Override
+    public int getId() throws InexistentDatabaseEntityException {
+      throw new InexistentDatabaseEntityException(this);
+    }
   }
 
   public Team(int id, @NotNull String name, int managerId, @NotNull String code) {
@@ -36,13 +45,8 @@ public class Team {
     this.code = code;
   }
 
-  // todo
-  public Optional<Integer> getId() {
-    return Optional.of(id);
-  }
-
-  public void setId(int id) {
-    this.id = id;
+  public int getId() throws InexistentDatabaseEntityException {
+    return id;
   }
 
   public @NotNull String getName() {
