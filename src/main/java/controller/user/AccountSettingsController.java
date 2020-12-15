@@ -1,7 +1,6 @@
 package controller.user;
 
 import controller.FrameController;
-import model.user.InexistentUserException;
 import model.user.NoSignedInUserException;
 import model.user.UserManager;
 import javax.swing.*;
@@ -83,7 +82,7 @@ public class AccountSettingsController extends FrameController {
 
   public void displayIncorrectPasswordDialog() {
     JOptionPane.showMessageDialog(
-        frame, INCORRECT_PASSWORD_MESSAGE,INCORRECT_PASSWORD_TITLE, JOptionPane.ERROR_MESSAGE);
+        frame, INCORRECT_PASSWORD_MESSAGE, INCORRECT_PASSWORD_TITLE, JOptionPane.ERROR_MESSAGE);
   }
   /** On going back, it closes the current frame. */
   public void goBack() {
