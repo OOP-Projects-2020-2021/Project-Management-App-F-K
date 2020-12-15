@@ -4,6 +4,14 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * SqliteDatabaseConnectionFactory is responsible for creating exactly one instance of database
+ * connection (remark thhe singleton pattern), used in all repositories.
+ * If more connections would be used, the database would get locked and updates would not be
+ * possible.
+ *
+ * @author Bori Fazakas
+ */
 public class SqliteDatabaseConnectionFactory {
     private static Connection c;
 

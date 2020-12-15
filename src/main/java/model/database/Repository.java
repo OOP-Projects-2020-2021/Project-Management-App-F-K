@@ -5,6 +5,12 @@ import model.project.repository.impl.SqliteProjectRepository;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+/**
+ * Repository is an abstract class which constructs a repository by getting the database
+ * connection and preparing all the statements.
+ *
+ * @author Bori Fazakas
+ */
 public abstract class Repository {
     protected Connection c;
 
