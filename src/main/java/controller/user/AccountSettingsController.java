@@ -1,9 +1,10 @@
 package controller.user;
 
 import controller.FrameController;
-import model.user.InexistentUserException;
-import model.user.NoSignedInUserException;
+import model.user.exceptions.*;
 import model.user.UserManager;
+import view.ErrorDialogFactory;
+
 import javax.swing.*;
 import java.sql.SQLException;
 
@@ -69,8 +70,8 @@ public class AccountSettingsController extends FrameController {
       userManager.updateUser(username, password);
       return true;
     } catch (SQLException sqlException) {
-      displayDatabaseErrorDialog();
-    } catch (InexistentUserException | NoSignedInUserException e) {
+      ErrorDialogFactory.createErrorDialog(sqlException, frame, null);
+    } catch (NoSignedInUserException e) {
       displayFailedUpdateDialog();
     }
     return false;

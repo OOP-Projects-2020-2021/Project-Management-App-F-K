@@ -1,4 +1,4 @@
-package model.user;
+package model.user.exceptions;
 
 /**
  * NoSignedInUserException is thrown when someone tres to access a functionality accessible to
