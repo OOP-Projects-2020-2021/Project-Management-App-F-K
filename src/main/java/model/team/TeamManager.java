@@ -28,7 +28,7 @@ public class TeamManager extends Manager {
   }
 
   public enum ChangablePropertyName {
-    CURRENT_USER_TEAM_MEMBERSHIPS, //event is fired when the user becomes member of a team/looses
+    CURRENT_USER_TEAM_MEMBERSHIPS, // event is fired when the user becomes member of a team/looses
     // membership of a team
   }
 
@@ -137,8 +137,8 @@ public class TeamManager extends Manager {
   }
 
   /**
-   * Removes the current user from the team with the given id.
-   * Requirement: the current user whould be the member of the team, but not the manager.
+   * Removes the current user from the team with the given id. Requirement: the current user whould
+   * be the member of the team, but not the manager.
    *
    * @param teamId is the id of the team to join.
    * @throws SQLException if the operation could not be performed in the database.
@@ -149,7 +149,7 @@ public class TeamManager extends Manager {
    * @throws UnregisteredMemberRemovalException if the user is not the member of the team.
    */
   public void leaveTeam(int teamId)
-          throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException,
+      throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException,
           InexistentTeamException, ManagerRemovalException, UnregisteredMemberRemovalException {
     User currentUser = getMandatoryCurrentUser();
     Team team = getMandatoryTeam(teamId);
@@ -194,8 +194,8 @@ public class TeamManager extends Manager {
 
   /**
    * Removes the user with userName from the team with teamId if they both exist and the current
-   * user is the manager of the team.
-   * Requirement: the user to remove should be the member of the team, but not the manager.
+   * user is the manager of the team. Requirement: the user to remove should be the member of the
+   * team, but not the manager.
    *
    * @param teamId is the id of the team which looses a member.
    * @param userName is the name of the user to be removed from the team.
@@ -207,10 +207,10 @@ public class TeamManager extends Manager {
    * @throws InexistentDatabaseEntityException - should never occur.
    * @throws UnregisteredMemberRemovalException if the user is not the member of the team.
    * @throws ManagerRemovalException if the member to remove is the manager of the team (i.e. the
-   * current user wants to leave the team).
+   *     current user wants to leave the team).
    */
   public void removeTeamMember(int teamId, String userName)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
           NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException,
           UnregisteredMemberRemovalException, ManagerRemovalException {
     Team team = getMandatoryTeam(teamId);

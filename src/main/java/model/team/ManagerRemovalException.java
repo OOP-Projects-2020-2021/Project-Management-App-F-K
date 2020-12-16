@@ -6,7 +6,7 @@ package model.team;
  * @author Bori Fazakas
  */
 public class ManagerRemovalException extends Exception {
-    ManagerRemovalException(String teamName, String managerName) {
-        super (managerName + " cannot leave team " + teamName + " because they are the manager.");
-    }
+  ManagerRemovalException(String teamName, String managerName) {
+    super(managerName + " cannot leave team " + teamName + " because they are the manager.");
+  }
 }

@@ -1,8 +1,8 @@
 package model.team;
 
 /**
- * AlreadyMemberException is thrown when a request is sent for a user to join a team, but the
- * user is already the member of the team.
+ * AlreadyMemberException is thrown when a request is sent for a user to join a team, but the user
+ * is already the member of the team.
  *
  * @author Bori Fazakas
  */
