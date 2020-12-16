@@ -137,17 +137,28 @@ public class TeamManager extends Manager {
   }
 
   /**
-   * Removes the current user from the team with the given id, if the user was a member of it. If
-   * not, nothing happens, no exception is thrown.
+   * Removes the current user from the team with the given id.
+   * Requirement: the current user whould be the member of the team, but not the manager.
    *
    * @param teamId is the id of the team to join.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentDatabaseEntityException - should never occur.
+   * @throws InexistentTeamException if the team to leave does not exist in the database.
+   * @throws ManagerRemovalException if the user who wants to leave is the manager.
+   * @throws UnregisteredMemberRemovalException if the user is not the member of the team.
    */
   public void leaveTeam(int teamId)
-      throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException {
+          throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException,
+          InexistentTeamException, ManagerRemovalException, UnregisteredMemberRemovalException {
     User currentUser = getMandatoryCurrentUser();
+    Team team = getMandatoryTeam(teamId);
+    if (!teamRepository.isMemberOfTeam(teamId, currentUser.getId())) {
+      throw new UnregisteredMemberRemovalException(team.getName(), currentUser.getUsername());
+    }
+    if (userIsManager(team, currentUser)) {
+      throw new ManagerRemovalException(team.getName(), currentUser.getUsername());
+    }
     teamRepository.removeTeamMember(teamId, currentUser.getId());
     support.firePropertyChange(
         ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
@@ -155,7 +166,7 @@ public class TeamManager extends Manager {
 
   /**
    * Adds the user with userName to the team with teamId if they both exist and the current user is
-   * the manager of the team.
+   * the manager of the team. The user to add should not already be a member.
    *
    * @param teamId is the id of the team with the new member.
    * @param userName is the name of the user to be added to the team.
@@ -183,8 +194,8 @@ public class TeamManager extends Manager {
 
   /**
    * Removes the user with userName from the team with teamId if they both exist and the current
-   * user is the manager of the team. Remark that if the user is not the member of the team, nothing
-   * happens.
+   * user is the manager of the team.
+   * Requirement: the user to remove should be the member of the team, but not the manager.
    *
    * @param teamId is the id of the team which looses a member.
    * @param userName is the name of the user to be removed from the team.
@@ -194,14 +205,24 @@ public class TeamManager extends Manager {
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentUserException if the requested new member with userName does not exist.
    * @throws InexistentDatabaseEntityException - should never occur.
+   * @throws UnregisteredMemberRemovalException if the user is not the member of the team.
+   * @throws ManagerRemovalException if the member to remove is the manager of the team (i.e. the
+   * current user wants to leave the team).
    */
   public void removeTeamMember(int teamId, String userName)
-      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException {
+          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException,
+          UnregisteredMemberRemovalException, ManagerRemovalException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
+    if (!teamRepository.isMemberOfTeam(teamId, currentUser.getId())) {
+      throw new UnregisteredMemberRemovalException(team.getName(), currentUser.getUsername());
+    }
     guaranteeUserIsManager(team, currentUser, "remove a member from the team");
     User toRemoveMember = getMandatoryUser(userName);
+    if (userIsManager(team, toRemoveMember)) {
+      throw new ManagerRemovalException(team.getName(), toRemoveMember.getUsername());
+    }
     teamRepository.removeTeamMember(team.getId(), toRemoveMember.getId());
   }
 
