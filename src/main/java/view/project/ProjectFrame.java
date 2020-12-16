@@ -1,5 +1,7 @@
 package view.project;
 
+import model.team.Team;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -22,6 +24,7 @@ public class ProjectFrame extends JFrame{
     private JLabel teamCodeLabel;
     private JLabel teamManagerLabel;
     private JTextArea teamDescriptionTextArea;
+
     private JFrame parentFrame;
     private static final Dimension DIMENSION = new Dimension(400, 400);
 
@@ -33,7 +36,9 @@ public class ProjectFrame extends JFrame{
         // add components here
         initHomePane();
         initMembersPane();
+        initProjectsPane();
         initTabbedPane();
+        this.pack();
         this.addWindowListener(new projectWindowAdapter());
         this.setVisible(true);
     }
@@ -52,6 +57,57 @@ public class ProjectFrame extends JFrame{
     private void initHomePane() {
         homeTab = new JPanel();
         homeTab.setPreferredSize(DIMENSION);
+        GroupLayout homeLayout = new GroupLayout(homeTab);
+        homeLayout.setAutoCreateGaps(true);
+        homeLayout.setAutoCreateContainerGaps(true);
+        homeTab.setLayout(homeLayout);
+        initHomePaneComponents();
+        JLabel nameLabel = new JLabel("Name:");
+        JLabel codeLabel = new JLabel("Code:");
+        JLabel managerLabel = new JLabel("Manager:");
+        JLabel descriptionLabel = new JLabel("Description:");
+
+        homeLayout.setHorizontalGroup(homeLayout.createSequentialGroup()
+                        .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(nameLabel)
+                                .addComponent(codeLabel)
+                                .addComponent(managerLabel)
+                                .addComponent(descriptionLabel))
+                        .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(teamNameLabel)
+                                .addComponent(teamCodeLabel)
+                                .addComponent(teamManagerLabel)
+                                .addComponent(teamDescriptionTextArea)));
+
+        homeLayout.setVerticalGroup(homeLayout.createSequentialGroup()
+                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(nameLabel)
+                        .addComponent(teamNameLabel))
+                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(codeLabel)
+                        .addComponent(teamCodeLabel))
+                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(managerLabel)
+                        .addComponent(teamManagerLabel))
+                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(descriptionLabel)
+                        .addComponent(teamDescriptionTextArea)));
+
+    }
+    private void initHomePaneComponents() {
+        // TODO get data from controller
+        teamNameLabel = new JLabel("name");
+        teamCodeLabel = new JLabel("code");
+        teamManagerLabel = new JLabel("manager");
+        teamDescriptionTextArea = new JTextArea("description");
+        teamDescriptionTextArea.setEditable(false);
+    }
+    private void updateHomePaneComponents(Team team) {
+        // todo from controller
+        teamNameLabel.setText("");
+        teamCodeLabel.setText("");
+        teamManagerLabel.setText("");
+        teamDescriptionTextArea.setText("");
     }
 
     private void initMembersPane() {
