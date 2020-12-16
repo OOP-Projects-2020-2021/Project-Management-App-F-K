@@ -190,10 +190,6 @@ public class TeamManager extends Manager {
       throw new AlreadyMemberException(newMember.getUsername(), team.getName());
     }
     teamRepository.addTeamMember(team.getId(), newMember.getId());
-    if (userName.equals(currentUser.getUsername())) {
-      support.firePropertyChange(
-              ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
-    }
   }
 
   /**
@@ -228,10 +224,6 @@ public class TeamManager extends Manager {
       throw new ManagerRemovalException(team.getName(), toRemoveMember.getUsername());
     }
     teamRepository.removeTeamMember(team.getId(), toRemoveMember.getId());
-    if (userName.equals(currentUser.getUsername())) {
-      support.firePropertyChange(
-              ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
-    }
   }
 
   /**
