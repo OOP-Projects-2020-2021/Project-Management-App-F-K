@@ -44,6 +44,7 @@ public class TeamListController {
       e.printStackTrace();
       ErrorDialogFactory.createErrorDialog(e, parentFrame, "Your teams cannot be displayed.");
     } catch (NullPointerException e) {
+      e.printStackTrace();
       ErrorDialogFactory.createErrorDialog(new SQLException(), parentFrame, "Your teams cannot be displayed" +
               ".");
       // NullPointerException occurs when manager is not found. This can be handled as if it were
