@@ -7,9 +7,12 @@ import model.user.NoSignedInUserException;
 import model.user.User;
 import model.user.UserManager;
 import view.ErrorDialogFactory;
+import view.team.TeamListPanel;
 import view.team.TeamViewModel;
 
 import java.awt.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,14 +24,17 @@ import java.util.Objects;
  *
  * @author Bori Fazakas
  */
-public class TeamListController {
+public class TeamListController implements PropertyChangeListener {
   TeamManager teamManager = TeamManager.getInstance();
   UserManager userManager = UserManager.getInstance();
 
   Frame parentFrame;
+  TeamListPanel panel;
 
-  public TeamListController(Frame frame) {
+  public TeamListController(TeamListPanel panel, Frame frame) {
+    this.panel = panel;
     this.parentFrame = frame;
+    teamManager.addPropertyChangeListener(this);
   }
 
   public List<TeamViewModel> getUsersTeams() {
@@ -51,5 +57,12 @@ public class TeamListController {
       // a database exception.
     }
     return teamsViewModels;
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+    if (propertyChangeEvent.getPropertyName().equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
+      panel.updateTeams();
+    }
   }
 }

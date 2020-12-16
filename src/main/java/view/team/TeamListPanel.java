@@ -21,7 +21,13 @@ public class TeamListPanel extends JPanel {
      * flexible at the same time, ModifiedFlowLayout is required instead of the simpleFlowLayout.
      */
     this.setLayout(new ModifiedFlowLayout());
-    controller = new TeamListController(frame);
+    controller = new TeamListController(this, frame);
+    updateTeams();
+  }
+
+  public void updateTeams() {
+    this.setEnabled(true);
+    this.removeAll();
     List<TeamViewModel> teams = controller.getUsersTeams();
     for (TeamViewModel team : teams) {
       this.add(new TeamLabel(team));
