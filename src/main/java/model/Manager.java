@@ -30,7 +30,9 @@ public abstract class Manager implements PropertyChangeObservable{
   protected static TeamRepository teamRepository = SqliteTeamRepository.getInstance();
   protected static UserRepository userRepository = SqliteUserRepository.getInstance();
 
-  private PropertyChangeSupport support;
+  protected PropertyChangeSupport support = new PropertyChangeSupport(this);
+  protected final int OLD_VALUE = 1; //dummy data
+  protected final int NEW_VALUE = 2; //dummy data, but it must be different from OLD_VALUE
 
   public void addPropertyChangeListener(PropertyChangeListener pcl) {
     support.addPropertyChangeListener(pcl);
