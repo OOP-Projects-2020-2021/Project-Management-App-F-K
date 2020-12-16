@@ -47,8 +47,8 @@ public class TeamManager extends Manager {
         teamRepository.saveTeam(
             new Team.SavableTeam(name, currentUser.getId(), generateTeamCode()));
     teamRepository.addTeamMember(teamId, currentUser.getId());
-    support.firePropertyChange(ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE,
-            NEW_VALUE);
+    support.firePropertyChange(
+        ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -70,8 +70,8 @@ public class TeamManager extends Manager {
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "delete the team");
     teamRepository.deleteTeam(teamId);
-    support.firePropertyChange(ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(),
-            OLD_VALUE, NEW_VALUE);
+    support.firePropertyChange(
+        ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -131,8 +131,8 @@ public class TeamManager extends Manager {
       throw new AlreadyMemberException(currentUser.getUsername(), team.getName());
     }
     teamRepository.addTeamMember(team.getId(), currentUser.getId());
-    support.firePropertyChange(ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(),
-            OLD_VALUE, NEW_VALUE);
+    support.firePropertyChange(
+        ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -148,8 +148,8 @@ public class TeamManager extends Manager {
       throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException {
     User currentUser = getMandatoryCurrentUser();
     teamRepository.removeTeamMember(teamId, currentUser.getId());
-    support.firePropertyChange(ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(),
-            OLD_VALUE, NEW_VALUE);
+    support.firePropertyChange(
+        ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**

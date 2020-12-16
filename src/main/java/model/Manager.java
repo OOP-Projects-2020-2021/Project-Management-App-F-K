@@ -25,14 +25,14 @@ import java.util.Optional;
  *
  * @author Bori Fazakas
  */
-public abstract class Manager implements PropertyChangeObservable{
+public abstract class Manager implements PropertyChangeObservable {
   protected static ProjectRepository projectRepository = SqliteProjectRepository.getInstance();
   protected static TeamRepository teamRepository = SqliteTeamRepository.getInstance();
   protected static UserRepository userRepository = SqliteUserRepository.getInstance();
 
   protected PropertyChangeSupport support = new PropertyChangeSupport(this);
-  protected final int OLD_VALUE = 1; //dummy data
-  protected final int NEW_VALUE = 2; //dummy data, but it must be different from OLD_VALUE
+  protected final int OLD_VALUE = 1; // dummy data
+  protected final int NEW_VALUE = 2; // dummy data, but it must be different from OLD_VALUE
 
   public void addPropertyChangeListener(PropertyChangeListener pcl) {
     support.addPropertyChangeListener(pcl);

@@ -42,16 +42,17 @@ public class TeamListController implements PropertyChangeListener {
       List<Team> usersTeams = teamManager.getTeamsOfCurrentUser();
       for (Team team : usersTeams) {
         User manager = userManager.getUserById(team.getManagerId());
-        teamsViewModels.add(new TeamViewModel(team.getName(), team.getCode(),
-                Objects.requireNonNull(manager).getUsername()));
+        teamsViewModels.add(
+            new TeamViewModel(
+                team.getName(), team.getCode(), Objects.requireNonNull(manager).getUsername()));
       }
     } catch (SQLException | NoSignedInUserException | InexistentDatabaseEntityException e) {
       e.printStackTrace();
       ErrorDialogFactory.createErrorDialog(e, parentFrame, "Your teams cannot be displayed.");
     } catch (NullPointerException e) {
       e.printStackTrace();
-      ErrorDialogFactory.createErrorDialog(new SQLException(), parentFrame, "Your teams cannot be displayed" +
-              ".");
+      ErrorDialogFactory.createErrorDialog(
+          new SQLException(), parentFrame, "Your teams cannot be displayed" + ".");
       // NullPointerException occurs when manager is not found. This can be handled as if it were
       // a database exception.
     }
@@ -60,7 +61,9 @@ public class TeamListController implements PropertyChangeListener {
 
   @Override
   public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-    if (propertyChangeEvent.getPropertyName().equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
+    if (propertyChangeEvent
+        .getPropertyName()
+        .equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
       panel.updateTeams();
     }
   }
