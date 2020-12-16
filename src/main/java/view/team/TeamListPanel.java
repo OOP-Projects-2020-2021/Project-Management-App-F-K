@@ -26,11 +26,11 @@ public class TeamListPanel extends JPanel {
   }
 
   public void updateTeams() {
-    this.setEnabled(true);
     this.removeAll();
     List<TeamViewModel> teams = controller.getUsersTeams();
     for (TeamViewModel team : teams) {
       this.add(new TeamLabel(team));
     }
+    this.revalidate();
   }
 }
