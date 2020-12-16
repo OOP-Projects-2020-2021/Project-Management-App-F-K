@@ -3,8 +3,7 @@ package model.team;
 import model.InexistentDatabaseEntityException;
 import model.Manager;
 import model.UnauthorisedOperationException;
-import model.user.InexistentUserException;
-import model.user.NoSignedInUserException;
+import model.user.exceptions.*;
 import model.user.User;
 import model.team.exceptions.*;
 

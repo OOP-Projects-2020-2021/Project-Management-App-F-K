@@ -1,7 +1,7 @@
 package controller.user;
 
 import controller.FrameController;
-import model.user.NoSignedInUserException;
+import model.user.exceptions.*;
 import model.user.UserManager;
 import view.ErrorDialogFactory;
 

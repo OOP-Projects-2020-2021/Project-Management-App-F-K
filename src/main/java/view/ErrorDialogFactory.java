@@ -2,7 +2,7 @@ package view;
 
 import model.InexistentDatabaseEntityException;
 import model.team.exceptions.*;
-import model.user.NoSignedInUserException;
+import model.user.exceptions.*;
 
 import javax.swing.*;
 import java.awt.*;

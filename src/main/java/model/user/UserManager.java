@@ -2,6 +2,7 @@ package model.user;
 
 import model.InexistentDatabaseEntityException;
 import model.Manager;
+import model.user.exceptions.NoSignedInUserException;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
