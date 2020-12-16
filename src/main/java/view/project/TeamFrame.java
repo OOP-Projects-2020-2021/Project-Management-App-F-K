@@ -41,10 +41,6 @@ public class TeamFrame extends JFrame implements ActionListener {
         initMenuComponents();
         this.setJMenuBar(teamMenuBar);
         // add components here
-        //initHomePane();
-        initMembersPane();
-        initProjectsPane();
-        membersTab.setVisible(false);
         addTabbedPanes();
         //this.pack();
         this.addWindowListener(new projectWindowAdapter());
@@ -80,12 +76,14 @@ public class TeamFrame extends JFrame implements ActionListener {
         teamMenuBar.add(teamMenu);
     }
     private void initTabbedPanes() {
-        homeTab = new TeamHomePanel();
-        membersTab = new JPanel();
+        homeTab = new TeamHomePanel(DIMENSION);
+        membersTab = new TeamMembersPanel(DIMENSION);
+        //membersTab = new JPanel();
         projectsTab = new JPanel();
     }
     private void addTabbedPanes() {
         mainPane = new JTabbedPane();
+        initTabbedPanes();
         mainPane.addTab("Home",homeTab);
         mainPane.addTab("Members",membersTab);
         mainPane.add("Projects",projectsTab);
@@ -95,12 +93,8 @@ public class TeamFrame extends JFrame implements ActionListener {
         mainPane.setMnemonicAt(2,KeyEvent.VK_P);
         this.add(mainPane);
     }
-    private void initMembersPane() {
 
-        membersTab.setPreferredSize(DIMENSION);
-    }
     private void initProjectsPane() {
-
         projectsTab.setPreferredSize(DIMENSION);
     }
     private class projectWindowAdapter extends WindowAdapter {

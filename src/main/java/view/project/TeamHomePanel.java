@@ -19,10 +19,8 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     private JButton saveTeamManagerButton;
     private JLabel savedLabel;
 
-    private static final Dimension DIMENSION = new Dimension(400, 400);
-
-    public TeamHomePanel() {
-        this.setPreferredSize(DIMENSION);
+    public TeamHomePanel(Dimension parentFrameDimension) {
+        this.setPreferredSize(parentFrameDimension);
         initHomePane();
     }
 
