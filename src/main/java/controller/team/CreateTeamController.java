@@ -3,7 +3,7 @@ package controller.team;
 import controller.FrameController;
 import model.InexistentDatabaseEntityException;
 import model.team.TeamManager;
-import model.user.NoSignedInUserException;
+import model.user.exceptions.*;
 import view.ErrorDialogFactory;
 
 import javax.swing.*;
