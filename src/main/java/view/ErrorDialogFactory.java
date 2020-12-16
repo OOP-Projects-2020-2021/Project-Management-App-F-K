@@ -1,8 +1,7 @@
 package view;
 
 import model.InexistentDatabaseEntityException;
-import model.team.AlreadyMemberException;
-import model.team.InexistentTeamException;
+import model.team.exceptions.*;
 import model.user.NoSignedInUserException;
 
 import javax.swing.*;

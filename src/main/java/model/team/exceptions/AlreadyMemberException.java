@@ -1,4 +1,4 @@
-package model.team;
+package model.team.exceptions;
 
 /**
  * AlreadyMemberException is thrown when a request is sent for a user to join a team, but the user
@@ -7,7 +7,7 @@ package model.team;
  * @author Bori Fazakas
  */
 public class AlreadyMemberException extends Exception {
-  AlreadyMemberException(String userName, String teamName) {
+  public AlreadyMemberException(String userName, String teamName) {
     super(
         "The user "
             + userName

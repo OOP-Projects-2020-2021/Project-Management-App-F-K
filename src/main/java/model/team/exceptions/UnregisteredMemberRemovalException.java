@@ -1,4 +1,4 @@
-package model.team;
+package model.team.exceptions;
 
 /**
  * UnregisteredMemberRemoval is thrown when a request is sent to remove a user from the members of a
@@ -7,7 +7,7 @@ package model.team;
  * @author Bori Fazakas
  */
 public class UnregisteredMemberRemovalException extends Exception {
-  UnregisteredMemberRemovalException(String teamName, String userName) {
+  public UnregisteredMemberRemovalException(String teamName, String userName) {
     super(
         userName
             + " cannot leave team "

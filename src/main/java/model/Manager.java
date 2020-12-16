@@ -2,7 +2,6 @@ package model;
 
 import model.project.repository.ProjectRepository;
 import model.project.repository.impl.SqliteProjectRepository;
-import model.team.InexistentTeamException;
 import model.team.Team;
 import model.team.repository.TeamRepository;
 import model.team.repository.impl.SqliteTeamRepository;
@@ -12,6 +11,7 @@ import model.user.User;
 import model.user.UserManager;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
+import model.team.exceptions.*;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
