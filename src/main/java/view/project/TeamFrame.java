@@ -29,14 +29,6 @@ public class TeamFrame extends JFrame implements ActionListener {
     private JPanel membersTab;
     private JPanel projectsTab;
 
-    private JTextField teamNameTextField;
-    private JLabel teamCodeLabel;
-    private JTextField teamManagerTextField;
-    private JButton editButton;
-    private JButton saveTeamNameButton;
-    private JButton generateCodeButton;
-    private JButton saveTeamManagerButton;
-    private JLabel savedLabel;
 
     private JFrame parentFrame;
     private static final Dimension DIMENSION = new Dimension(400, 400);
@@ -49,11 +41,12 @@ public class TeamFrame extends JFrame implements ActionListener {
         initMenuComponents();
         this.setJMenuBar(teamMenuBar);
         // add components here
-        initHomePane();
+        //initHomePane();
         initMembersPane();
         initProjectsPane();
-        addTabbedPane();
-        this.pack();
+        membersTab.setVisible(false);
+        addTabbedPanes();
+        //this.pack();
         this.addWindowListener(new projectWindowAdapter());
         this.setVisible(true);
     }
@@ -86,7 +79,12 @@ public class TeamFrame extends JFrame implements ActionListener {
 
         teamMenuBar.add(teamMenu);
     }
-    private void addTabbedPane() {
+    private void initTabbedPanes() {
+        homeTab = new TeamHomePanel();
+        membersTab = new JPanel();
+        projectsTab = new JPanel();
+    }
+    private void addTabbedPanes() {
         mainPane = new JTabbedPane();
         mainPane.addTab("Home",homeTab);
         mainPane.addTab("Members",membersTab);
@@ -97,91 +95,12 @@ public class TeamFrame extends JFrame implements ActionListener {
         mainPane.setMnemonicAt(2,KeyEvent.VK_P);
         this.add(mainPane);
     }
-    private void initHomePane() {
-        homeTab = new JPanel();
-        homeTab.setPreferredSize(DIMENSION);
-        GroupLayout homeLayout = new GroupLayout(homeTab);
-        homeLayout.setAutoCreateGaps(true);
-        homeLayout.setAutoCreateContainerGaps(true);
-        homeTab.setLayout(homeLayout);
-        initHomePaneComponents();
-        JLabel nameLabel = UIFactory.createLabel("Name:",null);
-        JLabel codeLabel = UIFactory.createLabel("Code:",null);
-        JLabel managerLabel = UIFactory.createLabel("Manager:",null);
-
-        homeLayout.setHorizontalGroup(homeLayout.createSequentialGroup()
-                        .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addComponent(nameLabel)
-                                .addComponent(codeLabel)
-                                .addComponent(managerLabel)
-                                .addComponent(editButton))
-                        .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addComponent(teamNameTextField)
-                                .addComponent(teamCodeLabel)
-                                .addComponent(teamManagerTextField)
-                                .addComponent(savedLabel))
-                        .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                                .addComponent(saveTeamNameButton)
-                                .addComponent(generateCodeButton)
-                                .addComponent(saveTeamManagerButton)));
-
-        homeLayout.setVerticalGroup(homeLayout.createSequentialGroup()
-                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(nameLabel)
-                        .addComponent(teamNameTextField)
-                        .addComponent(saveTeamNameButton))
-                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(codeLabel)
-                        .addComponent(teamCodeLabel)
-                        .addComponent(generateCodeButton))
-                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(managerLabel)
-                        .addComponent(teamManagerTextField)
-                        .addComponent(saveTeamManagerButton))
-                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(editButton)
-                        .addComponent(savedLabel)));
-
-    }
-    private void initHomePaneComponents() {
-        // TODO get data from controller
-        teamNameTextField = UIFactory.createTextField("name");
-        teamCodeLabel = UIFactory.createLabel("code",null);
-        teamManagerTextField = UIFactory.createTextField("manager");
-        editButton = UIFactory.createButton("Edit");
-        saveTeamNameButton = UIFactory.createButton("Save");
-        generateCodeButton = UIFactory.createButton("Generate code");
-        saveTeamManagerButton = UIFactory.createButton("Save");
-        savedLabel = UIFactory.createLabel("*Saved.",null);
-    }
-    public void enableSaveButtons(boolean enableSave) {
-        saveTeamNameButton.setVisible(enableSave);
-        saveTeamManagerButton.setVisible(enableSave);
-        generateCodeButton.setVisible(enableSave);
-    }
-    public void enableEditTextFields(boolean enableEdit) {
-        teamNameTextField.setEditable(enableEdit);
-        teamManagerTextField.setEditable(enableEdit);
-    }
-    public void showEditButton(boolean showEdit) {
-        editButton.setVisible(showEdit);
-    }
-    private void updateHomePaneComponents(Team team) {
-        // todo from controller
-        teamNameTextField.setText("");
-        teamCodeLabel.setText("");
-        teamManagerTextField.setText("");
-    }
-    public void showSavedLabel(boolean showSave) {
-        savedLabel.setVisible(showSave);
-    }
-
     private void initMembersPane() {
-        membersTab = new JPanel();
+
         membersTab.setPreferredSize(DIMENSION);
     }
     private void initProjectsPane() {
-        projectsTab = new JPanel();
+
         projectsTab.setPreferredSize(DIMENSION);
     }
     private class projectWindowAdapter extends WindowAdapter {
