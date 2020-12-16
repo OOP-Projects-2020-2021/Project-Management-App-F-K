@@ -1,13 +1,16 @@
 package view.project;
-import controller.project.TeamController;
+
+import model.team.Team;
+import view.UIFactory;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-
 /**
- * Displays the projects of the user.
+ * The project frame allows the user to view the team's details, the members list and the projects.
+ * Additionally the manager also has access to the teams settings and adding/removing members.
+ * From the frame's dropdown menu, the user can choose to go back to the main page or leave the team.
  *
  * @author Beata Keresztes
  */
@@ -21,32 +24,37 @@ public class TeamFrame extends JFrame implements ActionListener {
     private JMenuItem leaveTeamItem;
     private JMenuItem backItem;
 
-    /** Labels for displaying details about a team.*/
-    private JLabel teamNameLabel;
+    private JTabbedPane mainPane;
+    private JPanel homeTab;
+    private JPanel membersTab;
+    private JPanel projectsTab;
+
+    private JTextField teamNameTextField;
     private JLabel teamCodeLabel;
-    private JLabel teamManagerNameLabel;
-    private JTextArea teamDescriptionArea;
+    private JTextField teamManagerTextField;
+    private JButton editButton;
+    private JButton saveTeamNameButton;
+    private JButton generateCodeButton;
+    private JButton saveTeamManagerButton;
+    private JLabel savedLabel;
 
-    // todo move it to the Project frame
-    private JButton newProjectButton;
-
-    /**The member-list is only for viewing the members of the team. It's selection doesn't trigger any action.*/
-    private JList<String> memberList;
-
-    private TeamController teamController;
-
+    private JFrame parentFrame;
     private static final Dimension DIMENSION = new Dimension(400, 400);
 
-    public TeamFrame() {
-        super("Team");
+    public TeamFrame(JFrame parentFrame) {
+        super("Team"); // todo place here the team name and pass team to controller
+        this.parentFrame = parentFrame;
         this.setSize(DIMENSION);
         this.setResizable(false);
         initMenuComponents();
         this.setJMenuBar(teamMenuBar);
-        this.teamController = new TeamController(this);
-        this.setLayout(new BorderLayout());
-        initMainPanel();
-        this.addWindowListener(new TeamWindowAdapter());
+        // add components here
+        initHomePane();
+        initMembersPane();
+        initProjectsPane();
+        addTabbedPane();
+        this.pack();
+        this.addWindowListener(new projectWindowAdapter());
         this.setVisible(true);
     }
 
@@ -78,80 +86,113 @@ public class TeamFrame extends JFrame implements ActionListener {
 
         teamMenuBar.add(teamMenu);
     }
+    private void addTabbedPane() {
+        mainPane = new JTabbedPane();
+        mainPane.addTab("Home",homeTab);
+        mainPane.addTab("Members",membersTab);
+        mainPane.add("Projects",projectsTab);
 
-    private void initMainPanel() {
-
-        JPanel headerPanel = new JPanel(new GridLayout(3,1));
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(10,20,10,20));
-
-        teamNameLabel = new JLabel(teamController.getTeamName());
-        teamNameLabel.setHorizontalAlignment(JLabel.RIGHT);
-        teamCodeLabel = new JLabel(teamController.getTeamCode());
-        teamCodeLabel.setHorizontalAlignment(JLabel.RIGHT);
-        teamManagerNameLabel = new JLabel(teamController.getManagerName());
-        teamManagerNameLabel.setHorizontalAlignment(JLabel.RIGHT);
-
-        headerPanel.add(teamNameLabel);
-        headerPanel.add(teamCodeLabel);
-        headerPanel.add(teamManagerNameLabel);
-
-        JPanel mainPanel = new JPanel(new GridLayout(2,1,20,20));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
-
-        JPanel descriptionPanel = new JPanel(new BorderLayout());
-
-        teamDescriptionArea = new JTextArea(teamController.getTeamDescription());
-        teamDescriptionArea.setLineWrap(true);
-        teamDescriptionArea.setWrapStyleWord(true);
-        teamDescriptionArea.setEditable(false);
-        descriptionPanel.add(teamDescriptionArea,BorderLayout.CENTER);
-
-        JScrollPane scrollPaneDescription = new JScrollPane(teamDescriptionArea);
-        scrollPaneDescription.setVerticalScrollBarPolicy ( ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS );
-        descriptionPanel.add(scrollPaneDescription);
-
-        JPanel membersPanel = new JPanel(new GridLayout(1,2));
-        initLists();
-        JPanel listPanel = new JPanel(new BorderLayout());
-        JScrollPane scrollPaneList = new JScrollPane();
-        scrollPaneList.setViewportView(memberList);
-        memberList.setLayoutOrientation(JList.VERTICAL);
-        listPanel.add(scrollPaneList);
-        membersPanel.add(new JLabel("Members list:"));
-        membersPanel.add(listPanel);
-
-        mainPanel.add(descriptionPanel);
-        mainPanel.add(membersPanel);
-
-        newProjectButton = new JButton(" + New Project");
-        JPanel buttonPanel = new JPanel(new FlowLayout());
-        buttonPanel.add(newProjectButton);
-
-        this.add(headerPanel,BorderLayout.NORTH);
-        this.add(mainPanel,BorderLayout.CENTER);
-        this.add(buttonPanel,BorderLayout.SOUTH);
+        mainPane.setMnemonicAt(0, KeyEvent.VK_H);
+        mainPane.setMnemonicAt(1,KeyEvent.VK_M);
+        mainPane.setMnemonicAt(2,KeyEvent.VK_P);
+        this.add(mainPane);
     }
+    private void initHomePane() {
+        homeTab = new JPanel();
+        homeTab.setPreferredSize(DIMENSION);
+        GroupLayout homeLayout = new GroupLayout(homeTab);
+        homeLayout.setAutoCreateGaps(true);
+        homeLayout.setAutoCreateContainerGaps(true);
+        homeTab.setLayout(homeLayout);
+        initHomePaneComponents();
+        JLabel nameLabel = UIFactory.createLabel("Name:",null);
+        JLabel codeLabel = UIFactory.createLabel("Code:",null);
+        JLabel managerLabel = UIFactory.createLabel("Manager:",null);
 
-    private void initLists() {
-        // todo get members and projects from team/project repo
-        String[] Strings = { "Bird", "Cat", "Dog", "Rabbit", "Pig", "Hamster", "Parrot", "Goldfish"};
-        memberList = new JList<>(Strings);
+        homeLayout.setHorizontalGroup(homeLayout.createSequentialGroup()
+                        .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(nameLabel)
+                                .addComponent(codeLabel)
+                                .addComponent(managerLabel)
+                                .addComponent(editButton))
+                        .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(teamNameTextField)
+                                .addComponent(teamCodeLabel)
+                                .addComponent(teamManagerTextField)
+                                .addComponent(savedLabel))
+                        .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(saveTeamNameButton)
+                                .addComponent(generateCodeButton)
+                                .addComponent(saveTeamManagerButton)));
+
+        homeLayout.setVerticalGroup(homeLayout.createSequentialGroup()
+                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(nameLabel)
+                        .addComponent(teamNameTextField)
+                        .addComponent(saveTeamNameButton))
+                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(codeLabel)
+                        .addComponent(teamCodeLabel)
+                        .addComponent(generateCodeButton))
+                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(managerLabel)
+                        .addComponent(teamManagerTextField)
+                        .addComponent(saveTeamManagerButton))
+                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addComponent(editButton)
+                        .addComponent(savedLabel)));
 
     }
-
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-        Object source = actionEvent.getSource();
-        if(source == teamSettingsItem) {
-            teamController.enableTeamSettings();
-        }else if(source == projectListItem) {
-            //todo link this with the project frame
-        }
+    private void initHomePaneComponents() {
+        // TODO get data from controller
+        teamNameTextField = UIFactory.createTextField("name");
+        teamCodeLabel = UIFactory.createLabel("code",null);
+        teamManagerTextField = UIFactory.createTextField("manager");
+        editButton = UIFactory.createButton("Edit");
+        saveTeamNameButton = UIFactory.createButton("Save");
+        generateCodeButton = UIFactory.createButton("Generate code");
+        saveTeamManagerButton = UIFactory.createButton("Save");
+        savedLabel = UIFactory.createLabel("*Saved.",null);
     }
-    private class TeamWindowAdapter extends WindowAdapter {
+    public void enableSaveButtons(boolean enableSave) {
+        saveTeamNameButton.setVisible(enableSave);
+        saveTeamManagerButton.setVisible(enableSave);
+        generateCodeButton.setVisible(enableSave);
+    }
+    public void enableEditTextFields(boolean enableEdit) {
+        teamNameTextField.setEditable(enableEdit);
+        teamManagerTextField.setEditable(enableEdit);
+    }
+    public void showEditButton(boolean showEdit) {
+        editButton.setVisible(showEdit);
+    }
+    private void updateHomePaneComponents(Team team) {
+        // todo from controller
+        teamNameTextField.setText("");
+        teamCodeLabel.setText("");
+        teamManagerTextField.setText("");
+    }
+    public void showSavedLabel(boolean showSave) {
+        savedLabel.setVisible(showSave);
+    }
+
+    private void initMembersPane() {
+        membersTab = new JPanel();
+        membersTab.setPreferredSize(DIMENSION);
+    }
+    private void initProjectsPane() {
+        projectsTab = new JPanel();
+        projectsTab.setPreferredSize(DIMENSION);
+    }
+    private class projectWindowAdapter extends WindowAdapter {
         @Override
         public void windowClosing(WindowEvent e) {
             System.exit(0);
         }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+
     }
 }
