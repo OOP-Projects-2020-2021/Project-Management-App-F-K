@@ -13,6 +13,8 @@ import model.user.UserManager;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -23,10 +25,20 @@ import java.util.Optional;
  *
  * @author Bori Fazakas
  */
-public abstract class Manager {
+public abstract class Manager implements PropertyChangeObservable{
   protected static ProjectRepository projectRepository = SqliteProjectRepository.getInstance();
   protected static TeamRepository teamRepository = SqliteTeamRepository.getInstance();
   protected static UserRepository userRepository = SqliteUserRepository.getInstance();
+
+  private PropertyChangeSupport support;
+
+  public void addPropertyChangeListener(PropertyChangeListener pcl) {
+    support.addPropertyChangeListener(pcl);
+  }
+
+  public void removePropertyChangeListener(PropertyChangeListener pcl) {
+    support.removePropertyChangeListener(pcl);
+  }
 
   /**
    * @return the current user.
