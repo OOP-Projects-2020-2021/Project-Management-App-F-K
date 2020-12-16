@@ -20,6 +20,8 @@ import java.util.Objects;
 
 /**
  * TeamListController controls the actions related to TeamListPanel.
+ * It implements PropertyChangeListener and updates the TeamListPanel whenever the user
+ * becomes a member of a new team/looses their membership of a team.
  *
  * @author Bori Fazakas
  */

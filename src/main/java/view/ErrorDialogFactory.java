@@ -9,7 +9,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.sql.SQLException;
 
-/** @author Beata Keresztes, Bori Fazakas */
+/**
+ * Utility class which handles frequent exception types on the front-end, by displaying a
+ * corresponding dialog message to the user.
+ *
+ * @author Beata Keresztes, Bori Fazakas
+ */
 public class ErrorDialogFactory {
   /** Messages that inform the user of a database related failure. */
   private static final String DATABASE_ERROR_TITLE = "Database failure";

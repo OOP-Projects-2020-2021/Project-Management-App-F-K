@@ -23,6 +23,9 @@ import java.util.Optional;
  * repositories for data access and provides some frequently-used methods for getting and validating
  * data, all of which throw the necessary exceptions in case of invalid data.
  *
+ * It implements PropertyChangeObservable, so it is able to notify the controller about changes
+ * in data that should be reflected in the view.
+ *
  * @author Bori Fazakas
  */
 public abstract class Manager implements PropertyChangeObservable {
