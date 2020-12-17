@@ -41,6 +41,14 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
                   + ".StatusId = st.StatusId WHERE TeamId = ? AND AssigneeId = ?";
   private PreparedStatement getProjectsByTeamAssigneeSt;
 
+  // Get projects based on team and supervisor.
+  private static final String GET_PROJECTS_BY_TEAM_SUPERVISOR_STATEMENT =
+          "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
+                  + "StatusName "
+                  + "From Project p JOIN ProjectStatus st ON p"
+                  + ".StatusId = st.StatusId WHERE TeamId = ? AND SupervisorId = ?";
+  private PreparedStatement getProjectsByTeamSupervisorSt;
+
   // Get status id
   private static final String GET_PROJECTS_STATUS_ID =
       "SELECT StatusId from ProjectStatus WHERE StatusName = ?";
@@ -64,6 +72,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     getProjectByTitleTeamSt = c.prepareStatement(GET_PROJECT_BY_TEAM_TITLE_STATEMENT);
     getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
     getProjectsByTeamAssigneeSt = c.prepareStatement(GET_PROJECTS_BY_TEAM_ASSIGNEE_STATEMENT);
+    getProjectsByTeamSupervisorSt = c.prepareStatement(GET_PROJECTS_BY_TEAM_SUPERVISOR_STATEMENT);
   }
 
   @Override
@@ -107,8 +116,15 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   }
 
   @Override
-  public List<Project> getProjectsInTeamSupervisedByUser(int teamId, int supervisorId) {
-    return null;
+  public List<Project> getProjectsInTeamSupervisedByUser(int teamId, int supervisorId) throws SQLException {
+    getProjectsByTeamSupervisorSt.setInt(1, teamId);
+    getProjectsByTeamSupervisorSt.setInt(2, supervisorId);
+    ResultSet result = getProjectsByTeamSupervisorSt.executeQuery();
+    List<Project> projects = new ArrayList<>();
+    while (result.next()) {
+      projects.add(getProjectFromResult(result));
+    }
+    return projects;
   }
 
   @Override
