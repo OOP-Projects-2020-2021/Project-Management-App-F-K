@@ -2,6 +2,7 @@ package model.user;
 
 import model.InexistentDatabaseEntityException;
 import model.Manager;
+import model.user.exceptions.DuplicateUsernameException;
 import model.user.exceptions.NoSignedInUserException;
 import org.jetbrains.annotations.Nullable;
 
@@ -33,7 +34,7 @@ public class UserManager extends Manager {
    * @param password = the password set by the user
    * @throws SQLException = in case the user could not be saved
    */
-  public void signUp(String username, String password) throws SQLException {
+  public void signUp(String username, String password) throws SQLException, DuplicateUsernameException {
     User user = new User.SavableUser(username, password);
     userRepository.saveUser(user);
   }
