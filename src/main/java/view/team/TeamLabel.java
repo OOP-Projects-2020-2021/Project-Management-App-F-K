@@ -28,14 +28,14 @@ public class TeamLabel extends JLabel {
 
   private TeamLabelController controller;
 
-  public TeamLabel(TeamViewModel teamData) {
+  public TeamLabel(JFrame frame, TeamViewModel teamData) {
     super(
         String.format(
             HTML_FORMAT,
             teamData.getName().charAt(0),
             teamData.getName(),
             teamData.getManagerName()));
-    this.controller = new TeamLabelController(teamData.getId());
+    this.controller = new TeamLabelController(teamData.getId(), frame);
     this.setPreferredSize(LABEL_DIMENSION);
     this.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY));
     this.addMouseListener(new TeamLabelMouseListener());
