@@ -40,7 +40,7 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
         int noProjects = 20;
         String[][] projectsData = new String[noProjects][noColumn];
         for(int i=0;i<noProjects;i++) {
-            projectsData[i] = new String[]{"Name" + i,i%30+"/12/2020","TO DO","LOW"};
+            projectsData[i] = new String[]{"Name" + i,"2020-12-"+i%30,"TO DO","LOW"};
         }
         JTable projectsTable = new JTable(projectsData,columnNames){
                 public boolean editCellAt(int row, int column, java.util.EventObject e) {
@@ -55,20 +55,23 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
 
         TableRowSorter<TableModel> sorter
                 = new TableRowSorter<>(projectsTable.getModel());
-        Comparator<String> dateComparator = (s1, s2) -> {
+        sorter.setComparator(1,new DateComparator());
+        projectsTable.setRowSorter(sorter);
+    }
+    class DateComparator implements Comparator<String> {
+
+        @Override
+        public int compare(String s1, String s2) {
             try {
-                Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(s1);
-                Date date2=new SimpleDateFormat("dd/MM/yyyy").parse(s2);
+                Date date1=new SimpleDateFormat("yyyy-MM-dd").parse(s1);
+                Date date2=new SimpleDateFormat("yyyy-MM-dd").parse(s2);
                 return date1.compareTo(date2);
             } catch (ParseException e) {
                 e.printStackTrace();
                 return 0;
             }
-        };
-        sorter.setComparator(1,dateComparator);
-        projectsTable.setRowSorter(sorter);
+        }
     }
-
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
