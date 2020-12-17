@@ -20,9 +20,8 @@ public class TeamLabelController {
     }
 
     public void onLabelClicked() {
-        // new TeamFrame();
-        System.out.println("Label clicked");
-        frame.setEnabled(false);
-        new SignInFrame();
+        System.out.println("Label clicked for team: " + teamId);
+        // todo: frame.setEnabled(false);
+        // todo: new TeamFrame();
     }
 }
