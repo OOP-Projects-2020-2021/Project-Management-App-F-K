@@ -6,6 +6,7 @@ import model.project.repository.ProjectRepository;
 
 import java.sql.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,12 +26,20 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   private PreparedStatement saveProjectSt;
 
   // Get projects based on team and title.
-  private static final String GET_PROJECT_B_TEAM_TITLE_STATEMENT =
+  private static final String GET_PROJECT_BY_TEAM_TITLE_STATEMENT =
       "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
           + "StatusName "
           + "From Project p JOIN ProjectStatus st ON p"
           + ".StatusId = st.StatusId WHERE Name = ? and TeamId = ? ";
-  private PreparedStatement getProjectBTitleTeamSt;
+  private PreparedStatement getProjectByTitleTeamSt;
+
+  // Get projects based on team and assignee.
+  private static final String GET_PROJECTS_BY_TEAM_ASSIGNEE_STATEMENT =
+          "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
+                  + "StatusName "
+                  + "From Project p JOIN ProjectStatus st ON p"
+                  + ".StatusId = st.StatusId WHERE TeamId = ? AND AssigneeId = ?";
+  private PreparedStatement getProjectsByTeamAssigneeSt;
 
   // Get status id
   private static final String GET_PROJECTS_STATUS_ID =
@@ -52,8 +61,9 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
    */
   protected void prepareStatements() throws SQLException {
     saveProjectSt = c.prepareStatement(SAVE_PROJECT_STATEMENT);
-    getProjectBTitleTeamSt = c.prepareStatement(GET_PROJECT_B_TEAM_TITLE_STATEMENT);
+    getProjectByTitleTeamSt = c.prepareStatement(GET_PROJECT_BY_TEAM_TITLE_STATEMENT);
     getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
+    getProjectsByTeamAssigneeSt = c.prepareStatement(GET_PROJECTS_BY_TEAM_ASSIGNEE_STATEMENT);
   }
 
   @Override
@@ -80,9 +90,9 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   @Override
   public Optional<Project> getProject(int teamId, String name) throws SQLException {
-    getProjectBTitleTeamSt.setString(1, name);
-    getProjectBTitleTeamSt.setInt(2, teamId);
-    ResultSet result = getProjectBTitleTeamSt.executeQuery();
+    getProjectByTitleTeamSt.setString(1, name);
+    getProjectByTitleTeamSt.setInt(2, teamId);
+    ResultSet result = getProjectByTitleTeamSt.executeQuery();
     if (result.next()) {
       return Optional.of(getProjectFromResult(result));
     } else {
@@ -94,6 +104,23 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   public List<Project> getProjectsOfTeam(int teamId) {
     // todo
     return null;
+  }
+
+  @Override
+  public List<Project> getProjectsInTeamSupervisedByUser(int teamId, int supervisorId) {
+    return null;
+  }
+
+  @Override
+  public List<Project> getProjectsInTeamAssignedToUser(int teamId, int assigneeId) throws SQLException {
+    getProjectsByTeamAssigneeSt.setInt(1, teamId);
+    getProjectsByTeamAssigneeSt.setInt(2, assigneeId);
+    ResultSet result = getProjectsByTeamAssigneeSt.executeQuery();
+    List<Project> projects = new ArrayList<>();
+    while (result.next()) {
+      projects.add(getProjectFromResult(result));
+    }
+    return projects;
   }
 
   @Override

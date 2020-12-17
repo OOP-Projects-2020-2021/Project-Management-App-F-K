@@ -24,6 +24,10 @@ public interface ProjectRepository {
 
   List<Project> getProjectsOfTeam(int teamId);
 
+  List<Project> getProjectsInTeamSupervisedByUser(int teamId, int supervisorId);
+
+  List<Project> getProjectsInTeamAssignedToUser(int teamId, int assigneeId) throws SQLException;
+
   List<Project> getProjectsSupervisedByUser(int userId);
 
   List<Project> getProjectsAssignedToUser(int userId);
