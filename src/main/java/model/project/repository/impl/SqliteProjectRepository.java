@@ -25,6 +25,14 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + "StatusId) VALUES (?, ?, ?, ?, ?, ?, ?)";
   private PreparedStatement saveProjectSt;
 
+  // Get project based on id.
+  private static final String GET_PROJECT_BY_ID =
+          "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
+                  + "StatusName "
+                  + "From Project p JOIN ProjectStatus st ON p"
+                  + ".StatusId = st.StatusId WHERE ProjectId = ?";
+  private PreparedStatement getProjectByIdSt;
+
   // Get projects based on team and title.
   private static final String GET_PROJECT_BY_TEAM_TITLE_STATEMENT =
       "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
@@ -77,6 +85,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
    */
   protected void prepareStatements() throws SQLException {
     saveProjectSt = c.prepareStatement(SAVE_PROJECT_STATEMENT);
+    getProjectByIdSt = c.prepareStatement(GET_PROJECT_BY_ID);
     getProjectByTitleTeamSt = c.prepareStatement(GET_PROJECT_BY_TEAM_TITLE_STATEMENT);
     getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
     getProjectsByTeamSt = c.prepareStatement(GET_PROJECTS_BY_TEAM);
@@ -101,9 +110,14 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   }
 
   @Override
-  public Optional<Project> getProject(int projectId) {
-    // todo
-    return null;
+  public Optional<Project> getProject(int projectId) throws SQLException {
+    getProjectByIdSt.setInt(1, projectId);
+    ResultSet result = getProjectByIdSt.executeQuery();
+    if (result.next()) {
+      return Optional.of(getProjectFromResult(result));
+    } else {
+      return Optional.empty();
+    }
   }
 
   @Override

@@ -18,7 +18,7 @@ public interface ProjectRepository {
 
   void saveProject(Project.SavableProject project) throws SQLException;
 
-  Optional<Project> getProject(int projectId);
+  Optional<Project> getProject(int projectId) throws SQLException;
 
   Optional<Project> getProject(int teamId, String name) throws SQLException;
 
