@@ -6,6 +6,6 @@ import javax.swing.*;
 public class Main {
   public static void main(String[] args) {
     //JFrame signInFrame = new SignInFrame();
-    JFrame teamFrame = new TeamFrame(new JFrame());
+    JFrame teamFrame = new TeamFrame(new JFrame(),3);
   }
 }

@@ -1,6 +1,6 @@
 package view.team.single_team;
 
-import model.team.Team;
+import controller.team.single_team.TeamSettingsController;
 import view.UIFactory;
 
 import javax.swing.*;
@@ -13,26 +13,31 @@ public class TeamHomePanel extends JPanel implements ActionListener {
   private JTextField teamNameTextField;
   private JLabel teamCodeLabel;
   private JTextField teamManagerTextField;
+  private JLabel savedLabel;
+
   private JButton editButton;
   private JButton saveTeamNameButton;
   private JButton regenerateCodeButton;
   private JButton saveTeamManagerButton;
-  private JLabel savedLabel;
   private JButton leaveTeamButton;
 
-  public TeamHomePanel(Dimension parentFrameDimension) {
+  private TeamSettingsController controller;
+
+  public TeamHomePanel(JFrame frame,Dimension parentFrameDimension, int teamId) {
+    controller = new TeamSettingsController(frame,teamId);
     this.setPreferredSize(parentFrameDimension);
+    this.setBorder(BorderFactory.createEmptyBorder(50,100,50,100));
     initHomePane();
   }
 
   private void initHomePane() {
-
     GroupLayout homeLayout = new GroupLayout(this);
     homeLayout.setAutoCreateGaps(true);
     homeLayout.setAutoCreateContainerGaps(true);
     this.setLayout(homeLayout);
-    this.setBorder(BorderFactory.createEmptyBorder(50,100,50,100));
+
     initHomePaneComponents();
+
     JLabel nameLabel = UIFactory.createLabel("Name:", null);
     JLabel codeLabel = UIFactory.createLabel("Code:", null);
     JLabel managerLabel = UIFactory.createLabel("Manager:", null);
@@ -95,44 +100,63 @@ public class TeamHomePanel extends JPanel implements ActionListener {
   }
 
   private void initHomePaneComponents() {
-    // TODO get data from controller
-    teamNameTextField = UIFactory.createTextField("name");
-    teamCodeLabel = UIFactory.createLabel("code", null);
-    teamManagerTextField = UIFactory.createTextField("manager");
+    teamNameTextField = UIFactory.createTextField(controller.getTeamName());
+    teamCodeLabel = UIFactory.createLabel(controller.getTeamCode(), null);
+    teamManagerTextField = UIFactory.createTextField(controller.getTeamManagerName());
+
     editButton = UIFactory.createButton("Edit");
     saveTeamNameButton = UIFactory.createButton("Save");
     regenerateCodeButton = UIFactory.createButton("Generate code");
     saveTeamManagerButton = UIFactory.createButton("Save");
+    enableButtons(controller.getManagerAccessGranted());
+
     savedLabel = UIFactory.createLabel("*Saved.", null);
+    savedLabel.setVisible(false);
     leaveTeamButton = UIFactory.createButton("Leave Team");
   }
 
-  public void enableSaveButtons(boolean enableSave) {
-    saveTeamNameButton.setVisible(enableSave);
-    saveTeamManagerButton.setVisible(enableSave);
-    regenerateCodeButton.setVisible(enableSave);
-  }
 
-  public void enableEditTextFields(boolean enableEdit) {
+  private void enableEditTextFields(boolean enableEdit) {
     teamNameTextField.setEditable(enableEdit);
     teamManagerTextField.setEditable(enableEdit);
   }
 
-  public void showEditButton(boolean showEdit) {
-    editButton.setVisible(showEdit);
+  private void enableButtons(boolean enable) {
+    editButton.setVisible(enable);
+    saveTeamNameButton.setVisible(enable);
+    saveTeamManagerButton.setVisible(enable);
+    regenerateCodeButton.setVisible(enable);
   }
 
-  private void updateHomePaneComponents(Team team) {
-    // todo from controller
-    teamNameTextField.setText("");
-    teamCodeLabel.setText("");
-    teamManagerTextField.setText("");
+  private void updateHomePaneComponents() {
+    teamNameTextField.setText(controller.getTeamName());
+    teamManagerTextField.setText(controller.getTeamManagerName());
+    teamCodeLabel.setText(controller.getTeamCode());
   }
 
-  public void showSavedLabel(boolean showSave) {
-    savedLabel.setVisible(showSave);
+  private void showSavedLabel(boolean saved) {
+    savedLabel.setVisible(saved);
   }
 
   @Override
-  public void actionPerformed(ActionEvent actionEvent) {}
+  public void actionPerformed(ActionEvent actionEvent) {
+    Object source = actionEvent.getSource();
+    if(source == leaveTeamButton) {
+      controller.leaveTeam();
+    } else if (source == editButton) {
+      enableEditTextFields(controller.getManagerAccessGranted());
+      showSavedLabel(false);
+    } else {
+      if (source == saveTeamNameButton) {
+        controller.saveTeamName(teamNameTextField.getText());
+      } else if (source == regenerateCodeButton) {
+        controller.regenerateTeamCode();
+      } else if (source == saveTeamManagerButton) {
+        controller.saveTeamManager(teamManagerTextField.getText());
+      }
+      showSavedLabel(true);
+      updateHomePaneComponents();
+      enableEditTextFields(false);
+    }
+  }
 }

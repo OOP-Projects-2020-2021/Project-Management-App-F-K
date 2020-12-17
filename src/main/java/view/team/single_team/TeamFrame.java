@@ -1,5 +1,7 @@
 package view.team.single_team;
 
+import controller.team.single_team.TeamController;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -11,34 +13,35 @@ import java.awt.event.*;
  *
  * @author Beata Keresztes
  */
-public class TeamFrame extends JFrame implements ActionListener {
+public class TeamFrame extends JFrame {
 
-  private JTabbedPane mainPane;
   private JPanel homeTab;
   private JPanel membersTab;
   private JPanel projectsTab;
 
   private JFrame parentFrame;
+  private TeamController controller;
   private static final Dimension DIMENSION = new Dimension(600, 500);
 
-  public TeamFrame(JFrame parentFrame) {
-    super("Team"); // todo place here the team name and pass team to controller
+  public TeamFrame(JFrame parentFrame,int teamId) {
+    super("Team");
     this.parentFrame = parentFrame;
+    this.controller = new TeamController(this.parentFrame,teamId);
     this.setSize(DIMENSION);
     this.setResizable(false);
     addTabbedPanes();
-    this.addWindowListener(new projectWindowAdapter());
+    this.addWindowListener(new TeamWindowAdapter());
     this.setVisible(true);
   }
 
   private void initTabbedPanes() {
-    homeTab = new TeamHomePanel(DIMENSION);
+    homeTab = new TeamHomePanel(this,DIMENSION,controller.getCurrentTeamId());
     membersTab = new TeamMembersPanel(DIMENSION);
     projectsTab = new TeamProjectsPanel(DIMENSION);
   }
 
   private void addTabbedPanes() {
-    mainPane = new JTabbedPane();
+    JTabbedPane mainPane = new JTabbedPane();
     initTabbedPanes();
     mainPane.addTab("Home", homeTab);
     mainPane.addTab("Members", membersTab);
@@ -50,13 +53,11 @@ public class TeamFrame extends JFrame implements ActionListener {
     this.add(mainPane);
   }
 
-  private class projectWindowAdapter extends WindowAdapter {
+  private class TeamWindowAdapter extends WindowAdapter {
     @Override
     public void windowClosing(WindowEvent e) {
-      System.exit(0);
+      controller.onClose(parentFrame);
     }
   }
 
-  @Override
-  public void actionPerformed(ActionEvent e) {}
 }

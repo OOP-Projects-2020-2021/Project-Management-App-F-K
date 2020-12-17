@@ -6,6 +6,7 @@ import model.UnauthorisedOperationException;
 import model.user.exceptions.*;
 import model.user.User;
 import model.team.exceptions.*;
+import model.user.repository.UserRepository;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -310,12 +311,16 @@ public class TeamManager extends Manager {
       throws UnauthorisedOperationException, InexistentDatabaseEntityException {
     if (!userIsManager(team, user)) {
       throw new UnauthorisedOperationException(
-          user.getId(), operation, "this user is not the manager of the project");
+          user.getId(), operation, "this user is not the manager of the team");
     }
   }
 
   /** @throws InexistentDatabaseEntityException - should never occur. */
   private boolean userIsManager(Team team, User user) throws InexistentDatabaseEntityException {
     return team.getManagerId() == user.getId();
+  }
+  
+  public Team getCurrentTeam(int teamId) throws SQLException, InexistentTeamException {
+    return getMandatoryTeam(teamId);
   }
 }
