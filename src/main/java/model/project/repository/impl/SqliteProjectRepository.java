@@ -28,18 +28,18 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   // Get project based on id.
   private static final String GET_PROJECT_BY_ID =
-          "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-                  + "StatusName "
-                  + "From Project p JOIN ProjectStatus st ON p"
-                  + ".StatusId = st.StatusId WHERE ProjectId = ?";
+      "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
+          + "StatusName "
+          + "From Project p JOIN ProjectStatus st ON p"
+          + ".StatusId = st.StatusId WHERE ProjectId = ?";
   private PreparedStatement getProjectByIdSt;
 
   // Update project bases on id.
   private static final String UPDATE_PROJECT =
-          "UPDATE Project "
-                  + " SET Name = ?, TeamId = ?, Description = ?, Deadline = ?, AssigneeId = ?, "
-                  + "SupervisorId = ?, StatusId = ?"
-                  + "Where ProjectId = ?";
+      "UPDATE Project "
+          + " SET Name = ?, TeamId = ?, Description = ?, Deadline = ?, AssigneeId = ?, "
+          + "SupervisorId = ?, StatusId = ?"
+          + "Where ProjectId = ?";
   private PreparedStatement updateProjectSt;
 
   // Get projects based on team and title.
@@ -52,26 +52,26 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   // Get projects based on team.
   private static final String GET_PROJECTS_BY_TEAM =
-          "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-                  + "StatusName "
-                  + "From Project p JOIN ProjectStatus st ON p"
-                  + ".StatusId = st.StatusId WHERE TeamId = ?";
+      "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
+          + "StatusName "
+          + "From Project p JOIN ProjectStatus st ON p"
+          + ".StatusId = st.StatusId WHERE TeamId = ?";
   private PreparedStatement getProjectsByTeamSt;
 
   // Get projects based on team and assignee.
   private static final String GET_PROJECTS_BY_TEAM_ASSIGNEE_STATEMENT =
-          "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-                  + "StatusName "
-                  + "From Project p JOIN ProjectStatus st ON p"
-                  + ".StatusId = st.StatusId WHERE TeamId = ? AND AssigneeId = ?";
+      "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
+          + "StatusName "
+          + "From Project p JOIN ProjectStatus st ON p"
+          + ".StatusId = st.StatusId WHERE TeamId = ? AND AssigneeId = ?";
   private PreparedStatement getProjectsByTeamAssigneeSt;
 
   // Get projects based on team and supervisor.
   private static final String GET_PROJECTS_BY_TEAM_SUPERVISOR_STATEMENT =
-          "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-                  + "StatusName "
-                  + "From Project p JOIN ProjectStatus st ON p"
-                  + ".StatusId = st.StatusId WHERE TeamId = ? AND SupervisorId = ?";
+      "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
+          + "StatusName "
+          + "From Project p JOIN ProjectStatus st ON p"
+          + ".StatusId = st.StatusId WHERE TeamId = ? AND SupervisorId = ?";
   private PreparedStatement getProjectsByTeamSupervisorSt;
 
   // Get status id
@@ -143,7 +143,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   }
 
   @Override
-  public void updateProject(Project project) throws SQLException, InexistentDatabaseEntityException {
+  public void updateProject(Project project)
+      throws SQLException, InexistentDatabaseEntityException {
     updateProjectSt.setString(1, project.getTitle());
     updateProjectSt.setInt(2, project.getTeamId());
     if (project.getDescription().isPresent()) {
@@ -171,7 +172,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   }
 
   @Override
-  public List<Project> getProjectsInTeamSupervisedByUser(int teamId, int supervisorId) throws SQLException {
+  public List<Project> getProjectsInTeamSupervisedByUser(int teamId, int supervisorId)
+      throws SQLException {
     getProjectsByTeamSupervisorSt.setInt(1, teamId);
     getProjectsByTeamSupervisorSt.setInt(2, supervisorId);
     ResultSet result = getProjectsByTeamSupervisorSt.executeQuery();
@@ -183,7 +185,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   }
 
   @Override
-  public List<Project> getProjectsInTeamAssignedToUser(int teamId, int assigneeId) throws SQLException {
+  public List<Project> getProjectsInTeamAssignedToUser(int teamId, int assigneeId)
+      throws SQLException {
     getProjectsByTeamAssigneeSt.setInt(1, teamId);
     getProjectsByTeamAssigneeSt.setInt(2, assigneeId);
     ResultSet result = getProjectsByTeamAssigneeSt.executeQuery();
