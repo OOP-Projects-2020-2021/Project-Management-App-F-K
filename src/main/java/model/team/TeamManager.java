@@ -6,7 +6,6 @@ import model.UnauthorisedOperationException;
 import model.user.exceptions.*;
 import model.user.User;
 import model.team.exceptions.*;
-import model.user.repository.UserRepository;
 
 import java.sql.SQLException;
 import java.util.List;

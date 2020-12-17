@@ -8,8 +8,8 @@ import java.awt.event.*;
 
 /**
  * The TeamFrame allows the user to view the team's details, the members list and the projects.
- * Additionally the manager also has access to the teams settings and adding/removing members.
- * Upon closing this frame, the user will be redirected to the main frame.
+ * Additionally the manager also has access to the teams settings and adding/removing members. Upon
+ * closing this frame, the user will be redirected to the main frame.
  *
  * @author Beata Keresztes
  */
@@ -23,10 +23,10 @@ public class TeamFrame extends JFrame {
   private TeamController controller;
   private static final Dimension DIMENSION = new Dimension(600, 500);
 
-  public TeamFrame(JFrame parentFrame,int teamId) {
+  public TeamFrame(JFrame parentFrame, int teamId) {
     super("Team");
     this.parentFrame = parentFrame;
-    this.controller = new TeamController(this.parentFrame,teamId);
+    this.controller = new TeamController(this.parentFrame, teamId);
     this.setSize(DIMENSION);
     this.setResizable(false);
     addTabbedPanes();
@@ -35,7 +35,7 @@ public class TeamFrame extends JFrame {
   }
 
   private void initTabbedPanes() {
-    homeTab = new TeamHomePanel(this,DIMENSION,controller);
+    homeTab = new TeamHomePanel(this, DIMENSION, controller);
     membersTab = new TeamMembersPanel(DIMENSION);
     projectsTab = new TeamProjectsPanel(DIMENSION);
   }
@@ -59,5 +59,4 @@ public class TeamFrame extends JFrame {
       controller.onClose(parentFrame);
     }
   }
-
 }

@@ -1,4 +1,3 @@
 package controller.team.single_team;
 
-public class TeamProjectsController {
-}
+public class TeamProjectsController {}

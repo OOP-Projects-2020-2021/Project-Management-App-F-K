@@ -10,8 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * This panel displays general information about a team.
- * The general user can only view the listed data, but the manager can edit the team's attributes.
+ * This panel displays general information about a team. The general user can only view the listed
+ * data, but the manager can edit the team's attributes.
  */
 public class TeamHomePanel extends JPanel implements ActionListener {
 
@@ -28,10 +28,11 @@ public class TeamHomePanel extends JPanel implements ActionListener {
 
   private TeamSettingsController controller;
 
-  public TeamHomePanel(JFrame frame,Dimension parentFrameDimension, TeamController teamController) {
-    controller = new TeamSettingsController(frame,teamController);
+  public TeamHomePanel(
+      JFrame frame, Dimension parentFrameDimension, TeamController teamController) {
+    controller = new TeamSettingsController(frame, teamController);
     this.setPreferredSize(parentFrameDimension);
-    this.setBorder(BorderFactory.createEmptyBorder(50,100,50,100));
+    this.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
     initHomePane();
   }
 
@@ -155,7 +156,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
   @Override
   public void actionPerformed(ActionEvent actionEvent) {
     Object source = actionEvent.getSource();
-    if(source == leaveTeamButton) {
+    if (source == leaveTeamButton) {
       controller.leaveTeam();
       updateHomePaneComponents();
       enableButtons(false);

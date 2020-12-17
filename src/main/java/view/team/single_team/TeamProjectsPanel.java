@@ -14,8 +14,8 @@ import java.util.Comparator;
 import java.util.Date;
 
 /**
- * Displays the list of projects, which can be sorted based on the deadline or filtered based on the project's status,
- * importance, assignee or supervisor.
+ * Displays the list of projects, which can be sorted based on the deadline or filtered based on the
+ * project's status, importance, assignee or supervisor.
  */
 public class TeamProjectsPanel extends JPanel implements ActionListener {
 
@@ -37,13 +37,14 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
 
   private void initHeaderComponents() {
     // todo get this from controller
-    String[] status = {"TO DO","IN PROGRESS","MARKED AS DONE","FINISHED"};
+    String[] status = {"TO DO", "IN PROGRESS", "MARKED AS DONE", "FINISHED"};
     statusFilterComboBox = new JComboBox<>(status);
-    String[] importance = {"LOW","HIGH","MEDIUM"};
+    String[] importance = {"LOW", "HIGH", "MEDIUM"};
     importanceFilterComboBox = new JComboBox<>(importance);
     assignedProjectsCheckBox = new JCheckBox();
     supervisedProjectsCheckBox = new JCheckBox();
   }
+
   private void initProjectsHeader() {
     initHeaderComponents();
 
@@ -53,43 +54,63 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
     headerLayout.setAutoCreateContainerGaps(true);
     header.setLayout(headerLayout);
 
-    JLabel filterLabel = UIFactory.createLabel("Filter projects by:",null);
-    JLabel statusFilterLabel = UIFactory.createLabel("Status:",null);
-    JLabel importanceFilterLabel = UIFactory.createLabel("Importance:",null);
-    JLabel assignedProjectsLabel = UIFactory.createLabel("Assigned to me:",null);
-    JLabel supervisedProjectsLabel = UIFactory.createLabel("Supervised by me:",null);
+    JLabel filterLabel = UIFactory.createLabel("Filter projects by:", null);
+    JLabel statusFilterLabel = UIFactory.createLabel("Status:", null);
+    JLabel importanceFilterLabel = UIFactory.createLabel("Importance:", null);
+    JLabel assignedProjectsLabel = UIFactory.createLabel("Assigned to me:", null);
+    JLabel supervisedProjectsLabel = UIFactory.createLabel("Supervised by me:", null);
 
-    headerLayout.setHorizontalGroup(headerLayout.createSequentialGroup()
-            .addGroup(headerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
+    headerLayout.setHorizontalGroup(
+        headerLayout
+            .createSequentialGroup()
+            .addGroup(
+                headerLayout
+                    .createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(filterLabel)
-                    .addGroup(headerLayout.createSequentialGroup()
-                          .addComponent(statusFilterLabel)
-                          .addComponent(statusFilterComboBox))
-                    .addGroup(headerLayout.createSequentialGroup()
+                    .addGroup(
+                        headerLayout
+                            .createSequentialGroup()
+                            .addComponent(statusFilterLabel)
+                            .addComponent(statusFilterComboBox))
+                    .addGroup(
+                        headerLayout
+                            .createSequentialGroup()
                             .addComponent(assignedProjectsLabel)
                             .addComponent(assignedProjectsCheckBox)))
-            .addGroup(headerLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(headerLayout.createSequentialGroup()
+            .addGroup(
+                headerLayout
+                    .createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addGroup(
+                        headerLayout
+                            .createSequentialGroup()
                             .addComponent(importanceFilterLabel)
                             .addComponent(importanceFilterComboBox))
-                    .addGroup(headerLayout.createSequentialGroup()
-                          .addComponent(supervisedProjectsLabel)
-                          .addComponent(supervisedProjectsCheckBox))));
+                    .addGroup(
+                        headerLayout
+                            .createSequentialGroup()
+                            .addComponent(supervisedProjectsLabel)
+                            .addComponent(supervisedProjectsCheckBox))));
 
-    headerLayout.setVerticalGroup(headerLayout.createSequentialGroup()
+    headerLayout.setVerticalGroup(
+        headerLayout
+            .createSequentialGroup()
             .addComponent(filterLabel)
-            .addGroup(headerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+            .addGroup(
+                headerLayout
+                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(statusFilterLabel)
                     .addComponent(statusFilterComboBox)
                     .addComponent(importanceFilterLabel)
                     .addComponent(importanceFilterComboBox))
-            .addGroup(headerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                            .addComponent(assignedProjectsLabel)
-                            .addComponent(assignedProjectsCheckBox)
-                            .addComponent(supervisedProjectsLabel)
-                            .addComponent(supervisedProjectsCheckBox)));
+            .addGroup(
+                headerLayout
+                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(assignedProjectsLabel)
+                    .addComponent(assignedProjectsCheckBox)
+                    .addComponent(supervisedProjectsLabel)
+                    .addComponent(supervisedProjectsCheckBox)));
 
-    this.add(header,BorderLayout.NORTH);
+    this.add(header, BorderLayout.NORTH);
   }
 
   private void initProjectsList() {
@@ -100,8 +121,8 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
     int noProjects = 20;
     String[][] projectsData = new String[noProjects][noColumn];
     for (int i = 0; i < noProjects; i++) {
-      String status = (i%2 == 0) ? "TO DO":"IN PROGRESS";
-      projectsData[i] = new String[] {"Name" + i, "2020-12-" + i % 30,status , "LOW"};
+      String status = (i % 2 == 0) ? "TO DO" : "IN PROGRESS";
+      projectsData[i] = new String[] {"Name" + i, "2020-12-" + i % 30, status, "LOW"};
     }
     // the data in the tables cannot be edited only viewed
     JTable projectsTable =
@@ -122,15 +143,16 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
 
     JScrollPane scrollPane = new JScrollPane(projectsTable);
     // title of the table
-    scrollPane.setBorder(BorderFactory.createTitledBorder(
-            BorderFactory.createEtchedBorder(), "Projects List", TitledBorder.CENTER,
+    scrollPane.setBorder(
+        BorderFactory.createTitledBorder(
+            BorderFactory.createEtchedBorder(),
+            "Projects List",
+            TitledBorder.CENTER,
             TitledBorder.TOP));
     this.add(scrollPane, BorderLayout.CENTER);
   }
 
-  /**
-   * Compare the dates, used for sorting the column containing the deadlines.
-   */
+  /** Compare the dates, used for sorting the column containing the deadlines. */
   static class DateComparator implements Comparator<String> {
     @Override
     public int compare(String s1, String s2) {
@@ -144,7 +166,6 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
       }
     }
   }
-
 
   @Override
   public void actionPerformed(ActionEvent actionEvent) {}
