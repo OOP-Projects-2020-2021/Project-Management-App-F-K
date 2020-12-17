@@ -1,9 +1,18 @@
 package view.project;
+import view.UIFactory;
+
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Comparator;
+import java.util.Date;
+
 
 public class TeamProjectsPanel extends JPanel implements ActionListener {
 
@@ -15,15 +24,24 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
         initProjectsPane();  // todo get form controller
     }
     private void initProjectsPane() {
+        initProjectsHeader();
         initProjectsList();
     }
+    private void initProjectsHeader() {
+        JLabel projectsLabel = UIFactory.createLabel("List of projects:",null);
+        projectsLabel.setHorizontalAlignment(JLabel.LEFT);
+        JPanel headerPanel = new JPanel(new FlowLayout());
+        headerPanel.add(projectsLabel);
+        this.add(headerPanel,BorderLayout.NORTH);
+    }
     private void initProjectsList() {
+        // todo get data from controller
         String[] columnNames = {"Name","Deadline","Status","Importance"};
         int noColumn = columnNames.length;
-        int noProjects = 9;
+        int noProjects = 20;
         String[][] projectsData = new String[noProjects][noColumn];
         for(int i=0;i<noProjects;i++) {
-            projectsData[i] = new String[]{"Name" + i,"2020-12-1"+i,"TO DO","LOW"};
+            projectsData[i] = new String[]{"Name" + i,i%30+"/12/2020","TO DO","LOW"};
         }
         JTable projectsTable = new JTable(projectsData,columnNames){
                 public boolean editCellAt(int row, int column, java.util.EventObject e) {
@@ -31,11 +49,29 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
             }
         };
         JScrollPane scrollPane = new JScrollPane(projectsTable);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
         projectsTable.setFillsViewportHeight(true);
         projectsTable.setCellSelectionEnabled(true);
-        this.add(scrollPane);
+        this.add(scrollPane,BorderLayout.CENTER);
 
+        TableRowSorter<TableModel> sorter
+                = new TableRowSorter<>(projectsTable.getModel());
+        Comparator<String> dateComparator = new Comparator<String>() {
+            public int compare(String s1, String s2) {
+                try {
+                    Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(s1);
+                    Date date2=new SimpleDateFormat("dd/MM/yyyy").parse(s2);
+                    return date1.compareTo(date2);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                    return 0;
+                }
+            }
+        };
+        sorter.setComparator(1,dateComparator);
+        projectsTable.setRowSorter(sorter);
     }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
 
