@@ -1,5 +1,6 @@
 package view.team.single_team;
 
+import controller.team.single_team.TeamController;
 import controller.team.single_team.TeamSettingsController;
 import view.UIFactory;
 
@@ -8,6 +9,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * This panel displays general information about a team.
+ * The general user can only view the listed data, but the manager can edit the team's attributes.
+ */
 public class TeamHomePanel extends JPanel implements ActionListener {
 
   private JTextField teamNameTextField;
@@ -23,8 +28,8 @@ public class TeamHomePanel extends JPanel implements ActionListener {
 
   private TeamSettingsController controller;
 
-  public TeamHomePanel(JFrame frame,Dimension parentFrameDimension, int teamId) {
-    controller = new TeamSettingsController(frame,teamId);
+  public TeamHomePanel(JFrame frame,Dimension parentFrameDimension, TeamController teamController) {
+    controller = new TeamSettingsController(frame,teamController);
     this.setPreferredSize(parentFrameDimension);
     this.setBorder(BorderFactory.createEmptyBorder(50,100,50,100));
     initHomePane();
@@ -103,6 +108,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     teamNameTextField = UIFactory.createTextField(controller.getTeamName());
     teamCodeLabel = UIFactory.createLabel(controller.getTeamCode(), null);
     teamManagerTextField = UIFactory.createTextField(controller.getTeamManagerName());
+    enableEditTextFields(false);
 
     editButton = UIFactory.createButton("Edit");
     saveTeamNameButton = UIFactory.createButton("Save");
@@ -113,8 +119,8 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     savedLabel = UIFactory.createLabel("*Saved.", null);
     savedLabel.setVisible(false);
     leaveTeamButton = UIFactory.createButton("Leave Team");
+    addButtonListeners();
   }
-
 
   private void enableEditTextFields(boolean enableEdit) {
     teamNameTextField.setEditable(enableEdit);
@@ -134,6 +140,14 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     teamCodeLabel.setText(controller.getTeamCode());
   }
 
+  private void addButtonListeners() {
+    leaveTeamButton.addActionListener(this);
+    editButton.addActionListener(this);
+    saveTeamNameButton.addActionListener(this);
+    regenerateCodeButton.addActionListener(this);
+    saveTeamManagerButton.addActionListener(this);
+  }
+
   private void showSavedLabel(boolean saved) {
     savedLabel.setVisible(saved);
   }
@@ -143,6 +157,9 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     Object source = actionEvent.getSource();
     if(source == leaveTeamButton) {
       controller.leaveTeam();
+      updateHomePaneComponents();
+      enableButtons(false);
+      enableEditTextFields(false);
     } else if (source == editButton) {
       enableEditTextFields(controller.getManagerAccessGranted());
       showSavedLabel(false);

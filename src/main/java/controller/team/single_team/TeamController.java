@@ -38,6 +38,12 @@ public class TeamController extends FrameController {
     }
     return false;
   }
+  public boolean getManagerAccessGranted() {
+    return managerAccessGranted;
+  }
+  public void updateManagerAccess() {
+    managerAccessGranted = grantManagerAccess();
+  }
   public int getCurrentTeamId() {
     return currentTeamId;
   }

@@ -5,47 +5,43 @@ import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
 import model.team.Team;
 import model.team.TeamManager;
-import model.team.exceptions.InexistentTeamException;
-import model.team.exceptions.ManagerRemovalException;
-import model.team.exceptions.UnregisteredMemberRemovalException;
+import model.team.exceptions.*;
+import model.user.exceptions.*;
 import model.user.UserManager;
-import model.user.exceptions.InexistentUserException;
-import model.user.exceptions.NoSignedInUserException;
 import view.ErrorDialogFactory;
 
 import javax.swing.*;
 import java.sql.SQLException;
 import java.util.Objects;
 
+/**
+ * This controller manages the TeamHomePanel, and it is responsible for displaying and updating
+ * the currently viewed team's data.
+ */
 public class TeamSettingsController extends FrameController{
 
   private TeamManager teamManager;
   private UserManager userManager;
-  private boolean managerAccessGranted;
   private Team currentTeam;
+  private TeamController teamController;
 
-  public TeamSettingsController(JFrame frame,int currentTeamId) {
+  public TeamSettingsController(JFrame frame,TeamController teamController) {
     super(frame);
     teamManager = TeamManager.getInstance();
     userManager = UserManager.getInstance();
-    managerAccessGranted = grantManagerAccess();
+    this.teamController = teamController;
     try {
-      currentTeam = teamManager.getCurrentTeam(currentTeamId);
+      currentTeam = teamManager.getCurrentTeam(teamController.getCurrentTeamId());
     } catch (SQLException | InexistentTeamException e) {
       ErrorDialogFactory.createErrorDialog(e,frame,"This team cannot be viewed.");
     }
   }
 
-  public boolean grantManagerAccess() {
-    try {
-      return UserManager.getInstance().getCurrentUser().get().getId() == currentTeam.getManagerId();
-    } catch (InexistentDatabaseEntityException e) {
-      ErrorDialogFactory.createErrorDialog(e,frame,null);
-    }
-    return false;
-  }
   public boolean getManagerAccessGranted() {
-    return managerAccessGranted;
+    return teamController.getManagerAccessGranted();
+  }
+  public void updateManagerAccess() {
+    teamController.updateManagerAccess();
   }
 
   public String getTeamName() {
@@ -66,6 +62,8 @@ public class TeamSettingsController extends FrameController{
   public void leaveTeam() {
     try {
       teamManager.leaveTeam(currentTeam.getId());
+      updateCurrentTeam();
+      updateManagerAccess();
     } catch (SQLException | InexistentDatabaseEntityException | InexistentTeamException | NoSignedInUserException | UnregisteredMemberRemovalException | ManagerRemovalException e) {
       ErrorDialogFactory.createErrorDialog(e,frame,null);
     }
@@ -90,6 +88,7 @@ public class TeamSettingsController extends FrameController{
     try {
       teamManager.passManagerPosition(currentTeam.getId(),managerName);
       updateCurrentTeam();
+      updateManagerAccess();
     } catch (InexistentUserException | InexistentTeamException | NoSignedInUserException | InexistentDatabaseEntityException | SQLException | UnauthorisedOperationException e) {
       ErrorDialogFactory.createErrorDialog(e,frame,null);
     }

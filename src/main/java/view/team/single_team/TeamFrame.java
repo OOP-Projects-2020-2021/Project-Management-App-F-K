@@ -7,9 +7,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * The project frame allows the user to view the team's details, the members list and the projects.
- * Additionally the manager also has access to the teams settings and adding/removing members. From
- * the frame's dropdown menu, the user can choose to go back to the main page or leave the team.
+ * The TeamFrame allows the user to view the team's details, the members list and the projects.
+ * Additionally the manager also has access to the teams settings and adding/removing members.
+ * Upon closing this frame, the user will be redirected to the main frame.
  *
  * @author Beata Keresztes
  */
@@ -35,7 +35,7 @@ public class TeamFrame extends JFrame {
   }
 
   private void initTabbedPanes() {
-    homeTab = new TeamHomePanel(this,DIMENSION,controller.getCurrentTeamId());
+    homeTab = new TeamHomePanel(this,DIMENSION,controller);
     membersTab = new TeamMembersPanel(DIMENSION);
     projectsTab = new TeamProjectsPanel(DIMENSION);
   }
