@@ -24,7 +24,7 @@ public class TeamController extends FrameController {
 
   public String getTeamDescription() {
     return "This is a very long long long long long long long long long long long long long long"
-               + " description";
+        + " description";
   }
 
   public String getManagerName() {
