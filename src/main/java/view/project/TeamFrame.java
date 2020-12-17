@@ -16,14 +16,6 @@ import java.awt.event.*;
  */
 public class TeamFrame extends JFrame implements ActionListener {
 
-    /** Components and items of the drop-down menu. */
-    private JMenuBar teamMenuBar;
-    private JMenu teamMenu;
-    private JMenuItem teamSettingsItem;
-    private JMenuItem projectListItem;
-    private JMenuItem leaveTeamItem;
-    private JMenuItem backItem;
-
     private JTabbedPane mainPane;
     private JPanel homeTab;
     private JPanel membersTab;
@@ -38,7 +30,6 @@ public class TeamFrame extends JFrame implements ActionListener {
         this.parentFrame = parentFrame;
         this.setSize(DIMENSION);
         this.setResizable(false);
-        this.setJMenuBar(teamMenuBar);
         addTabbedPanes();
         this.addWindowListener(new projectWindowAdapter());
         this.setVisible(true);
@@ -47,7 +38,7 @@ public class TeamFrame extends JFrame implements ActionListener {
     private void initTabbedPanes() {
         homeTab = new TeamHomePanel(DIMENSION);
         membersTab = new TeamMembersPanel(DIMENSION);
-        projectsTab = new JPanel();
+        projectsTab = new TeamProjectsPanel(DIMENSION);
     }
     private void addTabbedPanes() {
         mainPane = new JTabbedPane();
@@ -62,9 +53,6 @@ public class TeamFrame extends JFrame implements ActionListener {
         this.add(mainPane);
     }
 
-    private void initProjectsPane() {
-        projectsTab.setPreferredSize(DIMENSION);
-    }
     private class projectWindowAdapter extends WindowAdapter {
         @Override
         public void windowClosing(WindowEvent e) {
