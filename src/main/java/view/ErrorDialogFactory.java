@@ -44,13 +44,11 @@ public class ErrorDialogFactory {
   private static final String ALREADY_MEMBER_ERROR_MESSAGE =
       "This team membership has already been registered, you can't add it again";
 
-  /**
-   * Messages to inform the user that the username introduced is already taken.
-   */
+  /** Messages to inform the user that the username introduced is already taken. */
   private static final String DUPLICATE_USERNAME_ERROR_TITLE = "Duplicate username!";
 
   private static final String DUPLICATE_USERNAME_ERROR_MESSAGE =
-          "This username already exists, please choose another one!";
+      "This username already exists, please choose another one!";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
@@ -69,8 +67,8 @@ public class ErrorDialogFactory {
     if (exception instanceof AlreadyMemberException) {
       displayAlreadyMemberErrorDialog(frame, message);
     }
-    if(exception instanceof DuplicateUsernameException) {
-      displayDuplicateUsernameErrorDialog(frame,message);
+    if (exception instanceof DuplicateUsernameException) {
+      displayDuplicateUsernameErrorDialog(frame, message);
     }
   }
 
@@ -116,13 +114,14 @@ public class ErrorDialogFactory {
         JOptionPane.ERROR_MESSAGE);
   }
 
-  /** Displays an error message when the user attempts to sign-up with an already existing username.*/
+  /**
+   * Displays an error message when the user attempts to sign-up with an already existing username.
+   */
   private static void displayDuplicateUsernameErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            DUPLICATE_USERNAME_ERROR_MESSAGE + "\n" + message,
-            DUPLICATE_USERNAME_ERROR_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        DUPLICATE_USERNAME_ERROR_MESSAGE + "\n" + message,
+        DUPLICATE_USERNAME_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
-
 }

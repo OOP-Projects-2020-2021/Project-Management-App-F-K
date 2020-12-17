@@ -25,7 +25,7 @@ public class SignUpController extends FrameController {
   private static final String EMPTY_FIELDS_LEFT_TITLE = "Empty fields left";
 
   private static final String EMPTY_FIELDS_LEFT_MESSAGE =
-          "Please fill in all the required information before continuing!";
+      "Please fill in all the required information before continuing!";
 
   private UserManager userManager;
 
@@ -44,14 +44,14 @@ public class SignUpController extends FrameController {
    */
   public boolean signUp(String username, String password) {
     try {
-      if(isNotEmptyText(username) && isNotEmptyText(password)) {
+      if (isNotEmptyText(username) && isNotEmptyText(password)) {
         userManager.signUp(username, password);
         return true;
-      }else {
+      } else {
         displayEmptyFieldsSignUpDialog();
       }
-    }catch(DuplicateUsernameException | SQLException e) {
-      ErrorDialogFactory.createErrorDialog(e,frame,null);
+    } catch (DuplicateUsernameException | SQLException e) {
+      ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
     return false;
   }
@@ -79,6 +79,6 @@ public class SignUpController extends FrameController {
   /** Display warning message to inform the user that some fields were not filled. */
   public void displayEmptyFieldsSignUpDialog() {
     JOptionPane.showMessageDialog(
-            frame,EMPTY_FIELDS_LEFT_MESSAGE,EMPTY_FIELDS_LEFT_TITLE,JOptionPane.WARNING_MESSAGE);
+        frame, EMPTY_FIELDS_LEFT_MESSAGE, EMPTY_FIELDS_LEFT_TITLE, JOptionPane.WARNING_MESSAGE);
   }
 }

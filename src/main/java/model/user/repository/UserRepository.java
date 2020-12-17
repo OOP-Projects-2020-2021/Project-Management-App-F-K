@@ -11,8 +11,8 @@ public interface UserRepository {
 
   /**
    * When saving the user, only the username and the password are specified. The user's id is
-   * automatically generated when the record is added to the User table.
-   * The username has to be unique, there cannot be
+   * automatically generated when the record is added to the User table. The username has to be
+   * unique, there cannot be
    *
    * @param user = the user to be saved
    * @throws SQLException if the user could not be saved

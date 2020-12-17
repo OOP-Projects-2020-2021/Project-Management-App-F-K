@@ -34,7 +34,8 @@ public class UserManager extends Manager {
    * @param password = the password set by the user
    * @throws SQLException = in case the user could not be saved
    */
-  public void signUp(String username, String password) throws SQLException, DuplicateUsernameException {
+  public void signUp(String username, String password)
+      throws SQLException, DuplicateUsernameException {
     User user = new User.SavableUser(username, password);
     userRepository.saveUser(user);
   }
