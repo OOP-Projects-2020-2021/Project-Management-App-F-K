@@ -18,6 +18,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     private JButton generateCodeButton;
     private JButton saveTeamManagerButton;
     private JLabel savedLabel;
+    private JButton leaveTeamButton;
 
     public TeamHomePanel(Dimension parentFrameDimension) {
         this.setPreferredSize(parentFrameDimension);
@@ -40,16 +41,17 @@ public class TeamHomePanel extends JPanel implements ActionListener {
                         .addComponent(nameLabel)
                         .addComponent(codeLabel)
                         .addComponent(managerLabel)
-                        .addComponent(editButton))
+                        .addComponent(leaveTeamButton))
                 .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(teamNameTextField)
                         .addComponent(teamCodeLabel)
-                        .addComponent(teamManagerTextField)
-                        .addComponent(savedLabel))
+                        .addComponent(teamManagerTextField))
                 .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addComponent(saveTeamNameButton)
                         .addComponent(generateCodeButton)
-                        .addComponent(saveTeamManagerButton)));
+                        .addComponent(saveTeamManagerButton)
+                        .addComponent(editButton)
+                        .addComponent(savedLabel)));
 
         homeLayout.setVerticalGroup(homeLayout.createSequentialGroup()
                 .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -65,8 +67,11 @@ public class TeamHomePanel extends JPanel implements ActionListener {
                         .addComponent(teamManagerTextField)
                         .addComponent(saveTeamManagerButton))
                 .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addComponent(editButton)
+                        .addComponent(leaveTeamButton)
+                        .addComponent(editButton))
+                .addGroup(homeLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                         .addComponent(savedLabel)));
+
 
     }
     private void initHomePaneComponents() {
@@ -79,6 +84,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
         generateCodeButton = UIFactory.createButton("Generate code");
         saveTeamManagerButton = UIFactory.createButton("Save");
         savedLabel = UIFactory.createLabel("*Saved.",null);
+        leaveTeamButton = UIFactory.createButton("Leave Team");
     }
     public void enableSaveButtons(boolean enableSave) {
         saveTeamNameButton.setVisible(enableSave);

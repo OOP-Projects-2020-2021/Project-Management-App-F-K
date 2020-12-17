@@ -31,7 +31,7 @@ public class TeamFrame extends JFrame implements ActionListener {
 
 
     private JFrame parentFrame;
-    private static final Dimension DIMENSION = new Dimension(600, 400);
+    private static final Dimension DIMENSION = new Dimension(450, 400);
 
     public TeamFrame(JFrame parentFrame) {
         super("Team"); // todo place here the team name and pass team to controller
@@ -78,7 +78,6 @@ public class TeamFrame extends JFrame implements ActionListener {
     private void initTabbedPanes() {
         homeTab = new TeamHomePanel(DIMENSION);
         membersTab = new TeamMembersPanel(DIMENSION);
-        //membersTab = new JPanel();
         projectsTab = new JPanel();
     }
     private void addTabbedPanes() {
