@@ -2,17 +2,18 @@ package model;
 
 import model.project.repository.ProjectRepository;
 import model.project.repository.impl.SqliteProjectRepository;
-import model.team.InexistentTeamException;
 import model.team.Team;
 import model.team.repository.TeamRepository;
 import model.team.repository.impl.SqliteTeamRepository;
-import model.user.InexistentUserException;
-import model.user.NoSignedInUserException;
+import model.user.exceptions.*;
 import model.user.User;
 import model.user.UserManager;
 import model.user.repository.UserRepository;
 import model.user.repository.impl.SqliteUserRepository;
+import model.team.exceptions.*;
 
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -21,12 +22,27 @@ import java.util.Optional;
  * repositories for data access and provides some frequently-used methods for getting and validating
  * data, all of which throw the necessary exceptions in case of invalid data.
  *
+ * <p>It implements PropertyChangeObservable, so it is able to notify the controller about changes
+ * in data that should be reflected in the view.
+ *
  * @author Bori Fazakas
  */
-public abstract class Manager {
+public abstract class Manager implements PropertyChangeObservable {
   protected static ProjectRepository projectRepository = SqliteProjectRepository.getInstance();
   protected static TeamRepository teamRepository = SqliteTeamRepository.getInstance();
   protected static UserRepository userRepository = SqliteUserRepository.getInstance();
+
+  protected PropertyChangeSupport support = new PropertyChangeSupport(this);
+  protected final int OLD_VALUE = 1; // dummy data
+  protected final int NEW_VALUE = 2; // dummy data, but it must be different from OLD_VALUE
+
+  public void addPropertyChangeListener(PropertyChangeListener pcl) {
+    support.addPropertyChangeListener(pcl);
+  }
+
+  public void removePropertyChangeListener(PropertyChangeListener pcl) {
+    support.removePropertyChangeListener(pcl);
+  }
 
   /**
    * @return the current user.

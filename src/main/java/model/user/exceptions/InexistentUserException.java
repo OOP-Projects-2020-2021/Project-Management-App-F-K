@@ -1,4 +1,4 @@
-package model.user;
+package model.user.exceptions;
 
 /**
  * InexistentUserException is thrown when a user with a name/id is requested who does not exist in

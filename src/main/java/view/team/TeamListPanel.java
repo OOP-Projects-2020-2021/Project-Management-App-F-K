@@ -3,6 +3,7 @@ package view.team;
 import controller.team.TeamListController;
 import view.ModifiedFlowLayout;
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -12,17 +13,24 @@ import java.util.List;
  * @author Bori Fazakas
  */
 public class TeamListPanel extends JPanel {
-  private TeamListController controller = new TeamListController();
+  private TeamListController controller;
 
-  public TeamListPanel() {
+  public TeamListPanel(Frame frame) {
     /**
      * In order to make this panel scrollable through a JScrollPane, and keep the number of teams
      * flexible at the same time, ModifiedFlowLayout is required instead of the simpleFlowLayout.
      */
     this.setLayout(new ModifiedFlowLayout());
+    controller = new TeamListController(this, frame);
+    updateTeams();
+  }
+
+  public void updateTeams() {
+    this.removeAll();
     List<TeamViewModel> teams = controller.getUsersTeams();
     for (TeamViewModel team : teams) {
       this.add(new TeamLabel(team));
     }
+    this.revalidate();
   }
 }

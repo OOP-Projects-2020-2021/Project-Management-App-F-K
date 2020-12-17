@@ -2,6 +2,7 @@ package controller.user;
 
 import controller.FrameController;
 import model.user.UserManager;
+import view.ErrorDialogFactory;
 import view.main.MainFrame;
 import view.user.SignUpFrame;
 import javax.swing.*;
@@ -50,7 +51,7 @@ public class SignInController extends FrameController {
         return userManager.signIn(username, password);
       }
     } catch (SQLException sqlException) {
-      super.displayDatabaseErrorDialog();
+      ErrorDialogFactory.createErrorDialog(sqlException, frame, null);
     }
     return false;
   }

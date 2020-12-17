@@ -1,4 +1,4 @@
-package model.team;
+package model.team.exceptions;
 
 /**
  * Exception thrown is the team with the specified id or code does not exist in the database.

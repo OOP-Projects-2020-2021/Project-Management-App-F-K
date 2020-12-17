@@ -15,7 +15,7 @@ import java.awt.event.WindowEvent;
 public class MainFrame extends JFrame {
 
   public MainFrame() {
-    this.add(new JScrollPane(new TeamListPanel()));
+    this.add(new JScrollPane(new TeamListPanel(this)));
     this.setTitle("Project Management App");
     this.setJMenuBar(new MainMenu(this));
     this.setSize(600, 400);

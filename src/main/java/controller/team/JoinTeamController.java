@@ -1,7 +1,14 @@
 package controller.team;
 
 import controller.FrameController;
+import model.InexistentDatabaseEntityException;
+import model.team.exceptions.*;
+import model.team.TeamManager;
+import model.user.exceptions.*;
+import view.ErrorDialogFactory;
+
 import javax.swing.*;
+import java.sql.SQLException;
 
 /**
  * Controller for CreateTeamFrame instances.
@@ -9,14 +16,41 @@ import javax.swing.*;
  * @author Bori Fazakas
  */
 public class JoinTeamController extends FrameController {
+  TeamManager teamManager;
+
+  private static final String SUCCESFUL_TEAM_JOINING_TITLE = "Succesful operation";
+  private static final String SUCCESSFUL_TEAM_JOINING_MESSAGE = "You succesfully joined the team";
 
   public JoinTeamController(JFrame frame) {
     super(frame);
+    teamManager = TeamManager.getInstance();
   }
 
+  /**
+   * When the user wants to join team, a request to the model is sent. The user is notified about
+   * the outcome of the operation. If successful, a new team with the given name is created.
+   *
+   * @param teamCode is the code of the team to join.
+   */
   public void joinTeam(String teamCode) {
-    // todo: pass data to modell, check if request is valid, handle exceptions
-    System.out.println("Join team with code: " + teamCode);
+    try {
+      teamManager.joinTeam(teamCode);
+      JOptionPane.showMessageDialog(
+          frame,
+          SUCCESSFUL_TEAM_JOINING_MESSAGE,
+          SUCCESFUL_TEAM_JOINING_TITLE,
+          JOptionPane.PLAIN_MESSAGE);
+    } catch (InexistentTeamException
+        | NoSignedInUserException
+        | SQLException
+        | InexistentDatabaseEntityException e) {
+      e.printStackTrace();
+      ErrorDialogFactory.createErrorDialog(e, frame, "You can't join team with code " + teamCode);
+    } catch (AlreadyMemberException e) {
+      e.printStackTrace();
+      ErrorDialogFactory.createErrorDialog(
+          e, frame, "You already are a member of team with code " + teamCode);
+    }
     closeFrame();
   }
 

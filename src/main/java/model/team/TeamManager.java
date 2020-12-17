@@ -3,9 +3,9 @@ package model.team;
 import model.InexistentDatabaseEntityException;
 import model.Manager;
 import model.UnauthorisedOperationException;
-import model.user.InexistentUserException;
-import model.user.NoSignedInUserException;
+import model.user.exceptions.*;
 import model.user.User;
+import model.team.exceptions.*;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,6 +27,11 @@ public class TeamManager extends Manager {
     return instance;
   }
 
+  public enum ChangablePropertyName {
+    CURRENT_USER_TEAM_MEMBERSHIPS, // event is fired when the user becomes member of a team/looses
+    // membership of a team
+  }
+
   /**
    * Creates a new team with the given name, and with the manager being the currently logged in
    * user.
@@ -38,8 +43,13 @@ public class TeamManager extends Manager {
    */
   public void createNewTeam(String name)
       throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException {
-    teamRepository.saveTeam(
-        new Team.SavableTeam(name, getMandatoryCurrentUser().getId(), generateTeamCode()));
+    User currentUser = getMandatoryCurrentUser();
+    int teamId =
+        teamRepository.saveTeam(
+            new Team.SavableTeam(name, currentUser.getId(), generateTeamCode()));
+    teamRepository.addTeamMember(teamId, currentUser.getId());
+    support.firePropertyChange(
+        ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -61,6 +71,8 @@ public class TeamManager extends Manager {
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "delete the team");
     teamRepository.deleteTeam(teamId);
+    support.firePropertyChange(
+        ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -71,7 +83,7 @@ public class TeamManager extends Manager {
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentDatabaseEntityException - should never occur.
    */
-  public List<Team> getMandatoryTeamsOfCurrentUser()
+  public List<Team> getTeamsOfCurrentUser()
       throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException {
     User currentUser = getMandatoryCurrentUser();
     return teamRepository.getTeamsOfUser(currentUser.getId());
@@ -101,40 +113,60 @@ public class TeamManager extends Manager {
   }
 
   /**
-   * Adds the current user as a member to the team with the given code, if it exists.
+   * Adds the current user as a member to the team with the given code, if it exists. Requirement:
+   * The user should not alrady be a member of the team.
    *
    * @param code is the code provided by the user of the team to join.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentTeamException if no team with this code exists.
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentDatabaseEntityException - should never occur.
+   * @throws AlreadyMemberException if the current user is already a member of the team.
    */
   public void joinTeam(String code)
       throws SQLException, InexistentTeamException, NoSignedInUserException,
-          InexistentDatabaseEntityException {
+          InexistentDatabaseEntityException, AlreadyMemberException {
     Team team = getMandatoryTeam(code);
     User currentUser = getMandatoryCurrentUser();
+    if (teamRepository.isMemberOfTeam(team.getId(), currentUser.getId())) {
+      throw new AlreadyMemberException(currentUser.getUsername(), team.getName());
+    }
     teamRepository.addTeamMember(team.getId(), currentUser.getId());
+    support.firePropertyChange(
+        ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
-   * Removes the current user from the team with the given id, if the user was a member of it. If
-   * not, nothing happens, no exception is thrown.
+   * Removes the current user from the team with the given id. Requirement: the current user whould
+   * be the member of the team, but not the manager.
    *
    * @param teamId is the id of the team to join.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentDatabaseEntityException - should never occur.
+   * @throws InexistentTeamException if the team to leave does not exist in the database.
+   * @throws ManagerRemovalException if the user who wants to leave is the manager.
+   * @throws UnregisteredMemberRemovalException if the user is not the member of the team.
    */
   public void leaveTeam(int teamId)
-      throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException {
+      throws SQLException, NoSignedInUserException, InexistentDatabaseEntityException,
+          InexistentTeamException, ManagerRemovalException, UnregisteredMemberRemovalException {
     User currentUser = getMandatoryCurrentUser();
+    Team team = getMandatoryTeam(teamId);
+    if (!teamRepository.isMemberOfTeam(teamId, currentUser.getId())) {
+      throw new UnregisteredMemberRemovalException(team.getName(), currentUser.getUsername());
+    }
+    if (userIsManager(team, currentUser)) {
+      throw new ManagerRemovalException(team.getName(), currentUser.getUsername());
+    }
     teamRepository.removeTeamMember(teamId, currentUser.getId());
+    support.firePropertyChange(
+        ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
    * Adds the user with userName to the team with teamId if they both exist and the current user is
-   * the manager of the team.
+   * the manager of the team. The user to add should not already be a member.
    *
    * @param teamId is the id of the team with the new member.
    * @param userName is the name of the user to be added to the team.
@@ -144,21 +176,26 @@ public class TeamManager extends Manager {
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentUserException if the requested new member with userName does not exist.
    * @throws InexistentDatabaseEntityException - should never occur.
+   * @throws AlreadyMemberException if the user with userName is already a member of the team.
    */
   public void addMemberToTeam(int teamId, String userName)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException {
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException,
+          AlreadyMemberException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "add member to the team");
     User newMember = getMandatoryUser(userName);
+    if (teamRepository.isMemberOfTeam(team.getId(), newMember.getId())) {
+      throw new AlreadyMemberException(newMember.getUsername(), team.getName());
+    }
     teamRepository.addTeamMember(team.getId(), newMember.getId());
   }
 
   /**
    * Removes the user with userName from the team with teamId if they both exist and the current
-   * user is the manager of the team. Remark that if the user is not the member of the team, nothing
-   * happens.
+   * user is the manager of the team. Requirement: the user to remove should be the member of the
+   * team, but not the manager.
    *
    * @param teamId is the id of the team which looses a member.
    * @param userName is the name of the user to be removed from the team.
@@ -168,14 +205,24 @@ public class TeamManager extends Manager {
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentUserException if the requested new member with userName does not exist.
    * @throws InexistentDatabaseEntityException - should never occur.
+   * @throws UnregisteredMemberRemovalException if the user is not the member of the team.
+   * @throws ManagerRemovalException if the member to remove is the manager of the team (i.e. the
+   *     current user wants to leave the team).
    */
   public void removeTeamMember(int teamId, String userName)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException {
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException,
+          UnregisteredMemberRemovalException, ManagerRemovalException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
+    if (!teamRepository.isMemberOfTeam(teamId, currentUser.getId())) {
+      throw new UnregisteredMemberRemovalException(team.getName(), currentUser.getUsername());
+    }
     guaranteeUserIsManager(team, currentUser, "remove a member from the team");
     User toRemoveMember = getMandatoryUser(userName);
+    if (userIsManager(team, toRemoveMember)) {
+      throw new ManagerRemovalException(team.getName(), toRemoveMember.getUsername());
+    }
     teamRepository.removeTeamMember(team.getId(), toRemoveMember.getId());
   }
 

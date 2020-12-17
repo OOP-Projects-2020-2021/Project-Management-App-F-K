@@ -2,6 +2,7 @@ package controller.user;
 
 import controller.FrameController;
 import model.user.UserManager;
+import view.ErrorDialogFactory;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -38,7 +39,7 @@ public class SignUpController extends FrameController {
     try {
       userManager.signUp(username, password);
     } catch (SQLException sqlException) {
-      super.displayDatabaseErrorDialog();
+      ErrorDialogFactory.createErrorDialog(sqlException, frame, null);
       return false;
     }
     return true;
