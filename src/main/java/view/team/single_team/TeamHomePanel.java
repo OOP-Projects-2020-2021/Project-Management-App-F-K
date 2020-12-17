@@ -15,7 +15,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
   private JTextField teamManagerTextField;
   private JButton editButton;
   private JButton saveTeamNameButton;
-  private JButton generateCodeButton;
+  private JButton regenerateCodeButton;
   private JButton saveTeamManagerButton;
   private JLabel savedLabel;
   private JButton leaveTeamButton;
@@ -56,7 +56,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
                 homeLayout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(saveTeamNameButton)
-                    .addComponent(generateCodeButton)
+                    .addComponent(regenerateCodeButton)
                     .addComponent(saveTeamManagerButton)
                     .addComponent(editButton)
                     .addComponent(savedLabel)));
@@ -75,7 +75,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
                     .createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(codeLabel)
                     .addComponent(teamCodeLabel)
-                    .addComponent(generateCodeButton))
+                    .addComponent(regenerateCodeButton))
             .addGroup(
                 homeLayout
                     .createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -100,7 +100,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     teamManagerTextField = UIFactory.createTextField("manager");
     editButton = UIFactory.createButton("Edit");
     saveTeamNameButton = UIFactory.createButton("Save");
-    generateCodeButton = UIFactory.createButton("Generate code");
+    regenerateCodeButton = UIFactory.createButton("Generate code");
     saveTeamManagerButton = UIFactory.createButton("Save");
     savedLabel = UIFactory.createLabel("*Saved.", null);
     leaveTeamButton = UIFactory.createButton("Leave Team");
@@ -109,7 +109,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
   public void enableSaveButtons(boolean enableSave) {
     saveTeamNameButton.setVisible(enableSave);
     saveTeamManagerButton.setVisible(enableSave);
-    generateCodeButton.setVisible(enableSave);
+    regenerateCodeButton.setVisible(enableSave);
   }
 
   public void enableEditTextFields(boolean enableEdit) {
