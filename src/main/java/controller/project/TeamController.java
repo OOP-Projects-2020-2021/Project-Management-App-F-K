@@ -2,7 +2,6 @@ package controller.project;
 
 import controller.FrameController;
 import model.team.TeamManager;
-import view.project.TeamSettingsFrame;
 
 import javax.swing.*;
 
@@ -33,7 +32,7 @@ public class TeamController extends FrameController {
      */
     public void enableTeamSettings() {
         //todo change guranteeUserisManager to public
-        new TeamSettingsFrame(frame);
+
     }
 
 
