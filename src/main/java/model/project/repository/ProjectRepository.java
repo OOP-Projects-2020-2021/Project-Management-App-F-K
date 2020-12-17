@@ -22,7 +22,7 @@ public interface ProjectRepository {
 
   Optional<Project> getProject(int teamId, String name) throws SQLException;
 
-  List<Project> getProjectsOfTeam(int teamId);
+  List<Project> getProjectsOfTeam(int teamId) throws SQLException;
 
   List<Project> getProjectsInTeamSupervisedByUser(int teamId, int supervisorId) throws SQLException;
 
