@@ -319,7 +319,7 @@ public class TeamManager extends Manager {
   private boolean userIsManager(Team team, User user) throws InexistentDatabaseEntityException {
     return team.getManagerId() == user.getId();
   }
-  
+
   public Team getCurrentTeam(int teamId) throws SQLException, InexistentTeamException {
     return getMandatoryTeam(teamId);
   }
