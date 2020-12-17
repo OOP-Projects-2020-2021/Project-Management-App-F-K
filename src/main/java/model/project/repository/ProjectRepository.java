@@ -1,5 +1,6 @@
 package model.project.repository;
 
+import model.InexistentDatabaseEntityException;
 import model.project.Project;
 
 import java.sql.SQLException;
@@ -21,6 +22,8 @@ public interface ProjectRepository {
   Optional<Project> getProject(int projectId) throws SQLException;
 
   Optional<Project> getProject(int teamId, String name) throws SQLException;
+
+  void updateProject(Project project) throws SQLException, InexistentDatabaseEntityException;
 
   List<Project> getProjectsOfTeam(int teamId) throws SQLException;
 

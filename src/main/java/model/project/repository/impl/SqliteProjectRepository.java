@@ -1,5 +1,6 @@
 package model.project.repository.impl;
 
+import model.InexistentDatabaseEntityException;
 import model.database.Repository;
 import model.project.Project;
 import model.project.repository.ProjectRepository;
@@ -32,6 +33,14 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
                   + "From Project p JOIN ProjectStatus st ON p"
                   + ".StatusId = st.StatusId WHERE ProjectId = ?";
   private PreparedStatement getProjectByIdSt;
+
+  // Update project bases on id.
+  private static final String UPDATE_PROJECT =
+          "UPDATE Project "
+                  + " SET Name = ?, TeamId = ?, Description = ?, Deadline = ?, AssigneeId = ?, "
+                  + "SupervisorId = ?, StatusId = ?"
+                  + "Where ProjectId = ?";
+  private PreparedStatement updateProjectSt;
 
   // Get projects based on team and title.
   private static final String GET_PROJECT_BY_TEAM_TITLE_STATEMENT =
@@ -86,6 +95,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   protected void prepareStatements() throws SQLException {
     saveProjectSt = c.prepareStatement(SAVE_PROJECT_STATEMENT);
     getProjectByIdSt = c.prepareStatement(GET_PROJECT_BY_ID);
+    updateProjectSt = c.prepareStatement(UPDATE_PROJECT);
     getProjectByTitleTeamSt = c.prepareStatement(GET_PROJECT_BY_TEAM_TITLE_STATEMENT);
     getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
     getProjectsByTeamSt = c.prepareStatement(GET_PROJECTS_BY_TEAM);
@@ -130,6 +140,23 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     } else {
       return Optional.empty();
     }
+  }
+
+  @Override
+  public void updateProject(Project project) throws SQLException, InexistentDatabaseEntityException {
+    updateProjectSt.setString(1, project.getTitle());
+    updateProjectSt.setInt(2, project.getTeamId());
+    if (project.getDescription().isPresent()) {
+      updateProjectSt.setString(3, project.getDescription().get());
+    } else {
+      updateProjectSt.setNull(3, Types.NVARCHAR);
+    }
+    updateProjectSt.setString(4, project.getDeadline().toString());
+    updateProjectSt.setInt(5, project.getAssigneeId());
+    updateProjectSt.setInt(6, project.getSupervisorId());
+    updateProjectSt.setInt(7, getProjectStatusId(project));
+    updateProjectSt.setInt(8, project.getId());
+    updateProjectSt.execute();
   }
 
   @Override
@@ -179,7 +206,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     return null;
   }
 
-  private int getProjectStatusId(Project.SavableProject project) throws SQLException {
+  private int getProjectStatusId(Project project) throws SQLException {
     getProjectStatusIdSt.setString(1, project.getStatus().toString());
     ResultSet result = getProjectStatusIdSt.executeQuery();
     result.next();
