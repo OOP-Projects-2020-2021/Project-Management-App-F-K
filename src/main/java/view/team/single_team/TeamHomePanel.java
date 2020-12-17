@@ -31,6 +31,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     homeLayout.setAutoCreateGaps(true);
     homeLayout.setAutoCreateContainerGaps(true);
     this.setLayout(homeLayout);
+    this.setBorder(BorderFactory.createEmptyBorder(50,100,50,100));
     initHomePaneComponents();
     JLabel nameLabel = UIFactory.createLabel("Name:", null);
     JLabel codeLabel = UIFactory.createLabel("Code:", null);

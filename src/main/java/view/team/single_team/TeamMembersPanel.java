@@ -18,6 +18,7 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
   public TeamMembersPanel(Dimension parentFrameDimension) {
     this.setPreferredSize(parentFrameDimension);
     this.setLayout(new BorderLayout());
+    this.setBorder(BorderFactory.createEmptyBorder(50,100,50,100));
     initMembersPane(true); // todo get form controller
   }
 
