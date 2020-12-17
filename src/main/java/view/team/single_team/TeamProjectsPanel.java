@@ -1,8 +1,7 @@
-package view.project;
+package view.team.single_team;
 import view.UIFactory;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
@@ -56,16 +55,14 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
 
         TableRowSorter<TableModel> sorter
                 = new TableRowSorter<>(projectsTable.getModel());
-        Comparator<String> dateComparator = new Comparator<String>() {
-            public int compare(String s1, String s2) {
-                try {
-                    Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(s1);
-                    Date date2=new SimpleDateFormat("dd/MM/yyyy").parse(s2);
-                    return date1.compareTo(date2);
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                    return 0;
-                }
+        Comparator<String> dateComparator = (s1, s2) -> {
+            try {
+                Date date1=new SimpleDateFormat("dd/MM/yyyy").parse(s1);
+                Date date2=new SimpleDateFormat("dd/MM/yyyy").parse(s2);
+                return date1.compareTo(date2);
+            } catch (ParseException e) {
+                e.printStackTrace();
+                return 0;
             }
         };
         sorter.setComparator(1,dateComparator);

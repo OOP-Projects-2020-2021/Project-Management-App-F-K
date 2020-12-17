@@ -1,7 +1,4 @@
-package view.project;
-
-import model.team.Team;
-import view.UIFactory;
+package view.team.single_team;
 
 import javax.swing.*;
 import java.awt.*;

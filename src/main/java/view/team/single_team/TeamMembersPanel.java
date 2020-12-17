@@ -1,4 +1,4 @@
-package view.project;
+package view.team.single_team;
 
 import view.UIFactory;
 
