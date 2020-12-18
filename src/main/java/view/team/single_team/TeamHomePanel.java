@@ -157,10 +157,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
   public void actionPerformed(ActionEvent actionEvent) {
     Object source = actionEvent.getSource();
     if (source == leaveTeamButton) {
-      controller.leaveTeam();
-      updateHomePaneComponents();
-      enableButtons(false);
-      enableEditTextFields(false);
+      controller.confirmLeavingTeam();
     } else if (source == editButton) {
       enableEditTextFields(controller.getManagerAccessGranted());
       showSavedLabel(false);

@@ -12,6 +12,7 @@ import view.ErrorDialogFactory;
 
 import javax.swing.*;
 import java.sql.SQLException;
+import java.time.Year;
 import java.util.Objects;
 
 /**
@@ -24,6 +25,14 @@ public class TeamSettingsController extends FrameController {
   private UserManager userManager;
   private Team currentTeam;
   private TeamController teamController;
+
+  /** Messages to confirm leaving the team. */
+  private static final String CONFIRM_LEAVING_TEAM_MESSAGE = "Are you sure that you want to leave this team?";
+  private static final String CONFIRM_LEAVING_TEAM_TITLE = "Leaving team";
+
+  /** Messages to inform the user that they left the team. */
+  private static final String AFFIRM_LEAVING_TEAM_MESSAGE = "Now you are not a member of this team.";
+  private static final String AFFIRM_LEAVING_TEAM_TITLE = "Left the team ";
 
   public TeamSettingsController(JFrame frame, TeamController teamController) {
     super(frame);
@@ -78,6 +87,14 @@ public class TeamSettingsController extends FrameController {
     }
   }
 
+  public void confirmLeavingTeam() {
+    int answer = JOptionPane.showConfirmDialog(frame,CONFIRM_LEAVING_TEAM_MESSAGE,CONFIRM_LEAVING_TEAM_TITLE,JOptionPane.YES_NO_OPTION);
+    if(answer == JOptionPane.YES_OPTION) {
+      leaveTeam();
+      JOptionPane.showMessageDialog(frame,AFFIRM_LEAVING_TEAM_MESSAGE,AFFIRM_LEAVING_TEAM_TITLE,JOptionPane.PLAIN_MESSAGE);
+      closeFrame();
+    }
+  }
   public void saveTeamName(String name) {
     try {
       teamManager.setNewName(currentTeam.getId(), name);
@@ -127,4 +144,5 @@ public class TeamSettingsController extends FrameController {
       ErrorDialogFactory.createErrorDialog(e, frame, "The data of this team was not updated.");
     }
   }
+
 }
