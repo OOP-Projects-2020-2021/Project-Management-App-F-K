@@ -16,6 +16,7 @@ public class Main {
       e.printStackTrace();
       ErrorDialogFactory.createErrorDialog(e,null,null);
     }
-    JFrame teamFrame = new TeamFrame(new JFrame(),26);
+    JFrame teamFrame = new TeamFrame(new JFrame(),52);
   }
+
 }

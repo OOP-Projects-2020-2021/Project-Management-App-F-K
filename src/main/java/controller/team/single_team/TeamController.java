@@ -12,16 +12,26 @@ import java.sql.SQLException;
 
 public class TeamController extends FrameController {
 
-  private TeamManager teamManager;
+  protected TeamManager teamManager;
+  protected UserManager userManager;
 
-  protected int currentTeamId;
-  protected boolean managerAccessGranted;
+  protected static int currentTeamId;
+  protected static boolean managerAccess;
 
   public TeamController(JFrame frame, int currentTeamId) {
     super(frame);
     teamManager = TeamManager.getInstance();
-    this.currentTeamId = currentTeamId;
-    managerAccessGranted = grantManagerAccess();
+    userManager = UserManager.getInstance();
+    TeamController.currentTeamId = currentTeamId;
+    managerAccess = grantManagerAccess();
+  }
+
+  public int getCurrentTeamId() {
+    return currentTeamId;
+  }
+
+  public JFrame getFrame() {
+    return frame;
   }
 
   /**
@@ -34,21 +44,17 @@ public class TeamController extends FrameController {
       int currentManagerId = teamManager.getCurrentTeam(currentTeamId).getManagerId();
       return (currentUserId == currentManagerId);
     } catch (SQLException | InexistentDatabaseEntityException | InexistentTeamException e) {
-      ErrorDialogFactory.createErrorDialog(e, frame, null);
+      ErrorDialogFactory.createErrorDialog(e, frame, "An internal error occurred, the access to edit this team could not be granted.");
     }
     return false;
   }
 
-  public boolean getManagerAccessGranted() {
-    return managerAccessGranted;
+  public boolean getManagerAccess() {
+    return managerAccess;
   }
 
-  public void updateManagerAccess() {
-    managerAccessGranted = grantManagerAccess();
-  }
-
-  public int getCurrentTeamId() {
-    return currentTeamId;
+  public void setManagerAccess() {
+    managerAccess = grantManagerAccess();
   }
 
   public void onClose(JFrame parentFrame) {

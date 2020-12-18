@@ -28,8 +28,8 @@ public class TeamManager extends Manager {
   }
 
   public enum ChangablePropertyName {
-    CURRENT_USER_TEAM_MEMBERSHIPS, // event is fired when the user becomes member of a team/looses
-    // membership of a team
+    CURRENT_USER_TEAM_MEMBERSHIPS, // event is fired when the user becomes member of a team/looses membership of a team
+    CHANGED_TEAM_DATA // event is fired when the data of the team have been edited by the user
   }
 
   /**
@@ -109,6 +109,8 @@ public class TeamManager extends Manager {
     guaranteeUserIsManager(team, currentUser, "regenerate team code");
     String newCode = generateTeamCode();
     teamRepository.setNewCode(teamId, newCode);
+    support.firePropertyChange(
+            ChangablePropertyName.CHANGED_TEAM_DATA.toString(), OLD_VALUE, NEW_VALUE);
     return newCode;
   }
 
@@ -256,6 +258,8 @@ public class TeamManager extends Manager {
               + "manager of a team he/she is not a member of");
     }
     teamRepository.setNewManagerPosition(teamId, newManager.getId());
+    support.firePropertyChange(
+            ChangablePropertyName.CHANGED_TEAM_DATA.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -278,6 +282,8 @@ public class TeamManager extends Manager {
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "change the name of the team");
     teamRepository.setNewName(teamId, newTeamName);
+    support.firePropertyChange(
+            ChangablePropertyName.CHANGED_TEAM_DATA.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -319,6 +325,7 @@ public class TeamManager extends Manager {
     return team.getManagerId() == user.getId();
   }
 
+  /** Return the team which is selected by the user from the Teams list. */
   public Team getCurrentTeam(int teamId) throws SQLException, InexistentTeamException {
     return getMandatoryTeam(teamId);
   }

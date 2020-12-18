@@ -9,22 +9,22 @@ import model.team.exceptions.*;
 import model.user.exceptions.*;
 import model.user.UserManager;
 import view.ErrorDialogFactory;
+import view.team.single_team.TeamHomePanel;
 
 import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
-import java.time.Year;
 import java.util.Objects;
 
 /**
  * This controller manages the TeamHomePanel, and it is responsible for displaying and updating the
  * currently viewed team's data.
  */
-public class TeamSettingsController extends FrameController {
+public class TeamSettingsController extends TeamController implements PropertyChangeListener {
 
-  private TeamManager teamManager;
-  private UserManager userManager;
   private Team currentTeam;
-  private TeamController teamController;
+  private TeamHomePanel homePanel;
 
   /** Messages to confirm leaving the team. */
   private static final String CONFIRM_LEAVING_TEAM_MESSAGE = "Are you sure that you want to leave this team?";
@@ -34,24 +34,42 @@ public class TeamSettingsController extends FrameController {
   private static final String AFFIRM_LEAVING_TEAM_MESSAGE = "Now you are not a member of this team.";
   private static final String AFFIRM_LEAVING_TEAM_TITLE = "Left the team ";
 
-  public TeamSettingsController(JFrame frame, TeamController teamController) {
-    super(frame);
-    teamManager = TeamManager.getInstance();
-    userManager = UserManager.getInstance();
-    this.teamController = teamController;
+  public TeamSettingsController(TeamHomePanel homePanel,JFrame frame,int currentTeamId) {
+    super(frame,currentTeamId);
+    this.homePanel = homePanel;
+    teamManager.addPropertyChangeListener(this);
     try {
-      currentTeam = teamManager.getCurrentTeam(teamController.getCurrentTeamId());
+      currentTeam = teamManager.getCurrentTeam(currentTeamId);
     } catch (SQLException | InexistentTeamException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, "This team cannot be viewed.");
     }
   }
-
-  public boolean getManagerAccessGranted() {
-    return teamController.getManagerAccessGranted();
+  public void setCurrentTeam(Team team) {
+    currentTeam = team;
   }
 
-  public void updateManagerAccess() {
-    teamController.updateManagerAccess();
+  private void updateCurrentTeam() {
+    try {
+      setCurrentTeam(teamManager.getCurrentTeam(currentTeam.getId()));
+    } catch (SQLException | InexistentTeamException | InexistentDatabaseEntityException e) {
+      ErrorDialogFactory.createErrorDialog(e, frame, "An internal error occurred and the data of this team was not updated.");
+    }
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    if(evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_DATA.toString())) {
+      updateCurrentTeam();
+      this.setManagerAccess();
+      updateHomePanel();
+    }else if(evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
+      this.setManagerAccess();
+    }
+  }
+
+  private void updateHomePanel() {
+    homePanel.enableButtons(getManagerAccess());
+    homePanel.updateHomePaneComponents();
   }
 
   public String getTeamName() {
@@ -67,24 +85,9 @@ public class TeamSettingsController extends FrameController {
       return Objects.requireNonNull(userManager.getUserById(currentTeam.getManagerId()))
           .getUsername();
     } catch (SQLException sqlException) {
-      sqlException.printStackTrace();
+      ErrorDialogFactory.createErrorDialog(sqlException, frame, "An internal error occurred, the new manager could not be fetched.");
     }
     return null;
-  }
-
-  public void leaveTeam() {
-    try {
-      teamManager.leaveTeam(currentTeam.getId());
-      updateCurrentTeam();
-      updateManagerAccess();
-    } catch (SQLException
-        | InexistentDatabaseEntityException
-        | InexistentTeamException
-        | NoSignedInUserException
-        | UnregisteredMemberRemovalException
-        | ManagerRemovalException e) {
-      ErrorDialogFactory.createErrorDialog(e, frame, null);
-    }
   }
 
   public void confirmLeavingTeam() {
@@ -95,54 +98,63 @@ public class TeamSettingsController extends FrameController {
       closeFrame();
     }
   }
+
+  public void leaveTeam() {
+    try {
+      teamManager.leaveTeam(currentTeamId);
+    } catch (SQLException
+        | InexistentDatabaseEntityException
+        | InexistentTeamException databaseException) {
+      ErrorDialogFactory.createErrorDialog(databaseException, frame, "An internal error occurred, your could not be removed from the team.");
+    }catch(NoSignedInUserException noSignedInUserException) {
+      ErrorDialogFactory.createErrorDialog(noSignedInUserException, frame, "You are not allowed to this do operation, because you have not signed in.");
+    }catch(UnregisteredMemberRemovalException unregisteredMemberRemovalException) {
+      ErrorDialogFactory.createErrorDialog(unregisteredMemberRemovalException, frame, "You cannot leave the team, because you were not a member of this team.");
+    }catch(ManagerRemovalException managerRemovalException) {
+      ErrorDialogFactory.createErrorDialog(managerRemovalException, frame, "You cannot leave the team, because you are the manager.");
+    }
+  }
+
   public void saveTeamName(String name) {
     try {
-      teamManager.setNewName(currentTeam.getId(), name);
-      updateCurrentTeam();
+      teamManager.setNewName(currentTeamId, name);
     } catch (SQLException
         | InexistentTeamException
-        | UnauthorisedOperationException
-        | NoSignedInUserException
-        | InexistentDatabaseEntityException e) {
-      ErrorDialogFactory.createErrorDialog(e, frame, null);
+        | InexistentDatabaseEntityException databaseException) {
+      ErrorDialogFactory.createErrorDialog(databaseException, frame,"An internal error occurred, the new name could not be saved." );
+    }catch(UnauthorisedOperationException | NoSignedInUserException unauthorizedAccessException) {
+      ErrorDialogFactory.createErrorDialog(unauthorizedAccessException, frame,"You are not allowed to change the name of the team." );
     }
   }
 
   public void regenerateTeamCode() {
     try {
-      teamManager.regenerateTeamCode(currentTeam.getId());
-      updateCurrentTeam();
+      teamManager.regenerateTeamCode(currentTeamId);
     } catch (SQLException
-        | UnauthorisedOperationException
         | InexistentDatabaseEntityException
-        | NoSignedInUserException
-        | InexistentTeamException e) {
-      ErrorDialogFactory.createErrorDialog(e, frame, null);
+        | InexistentTeamException databaseException) {
+      ErrorDialogFactory.createErrorDialog(databaseException, frame, "An internal error occurred, the new code could not be generated.");
+    }catch(UnauthorisedOperationException | NoSignedInUserException unauthorisedAccessException) {
+      ErrorDialogFactory.createErrorDialog(unauthorisedAccessException, frame, "You are not allowed to change the code of the team.");
     }
   }
 
-  public void saveTeamManager(String managerName) {
+  public void saveTeamManager(String newManagerName) {
     try {
-      teamManager.passManagerPosition(currentTeam.getId(), managerName);
-      updateCurrentTeam();
-      updateManagerAccess();
-    } catch (InexistentUserException
-        | InexistentTeamException
-        | NoSignedInUserException
+      teamManager.passManagerPosition(currentTeamId, newManagerName);
+    } catch (InexistentTeamException
         | InexistentDatabaseEntityException
-        | SQLException
-        | UnauthorisedOperationException e) {
-      ErrorDialogFactory.createErrorDialog(e, frame, null);
+        | SQLException databaseException) {
+      ErrorDialogFactory.createErrorDialog(databaseException, frame, "An internal error occurred, the new manager could not be saved.");
+    }catch(InexistentUserException inexistentUserException) {
+      ErrorDialogFactory.createErrorDialog(inexistentUserException, frame, "The user " + newManagerName + " cannot be set as the new manager," +
+              "because he/she is not a member.");
+    }catch(IllegalArgumentException illegalArgumentException) {
+      ErrorDialogFactory.createErrorDialog(illegalArgumentException, frame, "The user with username " + newManagerName + "doesn't exist.");
+    }catch(NoSignedInUserException | UnauthorisedOperationException unauthorisedAccessException) {
+      ErrorDialogFactory.createErrorDialog(unauthorisedAccessException, frame, "You are not allowed to change the manager of this team.");
     }
   }
 
-  private void updateCurrentTeam() {
-    try {
-      currentTeam = teamManager.getCurrentTeam(currentTeam.getId());
-    } catch (SQLException | InexistentTeamException | InexistentDatabaseEntityException e) {
-      e.printStackTrace();
-      ErrorDialogFactory.createErrorDialog(e, frame, "The data of this team was not updated.");
-    }
-  }
 
 }
