@@ -1,13 +1,11 @@
 package controller.team.single_team;
 
-import controller.FrameController;
 import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
 import model.team.Team;
 import model.team.TeamManager;
 import model.team.exceptions.*;
 import model.user.exceptions.*;
-import model.user.UserManager;
 import view.ErrorDialogFactory;
 import view.team.single_team.TeamHomePanel;
 
@@ -60,15 +58,13 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public void propertyChange(PropertyChangeEvent evt) {
     if(evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_DATA.toString())) {
       updateCurrentTeam();
-      this.setManagerAccess();
+      setManagerAccess();
       updateHomePanel();
-    }else if(evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
-      this.setManagerAccess();
     }
   }
 
   private void updateHomePanel() {
-    homePanel.enableButtons(getManagerAccess());
+    homePanel.enableButtons(managerAccess);
     homePanel.updateHomePaneComponents();
   }
 

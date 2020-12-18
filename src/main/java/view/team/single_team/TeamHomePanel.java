@@ -1,6 +1,5 @@
 package view.team.single_team;
 
-import controller.team.single_team.TeamController;
 import controller.team.single_team.TeamSettingsController;
 import view.UIFactory;
 
@@ -132,7 +131,6 @@ public class TeamHomePanel extends JPanel implements ActionListener {
 
   public void updateHomePaneComponents() {
     teamNameTextField.setText(controller.getTeamName());
-    teamManagerTextField.setText(controller.getTeamManagerName());
     teamCodeLabel.setText(controller.getTeamCode());
   }
 
