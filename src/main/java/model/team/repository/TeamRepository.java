@@ -119,4 +119,13 @@ public interface TeamRepository {
    * @throws SQLException if the operation could not be performed in the database.
    */
   void setNewName(int teamId, String newTeamName) throws SQLException;
+
+  /**
+   * Returns the names of the members of the given team. Used for displaying the team-members.
+   *
+   * @param teamId specifies the team
+   * @return an array of member names
+   * @throws SQLException if an error occurs during processing the data in the database
+   */
+  String[] getMembersOfTeam(int teamId) throws SQLException;
 }
