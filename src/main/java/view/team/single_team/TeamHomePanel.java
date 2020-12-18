@@ -27,8 +27,8 @@ public class TeamHomePanel extends JPanel implements ActionListener {
 
   private TeamSettingsController controller;
 
-  public TeamHomePanel(JFrame frame, Dimension parentFrameDimension,int currentTeamId) {
-    controller = new TeamSettingsController(this, frame,currentTeamId);
+  public TeamHomePanel(JFrame frame, Dimension parentFrameDimension, int currentTeamId) {
+    controller = new TeamSettingsController(this, frame, currentTeamId);
     this.setPreferredSize(parentFrameDimension);
     this.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
     initHomePane();
@@ -160,11 +160,12 @@ public class TeamHomePanel extends JPanel implements ActionListener {
       enableEditTextFields(false);
     }
   }
+
   private class HomeMouseAdapter extends MouseAdapter {
 
     @Override
     public void mouseClicked(MouseEvent evt) {
-      if(controller.getManagerAccess()) {
+      if (controller.getManagerAccess()) {
         if (evt.getSource() == teamNameTextField) {
           teamNameTextField.setEditable(true);
         } else if (evt.getSource() == teamManagerTextField) {

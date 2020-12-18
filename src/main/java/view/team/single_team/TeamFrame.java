@@ -1,6 +1,5 @@
 package view.team.single_team;
 
-
 import controller.team.single_team.TeamController;
 
 import javax.swing.*;
@@ -36,7 +35,7 @@ public class TeamFrame extends JFrame {
   }
 
   private void initTabbedPanes() {
-    homeTab = new TeamHomePanel(this, DIMENSION,controller.getCurrentTeamId());
+    homeTab = new TeamHomePanel(this, DIMENSION, controller.getCurrentTeamId());
     membersTab = new TeamMembersPanel(DIMENSION);
     projectsTab = new TeamProjectsPanel(DIMENSION);
   }

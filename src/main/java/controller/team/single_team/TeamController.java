@@ -44,7 +44,10 @@ public class TeamController extends FrameController {
       int currentManagerId = teamManager.getCurrentTeam(currentTeamId).getManagerId();
       return (currentUserId == currentManagerId);
     } catch (SQLException | InexistentDatabaseEntityException | InexistentTeamException e) {
-      ErrorDialogFactory.createErrorDialog(e, frame, "An internal error occurred, the access to edit this team could not be granted.");
+      ErrorDialogFactory.createErrorDialog(
+          e,
+          frame,
+          "An internal error occurred, the access to edit this team could not be granted.");
     }
     return false;
   }
