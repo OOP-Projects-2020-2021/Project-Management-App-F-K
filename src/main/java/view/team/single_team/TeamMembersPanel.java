@@ -1,8 +1,10 @@
 package view.team.single_team;
 
+import controller.team.single_team.TeamMembersController;
 import view.UIFactory;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -14,18 +16,22 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
   private JButton removeMemberButton;
   private JTextField addMemberTextField;
   private JList<String> membersList;
+  private DefaultListModel<String> membersListModel;
 
-  public TeamMembersPanel(Dimension parentFrameDimension) {
+  private TeamMembersController controller;
+
+  public TeamMembersPanel(JFrame parentFrame,Dimension parentFrameDimension,int currentTeamId) {
+    this.controller = new TeamMembersController(this,parentFrame,currentTeamId);
     this.setPreferredSize(parentFrameDimension);
     this.setLayout(new BorderLayout());
     this.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
-    initMembersPane(true); // todo get form controller
+    initMembersPane();
   }
 
-  private void initMembersPane(boolean enableManagingMembers) {
+  private void initMembersPane() {
     initComponents();
-    initMembersHeader(enableManagingMembers);
-    initMembersContent(enableManagingMembers);
+    initMembersHeader(controller.getManagerAccess());
+    initMembersContent(controller.getManagerAccess());
   }
 
   private void initMembersHeader(boolean enableManagingMembers) {
@@ -67,6 +73,12 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
     JScrollPane listScroller = new JScrollPane(membersListPanel);
     listScroller.setViewportView(membersList);
     listScroller.setVisible(true);
+    listScroller.setBorder(
+            BorderFactory.createTitledBorder(
+                    BorderFactory.createEtchedBorder(),
+                    "Members List",
+                    TitledBorder.CENTER,
+                    TitledBorder.TOP));
     membersListPanel.add(listScroller);
 
     contentPanelLayout.setHorizontalGroup(
@@ -89,37 +101,60 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
 
   private void initComponents() {
     addMemberLabel = UIFactory.createLabel("Add member:", null);
-    addMemberTextField = UIFactory.createTextField(""); // todo check if empty
+    addMemberTextField = UIFactory.createTextField("");
     addMemberButton = UIFactory.createButton("Add");
     removeMemberButton = UIFactory.createButton("Remove");
+    addButtonListeners();
+  }
+
+  private void addButtonListeners() {
+    addMemberButton.addActionListener(this);
+    removeMemberButton.addActionListener(this);
   }
 
   private void initMembersList() {
-    int noMembers = 20;
-    String[] members = new String[noMembers];
-    for (int i = 0; i < noMembers; i++) {
-      members[i] = "User" + i;
-    }
-    DefaultListModel<String> listModel = new DefaultListModel<>();
+    membersListModel = new DefaultListModel<>();
+    String[] members = controller.getTeamMembers();
     for (String member : members) {
-      listModel.addElement(member);
+      membersListModel.addElement(member);
     }
-    membersList = new JList<>(listModel);
+    membersList = new JList<>(membersListModel);
     membersList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
     membersList.setLayoutOrientation(JList.VERTICAL);
   }
 
-  public void enableManagingMembers(boolean enableManager) {
-    addMemberButton.setVisible(enableManager);
-    removeMemberButton.setVisible(enableManager);
+//  public void addMemberToList(String name) {
+//    membersListModel.add(membersListModel.size(),name);
+//  }
+//
+//  public void removeMemberFromList(String name) {
+//    membersListModel.remove(membersListModel.indexOf(name));
+//  }
+  public void updateMembersList() {
+    membersListModel.removeAllElements();
+    String[] members = controller.getTeamMembers();
+    for (String member : members) {
+      membersListModel.addElement(member);
+    }
+    membersList.setModel(membersListModel);
+  }
+
+  public void enableComponents(boolean enableManagerAccess) {
+    addMemberTextField.setVisible(enableManagerAccess);
+    addMemberButton.setVisible(enableManagerAccess);
+    removeMemberButton.setVisible(enableManagerAccess);
   }
 
   @Override
   public void actionPerformed(ActionEvent actionEvent) {
     if (actionEvent.getSource() == addMemberButton) {
-      // todo
+      String memberName = addMemberTextField.getText();
+      controller.addMember(memberName);
+     // updateMembersList();
     } else if (actionEvent.getSource() == removeMemberButton) {
-      // todo
+      String memberName = membersList.getSelectedValue();
+      controller.removeMember(memberName);
+     // updateMembersList();
     }
   }
 }

@@ -2,21 +2,39 @@ package controller.team.single_team;
 
 import controller.FrameController;
 import model.InexistentDatabaseEntityException;
+import model.PropertyChangeObservable;
 import model.team.TeamManager;
 import model.team.exceptions.InexistentTeamException;
 import model.user.UserManager;
+import org.jetbrains.annotations.NotNull;
 import view.ErrorDialogFactory;
 
 import javax.swing.*;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.sql.SQLException;
 
-public class TeamController extends FrameController {
+public class TeamController extends FrameController implements PropertyChangeObservable {
 
   protected TeamManager teamManager;
   protected UserManager userManager;
 
   protected static int currentTeamId;
   protected static boolean managerAccess;
+
+  public static final String MANAGER_CHANGED_PROPERTY = "Manager changed";
+
+  protected PropertyChangeSupport support = new PropertyChangeSupport(this);
+  protected final int OLD_VALUE = 1;
+  protected final int NEW_VALUE = 2;
+
+  public void addPropertyChangeListener(PropertyChangeListener pcl) {
+    support.addPropertyChangeListener(pcl);
+  }
+
+  public void removePropertyChangeListener(PropertyChangeListener pcl) {
+    support.removePropertyChangeListener(pcl);
+  }
 
   public TeamController(JFrame frame, int currentTeamId) {
     super(frame);
@@ -58,6 +76,7 @@ public class TeamController extends FrameController {
 
   public void setManagerAccess() {
     managerAccess = grantManagerAccess();
+    support.firePropertyChange(MANAGER_CHANGED_PROPERTY,OLD_VALUE,NEW_VALUE);
   }
 
   public void onClose(JFrame parentFrame) {

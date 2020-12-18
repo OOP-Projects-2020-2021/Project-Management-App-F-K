@@ -36,7 +36,7 @@ public class TeamFrame extends JFrame {
 
   private void initTabbedPanes() {
     homeTab = new TeamHomePanel(this, DIMENSION, controller.getCurrentTeamId());
-    membersTab = new TeamMembersPanel(DIMENSION);
+    membersTab = new TeamMembersPanel(this,DIMENSION,controller.getCurrentTeamId());
     projectsTab = new TeamProjectsPanel(DIMENSION);
   }
 
