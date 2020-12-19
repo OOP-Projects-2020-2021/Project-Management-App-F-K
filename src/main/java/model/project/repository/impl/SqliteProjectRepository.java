@@ -51,6 +51,18 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + ".StatusId = st.StatusId WHERE Name = ? and TeamId = ? ";
   private PreparedStatement getProjectByTitleTeamSt;
 
+  // Get projects of team, possibly with a given assignee, supervisor and status.
+  private static final String GET_PROJECTS_OF_TEAM =
+          "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, " +
+          "AssigneeId, SupervisorId, StatusName From Project p "
+                  + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
+                  + "JOIN Team t ON t.TeamId = p.TeamId "
+                  + "WHERE t.TeamId = ? AND "
+                  + "(p.SupervisorId = ? OR ?) AND "
+                  + "(p.AssigneeId = ? OR ?) AND"
+                  + "(p.StatusId = ? OR ?)";
+  private PreparedStatement getProjectsOfTeam;
+
   // Get status id
   private static final String GET_PROJECTS_STATUS_ID =
       "SELECT StatusId from ProjectStatus WHERE StatusName = ?";
@@ -75,6 +87,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     updateProjectSt = c.prepareStatement(UPDATE_PROJECT);
     getProjectByTitleTeamSt = c.prepareStatement(GET_PROJECT_BY_TEAM_TITLE_STATEMENT);
     getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
+    getProjectsOfTeam = c.prepareStatement(GET_PROJECTS_OF_TEAM);
   }
 
   @Override
@@ -89,7 +102,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     saveProjectSt.setString(4, project.getDeadline().toString());
     saveProjectSt.setInt(5, project.getAssigneeId());
     saveProjectSt.setInt(6, project.getSupervisorId());
-    saveProjectSt.setInt(7, getProjectStatusId(project));
+    saveProjectSt.setInt(7, getProjectStatusId(project.getStatus()));
     saveProjectSt.execute();
   }
 
@@ -129,18 +142,48 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     updateProjectSt.setString(4, project.getDeadline().toString());
     updateProjectSt.setInt(5, project.getAssigneeId());
     updateProjectSt.setInt(6, project.getSupervisorId());
-    updateProjectSt.setInt(7, getProjectStatusId(project));
+    updateProjectSt.setInt(7, getProjectStatusId(project.getStatus()));
     updateProjectSt.setInt(8, project.getId());
     updateProjectSt.execute();
   }
 
   @Override
-  public List<Project> getProjectsOfTeam(int teamId, QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId) {
-    return null;
+  public List<Project> getProjectsOfTeam(int teamId, QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId) throws SQLException {
+    getProjectsOfTeam.setInt(1, teamId);
+    // if supervisorid is null, it is don't care
+    if (supervisorId != null) {
+      getProjectsOfTeam.setInt(2, supervisorId);
+      getProjectsOfTeam.setBoolean(3, false);
+    } else {
+      getProjectsOfTeam.setNull(2, Types.INTEGER);
+      getProjectsOfTeam.setBoolean(3, true);
+    }
+    // if assigneId is null, it is don't care
+    if (assigneeId != null) {
+      getProjectsOfTeam.setInt(4, assigneeId);
+      getProjectsOfTeam.setBoolean(5, false);
+    } else {
+      getProjectsOfTeam.setNull(4, Types.INTEGER);
+      getProjectsOfTeam.setBoolean(5, true);
+    }
+    if (queryStatus == QueryProjectStatus.ALL) {
+      getProjectsOfTeam.setNull(6, Types.INTEGER);
+      getProjectsOfTeam.setBoolean(7, true);
+    } else {
+      int statusId = getProjectStatusId(queryStatus.getCorrespondingStatus());
+      getProjectsOfTeam.setInt(6, statusId);
+      getProjectsOfTeam.setBoolean(7, false);
+    }
+    ResultSet result = getProjectsOfTeam.executeQuery();
+    ArrayList<Project> projectsOfTeam = new ArrayList<>();
+    while (result.next()) {
+      projectsOfTeam.add(getProjectFromResult(result));
+    }
+    return projectsOfTeam;
   }
 
-  private int getProjectStatusId(Project project) throws SQLException {
-    getProjectStatusIdSt.setString(1, project.getStatus().toString());
+  private int getProjectStatusId(Project.ProjectStatus status) throws SQLException {
+    getProjectStatusIdSt.setString(1, status.toString());
     ResultSet result = getProjectStatusIdSt.executeQuery();
     result.next();
     return result.getInt("StatusId");

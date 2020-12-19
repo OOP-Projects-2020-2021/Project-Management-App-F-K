@@ -27,5 +27,5 @@ public interface ProjectRepository {
   void updateProject(Project project) throws SQLException, InexistentDatabaseEntityException;
 
   List<Project> getProjectsOfTeam(int teamId, QueryProjectStatus queryStatus, Integer assigneeId,
-                                  Integer supervisorId);
+                                  Integer supervisorId) throws SQLException;
 }
