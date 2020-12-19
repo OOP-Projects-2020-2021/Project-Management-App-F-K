@@ -61,7 +61,17 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
                   + "(p.SupervisorId = ? OR ?) AND "
                   + "(p.AssigneeId = ? OR ?) AND"
                   + "(st.StatusName = ? OR ?)";
-  private PreparedStatement getProjectsOfTeam;
+  private PreparedStatement getProjectsOfTeamSt;
+
+  // Get projects possibly with a given assignee, supervisor and status.
+  private static final String GET_PROJECTS =
+          "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, " +
+                  "AssigneeId, SupervisorId, StatusName From Project p "
+                  + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
+                  + "WHERE (p.SupervisorId = ? OR ?) AND "
+                  + "(p.AssigneeId = ? OR ?) AND"
+                  + "(st.StatusName = ? OR ?)";
+  private PreparedStatement getProjectsSt;
 
   // Get status id
   private static final String GET_PROJECTS_STATUS_ID =
@@ -87,7 +97,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     updateProjectSt = c.prepareStatement(UPDATE_PROJECT);
     getProjectByTitleTeamSt = c.prepareStatement(GET_PROJECT_BY_TEAM_TITLE_STATEMENT);
     getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
-    getProjectsOfTeam = c.prepareStatement(GET_PROJECTS_OF_TEAM);
+    getProjectsOfTeamSt = c.prepareStatement(GET_PROJECTS_OF_TEAM);
+    getProjectsSt = c.prepareStatement(GET_PROJECTS);
   }
 
   @Override
@@ -149,36 +160,69 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   @Override
   public List<Project> getProjectsOfTeam(int teamId, QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId) throws SQLException {
-    getProjectsOfTeam.setInt(1, teamId);
+    getProjectsOfTeamSt.setInt(1, teamId);
     // if supervisorid is null, it is don't care
     if (supervisorId != null) {
-      getProjectsOfTeam.setInt(2, supervisorId);
-      getProjectsOfTeam.setBoolean(3, false);
+      getProjectsOfTeamSt.setInt(2, supervisorId);
+      getProjectsOfTeamSt.setBoolean(3, false);
     } else {
-      getProjectsOfTeam.setNull(2, Types.INTEGER);
-      getProjectsOfTeam.setBoolean(3, true);
+      getProjectsOfTeamSt.setNull(2, Types.INTEGER);
+      getProjectsOfTeamSt.setBoolean(3, true);
     }
     // if assigneId is null, it is don't care
     if (assigneeId != null) {
-      getProjectsOfTeam.setInt(4, assigneeId);
-      getProjectsOfTeam.setBoolean(5, false);
+      getProjectsOfTeamSt.setInt(4, assigneeId);
+      getProjectsOfTeamSt.setBoolean(5, false);
     } else {
-      getProjectsOfTeam.setNull(4, Types.INTEGER);
-      getProjectsOfTeam.setBoolean(5, true);
+      getProjectsOfTeamSt.setNull(4, Types.INTEGER);
+      getProjectsOfTeamSt.setBoolean(5, true);
     }
     if (queryStatus == QueryProjectStatus.ALL) {
-      getProjectsOfTeam.setNull(6, Types.NVARCHAR);
-      getProjectsOfTeam.setBoolean(7, true);
+      getProjectsOfTeamSt.setNull(6, Types.NVARCHAR);
+      getProjectsOfTeamSt.setBoolean(7, true);
     } else {
-      getProjectsOfTeam.setString(6, queryStatus.getCorrespondingStatus().toString());
-      getProjectsOfTeam.setBoolean(7, false);
+      getProjectsOfTeamSt.setString(6, queryStatus.getCorrespondingStatus().toString());
+      getProjectsOfTeamSt.setBoolean(7, false);
     }
-    ResultSet result = getProjectsOfTeam.executeQuery();
+    ResultSet result = getProjectsOfTeamSt.executeQuery();
     ArrayList<Project> projectsOfTeam = new ArrayList<>();
     while (result.next()) {
       projectsOfTeam.add(getProjectFromResult(result));
     }
     return projectsOfTeam;
+  }
+
+  @Override
+  public List<Project> getProjects(QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId) throws SQLException {
+    // if supervisorid is null, it is don't care
+    if (supervisorId != null) {
+      getProjectsSt.setInt(1, supervisorId);
+      getProjectsSt.setBoolean(2, false);
+    } else {
+      getProjectsSt.setNull(1, Types.INTEGER);
+      getProjectsSt.setBoolean(2, true);
+    }
+    // if assigneId is null, it is don't care
+    if (assigneeId != null) {
+      getProjectsSt.setInt(3, assigneeId);
+      getProjectsSt.setBoolean(4, false);
+    } else {
+      getProjectsSt.setNull(3, Types.INTEGER);
+      getProjectsSt.setBoolean(4, true);
+    }
+    if (queryStatus == QueryProjectStatus.ALL) {
+      getProjectsSt.setNull(5, Types.NVARCHAR);
+      getProjectsSt.setBoolean(6, true);
+    } else {
+      getProjectsSt.setString(5, queryStatus.getCorrespondingStatus().toString());
+      getProjectsSt.setBoolean(6, false);
+    }
+    ResultSet result = getProjectsSt.executeQuery();
+    ArrayList<Project> projects = new ArrayList<>();
+    while (result.next()) {
+      projects.add(getProjectFromResult(result));
+    }
+    return projects;
   }
 
   private int getProjectStatusId(Project.ProjectStatus status) throws SQLException {

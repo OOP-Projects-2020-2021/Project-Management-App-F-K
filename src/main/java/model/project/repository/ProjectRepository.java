@@ -28,4 +28,7 @@ public interface ProjectRepository {
 
   List<Project> getProjectsOfTeam(int teamId, QueryProjectStatus queryStatus, Integer assigneeId,
                                   Integer supervisorId) throws SQLException;
+
+  List<Project> getProjects(QueryProjectStatus queryStatus, Integer assigneeId,
+                                  Integer supervisorId) throws SQLException;
 }
