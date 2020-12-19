@@ -4,8 +4,7 @@ import model.InexistentDatabaseEntityException;
 import model.Manager;
 import model.UnauthorisedOperationException;
 import model.project.queryconstants.QueryProjectStatus;
-import model.project.repository.exceptions.DuplicateProjectNameException;
-import model.project.repository.exceptions.InexistentProjectException;
+import model.project.exceptions.*;
 import model.team.Team;
 import model.team.exceptions.InexistentTeamException;
 import model.user.User;
@@ -55,11 +54,7 @@ public class ProjectManager extends Manager {
           String newProjectTitle, String newAssigneeName, String newSupervisorName,
           LocalDate newDeadline, String newDescription) throws NoSignedInUserException, SQLException, InexistentProjectException, InexistentDatabaseEntityException, UnauthorisedOperationException, InexistentUserException, DuplicateProjectNameException {
     User currentUser = getMandatoryCurrentUser();
-    Optional<Project> projectOp = projectRepository.getProject(projectId);
-    if (projectOp.isEmpty()) {
-      throw new InexistentProjectException(projectId);
-    }
-    Project project = projectOp.get();
+    Project project = getMandatoryProject(projectId);
     guaranteeUserIsSupervisor(currentUser, project, "change data of project", "they are not the " +
             "supervisor");
     User assignee = getMandatoryUser(newAssigneeName);
@@ -80,6 +75,108 @@ public class ProjectManager extends Manager {
     project.setTitle(newProjectTitle);
     project.setDeadline(newDeadline);
     projectRepository.updateProject(project);
+  }
+
+  public void setProjectInProgress(int projectId) throws InexistentProjectException, SQLException, NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+    Project project = getMandatoryProject(projectId);
+    User currentUser = getMandatoryCurrentUser();
+    if (project.getStatus() == Project.ProjectStatus.TO_DO) {
+      project.setStatus(Project.ProjectStatus.IN_PROGRESS);
+      projectRepository.updateProject(project);
+    } else {
+      throw new IllegalProjectStatusChangeException(project.getStatus(),
+              Project.ProjectStatus.IN_PROGRESS);
+    }
+  }
+
+  public void setProjectAsToDo(int projectId) throws InexistentProjectException, SQLException,
+          NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+    Project project = getMandatoryProject(projectId);
+    User currentUser = getMandatoryCurrentUser();
+    if (project.getStatus() == Project.ProjectStatus.IN_PROGRESS) {
+      if (userIsAssignee(currentUser, project)) {
+        project.setStatus(Project.ProjectStatus.TO_DO);
+        projectRepository.updateProject(project);
+      } else {
+        throw new UnauthorisedOperationException(currentUser.getId(), "set back the project " +
+                "status to to do", "they are not the assignee");
+      }
+    } else {
+      throw new IllegalProjectStatusChangeException(project.getStatus(),
+              Project.ProjectStatus.TO_DO);
+    }
+  }
+
+  public void turnInProject(int projectId) throws InexistentProjectException, SQLException,
+          NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+    Project project = getMandatoryProject(projectId);
+    User currentUser = getMandatoryCurrentUser();
+    if (project.getStatus() != Project.ProjectStatus.FINISHED) {
+      if (userIsAssignee(currentUser, project)) {
+        project.setStatus(Project.ProjectStatus.MARKED_AS_DONE);
+        projectRepository.updateProject(project);
+      } else {
+        throw new UnauthorisedOperationException(currentUser.getId(), "turn in project", "they " +
+                "are not the assignee");
+      }
+    } else {
+      throw new IllegalProjectStatusChangeException(project.getStatus(),
+              Project.ProjectStatus.MARKED_AS_DONE);
+    }
+  }
+
+  public void undoTurnIn(int projectId, Project.ProjectStatus newStatus) throws InexistentProjectException, SQLException,
+          NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+    Project project = getMandatoryProject(projectId);
+    User currentUser = getMandatoryCurrentUser();
+    if (project.getStatus() == Project.ProjectStatus.MARKED_AS_DONE) {
+      if (userIsAssignee(currentUser, project)) {
+        project.setStatus(newStatus);
+        projectRepository.updateProject(project);
+      } else {
+        throw new UnauthorisedOperationException(currentUser.getId(), "undo turn in", "they " +
+                "are not the assignee");
+      }
+    } else {
+      throw new IllegalProjectStatusChangeException(project.getStatus(),
+              newStatus);
+    }
+  }
+
+  public void acceptAsFinished(int projectId) throws InexistentProjectException, SQLException,
+          NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+    Project project = getMandatoryProject(projectId);
+    User currentUser = getMandatoryCurrentUser();
+    if (project.getStatus() == Project.ProjectStatus.MARKED_AS_DONE) {
+      if (userIsSupervisor(currentUser, project)) {
+        project.setStatus(Project.ProjectStatus.FINISHED);
+        projectRepository.updateProject(project);
+      } else {
+        throw new UnauthorisedOperationException(currentUser.getId(), "accept as finished", "they" +
+                " are not the supervisor");
+      }
+    } else {
+      throw new IllegalProjectStatusChangeException(project.getStatus(),
+              Project.ProjectStatus.FINISHED);
+    }
+  }
+
+  public void discardTurnIn(int projectId, Project.ProjectStatus newStatus) throws InexistentProjectException, SQLException,
+          NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+    Project project = getMandatoryProject(projectId);
+    User currentUser = getMandatoryCurrentUser();
+    if (project.getStatus() == Project.ProjectStatus.MARKED_AS_DONE) {
+      if (userIsSupervisor(currentUser, project)) {
+        project.setStatus(newStatus);
+        projectRepository.updateProject(project);
+      } else {
+        throw new UnauthorisedOperationException(currentUser.getId(), "discard turn in", "they" +
+                " are not the supervisor");
+      }
+    } else {
+      throw new IllegalProjectStatusChangeException(project.getStatus(),
+              newStatus);
+    }
   }
 
   public List<Project> getProjects(boolean assignedToCurrentUser, boolean supervisedByCurrentUser
@@ -152,39 +249,5 @@ public class ProjectManager extends Manager {
 
   private boolean userIsAssignee(User user, Project project) throws InexistentDatabaseEntityException {
     return project.getAssigneeId() == user.getId();
-  }
-
-  private boolean validProjectStatusChange(Project project, Project.ProjectStatus newStatus,
-                                           User user) throws InexistentDatabaseEntityException, UnauthorisedOperationException {
-    switch (project.getStatus()) {
-      case FINISHED:
-        // if the project was finished already, its status can be changed by the supervisor only.
-        if (!userIsSupervisor(user, project)) {
-          return false;
-        }
-        // the MARKED_AS_DONE status is reachable only for the assignee
-        return newStatus != Project.ProjectStatus.MARKED_AS_DONE;
-      case TO_DO:
-        switch (newStatus) {
-          case FINISHED: return userIsSupervisor(user, project);
-          case MARKED_AS_DONE: return userIsAssignee(user, project) ;
-          case IN_PROGRESS: return true;
-        }
-        break;
-      case IN_PROGRESS:
-        switch (newStatus) {
-          case FINISHED: return userIsSupervisor(user, project);
-          case MARKED_AS_DONE: return userIsAssignee(user, project);
-          case TO_DO: return userIsAssignee(user, project);
-        }
-        break;
-      case MARKED_AS_DONE:
-        switch (newStatus) {
-          case FINISHED: return userIsSupervisor(user, project);
-          case IN_PROGRESS: return userIsAssignee(user, project) || userIsSupervisor(user, project);
-          case TO_DO: return userIsAssignee(user, project) || userIsSupervisor(user, project);
-        }
-    }
-    return false;
   }
 }

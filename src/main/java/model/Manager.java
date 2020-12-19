@@ -1,6 +1,8 @@
 package model;
 
+import model.project.Project;
 import model.project.repository.ProjectRepository;
+import model.project.exceptions.*;
 import model.project.repository.impl.SqliteProjectRepository;
 import model.team.Team;
 import model.team.repository.TeamRepository;
@@ -101,5 +103,13 @@ public abstract class Manager implements PropertyChangeObservable {
       throw new InexistentUserException(userName);
     }
     return user;
+  }
+
+  protected Project getMandatoryProject(int projectId) throws InexistentProjectException, SQLException {
+    Optional<Project> projectOp = projectRepository.getProject(projectId);
+    if (projectOp.isEmpty()) {
+      throw new InexistentProjectException(projectId);
+    }
+    return projectOp.get();
   }
 }
