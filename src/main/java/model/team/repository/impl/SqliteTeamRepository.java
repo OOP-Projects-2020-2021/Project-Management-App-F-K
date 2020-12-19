@@ -234,7 +234,11 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
     getTeamMembersSt.setInt(1, teamId);
     ResultSet resultSet = getTeamMembersSt.executeQuery();
     while (resultSet.next()) {
-      User member = new User(resultSet.getInt("UserId"),resultSet.getString("UserName"),resultSet.getString("Password"));
+      User member =
+          new User(
+              resultSet.getInt("UserId"),
+              resultSet.getString("UserName"),
+              resultSet.getString("Password"));
       members.add(member);
     }
     return members;

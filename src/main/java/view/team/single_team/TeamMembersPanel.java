@@ -130,6 +130,7 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
       membersListModel.addElement(member.getUsername());
     }
   }
+
   private void initMembersList() {
     membersListModel = new DefaultListModel<>();
     fillMembersList();

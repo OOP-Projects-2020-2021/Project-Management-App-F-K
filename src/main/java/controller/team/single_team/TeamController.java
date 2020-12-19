@@ -13,10 +13,9 @@ import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 
 /**
- * This controller manages the TeamFrame.
- * It has two static fields, the teamId, which doesn't change while the frame is open, and a flag, which grants manager
- * to the privileged users. The managerAccess flag gets updated every time the manager of the currently viewed team is
- * changed.
+ * This controller manages the TeamFrame. It has two static fields, the teamId, which doesn't change
+ * while the frame is open, and a flag, which grants manager to the privileged users. The
+ * managerAccess flag gets updated every time the manager of the currently viewed team is changed.
  *
  * @author Beata Keresztes
  */
@@ -46,7 +45,8 @@ public class TeamController extends FrameController implements PropertyChangeLis
   }
 
   /**
-   * Checks if the current user is the manager of the team and grants access to them to modify the data about the team.
+   * Checks if the current user is the manager of the team and grants access to them to modify the
+   * data about the team.
    */
   protected void setManagerAccess() {
     try {
@@ -55,18 +55,18 @@ public class TeamController extends FrameController implements PropertyChangeLis
       managerAccess = currentUserId == currentManagerId;
     } catch (SQLException | InexistentDatabaseEntityException | InexistentTeamException e) {
       ErrorDialogFactory.createErrorDialog(
-              e,
-              frame,
-              "The access to edit this team could not be granted.");
+          e, frame, "The access to edit this team could not be granted.");
     }
   }
+
   public boolean getManagerAccess() {
     return managerAccess;
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
+    if (evt.getPropertyName()
+        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
       setManagerAccess();
     }
   }

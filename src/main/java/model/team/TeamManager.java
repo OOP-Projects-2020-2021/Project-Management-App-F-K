@@ -9,7 +9,6 @@ import model.team.exceptions.*;
 
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * TeamManager is responsible for executing all the commands needed for the application that are
@@ -348,11 +347,12 @@ public class TeamManager extends Manager {
 
   /**
    * Gets the members of the specified team.
+   *
    * @param teamId specifies the team
    * @return the list of members
    * @throws SQLException when a database error occurs
    */
-  public List<User> getMembersOfTeam(int teamId) throws SQLException{
+  public List<User> getMembersOfTeam(int teamId) throws SQLException {
     return teamRepository.getMembersOfTeam(teamId);
   }
 }

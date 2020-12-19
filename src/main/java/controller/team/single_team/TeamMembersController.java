@@ -17,7 +17,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * This controller manages the TeamMembersPanel tab, displaying and updating the list of members of a team.
+ * This controller manages the TeamMembersPanel tab, displaying and updating the list of members of
+ * a team.
  *
  * @author Beata Keresztes
  */
@@ -28,21 +29,23 @@ public class TeamMembersController extends TeamController implements PropertyCha
   /** Messages to confirm the removal of a member from the team. */
   private static final String CONFIRM_REMOVING_MEMBER_MESSAGE =
       "Are you sure you want to remove this member?";
+
   private static final String CONFIRM_REMOVING_MEMBER_TITLE = "Removing member";
 
   public TeamMembersController(TeamMembersPanel membersPanel, JFrame frame, int currentTeamId) {
-    super(frame,currentTeamId);
+    super(frame, currentTeamId);
     this.membersPanel = membersPanel;
     teamManager.addPropertyChangeListener(this);
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString()) || evt.getPropertyName()
+    if (evt.getPropertyName().equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
+        || evt.getPropertyName()
             .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
       membersPanel.updateMembersList();
-    } else if (evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
+    } else if (evt.getPropertyName()
+        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
       membersPanel.enableComponents(managerAccess);
     }
   }
@@ -68,10 +71,9 @@ public class TeamMembersController extends TeamController implements PropertyCha
       teamManager.addMemberToTeam(currentTeamId, name);
     } catch (SQLException | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
-          databaseException,
-          frame,
-          "The member \"" + name + "\" could not be added to the team.");
-    } catch (UnauthorisedOperationException | InexistentDatabaseEntityException
+          databaseException, frame, "The member \"" + name + "\" could not be added to the team.");
+    } catch (UnauthorisedOperationException
+        | InexistentDatabaseEntityException
         | NoSignedInUserException operationNotAllowedException) {
       ErrorDialogFactory.createErrorDialog(
           operationNotAllowedException,
@@ -79,14 +81,12 @@ public class TeamMembersController extends TeamController implements PropertyCha
           "You are not allowed to add a new member to the team.");
     } catch (InexistentUserException inexistentUserException) {
       ErrorDialogFactory.createErrorDialog(
-          inexistentUserException,
-          frame,
-          "The user \""
-              + name
-              + "\" doesn't exist.");
+          inexistentUserException, frame, "The user \"" + name + "\" doesn't exist.");
     } catch (AlreadyMemberException alreadyMemberException) {
       ErrorDialogFactory.createErrorDialog(
-          alreadyMemberException, frame, "The user \"" + name + "\" is already a member of this team.");
+          alreadyMemberException,
+          frame,
+          "The user \"" + name + "\" is already a member of this team.");
     }
   }
 
@@ -104,9 +104,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
           | InexistentDatabaseEntityException
           | SQLException databaseException) {
         ErrorDialogFactory.createErrorDialog(
-            databaseException,
-            frame,
-            "The member \"" + name + "\" could not be removed.");
+            databaseException, frame, "The member \"" + name + "\" could not be removed.");
       } catch (UnauthorisedOperationException | NoSignedInUserException accessDeniedException) {
         ErrorDialogFactory.createErrorDialog(
             accessDeniedException, frame, "You are not allowed to remove a member from this team.");
@@ -122,7 +120,9 @@ public class TeamMembersController extends TeamController implements PropertyCha
             "The user \" + name + \" could not be removed, because it doesn't exist.");
       } catch (ManagerRemovalException managerRemovalException) {
         ErrorDialogFactory.createErrorDialog(
-            managerRemovalException, frame, "The user \"" + name + "\" is the current manager of the team.");
+            managerRemovalException,
+            frame,
+            "The user \"" + name + "\" is the current manager of the team.");
       }
     }
   }

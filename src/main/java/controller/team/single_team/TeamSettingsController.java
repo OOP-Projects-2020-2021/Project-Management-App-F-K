@@ -39,7 +39,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   private static final String AFFIRM_LEAVING_TEAM_TITLE = "Left the team ";
 
   public TeamSettingsController(TeamHomePanel homePanel, JFrame frame, int currentTeamId) {
-    super(frame,currentTeamId);
+    super(frame, currentTeamId);
     this.homePanel = homePanel;
     teamManager.addPropertyChangeListener(this);
     try {
@@ -53,15 +53,16 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     try {
       currentTeam = teamManager.getTeam(currentTeam.getId());
     } catch (SQLException | InexistentTeamException | InexistentDatabaseEntityException e) {
-      ErrorDialogFactory.createErrorDialog(
-          e, frame, "The data of this team was not updated.");
+      ErrorDialogFactory.createErrorDialog(e, frame, "The data of this team was not updated.");
     }
   }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString()) || evt.getPropertyName()
-            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString()) || evt.getPropertyName()
+    if (evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString())
+        || evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString())
+        || evt.getPropertyName()
             .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
       updateCurrentTeam();
       updateHomePanel();
@@ -114,14 +115,9 @@ public class TeamSettingsController extends TeamController implements PropertyCh
         | InexistentDatabaseEntityException
         | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
-          databaseException,
-          frame,
-          "You could not be removed from the team.");
+          databaseException, frame, "You could not be removed from the team.");
     } catch (NoSignedInUserException noSignedInUserException) {
-      ErrorDialogFactory.createErrorDialog(
-          noSignedInUserException,
-          frame,
-          null);
+      ErrorDialogFactory.createErrorDialog(noSignedInUserException, frame, null);
     } catch (UnregisteredMemberRemovalException unregisteredMemberRemovalException) {
       ErrorDialogFactory.createErrorDialog(
           unregisteredMemberRemovalException,
@@ -139,11 +135,12 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     try {
       teamManager.setNewName(currentTeamId, name);
       homePanel.updateNameFieldAfterSave();
-    } catch (SQLException
-        | InexistentTeamException databaseException) {
+    } catch (SQLException | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new name could not be saved.");
-    } catch (UnauthorisedOperationException | NoSignedInUserException  | InexistentDatabaseEntityException unauthorizedAccessException) {
+    } catch (UnauthorisedOperationException
+        | NoSignedInUserException
+        | InexistentDatabaseEntityException unauthorizedAccessException) {
       ErrorDialogFactory.createErrorDialog(
           unauthorizedAccessException,
           frame,
@@ -153,15 +150,13 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   public void regenerateTeamCode() {
     try {
-      if(teamManager.regenerateTeamCode(currentTeamId) != null) {
-      }
-    } catch (SQLException
-        | InexistentTeamException databaseException) {
+      if (teamManager.regenerateTeamCode(currentTeamId) != null) {}
+    } catch (SQLException | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
-          databaseException,
-          frame,
-          "The new code could not be generated.");
-    } catch (UnauthorisedOperationException | NoSignedInUserException | InexistentDatabaseEntityException unauthorisedAccessException) {
+          databaseException, frame, "The new code could not be generated.");
+    } catch (UnauthorisedOperationException
+        | NoSignedInUserException
+        | InexistentDatabaseEntityException unauthorisedAccessException) {
       ErrorDialogFactory.createErrorDialog(
           unauthorisedAccessException,
           frame,
@@ -173,25 +168,20 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     try {
       teamManager.passManagerPosition(currentTeamId, newManagerName);
       homePanel.updateManagerFieldAfterSave();
-    } catch (InexistentTeamException
-        | SQLException databaseException) {
+    } catch (InexistentTeamException | SQLException databaseException) {
       ErrorDialogFactory.createErrorDialog(
-          databaseException,
-          frame,
-          "The new manager could not be saved.");
+          databaseException, frame, "The new manager could not be saved.");
     } catch (InexistentUserException inexistentUserException) {
       ErrorDialogFactory.createErrorDialog(
-          inexistentUserException,
-          frame,
-          "The user \""
-              + newManagerName
-              + "\" doesn't exist.");
+          inexistentUserException, frame, "The user \"" + newManagerName + "\" doesn't exist.");
     } catch (IllegalArgumentException illegalArgumentException) {
       ErrorDialogFactory.createErrorDialog(
           illegalArgumentException,
           frame,
           "The user with username \"" + newManagerName + "\" is not a member of the team.");
-    } catch (NoSignedInUserException | UnauthorisedOperationException | InexistentDatabaseEntityException unauthorisedAccessException) {
+    } catch (NoSignedInUserException
+        | UnauthorisedOperationException
+        | InexistentDatabaseEntityException unauthorisedAccessException) {
       ErrorDialogFactory.createErrorDialog(
           unauthorisedAccessException,
           frame,

@@ -45,12 +45,13 @@ public class ErrorDialogFactory {
       "This team membership has already been registered, you can't add it again";
 
   /**
-   * Messages that inform the user that the operation is invalid because the manager can't be removed from the members' list.
+   * Messages that inform the user that the operation is invalid because the manager can't be
+   * removed from the members' list.
    */
   private static final String MANAGER_REMOVAL_ERROR_TITLE = "Removing manager";
 
   private static final String MANAGER_REMOVAL_ERROR_MESSAGE =
-          "The manager cannot be removed from the team.";
+      "The manager cannot be removed from the team.";
 
   /** Messages to inform the user that the username introduced is already taken. */
   private static final String DUPLICATE_USERNAME_ERROR_TITLE = "Duplicate username!";
@@ -62,19 +63,20 @@ public class ErrorDialogFactory {
   private static final String INEXISTENT_USER_ERROR_TITLE = "Inexistent user!";
 
   private static final String INEXISTENT_USER_ERROR_MESSAGE =
-          "No user was found with this username.\nCheck that you introduced the name correctly.";
+      "No user was found with this username.\nCheck that you introduced the name correctly.";
 
   /** Messages to inform the user that arguments passed were incorrect. */
   private static final String ILLEGAL_ARGUMENT_ERROR_TITLE = "Illegal argument!";
 
   private static final String ILLEGAL_ARGUMENT_ERROR_MESSAGE =
-          "Check that the arguments passed are correct.";
+      "Check that the arguments passed are correct.";
 
   /** Messages to inform the user that non-members cannot leave the team. */
-  private static final String UNREGISTERED_MEMBER_REMOVAL_ERROR_TITLE = "Removing unregistered members!";
+  private static final String UNREGISTERED_MEMBER_REMOVAL_ERROR_TITLE =
+      "Removing unregistered members!";
 
   private static final String UNREGISTERED_MEMBER_REMOVAL_ARGUMENT_ERROR_MESSAGE =
-          "The user you attempt to remove is not a member of this team.";
+      "The user you attempt to remove is not a member of this team.";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
@@ -97,10 +99,10 @@ public class ErrorDialogFactory {
       displayDuplicateUsernameErrorDialog(frame, message);
     }
     if (exception instanceof InexistentUserException) {
-      displayInexistentUserErrorDialog(frame,message);
+      displayInexistentUserErrorDialog(frame, message);
     }
     if (exception instanceof ManagerRemovalException) {
-      displayManagerRemovalErrorDialog(frame,message);
+      displayManagerRemovalErrorDialog(frame, message);
     }
     if (exception instanceof IllegalArgumentException) {
       displayIllegalArgumentErrorDialog(frame, message);
@@ -152,15 +154,13 @@ public class ErrorDialogFactory {
         JOptionPane.ERROR_MESSAGE);
   }
 
-  /**
-   * Displays an error message when user attempts to remove the manager from the team.
-   */
+  /** Displays an error message when user attempts to remove the manager from the team. */
   private static void displayManagerRemovalErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            MANAGER_REMOVAL_ERROR_MESSAGE + "\n" + message,
-            MANAGER_REMOVAL_ERROR_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        MANAGER_REMOVAL_ERROR_MESSAGE + "\n" + message,
+        MANAGER_REMOVAL_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
   /**
    * Displays an error message when the user attempts to sign-up with an already existing username.
@@ -172,37 +172,36 @@ public class ErrorDialogFactory {
         DUPLICATE_USERNAME_ERROR_TITLE,
         JOptionPane.ERROR_MESSAGE);
   }
-  /**
-   * Displays an error message when the manager tries to add an inexistent user to the team.
-   */
+  /** Displays an error message when the manager tries to add an inexistent user to the team. */
   private static void displayInexistentUserErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            INEXISTENT_USER_ERROR_MESSAGE + "\n" + message,
-            INEXISTENT_USER_ERROR_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        INEXISTENT_USER_ERROR_MESSAGE + "\n" + message,
+        INEXISTENT_USER_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
 
   /**
-   * Displays an error message when the manager tries to pass its position to a user which is not a member of the team.
+   * Displays an error message when the manager tries to pass its position to a user which is not a
+   * member of the team.
    */
   private static void displayIllegalArgumentErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            ILLEGAL_ARGUMENT_ERROR_MESSAGE + "\n" + message,
-            ILLEGAL_ARGUMENT_ERROR_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        ILLEGAL_ARGUMENT_ERROR_MESSAGE + "\n" + message,
+        ILLEGAL_ARGUMENT_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
 
   /**
-   * Displays an error message when the manager tries to pass its position to a user which is not a member
-   * of the team.
+   * Displays an error message when the manager tries to pass its position to a user which is not a
+   * member of the team.
    */
   private static void displayUnregisteredMemberRemovalErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            UNREGISTERED_MEMBER_REMOVAL_ARGUMENT_ERROR_MESSAGE + "\n" + message,
-            UNREGISTERED_MEMBER_REMOVAL_ERROR_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        UNREGISTERED_MEMBER_REMOVAL_ARGUMENT_ERROR_MESSAGE + "\n" + message,
+        UNREGISTERED_MEMBER_REMOVAL_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
 }
