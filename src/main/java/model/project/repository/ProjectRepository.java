@@ -28,10 +28,17 @@ public interface ProjectRepository {
   void updateProject(Project project) throws SQLException, InexistentDatabaseEntityException;
 
   List<Project> getProjectsOfTeam(
-          int teamId, QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId,
-          QueryProjectDeadlineStatus queryDeadlineStatus)
+      int teamId,
+      QueryProjectStatus queryStatus,
+      Integer assigneeId,
+      Integer supervisorId,
+      QueryProjectDeadlineStatus queryDeadlineStatus)
       throws SQLException;
 
   List<Project> getProjects(
-      QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId, QueryProjectDeadlineStatus queryDeadlineStatus) throws SQLException;
+      QueryProjectStatus queryStatus,
+      Integer assigneeId,
+      Integer supervisorId,
+      QueryProjectDeadlineStatus queryDeadlineStatus)
+      throws SQLException;
 }

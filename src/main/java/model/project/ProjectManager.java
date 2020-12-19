@@ -218,12 +218,16 @@ public class ProjectManager extends Manager {
     if (supervisedByCurrentUser) {
       supervisorId = currentUser.getId();
     }
-    return projectRepository.getProjects(queryStatus, assigneeId, supervisorId, queryDeadlineStatus);
+    return projectRepository.getProjects(
+        queryStatus, assigneeId, supervisorId, queryDeadlineStatus);
   }
 
   public List<Project> getProjectsOfTeam(
-          int teamId, String supervisorName, String assigneeName, QueryProjectStatus queryStatus,
-          QueryProjectDeadlineStatus queryDeadlineStatus)
+      int teamId,
+      String supervisorName,
+      String assigneeName,
+      QueryProjectStatus queryStatus,
+      QueryProjectDeadlineStatus queryDeadlineStatus)
       throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException,
           InexistentUserException, InexistentTeamException {
     User currentUser = getMandatoryCurrentUser();
@@ -238,7 +242,8 @@ public class ProjectManager extends Manager {
       User supervisor = getMandatoryUser(supervisorName);
       supervisorId = supervisor.getId();
     }
-    return projectRepository.getProjectsOfTeam(teamId, queryStatus, assigneeId, supervisorId, queryDeadlineStatus);
+    return projectRepository.getProjectsOfTeam(
+        teamId, queryStatus, assigneeId, supervisorId, queryDeadlineStatus);
   }
 
   private void guaranteeUserIsSupervisor(
