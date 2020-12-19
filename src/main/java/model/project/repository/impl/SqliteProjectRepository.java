@@ -3,6 +3,7 @@ package model.project.repository.impl;
 import model.InexistentDatabaseEntityException;
 import model.database.Repository;
 import model.project.Project;
+import model.project.queryconstants.QueryProjectDeadlineStatus;
 import model.project.queryconstants.QueryProjectStatus;
 import model.project.repository.ProjectRepository;
 
@@ -59,8 +60,9 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + "JOIN Team t ON t.TeamId = p.TeamId "
           + "WHERE t.TeamId = ? AND "
           + "(p.SupervisorId = ? OR ?) AND "
-          + "(p.AssigneeId = ? OR ?) AND"
-          + "(st.StatusName = ? OR ?)";
+          + "(p.AssigneeId = ? OR ?) AND "
+          + "(st.StatusName = ? OR ?) AND "
+          + "((p.Deadline >= date(\"now\") AND ?) OR (p.deadline < date(\"now\") AND ?))";
   private PreparedStatement getProjectsOfTeamSt;
 
   // Get projects possibly with a given assignee, supervisor and status.
@@ -70,7 +72,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
           + "WHERE (p.SupervisorId = ? OR ?) AND "
           + "(p.AssigneeId = ? OR ?) AND"
-          + "(st.StatusName = ? OR ?)";
+          + "(st.StatusName = ? OR ?) AND "
+          + "((p.Deadline >= date(\"now\") AND ?) OR (p.deadline < date(\"now\") AND ?))";
   private PreparedStatement getProjectsSt;
 
   // Get status id
@@ -160,7 +163,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   @Override
   public List<Project> getProjectsOfTeam(
-      int teamId, QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId)
+          int teamId, QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId,
+          QueryProjectDeadlineStatus queryDeadlineStatus)
       throws SQLException {
     getProjectsOfTeamSt.setInt(1, teamId);
     // if supervisorid is null, it is don't care
@@ -186,6 +190,16 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       getProjectsOfTeamSt.setString(6, queryStatus.getCorrespondingStatus().toString());
       getProjectsOfTeamSt.setBoolean(7, false);
     }
+    if (queryDeadlineStatus == QueryProjectDeadlineStatus.IN_TIME || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
+      getProjectsOfTeamSt.setBoolean(8, true);
+    } else {
+      getProjectsOfTeamSt.setBoolean(8, false);
+    }
+    if (queryDeadlineStatus == QueryProjectDeadlineStatus.OVERDUE || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
+      getProjectsOfTeamSt.setBoolean(9, true);
+    } else {
+      getProjectsOfTeamSt.setBoolean(9, false);
+    }
     ResultSet result = getProjectsOfTeamSt.executeQuery();
     ArrayList<Project> projectsOfTeam = new ArrayList<>();
     while (result.next()) {
@@ -196,7 +210,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   @Override
   public List<Project> getProjects(
-      QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId)
+      QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId, QueryProjectDeadlineStatus queryDeadlineStatus)
       throws SQLException {
     // if supervisorid is null, it is don't care
     if (supervisorId != null) {
@@ -220,6 +234,16 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     } else {
       getProjectsSt.setString(5, queryStatus.getCorrespondingStatus().toString());
       getProjectsSt.setBoolean(6, false);
+    }
+    if (queryDeadlineStatus == QueryProjectDeadlineStatus.IN_TIME || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
+      getProjectsSt.setBoolean(7, true);
+    } else {
+      getProjectsSt.setBoolean(7, false);
+    }
+    if (queryDeadlineStatus == QueryProjectDeadlineStatus.OVERDUE || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
+      getProjectsSt.setBoolean(8, true);
+    } else {
+      getProjectsSt.setBoolean(8, false);
     }
     ResultSet result = getProjectsSt.executeQuery();
     ArrayList<Project> projects = new ArrayList<>();
