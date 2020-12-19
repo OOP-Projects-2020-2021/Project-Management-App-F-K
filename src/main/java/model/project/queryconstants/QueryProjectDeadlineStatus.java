@@ -8,6 +8,7 @@ package model.project.queryconstants;
  */
 public enum QueryProjectDeadlineStatus {
   ALL, // no specified status.
-  IN_TIME, // the deadline is later than the current date, or today.
-  OVERDUE // the deadline is earlier than the current date.
+  IN_TIME, // the deadline is later than the current date, or today, or the project is already
+  // turned in.
+  OVERDUE // the deadline is earlier than the current date and the project is not yet turned in.
 }
