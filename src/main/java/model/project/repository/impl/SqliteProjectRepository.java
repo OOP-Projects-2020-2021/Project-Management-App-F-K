@@ -53,24 +53,24 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   // Get projects of team, possibly with a given assignee, supervisor and status.
   private static final String GET_PROJECTS_OF_TEAM =
-          "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, " +
-          "AssigneeId, SupervisorId, StatusName From Project p "
-                  + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
-                  + "JOIN Team t ON t.TeamId = p.TeamId "
-                  + "WHERE t.TeamId = ? AND "
-                  + "(p.SupervisorId = ? OR ?) AND "
-                  + "(p.AssigneeId = ? OR ?) AND"
-                  + "(st.StatusName = ? OR ?)";
+      "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
+          + "AssigneeId, SupervisorId, StatusName From Project p "
+          + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
+          + "JOIN Team t ON t.TeamId = p.TeamId "
+          + "WHERE t.TeamId = ? AND "
+          + "(p.SupervisorId = ? OR ?) AND "
+          + "(p.AssigneeId = ? OR ?) AND"
+          + "(st.StatusName = ? OR ?)";
   private PreparedStatement getProjectsOfTeamSt;
 
   // Get projects possibly with a given assignee, supervisor and status.
   private static final String GET_PROJECTS =
-          "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, " +
-                  "AssigneeId, SupervisorId, StatusName From Project p "
-                  + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
-                  + "WHERE (p.SupervisorId = ? OR ?) AND "
-                  + "(p.AssigneeId = ? OR ?) AND"
-                  + "(st.StatusName = ? OR ?)";
+      "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
+          + "AssigneeId, SupervisorId, StatusName From Project p "
+          + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
+          + "WHERE (p.SupervisorId = ? OR ?) AND "
+          + "(p.AssigneeId = ? OR ?) AND"
+          + "(st.StatusName = ? OR ?)";
   private PreparedStatement getProjectsSt;
 
   // Get status id
@@ -159,7 +159,9 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   }
 
   @Override
-  public List<Project> getProjectsOfTeam(int teamId, QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId) throws SQLException {
+  public List<Project> getProjectsOfTeam(
+      int teamId, QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId)
+      throws SQLException {
     getProjectsOfTeamSt.setInt(1, teamId);
     // if supervisorid is null, it is don't care
     if (supervisorId != null) {
@@ -193,7 +195,9 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   }
 
   @Override
-  public List<Project> getProjects(QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId) throws SQLException {
+  public List<Project> getProjects(
+      QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId)
+      throws SQLException {
     // if supervisorid is null, it is don't care
     if (supervisorId != null) {
       getProjectsSt.setInt(1, supervisorId);
