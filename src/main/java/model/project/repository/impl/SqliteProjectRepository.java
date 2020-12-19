@@ -105,7 +105,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   }
 
   @Override
-  public void saveProject(Project.SavableProject project) throws SQLException {
+  public int saveProject(Project.SavableProject project) throws SQLException, InexistentDatabaseEntityException {
+    saveProjectSt.clearParameters();
     saveProjectSt.setString(1, project.getTitle());
     saveProjectSt.setInt(2, project.getTeamId());
     if (project.getDescription().isPresent()) {
@@ -116,8 +117,16 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     saveProjectSt.setString(4, project.getDeadline().toString());
     saveProjectSt.setInt(5, project.getAssigneeId());
     saveProjectSt.setInt(6, project.getSupervisorId());
-    saveProjectSt.setInt(7, getProjectStatusId(project.getStatus()));
+    saveProjectSt.setInt(7,
+            getProjectStatusId(project.getStatus()));
+    System.out.println(getProjectStatusId(Project.ProjectStatus.IN_PROGRESS));
     saveProjectSt.execute();
+    Optional<Project> savedProjectOp = getProject(project.getTeamId(), project.getTitle());
+    if (savedProjectOp.isEmpty()) {
+      throw new SQLException("the project could not be saved in the database");
+    } else {
+      return savedProjectOp.get().getId();
+    }
   }
 
   @Override

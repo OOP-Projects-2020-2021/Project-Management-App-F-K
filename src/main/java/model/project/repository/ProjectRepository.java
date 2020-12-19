@@ -19,7 +19,14 @@ public interface ProjectRepository {
   // todo: javadoc
   // todo: extend with further methods
 
-  void saveProject(Project.SavableProject project) throws SQLException;
+  /**
+   * Saves the project in the database and assigns it an id, which is returned.
+   *
+   * @param project is the project to save.
+   * @return the id of the newly saved project in the database.
+   * @throws SQLException if the operations could not be performed in the database.
+   */
+  int saveProject(Project.SavableProject project) throws SQLException, InexistentDatabaseEntityException;
 
   Optional<Project> getProject(int projectId) throws SQLException;
 
