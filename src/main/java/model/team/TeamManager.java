@@ -236,24 +236,19 @@ public class TeamManager extends Manager {
    * @throws InexistentTeamException if there is no team with id teamId.
    * @throws UnauthorisedOperationException if the current user is not the manager of the team, so
    *     they are not authorised to change the manager.
-   * @throws IllegalArgumentException if the user with newManagerName is not the member of the team
-   *     in which he/she should become a manager.
+   * @throws UnregisteredMemberRoleException if the manager to be set is not the member of the team.
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentUserException if the requested new member with userName does not exist.
    */
   public void passManagerPosition(int teamId, String newManagerName)
-      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException {
+          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException, UnregisteredMemberRoleException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "pass manager position of team to someone else");
     User newManager = getMandatoryUser(newManagerName);
     if (!teamRepository.isMemberOfTeam(teamId, newManager.getId())) {
-      throw new IllegalArgumentException(
-          "The user with name "
-              + newManagerName
-              + " can't be the "
-              + "manager of a team he/she is not a member of");
+      throw new UnregisteredMemberRoleException(newManagerName, team.getId(), "be manager");
     }
     teamRepository.setNewManagerPosition(teamId, newManager.getId());
   }
