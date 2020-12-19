@@ -13,7 +13,6 @@ import java.awt.event.MouseEvent;
 /**
  * This panel displays general information about a team. The general user can only view the listed
  * data, but the manager can edit the team's attributes.
- *
  */
 public class TeamHomePanel extends JPanel implements ActionListener {
 

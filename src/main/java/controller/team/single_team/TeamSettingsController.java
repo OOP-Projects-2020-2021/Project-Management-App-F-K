@@ -68,7 +68,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
       updateCurrentTeam();
       setManagerAccess();
       updateHomePanel();
-    }else if(evt.getPropertyName().equals(TeamTabs.HOME_TAB.toString())) {
+    } else if (evt.getPropertyName().equals(TeamTabs.HOME_TAB.toString())) {
       setManagerAccess();
       updateHomePanel();
     }

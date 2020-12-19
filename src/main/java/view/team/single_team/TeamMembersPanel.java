@@ -10,9 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * This tab displays the list of members of a team.
- * The manager of the team is allowed only to add or remove members from this team.
- *
+ * This tab displays the list of members of a team. The manager of the team is allowed only to add
+ * or remove members from this team.
  */
 public class TeamMembersPanel extends JPanel implements ActionListener {
 
@@ -26,7 +25,7 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
   private TeamMembersController controller;
 
   public TeamMembersPanel(JFrame parentFrame, Dimension parentFrameDimension, int currentTeamId) {
-    this.controller = new TeamMembersController(this,parentFrame,currentTeamId);
+    this.controller = new TeamMembersController(this, parentFrame, currentTeamId);
     this.setPreferredSize(parentFrameDimension);
     this.setLayout(new BorderLayout());
     this.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
@@ -79,11 +78,11 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
     listScroller.setViewportView(membersList);
     listScroller.setVisible(true);
     listScroller.setBorder(
-            BorderFactory.createTitledBorder(
-                    BorderFactory.createEtchedBorder(),
-                    "Members List",
-                    TitledBorder.CENTER,
-                    TitledBorder.TOP));
+        BorderFactory.createTitledBorder(
+            BorderFactory.createEtchedBorder(),
+            "Members List",
+            TitledBorder.CENTER,
+            TitledBorder.TOP));
     membersListPanel.add(listScroller);
 
     contentPanelLayout.setHorizontalGroup(

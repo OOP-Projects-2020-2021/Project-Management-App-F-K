@@ -79,12 +79,13 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
 
   // Get all members of a team.
   private static final String GET_TEAM_MEMBERS_QUERY =
-          "SELECT u.UserName FROM User AS u JOIN MemberToTeam AS m ON u.UserId = m.MemberId WHERE m.TeamId = ?";
+      "SELECT u.UserName FROM User AS u JOIN MemberToTeam AS m ON u.UserId = m.MemberId WHERE"
+          + " m.TeamId = ?";
   private PreparedStatement getTeamMembersSt;
 
   // Count all members of a team.
   private static final String COUNT_TEAM_MEMBERS_QUERY =
-          "SELECT COUNT(MemberId) FROM MemberToTeam WHERE TeamId = ?";
+      "SELECT COUNT(MemberId) FROM MemberToTeam WHERE TeamId = ?";
   private PreparedStatement countTeamMembersSt;
 
   private SqliteTeamRepository() {}
@@ -234,10 +235,10 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
 
   @Override
   public String[] getMembersOfTeam(int teamId) throws SQLException {
-    countTeamMembersSt.setInt(1,teamId);
+    countTeamMembersSt.setInt(1, teamId);
     ResultSet resultSetCount = countTeamMembersSt.executeQuery();
     int noMembers = resultSetCount.getInt(1);
-    getTeamMembersSt.setInt(1,teamId);
+    getTeamMembersSt.setInt(1, teamId);
     ResultSet resultSet = getTeamMembersSt.executeQuery();
     String[] members = new String[noMembers];
     int i = 0;

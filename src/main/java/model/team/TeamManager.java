@@ -29,7 +29,7 @@ public class TeamManager extends Manager {
 
   public enum ChangablePropertyName {
     CURRENT_USER_TEAM_MEMBERSHIPS, // event is fired when the user becomes member of a team/looses
-                                   // membership of a team
+    // membership of a team
     CHANGED_TEAM_DATA, // event is fired when the data of the team have been edited by the user
     CHANGED_TEAM_MEMBERS // members have been added to/ removed from a team
   }
@@ -195,7 +195,7 @@ public class TeamManager extends Manager {
     }
     teamRepository.addTeamMember(team.getId(), newMember.getId());
     support.firePropertyChange(
-            ChangablePropertyName.CHANGED_TEAM_MEMBERS.toString(), OLD_VALUE, NEW_VALUE);
+        ChangablePropertyName.CHANGED_TEAM_MEMBERS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -231,7 +231,7 @@ public class TeamManager extends Manager {
     }
     teamRepository.removeTeamMember(team.getId(), toRemoveMember.getId());
     support.firePropertyChange(
-            ChangablePropertyName.CHANGED_TEAM_MEMBERS.toString(), OLD_VALUE, NEW_VALUE);
+        ChangablePropertyName.CHANGED_TEAM_MEMBERS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -337,7 +337,7 @@ public class TeamManager extends Manager {
   }
 
   /** Return the names of the members of a team. */
-  public String[] getMembersOfTeam(int teamId) throws SQLException{
+  public String[] getMembersOfTeam(int teamId) throws SQLException {
     return teamRepository.getMembersOfTeam(teamId);
   }
 }

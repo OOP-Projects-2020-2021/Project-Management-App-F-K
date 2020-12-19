@@ -11,13 +11,14 @@ import javax.swing.*;
 import java.sql.SQLException;
 
 /**
- * This controller manages the TeamFrame, and it contains two static fields: the id of the currently viewed team and a flag,
- * which specifies the privilege level of the user who views the team. This can be either a simple member, who can only view the data,
- * or the manager of the team, who can also edit the data about the team.
- * These fields and the method for checking the privilege level are inherited by the tabs of the TeamFrame, so that when any of these attempt
- * to change the values of the static fields, these will be changed across all instances.
+ * This controller manages the TeamFrame, and it contains two static fields: the id of the currently
+ * viewed team and a flag, which specifies the privilege level of the user who views the team. This
+ * can be either a simple member, who can only view the data, or the manager of the team, who can
+ * also edit the data about the team. These fields and the method for checking the privilege level
+ * are inherited by the tabs of the TeamFrame, so that when any of these attempt to change the
+ * values of the static fields, these will be changed across all instances.
  */
-public class TeamController extends FrameController{
+public class TeamController extends FrameController {
 
   protected TeamManager teamManager;
   protected UserManager userManager;
