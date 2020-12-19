@@ -8,6 +8,7 @@ import model.project.queryconstants.QueryProjectStatus;
 import model.project.exceptions.*;
 import model.team.Team;
 import model.team.exceptions.InexistentTeamException;
+import model.team.exceptions.UnregisteredMemberRoleException;
 import model.user.User;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
@@ -33,9 +34,27 @@ public class ProjectManager extends Manager {
     return instance;
   }
 
+  /**
+   * Creates a new project with the specified data and saves it in the database. The supervisor
+   * of the project will be automatically the current user. There should not be another project
+   * with the same title/name in the team.
+   *
+   * @param projectName is the name of the project to be saved.
+   * @param teamId is the id of the team to which the new project belongs.
+   * @param assigneeName is the name of the user to whom this project is assigned.
+   * @param deadline is the deadline of the project to be saved.
+   * @param description is the description of the project to be saved.
+   * @throws NoSignedInUserException if there is noone signed in.
+   * @throws SQLException if the operation could not be performed in the database.
+   * @throws InexistentUserException if the user with assigneeName does not exist.
+   * @throws InexistentTeamException if the team with teamId does not exist.
+   * @throws DuplicateProjectNameException if there is already a project with the same name in
+   * the same team. This is not allowed.
+   * @throws InexistentDatabaseEntityException should never occur.
+   */
   public void createProject(
       String projectName, int teamId, String assigneeName, LocalDate deadline, String description)
-      throws Exception {
+          throws NoSignedInUserException, SQLException, InexistentUserException, InexistentTeamException, DuplicateProjectNameException, InexistentDatabaseEntityException {
     User currentUser = getMandatoryCurrentUser();
     User assignee = getMandatoryUser(assigneeName);
     Team team = getMandatoryTeam(teamId);
@@ -51,6 +70,29 @@ public class ProjectManager extends Manager {
     projectRepository.saveProject(project);
   }
 
+  /**
+   * Updates the data of the project with id projectId with the specified data, provided that all
+   * the teams and users mentions exist, and the current user is the supervisor of the project.
+   * For others, these settings are not accessible.
+   *
+   * @param projectId is the id of the project to be updated.
+   * @param newProjectTitle is the title to set.
+   * @param newAssigneeName is the name of the new assignee.
+   * @param newSupervisorName is the nam of the new supervisor.
+   * @param newDeadline  is the new deadline of the project.
+   * @param newDescription is the new description of the project.
+   * @throws NoSignedInUserException is there is noone signed in.
+   * @throws SQLException if the operation could not be performed in the database.
+   * @throws InexistentUserException if the user with assigneeName does not exist.
+   * @throws InexistentProjectException if the project to update does not exist.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws UnauthorisedOperationException if the current user is not the manager of the team.
+   * @throws InexistentUserException if the user with assigneeName does not exist.
+   * @throws DuplicateProjectNameException if there is already another project in the team with
+   * the desired name.
+   * @throws UnregisteredMemberRoleException if the assignee or the supervisor to be set is not
+   * the member of the team.
+   */
   public void updateProject(
       int projectId,
       String newProjectTitle,
@@ -58,9 +100,9 @@ public class ProjectManager extends Manager {
       String newSupervisorName,
       LocalDate newDeadline,
       String newDescription)
-      throws NoSignedInUserException, SQLException, InexistentProjectException,
+          throws NoSignedInUserException, SQLException, InexistentProjectException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
-          InexistentUserException, DuplicateProjectNameException {
+          InexistentUserException, DuplicateProjectNameException, UnregisteredMemberRoleException {
     User currentUser = getMandatoryCurrentUser();
     Project project = getMandatoryProject(projectId);
     guaranteeUserIsSupervisor(
@@ -69,12 +111,12 @@ public class ProjectManager extends Manager {
     guaranteeUserIsTeamMember(
         assignee,
         project.getTeamId(),
-        "This user cannot be assignee " + "because they are not a member of the team");
+        "be assignee");
     User supervisor = getMandatoryUser(newSupervisorName);
     guaranteeUserIsTeamMember(
         supervisor,
         project.getTeamId(),
-        "This user cannot be supervisor " + "because they are not a member of the team");
+        "be supervisor");
     // check that there is no other project with the new name
     if (!newProjectTitle.equals(project.getTitle())
         && projectRepository.getProject(project.getTeamId(), newProjectTitle).isPresent()) {
@@ -185,6 +227,20 @@ public class ProjectManager extends Manager {
     }
   }
 
+  /**
+   * Changes the status of the project with projectId to newStatus, but unly if the current user
+   * is the supervisor.
+   *
+   * @param projectId is the id of the project to update.
+   * @param newStatus is the new status of the project. Cannot be finished.
+   * @throws InexistentProjectException if the project does not exist.
+   * @throws SQLException if the operation could not pe performed in the database.
+   * @throws NoSignedInUserException if there is noone signed in.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws UnauthorisedOperationException if the current user is not the supervisor.
+   * @throws IllegalProjectStatusChangeException if the current state is not TURNED_IN, or the
+   * newState is FINISHED or TURNED_IN.
+   */
   public void discardTurnIn(int projectId, Project.ProjectStatus newStatus)
       throws InexistentProjectException, SQLException, NoSignedInUserException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
@@ -193,8 +249,12 @@ public class ProjectManager extends Manager {
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
       if (userIsSupervisor(currentUser, project)) {
-        project.setStatus(newStatus);
-        projectRepository.updateProject(project);
+        if (newStatus != Project.ProjectStatus.FINISHED && newStatus != Project.ProjectStatus.TURNED_IN) {
+          project.setStatus(newStatus);
+          projectRepository.updateProject(project);
+        } else {
+          throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
+        }
       } else {
         throw new UnauthorisedOperationException(
             currentUser.getId(), "discard turn in", "they" + " are not the supervisor");
@@ -204,6 +264,27 @@ public class ProjectManager extends Manager {
     }
   }
 
+  /**
+   * Returns a list of all the projects in the team with teamId, assigned to a user with assigneeId,
+   * if assigeeId is not null, otherwise assigned to any user, supervised by a user with id
+   * supervisorId, if supervisorId is not null, otherwise supervised by any user, having any status
+   * specified by queryStatus (possibly ALL), and a status with respect to the deadline specified by
+   * queryDeadlineStatus.
+   *
+   * @param queryStatus is an optional parameter. If it is ALL, it doesn't count. Othwerise, only
+   *     those projects are returned, which have the status corresponding to queryStatus.
+   * @param assignedToCurrentUser shows whether the returned projects should be assigned to the
+   *                              current user (true) or assigned to anyone (false).
+   * @param supervisedByCurrentUser shows whether the returned projects should be supervised by the
+   *                                current user (true) or supervised by anyone (false).
+   * @param queryDeadlineStatus is an optional parameter. If it is null, it doesn't count.
+   *     Othwerise, only those projects are returned, which have the status with respect to the
+   *     deadline corresponding to ueryDeadlineStatus.
+   * @return the list of projects fulfilling all the above requirements.
+   * @throws SQLException if the operations could not be performed in the database.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws NoSignedInUserException if there is noone signed in.
+   */
   public List<Project> getProjects(
       boolean assignedToCurrentUser,
       boolean supervisedByCurrentUser,
@@ -223,16 +304,37 @@ public class ProjectManager extends Manager {
         queryStatus, assigneeId, supervisorId, queryDeadlineStatus);
   }
 
+  /**
+   * Returns a list of all the projects in the team with teamId, assigned to a user with assigneeId,
+   * if assigeeId is not null, otherwise assigned to any user, supervised by a user with id
+   * supervisorId, if supervisorId is not null, otherwise supervised by any user, having any status
+   * specified by queryStatus (possibly ALL), and a status with respect to the deadline specified by
+   * queryDeadlineStatus.
+   *
+   * @param teamId is the id of the team whose projects are returned.
+   * @param queryStatus is an optional parameter. If it is ALL, it doesn't count. Othwerise, only
+   *     those projects are returned, which have the status corresponding to queryStatus.
+   * @param assigneeName is an optional parameter. If it is null, it doesn't count. Othwerise, only
+   *     those projects are returned, which are assigned to the user with name assigneeName.
+   * @param supervisorName is an optional parameter. If it is null, it doesn't count. Othwerise,
+   *                       only those projects are returned, which are supervised by the user
+   *                       with id supervisorName.
+   * @param queryDeadlineStatus is an optional parameter. If it is null, it doesn't count.
+   *     Othwerise, only those projects are returned, which have the status with respect to the
+   *     deadline corresponding to ueryDeadlineStatus.
+   * @return the list of projects fulfilling all the above requirements.
+   * @throws SQLException if the operations could not be performed in the database.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws InexistentUserException if the user with assigneeName or supervisorName does not
+   * exist in the database.
+   */
   public List<Project> getProjectsOfTeam(
       int teamId,
       String supervisorName,
       String assigneeName,
       QueryProjectStatus queryStatus,
       QueryProjectDeadlineStatus queryDeadlineStatus)
-      throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException,
-          InexistentUserException, InexistentTeamException {
-    User currentUser = getMandatoryCurrentUser();
-    Team team = getMandatoryTeam(teamId);
+      throws InexistentDatabaseEntityException, SQLException, InexistentUserException{
     Integer assigneeId = null;
     if (assigneeName != null) {
       User assignee = getMandatoryUser(assigneeName);
@@ -262,10 +364,10 @@ public class ProjectManager extends Manager {
     }
   }
 
-  private void guaranteeUserIsTeamMember(User user, int teamId, String message)
-      throws UnauthorisedOperationException, InexistentDatabaseEntityException, SQLException {
+  private void guaranteeUserIsTeamMember(User user, int teamId, String operation)
+          throws InexistentDatabaseEntityException, SQLException, UnregisteredMemberRoleException {
     if (!teamRepository.isMemberOfTeam(teamId, user.getId())) {
-      throw new IllegalArgumentException(message);
+      throw new UnregisteredMemberRoleException(user.getUsername(), teamId, operation);
     }
   }
 
