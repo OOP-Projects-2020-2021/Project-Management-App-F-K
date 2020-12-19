@@ -1,10 +1,15 @@
 package model.project;
 
+import model.InexistentDatabaseEntityException;
 import model.Manager;
+import model.project.queryconstants.QueryProjectStatus;
 import model.team.Team;
 import model.user.User;
+import model.user.exceptions.NoSignedInUserException;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * ProjectManager is responsible for executing all the commands needed for the application that are
@@ -38,5 +43,19 @@ public class ProjectManager extends Manager {
         new Project.SavableProject(
             projectName, teamId, deadline, currentUser.getId(), assignee.getId());
     projectRepository.saveProject(project);
+  }
+
+  public List<Project> getProjects(boolean assignedToCurrentUser, boolean supervisedByCurrentUser
+          , QueryProjectStatus queryStatus) throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException {
+    User currentUser = getMandatoryCurrentUser();
+    Integer assigneeId = null;
+    if (assignedToCurrentUser) {
+      assigneeId = currentUser.getId();
+    }
+    Integer supervisorId = null;
+    if (supervisedByCurrentUser) {
+      supervisorId = currentUser.getId();
+    }
+    return projectRepository.getProjects(queryStatus, assigneeId, supervisorId);
   }
 }
