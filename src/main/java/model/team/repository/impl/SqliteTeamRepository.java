@@ -4,6 +4,7 @@ import model.InexistentDatabaseEntityException;
 import model.database.Repository;
 import model.team.Team;
 import model.team.repository.TeamRepository;
+import model.user.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -79,14 +80,9 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
 
   // Get all members of a team.
   private static final String GET_TEAM_MEMBERS_QUERY =
-      "SELECT u.UserName FROM User AS u JOIN MemberToTeam AS m ON u.UserId = m.MemberId WHERE"
+      "SELECT * FROM User AS u JOIN MemberToTeam AS m ON u.UserId = m.MemberId WHERE"
           + " m.TeamId = ?";
   private PreparedStatement getTeamMembersSt;
-
-  // Count all members of a team.
-  private static final String COUNT_TEAM_MEMBERS_QUERY =
-      "SELECT COUNT(MemberId) FROM MemberToTeam WHERE TeamId = ?";
-  private PreparedStatement countTeamMembersSt;
 
   private SqliteTeamRepository() {}
 
@@ -115,7 +111,6 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
     setNameSt = c.prepareStatement(SET_NAME_STATEMENT);
     isMemberSt = c.prepareStatement(IS_MEMBER_QUERY);
     getTeamMembersSt = c.prepareStatement(GET_TEAM_MEMBERS_QUERY);
-    countTeamMembersSt = c.prepareStatement(COUNT_TEAM_MEMBERS_QUERY);
   }
 
   @Override
@@ -234,17 +229,13 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
   }
 
   @Override
-  public String[] getMembersOfTeam(int teamId) throws SQLException {
-    countTeamMembersSt.setInt(1, teamId);
-    ResultSet resultSetCount = countTeamMembersSt.executeQuery();
-    int noMembers = resultSetCount.getInt(1);
+  public List<User> getMembersOfTeam(int teamId) throws SQLException {
+    List<User> members = new ArrayList<>();
     getTeamMembersSt.setInt(1, teamId);
     ResultSet resultSet = getTeamMembersSt.executeQuery();
-    String[] members = new String[noMembers];
-    int i = 0;
     while (resultSet.next()) {
-      members[i] = resultSet.getString("UserName");
-      i++;
+      User member = new User(resultSet.getInt("UserId"),resultSet.getString("UserName"),resultSet.getString("Password"));
+      members.add(member);
     }
     return members;
   }

@@ -16,6 +16,8 @@ import java.util.Date;
 /**
  * Displays the list of projects, which can be sorted based on the deadline or filtered based on the
  * project's status, importance, assignee or supervisor.
+ *
+ * @author Beata Keresztes
  */
 public class TeamProjectsPanel extends JPanel implements ActionListener {
 

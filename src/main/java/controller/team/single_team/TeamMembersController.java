@@ -4,6 +4,7 @@ import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
 import model.team.TeamManager;
 import model.team.exceptions.*;
+import model.user.User;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
 import view.ErrorDialogFactory;
@@ -13,10 +14,12 @@ import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
- * This controller manages the TeamMembersPanel tab, displaying and updating the list of members of
- * a team.
+ * This controller manages the TeamMembersPanel tab, displaying and updating the list of members of a team.
+ *
+ * @author Beata Keresztes
  */
 public class TeamMembersController extends TeamController implements PropertyChangeListener {
 
@@ -50,12 +53,12 @@ public class TeamMembersController extends TeamController implements PropertyCha
    *
    * @return the members of the current team
    */
-  public String[] getTeamMembers() {
+  public List<User> getTeamMembers() {
     try {
       return teamManager.getMembersOfTeam(currentTeamId);
     } catch (SQLException sqlException) {
       ErrorDialogFactory.createErrorDialog(
-          sqlException, frame, "An internal error occurred, the members could not be displayed.");
+          sqlException, frame, "The members could not be displayed.");
     }
     return null;
   }
@@ -67,7 +70,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
       ErrorDialogFactory.createErrorDialog(
           databaseException,
           frame,
-          "An internal error occurred, the member " + name + " could not be added to the team.");
+          "The member \"" + name + "\" could not be added to the team.");
     } catch (UnauthorisedOperationException | InexistentDatabaseEntityException
         | NoSignedInUserException operationNotAllowedException) {
       ErrorDialogFactory.createErrorDialog(
@@ -78,12 +81,12 @@ public class TeamMembersController extends TeamController implements PropertyCha
       ErrorDialogFactory.createErrorDialog(
           inexistentUserException,
           frame,
-          "The user "
+          "The user \""
               + name
-              + " doesn't exist.");
+              + "\" doesn't exist.");
     } catch (AlreadyMemberException alreadyMemberException) {
       ErrorDialogFactory.createErrorDialog(
-          alreadyMemberException, frame, "The user " + name + " is already a member of this team.");
+          alreadyMemberException, frame, "The user \"" + name + "\" is already a member of this team.");
     }
   }
 
@@ -103,7 +106,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
         ErrorDialogFactory.createErrorDialog(
             databaseException,
             frame,
-            "An internal error occurred, the member " + name + " could not be removed.");
+            "The member \"" + name + "\" could not be removed.");
       } catch (UnauthorisedOperationException | NoSignedInUserException accessDeniedException) {
         ErrorDialogFactory.createErrorDialog(
             accessDeniedException, frame, "You are not allowed to remove a member from this team.");
@@ -111,7 +114,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
         ErrorDialogFactory.createErrorDialog(
             unregisteredMemberRemovalException,
             frame,
-            "The user " + name + " is not a member of this team.");
+            "The user \" " + name + "\" is not a member of this team.");
       } catch (InexistentUserException inexistentUserException) {
         ErrorDialogFactory.createErrorDialog(
             inexistentUserException,
@@ -119,7 +122,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
             "The user \" + name + \" could not be removed, because it doesn't exist.");
       } catch (ManagerRemovalException managerRemovalException) {
         ErrorDialogFactory.createErrorDialog(
-            managerRemovalException, frame, "The user " + name + " is the current manager of the team.");
+            managerRemovalException, frame, "The user \"" + name + "\" is the current manager of the team.");
       }
     }
   }

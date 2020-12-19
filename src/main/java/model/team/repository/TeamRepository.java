@@ -2,6 +2,8 @@ package model.team.repository;
 
 import model.InexistentDatabaseEntityException;
 import model.team.Team;
+import model.team.exceptions.InexistentTeamException;
+import model.user.User;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -27,7 +29,7 @@ public interface TeamRepository {
 
   /**
    * Deletes the team with the specified id from the database. It also deletes all the memberships
-   * related to it. // todo: delet projects of the team too
+   * related to it. // todo: delete projects of the team too
    *
    * @param teamId is the id of the team to delete.
    * @throws SQLException if the operation could not be performed in the database.
@@ -51,7 +53,7 @@ public interface TeamRepository {
    * @return the team with the given code, or null if it doesn't exist.
    * @throws SQLException if the operation could not be performed in the database.
    */
-  Optional<Team> getTeam(int teamId) throws SQLException;
+  Optional<Team> getTeam(int teamId) throws SQLException, InexistentTeamException;
 
   /**
    * Searches for and returns all the teams in which the user is a member.
@@ -121,11 +123,11 @@ public interface TeamRepository {
   void setNewName(int teamId, String newTeamName) throws SQLException;
 
   /**
-   * Returns the names of the members of the given team. Used for displaying the team-members.
+   * Returns the members of the given team. Used for displaying the team-members.
    *
    * @param teamId specifies the team
-   * @return an array of member names
+   * @return a list of members
    * @throws SQLException if an error occurs during processing the data in the database
    */
-  String[] getMembersOfTeam(int teamId) throws SQLException;
+  List<User> getMembersOfTeam(int teamId) throws SQLException;
 }

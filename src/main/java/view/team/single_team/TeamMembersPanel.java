@@ -1,8 +1,10 @@
 package view.team.single_team;
 
 import controller.team.single_team.TeamMembersController;
+import model.user.User;
 import view.UIFactory;
 
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
@@ -12,6 +14,8 @@ import java.awt.event.ActionListener;
 /**
  * This tab displays the list of members of a team. The manager of the team is allowed only to add
  * or remove members from this team.
+ *
+ * @author Beata Keresztes
  */
 public class TeamMembersPanel extends JPanel implements ActionListener {
 
@@ -120,12 +124,15 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
     removeMemberButton.addActionListener(this);
   }
 
+  public void fillMembersList() {
+    List<User> members = controller.getTeamMembers();
+    for (User member : members) {
+      membersListModel.addElement(member.getUsername());
+    }
+  }
   private void initMembersList() {
     membersListModel = new DefaultListModel<>();
-    String[] members = controller.getTeamMembers();
-    for (String member : members) {
-      membersListModel.addElement(member);
-    }
+    fillMembersList();
     membersList = new JList<>(membersListModel);
     membersList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
     membersList.setLayoutOrientation(JList.VERTICAL);
@@ -133,10 +140,7 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
 
   public void updateMembersList() {
     membersListModel.removeAllElements();
-    String[] members = controller.getTeamMembers();
-    for (String member : members) {
-      membersListModel.addElement(member);
-    }
+    fillMembersList();
     membersList.setModel(membersListModel);
   }
 

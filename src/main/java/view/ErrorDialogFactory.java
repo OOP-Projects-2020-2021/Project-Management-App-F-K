@@ -70,6 +70,12 @@ public class ErrorDialogFactory {
   private static final String ILLEGAL_ARGUMENT_ERROR_MESSAGE =
           "Check that the arguments passed are correct.";
 
+  /** Messages to inform the user that non-members cannot leave the team. */
+  private static final String UNREGISTERED_MEMBER_REMOVAL_ERROR_TITLE = "Removing unregistered members!";
+
+  private static final String UNREGISTERED_MEMBER_REMOVAL_ARGUMENT_ERROR_MESSAGE =
+          "The user you attempt to remove is not a member of this team.";
+
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
       message = "";
@@ -98,6 +104,9 @@ public class ErrorDialogFactory {
     }
     if (exception instanceof IllegalArgumentException) {
       displayIllegalArgumentErrorDialog(frame, message);
+    }
+    if (exception instanceof UnregisteredMemberRemovalException) {
+      displayUnregisteredMemberRemovalErrorDialog(frame, message);
     }
   }
 
@@ -175,14 +184,25 @@ public class ErrorDialogFactory {
   }
 
   /**
-   * Displays an error message when the manager tries to pass its position to a user which is not a member
-   * of the team.
+   * Displays an error message when the manager tries to pass its position to a user which is not a member of the team.
    */
   private static void displayIllegalArgumentErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
             frame,
             ILLEGAL_ARGUMENT_ERROR_MESSAGE + "\n" + message,
             ILLEGAL_ARGUMENT_ERROR_TITLE,
+            JOptionPane.ERROR_MESSAGE);
+  }
+
+  /**
+   * Displays an error message when the manager tries to pass its position to a user which is not a member
+   * of the team.
+   */
+  private static void displayUnregisteredMemberRemovalErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+            frame,
+            UNREGISTERED_MEMBER_REMOVAL_ARGUMENT_ERROR_MESSAGE + "\n" + message,
+            UNREGISTERED_MEMBER_REMOVAL_ERROR_TITLE,
             JOptionPane.ERROR_MESSAGE);
   }
 }

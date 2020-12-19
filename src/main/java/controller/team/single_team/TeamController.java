@@ -14,6 +14,11 @@ import java.sql.SQLException;
 
 /**
  * This controller manages the TeamFrame.
+ * It has two static fields, the teamId, which doesn't change while the frame is open, and a flag, which grants manager
+ * to the privileged users. The managerAccess flag gets updated every time the manager of the currently viewed team is
+ * changed.
+ *
+ * @author Beata Keresztes
  */
 public class TeamController extends FrameController implements PropertyChangeListener {
 
@@ -39,20 +44,20 @@ public class TeamController extends FrameController implements PropertyChangeLis
   public JFrame getFrame() {
     return frame;
   }
+
   /**
-   * Checks if the current user is the manager of the team and grants access to them to modify data
-   * about the team.
+   * Checks if the current user is the manager of the team and grants access to them to modify the data about the team.
    */
   protected void setManagerAccess() {
     try {
       int currentUserId = UserManager.getInstance().getCurrentUser().get().getId();
-      int currentManagerId = teamManager.getCurrentTeam(currentTeamId).getManagerId();
+      int currentManagerId = teamManager.getTeam(currentTeamId).getManagerId();
       managerAccess = currentUserId == currentManagerId;
     } catch (SQLException | InexistentDatabaseEntityException | InexistentTeamException e) {
       ErrorDialogFactory.createErrorDialog(
               e,
               frame,
-              "An internal error occurred, the access to edit this team could not be granted.");
+              "The access to edit this team could not be granted.");
     }
   }
   public boolean getManagerAccess() {

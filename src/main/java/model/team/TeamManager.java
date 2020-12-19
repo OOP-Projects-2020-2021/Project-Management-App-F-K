@@ -9,6 +9,7 @@ import model.team.exceptions.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * TeamManager is responsible for executing all the commands needed for the application that are
@@ -16,7 +17,7 @@ import java.util.List;
  *
  * <p>Remark that it is implemented with the singleton pattern, so only one instance of it exists.
  *
- * @author Bori Fazakas
+ * @author Bori Fazakas, Beata Keresztes
  */
 public class TeamManager extends Manager {
   private static TeamManager instance = new TeamManager();
@@ -31,10 +32,10 @@ public class TeamManager extends Manager {
     CURRENT_USER_TEAM_MEMBERSHIPS, // event is fired when the user becomes member of a team/looses
     // membership of a team
     CHANGED_TEAM_NAME, // event is fired when the data of the name of the team has been changed
-    CHANGED_TEAM_CODE, // when the code of the team has been changed
-    CHANGED_TEAM_MANAGER, // when the manager passed it position to another member
-    ADDED_TEAM_MEMBER, // a new member has been added to the team
-    REMOVED_TEAM_MEMBER // an existing member has been removed from the team
+    CHANGED_TEAM_CODE, // event is fired when the code of the team has been changed
+    CHANGED_TEAM_MANAGER, // event is fired when the manager passed it position to another member
+    ADDED_TEAM_MEMBER, // event is fired when a new member has been added to the team
+    REMOVED_TEAM_MEMBER // event is fired when an existing member has been removed from the team
   }
 
   /**
@@ -144,7 +145,7 @@ public class TeamManager extends Manager {
   }
 
   /**
-   * Removes the current user from the team with the given id. Requirement: the current user whould
+   * Removes the current user from the team with the given id. Requirement: the current user would
    * be the member of the team, but not the manager.
    *
    * @param teamId is the id of the team to join.
@@ -335,13 +336,23 @@ public class TeamManager extends Manager {
     return team.getManagerId() == user.getId();
   }
 
-  /** Return the team which is selected by the user from the Teams list. */
-  public Team getCurrentTeam(int teamId) throws SQLException, InexistentTeamException {
+  /**
+   * Return the team specified by the teamId, which is selected by the user from the Teams list.
+   *
+   * @throws SQLException if a database error occurred
+   * @throws InexistentTeamException if the team is was not found in the database
+   */
+  public Team getTeam(int teamId) throws SQLException, InexistentTeamException {
     return getMandatoryTeam(teamId);
   }
 
-  /** Return the names of the members of a team. */
-  public String[] getMembersOfTeam(int teamId) throws SQLException {
+  /**
+   * Gets the members of the specified team.
+   * @param teamId specifies the team
+   * @return the list of members
+   * @throws SQLException when a database error occurs
+   */
+  public List<User> getMembersOfTeam(int teamId) throws SQLException{
     return teamRepository.getMembersOfTeam(teamId);
   }
 }
