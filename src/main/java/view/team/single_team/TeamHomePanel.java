@@ -13,6 +13,8 @@ import java.awt.event.MouseEvent;
 /**
  * This panel displays general information about a team. The general user can only view the listed
  * data, but the manager can edit the team's attributes.
+ *
+ * @author Beata Keresztes
  */
 public class TeamHomePanel extends JPanel implements ActionListener {
 
@@ -106,7 +108,8 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     teamNameTextField = UIFactory.createTextField(controller.getTeamName());
     teamCodeLabel = UIFactory.createLabel(controller.getTeamCode(), null);
     teamManagerTextField = UIFactory.createTextField(controller.getTeamManagerName());
-    enableEditTextFields(false);
+    teamNameTextField.setEditable(false);
+    teamManagerTextField.setEditable(false);
 
     HomeMouseAdapter homeMouseAdapter = new HomeMouseAdapter();
     teamNameTextField.addMouseListener(homeMouseAdapter);
@@ -121,11 +124,6 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     savedLabel.setVisible(false);
     leaveTeamButton = UIFactory.createButton("Leave Team");
     addButtonListeners();
-  }
-
-  public void enableEditTextFields(boolean enableEdit) {
-    teamNameTextField.setEditable(enableEdit);
-    teamManagerTextField.setEditable(enableEdit);
   }
 
   public void enableButtons(boolean enable) {
@@ -147,8 +145,14 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     regenerateCodeButton.addActionListener(this);
   }
 
-  public void showSavedLabel(boolean saved) {
-    savedLabel.setVisible(saved);
+  public void updateNameFieldAfterSave() {
+    teamNameTextField.setEditable(false);
+    savedLabel.setVisible(true);
+  }
+
+  public void updateManagerFieldAfterSave() {
+    teamManagerTextField.setEditable(false);
+    savedLabel.setVisible(true);
   }
 
   @Override
@@ -164,7 +168,6 @@ public class TeamHomePanel extends JPanel implements ActionListener {
       } else if (source == regenerateCodeButton) {
         controller.regenerateTeamCode();
       }
-      enableEditTextFields(false);
     }
   }
 
@@ -178,6 +181,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
         } else if (evt.getSource() == teamManagerTextField) {
           teamManagerTextField.setEditable(true);
         }
+        savedLabel.setVisible(false);
       }
     }
   }
