@@ -3,6 +3,7 @@ package model.project;
 import model.InexistentDatabaseEntityException;
 import model.Manager;
 import model.UnauthorisedOperationException;
+import model.project.queryconstants.QueryProjectDeadlineStatus;
 import model.project.queryconstants.QueryProjectStatus;
 import model.project.exceptions.*;
 import model.team.Team;
@@ -205,7 +206,8 @@ public class ProjectManager extends Manager {
   public List<Project> getProjects(
       boolean assignedToCurrentUser,
       boolean supervisedByCurrentUser,
-      QueryProjectStatus queryStatus)
+      QueryProjectStatus queryStatus,
+      QueryProjectDeadlineStatus queryDeadlineStatus)
       throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException {
     User currentUser = getMandatoryCurrentUser();
     Integer assigneeId = null;
@@ -216,11 +218,12 @@ public class ProjectManager extends Manager {
     if (supervisedByCurrentUser) {
       supervisorId = currentUser.getId();
     }
-    return projectRepository.getProjects(queryStatus, assigneeId, supervisorId);
+    return projectRepository.getProjects(queryStatus, assigneeId, supervisorId, queryDeadlineStatus);
   }
 
   public List<Project> getProjectsOfTeam(
-      int teamId, String supervisorName, String assigneeName, QueryProjectStatus queryStatus)
+          int teamId, String supervisorName, String assigneeName, QueryProjectStatus queryStatus,
+          QueryProjectDeadlineStatus queryDeadlineStatus)
       throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException,
           InexistentUserException, InexistentTeamException {
     User currentUser = getMandatoryCurrentUser();
@@ -235,7 +238,7 @@ public class ProjectManager extends Manager {
       User supervisor = getMandatoryUser(supervisorName);
       supervisorId = supervisor.getId();
     }
-    return projectRepository.getProjectsOfTeam(teamId, queryStatus, assigneeId, supervisorId);
+    return projectRepository.getProjectsOfTeam(teamId, queryStatus, assigneeId, supervisorId, queryDeadlineStatus);
   }
 
   private void guaranteeUserIsSupervisor(
