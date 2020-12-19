@@ -179,8 +179,11 @@ public class ProjectManager extends Manager {
     }
   }
 
-  public List<Project> getProjects(boolean assignedToCurrentUser, boolean supervisedByCurrentUser
-          , QueryProjectStatus queryStatus) throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException {
+  public List<Project> getProjects(
+      boolean assignedToCurrentUser,
+      boolean supervisedByCurrentUser,
+      QueryProjectStatus queryStatus)
+      throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException {
     User currentUser = getMandatoryCurrentUser();
     Integer assigneeId = null;
     if (assignedToCurrentUser) {
@@ -193,9 +196,10 @@ public class ProjectManager extends Manager {
     return projectRepository.getProjects(queryStatus, assigneeId, supervisorId);
   }
 
-  public List<Project> getProjectsOfTeam(int teamId, String supervisorName, String assigneeName,
-                                         QueryProjectStatus queryStatus) throws NoSignedInUserException,
-          InexistentDatabaseEntityException, SQLException, InexistentUserException, InexistentTeamException {
+  public List<Project> getProjectsOfTeam(
+      int teamId, String supervisorName, String assigneeName, QueryProjectStatus queryStatus)
+      throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException,
+          InexistentUserException, InexistentTeamException {
     User currentUser = getMandatoryCurrentUser();
     Team team = getMandatoryTeam(teamId);
     Integer assigneeId = null;
