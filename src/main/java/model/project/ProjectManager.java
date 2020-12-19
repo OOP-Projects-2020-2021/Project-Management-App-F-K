@@ -4,7 +4,9 @@ import model.InexistentDatabaseEntityException;
 import model.Manager;
 import model.project.queryconstants.QueryProjectStatus;
 import model.team.Team;
+import model.team.exceptions.InexistentTeamException;
 import model.user.User;
+import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
 
 import java.sql.SQLException;
@@ -57,5 +59,23 @@ public class ProjectManager extends Manager {
       supervisorId = currentUser.getId();
     }
     return projectRepository.getProjects(queryStatus, assigneeId, supervisorId);
+  }
+
+  public List<Project> getProjectsOfTeam(int teamId, String supervisorName, String assigneeName,
+                                         QueryProjectStatus queryStatus) throws NoSignedInUserException,
+          InexistentDatabaseEntityException, SQLException, InexistentUserException, InexistentTeamException {
+    User currentUser = getMandatoryCurrentUser();
+    Team team = getMandatoryTeam(teamId);
+    Integer assigneeId = null;
+    if (assigneeName != null) {
+      User assignee = getMandatoryUser(assigneeName);
+      assigneeId = assignee.getId();
+    }
+    Integer supervisorId = null;
+    if (supervisorName != null) {
+      User supervisor = getMandatoryUser(supervisorName);
+      supervisorId = supervisor.getId();
+    }
+    return projectRepository.getProjectsOfTeam(teamId, queryStatus, assigneeId, supervisorId);
   }
 }
