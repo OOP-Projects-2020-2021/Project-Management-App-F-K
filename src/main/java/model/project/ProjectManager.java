@@ -60,7 +60,8 @@ public class ProjectManager extends Manager {
       throw new InexistentProjectException(projectId);
     }
     Project project = projectOp.get();
-    guaranteeUserIsSupervisor(currentUser, project);
+    guaranteeUserIsSupervisor(currentUser, project, "change data of project", "they are not the " +
+            "supervisor");
     User assignee = getMandatoryUser(newAssigneeName);
     guaranteeUserIsTeamMember(assignee, project.getTeamId(), "This user cannot be assignee " +
             "because they are not a member of the team");
@@ -113,17 +114,77 @@ public class ProjectManager extends Manager {
     return projectRepository.getProjectsOfTeam(teamId, queryStatus, assigneeId, supervisorId);
   }
 
-  private void guaranteeUserIsSupervisor(User user, Project project) throws InexistentDatabaseEntityException, UnauthorisedOperationException {
-    if (project.getSupervisorId() != user.getId()) {
-      throw new UnauthorisedOperationException(user.getId(), "Change data of the project",
-              "they are not the current supervisor");
+  private void guaranteeUserIsSupervisor(User user, Project project, String operation,
+                                         String reason) throws InexistentDatabaseEntityException,
+          UnauthorisedOperationException {
+    if (!userIsSupervisor(user, project)) {
+      throw new UnauthorisedOperationException(user.getId(), operation, reason);
+    }
+  }
+
+  private void guaranteeUserIsAssignee(User user, Project project, String operation,
+                                       String reason) throws InexistentDatabaseEntityException,
+          UnauthorisedOperationException {
+    if (!userIsAssignee(user, project)) {
+      throw new UnauthorisedOperationException(user.getId(), operation, reason);
     }
   }
 
   private void guaranteeUserIsTeamMember(User user, int teamId, String message) throws
+
           UnauthorisedOperationException, InexistentDatabaseEntityException, SQLException {
     if (!teamRepository.isMemberOfTeam(teamId, user.getId())) {
       throw new IllegalArgumentException(message);
     }
+  }
+
+  private void guaranteeUserIsSupervisorOrAssignee(User user, Project project, String operation,
+                                                   String reason) throws
+          UnauthorisedOperationException, InexistentDatabaseEntityException, SQLException {
+    if (!userIsAssignee(user, project) && !userIsSupervisor(user, project)) {
+      throw new UnauthorisedOperationException(user.getId(), operation, reason);
+    }
+  }
+
+  private boolean userIsSupervisor(User user, Project project) throws InexistentDatabaseEntityException {
+    return project.getSupervisorId() == user.getId();
+  }
+
+  private boolean userIsAssignee(User user, Project project) throws InexistentDatabaseEntityException {
+    return project.getAssigneeId() == user.getId();
+  }
+
+  private boolean validProjectStatusChange(Project project, Project.ProjectStatus newStatus,
+                                           User user) throws InexistentDatabaseEntityException, UnauthorisedOperationException {
+    switch (project.getStatus()) {
+      case FINISHED:
+        // if the project was finished already, its status can be changed by the supervisor only.
+        if (!userIsSupervisor(user, project)) {
+          return false;
+        }
+        // the MARKED_AS_DONE status is reachable only for the assignee
+        return newStatus != Project.ProjectStatus.MARKED_AS_DONE;
+      case TO_DO:
+        switch (newStatus) {
+          case FINISHED: return userIsSupervisor(user, project);
+          case MARKED_AS_DONE: return userIsAssignee(user, project) ;
+          case IN_PROGRESS: return true;
+        }
+        break;
+      case IN_PROGRESS:
+        switch (newStatus) {
+          case FINISHED: return userIsSupervisor(user, project);
+          case MARKED_AS_DONE: return userIsAssignee(user, project);
+          case TO_DO: return userIsAssignee(user, project);
+        }
+        break;
+      case MARKED_AS_DONE:
+        switch (newStatus) {
+          case FINISHED: return userIsSupervisor(user, project);
+          case IN_PROGRESS: return userIsAssignee(user, project) || userIsSupervisor(user, project);
+          case TO_DO: return userIsAssignee(user, project) || userIsSupervisor(user, project);
+        }
+    }
+    return false;
   }
 }
