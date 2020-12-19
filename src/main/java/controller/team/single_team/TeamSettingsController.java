@@ -21,15 +21,10 @@ import java.util.Objects;
  * This controller manages the TeamHomePanel, and it is responsible for displaying and updating the
  * currently viewed team's data.
  */
-public class TeamSettingsController extends FrameController implements PropertyChangeListener {
+public class TeamSettingsController extends TeamController implements PropertyChangeListener {
 
   private Team currentTeam;
   private TeamHomePanel homePanel;
-  private boolean managerAccess;
-  private int currentTeamId;
-
-  protected TeamManager teamManager;
-  protected UserManager userManager;
 
   /** Messages to confirm leaving the team. */
   private static final String CONFIRM_LEAVING_TEAM_MESSAGE =
@@ -44,13 +39,9 @@ public class TeamSettingsController extends FrameController implements PropertyC
   private static final String AFFIRM_LEAVING_TEAM_TITLE = "Left the team ";
 
   public TeamSettingsController(TeamHomePanel homePanel, JFrame frame, int currentTeamId) {
-    super(frame);
+    super(frame,currentTeamId);
     this.homePanel = homePanel;
-    teamManager = TeamManager.getInstance();
-    userManager = UserManager.getInstance();
-    this.currentTeamId = currentTeamId;
     teamManager.addPropertyChangeListener(this);
-    setManagerAccess();
     try {
       currentTeam = teamManager.getCurrentTeam(currentTeamId);
     } catch (SQLException | InexistentTeamException e) {
@@ -70,37 +61,13 @@ public class TeamSettingsController extends FrameController implements PropertyC
           e, frame, "An internal error occurred and the data of this team was not updated.");
     }
   }
-  /**
-   * Checks if the current user is the manager of the team and grants access to them to modify data
-   * about the team.
-   */
-  private void setManagerAccess() {
-    try {
-      int currentUserId = UserManager.getInstance().getCurrentUser().get().getId();
-      int currentManagerId = teamManager.getCurrentTeam(currentTeamId).getManagerId();
-      managerAccess = currentUserId == currentManagerId;
-    } catch (SQLException | InexistentDatabaseEntityException | InexistentTeamException e) {
-      ErrorDialogFactory.createErrorDialog(
-              e,
-              frame,
-              "An internal error occurred, the access to edit this team could not be granted.");
-    }
-  }
-  public boolean getManagerAccess() {
-    return managerAccess;
-  }
-
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName()
         .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString()) || evt.getPropertyName()
-            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString())) {
-      updateCurrentTeam();
-      updateHomePanel();
-    }else if(evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString()) || evt.getPropertyName()
             .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
       updateCurrentTeam();
-      setManagerAccess();
       updateHomePanel();
     }
   }
