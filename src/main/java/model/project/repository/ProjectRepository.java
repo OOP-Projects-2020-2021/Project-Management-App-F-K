@@ -80,8 +80,11 @@ public interface ProjectRepository {
    * @throws SQLException if the operations could not be performed in the database.
    */
   List<Project> getProjectsOfTeam(
-          int teamId, QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId,
-          QueryProjectDeadlineStatus queryDeadlineStatus)
+      int teamId,
+      QueryProjectStatus queryStatus,
+      Integer assigneeId,
+      Integer supervisorId,
+      QueryProjectDeadlineStatus queryDeadlineStatus)
       throws SQLException;
 
   /**
@@ -107,5 +110,9 @@ public interface ProjectRepository {
    * @throws SQLException if the operations could not be performed in the database.
    */
   List<Project> getProjects(
-      QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId, QueryProjectDeadlineStatus queryDeadlineStatus) throws SQLException;
+      QueryProjectStatus queryStatus,
+      Integer assigneeId,
+      Integer supervisorId,
+      QueryProjectDeadlineStatus queryDeadlineStatus)
+      throws SQLException;
 }

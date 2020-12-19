@@ -172,8 +172,11 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   @Override
   public List<Project> getProjectsOfTeam(
-          int teamId, QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId,
-          QueryProjectDeadlineStatus queryDeadlineStatus)
+      int teamId,
+      QueryProjectStatus queryStatus,
+      Integer assigneeId,
+      Integer supervisorId,
+      QueryProjectDeadlineStatus queryDeadlineStatus)
       throws SQLException {
     getProjectsOfTeamSt.setInt(1, teamId);
     // if supervisorid is null, it is don't care
@@ -199,12 +202,14 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       getProjectsOfTeamSt.setString(6, queryStatus.getCorrespondingStatus().toString());
       getProjectsOfTeamSt.setBoolean(7, false);
     }
-    if (queryDeadlineStatus == QueryProjectDeadlineStatus.IN_TIME || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
+    if (queryDeadlineStatus == QueryProjectDeadlineStatus.IN_TIME
+        || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
       getProjectsOfTeamSt.setBoolean(8, true);
     } else {
       getProjectsOfTeamSt.setBoolean(8, false);
     }
-    if (queryDeadlineStatus == QueryProjectDeadlineStatus.OVERDUE || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
+    if (queryDeadlineStatus == QueryProjectDeadlineStatus.OVERDUE
+        || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
       getProjectsOfTeamSt.setBoolean(9, true);
     } else {
       getProjectsOfTeamSt.setBoolean(9, false);
@@ -219,7 +224,10 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   @Override
   public List<Project> getProjects(
-      QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId, QueryProjectDeadlineStatus queryDeadlineStatus)
+      QueryProjectStatus queryStatus,
+      Integer assigneeId,
+      Integer supervisorId,
+      QueryProjectDeadlineStatus queryDeadlineStatus)
       throws SQLException {
     // if supervisorid is null, it is don't care
     if (supervisorId != null) {
@@ -244,12 +252,14 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       getProjectsSt.setString(5, queryStatus.getCorrespondingStatus().toString());
       getProjectsSt.setBoolean(6, false);
     }
-    if (queryDeadlineStatus == QueryProjectDeadlineStatus.IN_TIME || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
+    if (queryDeadlineStatus == QueryProjectDeadlineStatus.IN_TIME
+        || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
       getProjectsSt.setBoolean(7, true);
     } else {
       getProjectsSt.setBoolean(7, false);
     }
-    if (queryDeadlineStatus == QueryProjectDeadlineStatus.OVERDUE || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
+    if (queryDeadlineStatus == QueryProjectDeadlineStatus.OVERDUE
+        || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
       getProjectsSt.setBoolean(8, true);
     } else {
       getProjectsSt.setBoolean(8, false);
