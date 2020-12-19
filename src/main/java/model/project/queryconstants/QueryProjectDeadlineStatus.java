@@ -3,6 +3,8 @@ package model.project.queryconstants;
 /**
  * QueryProjectDeadlineStatus is used for database queries and specifies the required status of
  * the project with respect to its deadline.
+ *
+ * @author Bori Fazakas
  */
 public enum QueryProjectDeadlineStatus {
     ALL, //no specified status.
