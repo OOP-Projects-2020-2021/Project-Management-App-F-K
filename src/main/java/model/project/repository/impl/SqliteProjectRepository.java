@@ -60,7 +60,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
                   + "WHERE t.TeamId = ? AND "
                   + "(p.SupervisorId = ? OR ?) AND "
                   + "(p.AssigneeId = ? OR ?) AND"
-                  + "(p.StatusId = ? OR ?)";
+                  + "(st.StatusName = ? OR ?)";
   private PreparedStatement getProjectsOfTeam;
 
   // Get status id
@@ -167,11 +167,10 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       getProjectsOfTeam.setBoolean(5, true);
     }
     if (queryStatus == QueryProjectStatus.ALL) {
-      getProjectsOfTeam.setNull(6, Types.INTEGER);
+      getProjectsOfTeam.setNull(6, Types.NVARCHAR);
       getProjectsOfTeam.setBoolean(7, true);
     } else {
-      int statusId = getProjectStatusId(queryStatus.getCorrespondingStatus());
-      getProjectsOfTeam.setInt(6, statusId);
+      getProjectsOfTeam.setString(6, queryStatus.getCorrespondingStatus().toString());
       getProjectsOfTeam.setBoolean(7, false);
     }
     ResultSet result = getProjectsOfTeam.executeQuery();
