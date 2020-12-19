@@ -3,6 +3,7 @@ package model.project.repository.impl;
 import model.InexistentDatabaseEntityException;
 import model.database.Repository;
 import model.project.Project;
+import model.project.queryconstants.QueryProjectStatus;
 import model.project.repository.ProjectRepository;
 
 import java.sql.*;
@@ -50,30 +51,6 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + ".StatusId = st.StatusId WHERE Name = ? and TeamId = ? ";
   private PreparedStatement getProjectByTitleTeamSt;
 
-  // Get projects based on team.
-  private static final String GET_PROJECTS_BY_TEAM =
-      "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusName "
-          + "From Project p JOIN ProjectStatus st ON p"
-          + ".StatusId = st.StatusId WHERE TeamId = ?";
-  private PreparedStatement getProjectsByTeamSt;
-
-  // Get projects based on team and assignee.
-  private static final String GET_PROJECTS_BY_TEAM_ASSIGNEE_STATEMENT =
-      "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusName "
-          + "From Project p JOIN ProjectStatus st ON p"
-          + ".StatusId = st.StatusId WHERE TeamId = ? AND AssigneeId = ?";
-  private PreparedStatement getProjectsByTeamAssigneeSt;
-
-  // Get projects based on team and supervisor.
-  private static final String GET_PROJECTS_BY_TEAM_SUPERVISOR_STATEMENT =
-      "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusName "
-          + "From Project p JOIN ProjectStatus st ON p"
-          + ".StatusId = st.StatusId WHERE TeamId = ? AND SupervisorId = ?";
-  private PreparedStatement getProjectsByTeamSupervisorSt;
-
   // Get status id
   private static final String GET_PROJECTS_STATUS_ID =
       "SELECT StatusId from ProjectStatus WHERE StatusName = ?";
@@ -98,9 +75,6 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     updateProjectSt = c.prepareStatement(UPDATE_PROJECT);
     getProjectByTitleTeamSt = c.prepareStatement(GET_PROJECT_BY_TEAM_TITLE_STATEMENT);
     getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
-    getProjectsByTeamSt = c.prepareStatement(GET_PROJECTS_BY_TEAM);
-    getProjectsByTeamAssigneeSt = c.prepareStatement(GET_PROJECTS_BY_TEAM_ASSIGNEE_STATEMENT);
-    getProjectsByTeamSupervisorSt = c.prepareStatement(GET_PROJECTS_BY_TEAM_SUPERVISOR_STATEMENT);
   }
 
   @Override
@@ -161,51 +135,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   }
 
   @Override
-  public List<Project> getProjectsOfTeam(int teamId) throws SQLException {
-    getProjectsByTeamSt.setInt(1, teamId);
-    ResultSet result = getProjectsByTeamSt.executeQuery();
-    List<Project> projects = new ArrayList<>();
-    while (result.next()) {
-      projects.add(getProjectFromResult(result));
-    }
-    return projects;
-  }
-
-  @Override
-  public List<Project> getProjectsInTeamSupervisedByUser(int teamId, int supervisorId)
-      throws SQLException {
-    getProjectsByTeamSupervisorSt.setInt(1, teamId);
-    getProjectsByTeamSupervisorSt.setInt(2, supervisorId);
-    ResultSet result = getProjectsByTeamSupervisorSt.executeQuery();
-    List<Project> projects = new ArrayList<>();
-    while (result.next()) {
-      projects.add(getProjectFromResult(result));
-    }
-    return projects;
-  }
-
-  @Override
-  public List<Project> getProjectsInTeamAssignedToUser(int teamId, int assigneeId)
-      throws SQLException {
-    getProjectsByTeamAssigneeSt.setInt(1, teamId);
-    getProjectsByTeamAssigneeSt.setInt(2, assigneeId);
-    ResultSet result = getProjectsByTeamAssigneeSt.executeQuery();
-    List<Project> projects = new ArrayList<>();
-    while (result.next()) {
-      projects.add(getProjectFromResult(result));
-    }
-    return projects;
-  }
-
-  @Override
-  public List<Project> getProjectsSupervisedByUser(int userId) {
-    // todo
-    return null;
-  }
-
-  @Override
-  public List<Project> getProjectsAssignedToUser(int userId) {
-    // todo
+  public List<Project> getProjectsOfTeam(int teamId, QueryProjectStatus queryStatus, Integer assigneeId, Integer supervisorId) {
     return null;
   }
 

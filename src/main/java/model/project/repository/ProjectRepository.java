@@ -2,6 +2,7 @@ package model.project.repository;
 
 import model.InexistentDatabaseEntityException;
 import model.project.Project;
+import model.project.queryconstants.QueryProjectStatus;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -25,13 +26,6 @@ public interface ProjectRepository {
 
   void updateProject(Project project) throws SQLException, InexistentDatabaseEntityException;
 
-  List<Project> getProjectsOfTeam(int teamId) throws SQLException;
-
-  List<Project> getProjectsInTeamSupervisedByUser(int teamId, int supervisorId) throws SQLException;
-
-  List<Project> getProjectsInTeamAssignedToUser(int teamId, int assigneeId) throws SQLException;
-
-  List<Project> getProjectsSupervisedByUser(int userId);
-
-  List<Project> getProjectsAssignedToUser(int userId);
+  List<Project> getProjectsOfTeam(int teamId, QueryProjectStatus queryStatus, Integer assigneeId,
+                                  Integer supervisorId);
 }
