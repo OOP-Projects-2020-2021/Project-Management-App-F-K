@@ -1,10 +1,12 @@
 package controller.team.single_team;
 
+import controller.FrameController;
 import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
 import model.team.Team;
 import model.team.TeamManager;
 import model.team.exceptions.*;
+import model.user.UserManager;
 import model.user.exceptions.*;
 import view.ErrorDialogFactory;
 import view.team.single_team.TeamHomePanel;
@@ -19,10 +21,15 @@ import java.util.Objects;
  * This controller manages the TeamHomePanel, and it is responsible for displaying and updating the
  * currently viewed team's data.
  */
-public class TeamSettingsController extends TeamController implements PropertyChangeListener {
+public class TeamSettingsController extends FrameController implements PropertyChangeListener {
 
   private Team currentTeam;
   private TeamHomePanel homePanel;
+  private boolean managerAccess;
+  private int currentTeamId;
+
+  protected TeamManager teamManager;
+  protected UserManager userManager;
 
   /** Messages to confirm leaving the team. */
   private static final String CONFIRM_LEAVING_TEAM_MESSAGE =
@@ -37,10 +44,13 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   private static final String AFFIRM_LEAVING_TEAM_TITLE = "Left the team ";
 
   public TeamSettingsController(TeamHomePanel homePanel, JFrame frame, int currentTeamId) {
-    super(frame, currentTeamId);
+    super(frame);
     this.homePanel = homePanel;
+    teamManager = TeamManager.getInstance();
+    userManager = UserManager.getInstance();
+    this.currentTeamId = currentTeamId;
     teamManager.addPropertyChangeListener(this);
-    frame.addPropertyChangeListener(this);
+    setManagerAccess();
     try {
       currentTeam = teamManager.getCurrentTeam(currentTeamId);
     } catch (SQLException | InexistentTeamException e) {
@@ -48,7 +58,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     }
   }
 
-  public void setCurrentTeam(Team team) {
+  private void setCurrentTeam(Team team) {
     currentTeam = team;
   }
 
@@ -60,15 +70,36 @@ public class TeamSettingsController extends TeamController implements PropertyCh
           e, frame, "An internal error occurred and the data of this team was not updated.");
     }
   }
+  /**
+   * Checks if the current user is the manager of the team and grants access to them to modify data
+   * about the team.
+   */
+  private void setManagerAccess() {
+    try {
+      int currentUserId = UserManager.getInstance().getCurrentUser().get().getId();
+      int currentManagerId = teamManager.getCurrentTeam(currentTeamId).getManagerId();
+      managerAccess = currentUserId == currentManagerId;
+    } catch (SQLException | InexistentDatabaseEntityException | InexistentTeamException e) {
+      ErrorDialogFactory.createErrorDialog(
+              e,
+              frame,
+              "An internal error occurred, the access to edit this team could not be granted.");
+    }
+  }
+  public boolean getManagerAccess() {
+    return managerAccess;
+  }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_DATA.toString())) {
+        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString()) || evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString())) {
       updateCurrentTeam();
-      setManagerAccess();
       updateHomePanel();
-    } else if (evt.getPropertyName().equals(TeamTabs.HOME_TAB.toString())) {
+    }else if(evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
+      updateCurrentTeam();
       setManagerAccess();
       updateHomePanel();
     }
@@ -113,7 +144,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     }
   }
 
-  public void leaveTeam() {
+  private void leaveTeam() {
     try {
       teamManager.leaveTeam(currentTeamId);
     } catch (SQLException
@@ -144,6 +175,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public void saveTeamName(String name) {
     try {
       teamManager.setNewName(currentTeamId, name);
+      homePanel.showSavedLabel(true);
     } catch (SQLException
         | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
@@ -159,6 +191,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public void regenerateTeamCode() {
     try {
       teamManager.regenerateTeamCode(currentTeamId);
+      homePanel.showSavedLabel(true);
     } catch (SQLException
         | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
@@ -176,6 +209,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public void saveTeamManager(String newManagerName) {
     try {
       teamManager.passManagerPosition(currentTeamId, newManagerName);
+      homePanel.showSavedLabel(true);
     } catch (InexistentTeamException
         | SQLException databaseException) {
       ErrorDialogFactory.createErrorDialog(

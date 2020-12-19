@@ -4,6 +4,7 @@ import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
 import model.team.TeamManager;
 import model.team.exceptions.*;
+import model.user.UserManager;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
 import view.ErrorDialogFactory;
@@ -18,9 +19,15 @@ import java.sql.SQLException;
  * This controller manages the TeamMembersPanel tab, displaying and updating the list of members of
  * a team.
  */
-public class TeamMembersController extends TeamController implements PropertyChangeListener {
+public class TeamMembersController implements PropertyChangeListener {
 
   TeamMembersPanel membersPanel;
+  private boolean managerAccess;
+  private JFrame frame;
+  private int currentTeamId;
+
+  protected TeamManager teamManager;
+  protected UserManager userManager;
 
   /** Messages to confirm the removal of a member from the team. */
   private static final String CONFIRM_REMOVING_MEMBER_MESSAGE =
@@ -29,20 +36,45 @@ public class TeamMembersController extends TeamController implements PropertyCha
   private static final String CONFIRM_REMOVING_MEMBER_TITLE = "Removing member";
 
   public TeamMembersController(TeamMembersPanel membersPanel, JFrame frame, int currentTeamId) {
-    super(frame, currentTeamId);
     this.membersPanel = membersPanel;
-    frame.addPropertyChangeListener(this);
+    this.frame = frame;
+    teamManager = TeamManager.getInstance();
+    userManager = UserManager.getInstance();
+    this.currentTeamId = currentTeamId;
     teamManager.addPropertyChangeListener(this);
+    setManagerAccess();
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MEMBERS.toString())) {
+        .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString()) || evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
       membersPanel.updateMembersList();
-    } else if (evt.getPropertyName().equals(TeamTabs.MEMBERS_TAB.toString())) {
-      membersPanel.enableComponents(getManagerAccess());
+    } else if (evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
+      setManagerAccess();
+      membersPanel.enableComponents(managerAccess);
     }
+  }
+
+  /**
+   * Checks if the current user is the manager of the team and grants access to them to modify data
+   * about the team.
+   */
+  private void setManagerAccess() {
+    try {
+      int currentUserId = UserManager.getInstance().getCurrentUser().get().getId();
+      int currentManagerId = teamManager.getCurrentTeam(currentTeamId).getManagerId();
+      managerAccess = currentUserId == currentManagerId;
+    } catch (SQLException | InexistentDatabaseEntityException | InexistentTeamException e) {
+      ErrorDialogFactory.createErrorDialog(
+              e,
+              frame,
+              "An internal error occurred, the access to edit this team could not be granted.");
+    }
+  }
+  public boolean getManagerAccess() {
+    return managerAccess;
   }
 
   /**
