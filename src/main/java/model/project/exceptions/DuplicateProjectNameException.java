@@ -1,4 +1,4 @@
-package model.project.repository.exceptions;
+package model.project.exceptions;
 
 /**
  * DuplicateProjectNameException is thrown when someone tries to create a project inside a team

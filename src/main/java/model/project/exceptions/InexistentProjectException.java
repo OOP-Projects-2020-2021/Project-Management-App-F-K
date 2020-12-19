@@ -1,4 +1,4 @@
-package model.project.repository.exceptions;
+package model.project.exceptions;
 
 
 public class InexistentProjectException extends Exception {
