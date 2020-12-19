@@ -40,6 +40,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     super(frame, currentTeamId);
     this.homePanel = homePanel;
     teamManager.addPropertyChangeListener(this);
+    frame.addPropertyChangeListener(this);
     try {
       currentTeam = teamManager.getCurrentTeam(currentTeamId);
     } catch (SQLException | InexistentTeamException e) {
@@ -65,6 +66,9 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     if (evt.getPropertyName()
         .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_DATA.toString())) {
       updateCurrentTeam();
+      setManagerAccess();
+      updateHomePanel();
+    }else if(evt.getPropertyName().equals(TeamTabs.HOME_TAB.toString())) {
       setManagerAccess();
       updateHomePanel();
     }

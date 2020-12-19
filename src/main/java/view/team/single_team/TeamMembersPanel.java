@@ -9,6 +9,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+/**
+ * This tab displays the list of members of a team.
+ * The manager of the team is allowed only to add or remove members from this team.
+ *
+ */
 public class TeamMembersPanel extends JPanel implements ActionListener {
 
   private JLabel addMemberLabel;
@@ -20,7 +25,7 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
 
   private TeamMembersController controller;
 
-  public TeamMembersPanel(JFrame parentFrame,Dimension parentFrameDimension,int currentTeamId) {
+  public TeamMembersPanel(JFrame parentFrame, Dimension parentFrameDimension, int currentTeamId) {
     this.controller = new TeamMembersController(this,parentFrame,currentTeamId);
     this.setPreferredSize(parentFrameDimension);
     this.setLayout(new BorderLayout());
@@ -107,6 +112,10 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
     addButtonListeners();
   }
 
+  private void emptySearchField() {
+    addMemberTextField.setText("");
+  }
+
   private void addButtonListeners() {
     addMemberButton.addActionListener(this);
     removeMemberButton.addActionListener(this);
@@ -123,13 +132,6 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
     membersList.setLayoutOrientation(JList.VERTICAL);
   }
 
-//  public void addMemberToList(String name) {
-//    membersListModel.add(membersListModel.size(),name);
-//  }
-//
-//  public void removeMemberFromList(String name) {
-//    membersListModel.remove(membersListModel.indexOf(name));
-//  }
   public void updateMembersList() {
     membersListModel.removeAllElements();
     String[] members = controller.getTeamMembers();
@@ -140,6 +142,7 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
   }
 
   public void enableComponents(boolean enableManagerAccess) {
+    addMemberLabel.setVisible(enableManagerAccess);
     addMemberTextField.setVisible(enableManagerAccess);
     addMemberButton.setVisible(enableManagerAccess);
     removeMemberButton.setVisible(enableManagerAccess);
@@ -150,11 +153,10 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
     if (actionEvent.getSource() == addMemberButton) {
       String memberName = addMemberTextField.getText();
       controller.addMember(memberName);
-     // updateMembersList();
+      emptySearchField();
     } else if (actionEvent.getSource() == removeMemberButton) {
       String memberName = membersList.getSelectedValue();
       controller.removeMember(memberName);
-     // updateMembersList();
     }
   }
 }
