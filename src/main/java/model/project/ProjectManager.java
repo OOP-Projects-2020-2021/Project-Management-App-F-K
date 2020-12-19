@@ -133,7 +133,7 @@ public class ProjectManager extends Manager {
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() != Project.ProjectStatus.FINISHED) {
       if (userIsAssignee(currentUser, project)) {
-        project.setStatus(Project.ProjectStatus.MARKED_AS_DONE);
+        project.setStatus(Project.ProjectStatus.TURNED_IN);
         projectRepository.updateProject(project);
       } else {
         throw new UnauthorisedOperationException(
@@ -141,7 +141,7 @@ public class ProjectManager extends Manager {
       }
     } else {
       throw new IllegalProjectStatusChangeException(
-          project.getStatus(), Project.ProjectStatus.MARKED_AS_DONE);
+          project.getStatus(), Project.ProjectStatus.TURNED_IN);
     }
   }
 
@@ -151,7 +151,7 @@ public class ProjectManager extends Manager {
           IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     User currentUser = getMandatoryCurrentUser();
-    if (project.getStatus() == Project.ProjectStatus.MARKED_AS_DONE) {
+    if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
       if (userIsAssignee(currentUser, project)) {
         project.setStatus(newStatus);
         projectRepository.updateProject(project);
@@ -170,7 +170,7 @@ public class ProjectManager extends Manager {
           IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     User currentUser = getMandatoryCurrentUser();
-    if (project.getStatus() == Project.ProjectStatus.MARKED_AS_DONE) {
+    if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
       if (userIsSupervisor(currentUser, project)) {
         project.setStatus(Project.ProjectStatus.FINISHED);
         projectRepository.updateProject(project);
@@ -190,7 +190,7 @@ public class ProjectManager extends Manager {
           IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     User currentUser = getMandatoryCurrentUser();
-    if (project.getStatus() == Project.ProjectStatus.MARKED_AS_DONE) {
+    if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
       if (userIsSupervisor(currentUser, project)) {
         project.setStatus(newStatus);
         projectRepository.updateProject(project);

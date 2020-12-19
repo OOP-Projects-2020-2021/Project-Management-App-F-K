@@ -16,7 +16,7 @@ public enum QueryProjectStatus {
   },
   TO_DO(Project.ProjectStatus.TO_DO),
   IN_PROGRESS(Project.ProjectStatus.IN_PROGRESS),
-  MARKED_AS_DONE(Project.ProjectStatus.MARKED_AS_DONE),
+  TURNED_IN(Project.ProjectStatus.TURNED_IN),
   FINISHED(Project.ProjectStatus.FINISHED);
 
   private final Project.ProjectStatus correspondingStatus;
