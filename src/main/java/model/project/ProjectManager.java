@@ -14,7 +14,6 @@ import model.user.exceptions.NoSignedInUserException;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 /**
  * ProjectManager is responsible for executing all the commands needed for the application that are
@@ -50,23 +49,34 @@ public class ProjectManager extends Manager {
     projectRepository.saveProject(project);
   }
 
-  public void updateProject(int projectId,
-          String newProjectTitle, String newAssigneeName, String newSupervisorName,
-          LocalDate newDeadline, String newDescription) throws NoSignedInUserException, SQLException, InexistentProjectException, InexistentDatabaseEntityException, UnauthorisedOperationException, InexistentUserException, DuplicateProjectNameException {
+  public void updateProject(
+      int projectId,
+      String newProjectTitle,
+      String newAssigneeName,
+      String newSupervisorName,
+      LocalDate newDeadline,
+      String newDescription)
+      throws NoSignedInUserException, SQLException, InexistentProjectException,
+          InexistentDatabaseEntityException, UnauthorisedOperationException,
+          InexistentUserException, DuplicateProjectNameException {
     User currentUser = getMandatoryCurrentUser();
     Project project = getMandatoryProject(projectId);
-    guaranteeUserIsSupervisor(currentUser, project, "change data of project", "they are not the " +
-            "supervisor");
+    guaranteeUserIsSupervisor(
+        currentUser, project, "change data of project", "they are not the " + "supervisor");
     User assignee = getMandatoryUser(newAssigneeName);
-    guaranteeUserIsTeamMember(assignee, project.getTeamId(), "This user cannot be assignee " +
-            "because they are not a member of the team");
+    guaranteeUserIsTeamMember(
+        assignee,
+        project.getTeamId(),
+        "This user cannot be assignee " + "because they are not a member of the team");
     User supervisor = getMandatoryUser(newSupervisorName);
-    guaranteeUserIsTeamMember(supervisor, project.getTeamId(), "This user cannot be supervisor " +
-            "because they are not a member of the team");
+    guaranteeUserIsTeamMember(
+        supervisor,
+        project.getTeamId(),
+        "This user cannot be supervisor " + "because they are not a member of the team");
     // check that there is no other project with the new name
-    if (!newProjectTitle.equals(project.getTitle()) && projectRepository.getProject(project.getTeamId(),
-            newProjectTitle).isPresent()) {
-       throw new DuplicateProjectNameException(newProjectTitle);
+    if (!newProjectTitle.equals(project.getTitle())
+        && projectRepository.getProject(project.getTeamId(), newProjectTitle).isPresent()) {
+      throw new DuplicateProjectNameException(newProjectTitle);
     }
     // update project
     project.setAssigneeId(assignee.getId());
@@ -77,20 +87,25 @@ public class ProjectManager extends Manager {
     projectRepository.updateProject(project);
   }
 
-  public void setProjectInProgress(int projectId) throws InexistentProjectException, SQLException, NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+  public void setProjectInProgress(int projectId)
+      throws InexistentProjectException, SQLException, NoSignedInUserException,
+          InexistentDatabaseEntityException, UnauthorisedOperationException,
+          IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.ProjectStatus.TO_DO) {
       project.setStatus(Project.ProjectStatus.IN_PROGRESS);
       projectRepository.updateProject(project);
     } else {
-      throw new IllegalProjectStatusChangeException(project.getStatus(),
-              Project.ProjectStatus.IN_PROGRESS);
+      throw new IllegalProjectStatusChangeException(
+          project.getStatus(), Project.ProjectStatus.IN_PROGRESS);
     }
   }
 
-  public void setProjectAsToDo(int projectId) throws InexistentProjectException, SQLException,
-          NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+  public void setProjectAsToDo(int projectId)
+      throws InexistentProjectException, SQLException, NoSignedInUserException,
+          InexistentDatabaseEntityException, UnauthorisedOperationException,
+          IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.ProjectStatus.IN_PROGRESS) {
@@ -98,17 +113,21 @@ public class ProjectManager extends Manager {
         project.setStatus(Project.ProjectStatus.TO_DO);
         projectRepository.updateProject(project);
       } else {
-        throw new UnauthorisedOperationException(currentUser.getId(), "set back the project " +
-                "status to to do", "they are not the assignee");
+        throw new UnauthorisedOperationException(
+            currentUser.getId(),
+            "set back the project " + "status to to do",
+            "they are not the assignee");
       }
     } else {
-      throw new IllegalProjectStatusChangeException(project.getStatus(),
-              Project.ProjectStatus.TO_DO);
+      throw new IllegalProjectStatusChangeException(
+          project.getStatus(), Project.ProjectStatus.TO_DO);
     }
   }
 
-  public void turnInProject(int projectId) throws InexistentProjectException, SQLException,
-          NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+  public void turnInProject(int projectId)
+      throws InexistentProjectException, SQLException, NoSignedInUserException,
+          InexistentDatabaseEntityException, UnauthorisedOperationException,
+          IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() != Project.ProjectStatus.FINISHED) {
@@ -116,17 +135,19 @@ public class ProjectManager extends Manager {
         project.setStatus(Project.ProjectStatus.MARKED_AS_DONE);
         projectRepository.updateProject(project);
       } else {
-        throw new UnauthorisedOperationException(currentUser.getId(), "turn in project", "they " +
-                "are not the assignee");
+        throw new UnauthorisedOperationException(
+            currentUser.getId(), "turn in project", "they " + "are not the assignee");
       }
     } else {
-      throw new IllegalProjectStatusChangeException(project.getStatus(),
-              Project.ProjectStatus.MARKED_AS_DONE);
+      throw new IllegalProjectStatusChangeException(
+          project.getStatus(), Project.ProjectStatus.MARKED_AS_DONE);
     }
   }
 
-  public void undoTurnIn(int projectId, Project.ProjectStatus newStatus) throws InexistentProjectException, SQLException,
-          NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+  public void undoTurnIn(int projectId, Project.ProjectStatus newStatus)
+      throws InexistentProjectException, SQLException, NoSignedInUserException,
+          InexistentDatabaseEntityException, UnauthorisedOperationException,
+          IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.ProjectStatus.MARKED_AS_DONE) {
@@ -134,17 +155,18 @@ public class ProjectManager extends Manager {
         project.setStatus(newStatus);
         projectRepository.updateProject(project);
       } else {
-        throw new UnauthorisedOperationException(currentUser.getId(), "undo turn in", "they " +
-                "are not the assignee");
+        throw new UnauthorisedOperationException(
+            currentUser.getId(), "undo turn in", "they " + "are not the assignee");
       }
     } else {
-      throw new IllegalProjectStatusChangeException(project.getStatus(),
-              newStatus);
+      throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
     }
   }
 
-  public void acceptAsFinished(int projectId) throws InexistentProjectException, SQLException,
-          NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+  public void acceptAsFinished(int projectId)
+      throws InexistentProjectException, SQLException, NoSignedInUserException,
+          InexistentDatabaseEntityException, UnauthorisedOperationException,
+          IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.ProjectStatus.MARKED_AS_DONE) {
@@ -152,17 +174,19 @@ public class ProjectManager extends Manager {
         project.setStatus(Project.ProjectStatus.FINISHED);
         projectRepository.updateProject(project);
       } else {
-        throw new UnauthorisedOperationException(currentUser.getId(), "accept as finished", "they" +
-                " are not the supervisor");
+        throw new UnauthorisedOperationException(
+            currentUser.getId(), "accept as finished", "they" + " are not the supervisor");
       }
     } else {
-      throw new IllegalProjectStatusChangeException(project.getStatus(),
-              Project.ProjectStatus.FINISHED);
+      throw new IllegalProjectStatusChangeException(
+          project.getStatus(), Project.ProjectStatus.FINISHED);
     }
   }
 
-  public void discardTurnIn(int projectId, Project.ProjectStatus newStatus) throws InexistentProjectException, SQLException,
-          NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException, IllegalProjectStatusChangeException {
+  public void discardTurnIn(int projectId, Project.ProjectStatus newStatus)
+      throws InexistentProjectException, SQLException, NoSignedInUserException,
+          InexistentDatabaseEntityException, UnauthorisedOperationException,
+          IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.ProjectStatus.MARKED_AS_DONE) {
@@ -170,12 +194,11 @@ public class ProjectManager extends Manager {
         project.setStatus(newStatus);
         projectRepository.updateProject(project);
       } else {
-        throw new UnauthorisedOperationException(currentUser.getId(), "discard turn in", "they" +
-                " are not the supervisor");
+        throw new UnauthorisedOperationException(
+            currentUser.getId(), "discard turn in", "they" + " are not the supervisor");
       }
     } else {
-      throw new IllegalProjectStatusChangeException(project.getStatus(),
-              newStatus);
+      throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
     }
   }
 
@@ -215,43 +238,43 @@ public class ProjectManager extends Manager {
     return projectRepository.getProjectsOfTeam(teamId, queryStatus, assigneeId, supervisorId);
   }
 
-  private void guaranteeUserIsSupervisor(User user, Project project, String operation,
-                                         String reason) throws InexistentDatabaseEntityException,
-          UnauthorisedOperationException {
+  private void guaranteeUserIsSupervisor(
+      User user, Project project, String operation, String reason)
+      throws InexistentDatabaseEntityException, UnauthorisedOperationException {
     if (!userIsSupervisor(user, project)) {
       throw new UnauthorisedOperationException(user.getId(), operation, reason);
     }
   }
 
-  private void guaranteeUserIsAssignee(User user, Project project, String operation,
-                                       String reason) throws InexistentDatabaseEntityException,
-          UnauthorisedOperationException {
+  private void guaranteeUserIsAssignee(User user, Project project, String operation, String reason)
+      throws InexistentDatabaseEntityException, UnauthorisedOperationException {
     if (!userIsAssignee(user, project)) {
       throw new UnauthorisedOperationException(user.getId(), operation, reason);
     }
   }
 
-  private void guaranteeUserIsTeamMember(User user, int teamId, String message) throws
-
-          UnauthorisedOperationException, InexistentDatabaseEntityException, SQLException {
+  private void guaranteeUserIsTeamMember(User user, int teamId, String message)
+      throws UnauthorisedOperationException, InexistentDatabaseEntityException, SQLException {
     if (!teamRepository.isMemberOfTeam(teamId, user.getId())) {
       throw new IllegalArgumentException(message);
     }
   }
 
-  private void guaranteeUserIsSupervisorOrAssignee(User user, Project project, String operation,
-                                                   String reason) throws
-          UnauthorisedOperationException, InexistentDatabaseEntityException, SQLException {
+  private void guaranteeUserIsSupervisorOrAssignee(
+      User user, Project project, String operation, String reason)
+      throws UnauthorisedOperationException, InexistentDatabaseEntityException, SQLException {
     if (!userIsAssignee(user, project) && !userIsSupervisor(user, project)) {
       throw new UnauthorisedOperationException(user.getId(), operation, reason);
     }
   }
 
-  private boolean userIsSupervisor(User user, Project project) throws InexistentDatabaseEntityException {
+  private boolean userIsSupervisor(User user, Project project)
+      throws InexistentDatabaseEntityException {
     return project.getSupervisorId() == user.getId();
   }
 
-  private boolean userIsAssignee(User user, Project project) throws InexistentDatabaseEntityException {
+  private boolean userIsAssignee(User user, Project project)
+      throws InexistentDatabaseEntityException {
     return project.getAssigneeId() == user.getId();
   }
 }

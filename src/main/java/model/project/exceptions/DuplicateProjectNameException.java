@@ -19,8 +19,8 @@ public class DuplicateProjectNameException extends Exception {
 
   public DuplicateProjectNameException(String projectName) {
     super(
-            "Invalid project name: a project with name "
-                    + projectName
-                    + " already exists in this team");
+        "Invalid project name: a project with name "
+            + projectName
+            + " already exists in this team");
   }
 }

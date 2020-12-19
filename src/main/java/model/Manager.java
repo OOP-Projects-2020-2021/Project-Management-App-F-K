@@ -105,7 +105,8 @@ public abstract class Manager implements PropertyChangeObservable {
     return user;
   }
 
-  protected Project getMandatoryProject(int projectId) throws InexistentProjectException, SQLException {
+  protected Project getMandatoryProject(int projectId)
+      throws InexistentProjectException, SQLException {
     Optional<Project> projectOp = projectRepository.getProject(projectId);
     if (projectOp.isEmpty()) {
       throw new InexistentProjectException(projectId);
