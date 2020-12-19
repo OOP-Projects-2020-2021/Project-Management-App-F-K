@@ -9,7 +9,8 @@ import model.project.Project;
 public enum QueryProjectStatus {
     ALL(null) {
         @Override
-        public Project.ProjectStatus getCorrespondingStatus() {
+        public
+        Project.ProjectStatus getCorrespondingStatus() {
             throw new IllegalStateException("All QueryProjectStatus is not bound to a single " +
                     "status");
         }
