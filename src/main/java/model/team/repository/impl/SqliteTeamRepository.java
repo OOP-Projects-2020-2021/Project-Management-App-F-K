@@ -45,7 +45,7 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
 
   // Set a new code for a team.
   private static final String SET_NEW_TEAMCODE_STATEMENT =
-      "UPDATE team SET Code = ? WHERE " + "TeamId = ?";
+      "UPDATE Team SET Code = ? WHERE " + "TeamId = ?";
   private PreparedStatement setNewCodeSt;
 
   // Add a new member to a team.
@@ -65,11 +65,11 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
 
   // Set new manager for team.
   private static final String SET_MANAGER_STATEMENT =
-      "UPDATE team SET ManagerId = ? WHERE TeamId = ?";
+      "UPDATE Team SET ManagerId = ? WHERE TeamId = ?";
   private PreparedStatement setManagerSt;
 
   // Set new name for team.
-  private static final String SET_NAME_STATEMENT = "UPDATE team SET TeamName = ? WHERE TeamId = ?";
+  private static final String SET_NAME_STATEMENT = "UPDATE Team SET TeamName = ? WHERE TeamId = ?";
   private PreparedStatement setNameSt;
 
   // Check user's membership in team.

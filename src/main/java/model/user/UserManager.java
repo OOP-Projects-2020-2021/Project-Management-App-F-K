@@ -36,8 +36,14 @@ public class UserManager extends Manager {
    */
   public void signUp(String username, String password)
       throws SQLException, DuplicateUsernameException {
-    User user = new User.SavableUser(username, password);
-    userRepository.saveUser(user);
+    // check if the given username is already taken
+    User existingUser = userRepository.getUserByUsername(username);
+    if (existingUser != null) {
+      throw new DuplicateUsernameException(username);
+    } else {
+      User user = new User.SavableUser(username, password);
+      userRepository.saveUser(user);
+    }
   }
 
   /**

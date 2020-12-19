@@ -58,11 +58,17 @@ public class ErrorDialogFactory {
   private static final String DUPLICATE_USERNAME_ERROR_MESSAGE =
       "This username already exists, please choose another one!";
 
-  /** Messages to inform the user that the username introduced is already taken. */
+  /** Messages to inform the user that the user doesn not exist in the database. */
   private static final String INEXISTENT_USER_ERROR_TITLE = "Inexistent user!";
 
   private static final String INEXISTENT_USER_ERROR_MESSAGE =
           "No user was found with this username.\nCheck that you introduced the name correctly.";
+
+  /** Messages to inform the user that arguments passed were incorrect. */
+  private static final String ILLEGAL_ARGUMENT_ERROR_TITLE = "Illegal argument!";
+
+  private static final String ILLEGAL_ARGUMENT_ERROR_MESSAGE =
+          "Check that the arguments passed are correct.";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
@@ -89,6 +95,9 @@ public class ErrorDialogFactory {
     }
     if (exception instanceof ManagerRemovalException) {
       displayManagerRemovalErrorDialog(frame,message);
+    }
+    if (exception instanceof IllegalArgumentException) {
+      displayIllegalArgumentErrorDialog(frame, message);
     }
   }
 
@@ -162,6 +171,18 @@ public class ErrorDialogFactory {
             frame,
             INEXISTENT_USER_ERROR_MESSAGE + "\n" + message,
             INEXISTENT_USER_ERROR_TITLE,
+            JOptionPane.ERROR_MESSAGE);
+  }
+
+  /**
+   * Displays an error message when the manager tries to pass its position to a user which is not a member
+   * of the team.
+   */
+  private static void displayIllegalArgumentErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+            frame,
+            ILLEGAL_ARGUMENT_ERROR_MESSAGE + "\n" + message,
+            ILLEGAL_ARGUMENT_ERROR_TITLE,
             JOptionPane.ERROR_MESSAGE);
   }
 }

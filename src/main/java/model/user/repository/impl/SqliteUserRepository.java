@@ -45,12 +45,7 @@ public class SqliteUserRepository extends Repository implements UserRepository {
   }
 
   /** Saves the user in the database. */
-  public void saveUser(User user) throws SQLException, DuplicateUsernameException {
-    // check if the given username is already taken
-    User existingUser = getUserByUsername(user.getUsername());
-    if (existingUser != null) {
-      throw new DuplicateUsernameException(user.getUsername());
-    } else {
+  public void saveUser(User user) throws SQLException{
       saveUserStatement.setString(1, user.getUsername());
       saveUserStatement.setString(2, user.getPassword());
       saveUserStatement.execute();
@@ -60,7 +55,6 @@ public class SqliteUserRepository extends Repository implements UserRepository {
         throw new SQLException("User could not be saved.");
       }
     }
-  }
   /** Updates information about an existing user. */
   public void updateUser(User user) throws SQLException, InexistentDatabaseEntityException {
     updateUserStatement.setString(1, user.getUsername());

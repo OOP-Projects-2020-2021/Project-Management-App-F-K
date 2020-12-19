@@ -30,8 +30,11 @@ public class TeamManager extends Manager {
   public enum ChangablePropertyName {
     CURRENT_USER_TEAM_MEMBERSHIPS, // event is fired when the user becomes member of a team/looses
     // membership of a team
-    CHANGED_TEAM_DATA, // event is fired when the data of the team have been edited by the user
-    CHANGED_TEAM_MEMBERS // members have been added to/ removed from a team
+    CHANGED_TEAM_NAME, // event is fired when the data of the name of the team has been changed
+    CHANGED_TEAM_CODE, // when the code of the team has been changed
+    CHANGED_TEAM_MANAGER, // when the manager passed it position to another member
+    ADDED_TEAM_MEMBER, // a new member has been added to the team
+    REMOVED_TEAM_MEMBER // an existing member has been removed from the team
   }
 
   /**
@@ -112,7 +115,7 @@ public class TeamManager extends Manager {
     String newCode = generateTeamCode();
     teamRepository.setNewCode(teamId, newCode);
     support.firePropertyChange(
-        ChangablePropertyName.CHANGED_TEAM_DATA.toString(), OLD_VALUE, NEW_VALUE);
+        ChangablePropertyName.CHANGED_TEAM_CODE.toString(), OLD_VALUE, NEW_VALUE);
     return newCode;
   }
 
@@ -195,7 +198,7 @@ public class TeamManager extends Manager {
     }
     teamRepository.addTeamMember(team.getId(), newMember.getId());
     support.firePropertyChange(
-        ChangablePropertyName.CHANGED_TEAM_MEMBERS.toString(), OLD_VALUE, NEW_VALUE);
+        ChangablePropertyName.ADDED_TEAM_MEMBER.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -231,7 +234,7 @@ public class TeamManager extends Manager {
     }
     teamRepository.removeTeamMember(team.getId(), toRemoveMember.getId());
     support.firePropertyChange(
-        ChangablePropertyName.CHANGED_TEAM_MEMBERS.toString(), OLD_VALUE, NEW_VALUE);
+        ChangablePropertyName.REMOVED_TEAM_MEMBER.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -251,7 +254,8 @@ public class TeamManager extends Manager {
    */
   public void passManagerPosition(int teamId, String newManagerName)
       throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException {
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException,
+          IllegalArgumentException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "pass manager position of team to someone else");
@@ -265,7 +269,7 @@ public class TeamManager extends Manager {
     }
     teamRepository.setNewManagerPosition(teamId, newManager.getId());
     support.firePropertyChange(
-        ChangablePropertyName.CHANGED_TEAM_DATA.toString(), OLD_VALUE, NEW_VALUE);
+        ChangablePropertyName.CHANGED_TEAM_MANAGER.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -289,7 +293,7 @@ public class TeamManager extends Manager {
     guaranteeUserIsManager(team, currentUser, "change the name of the team");
     teamRepository.setNewName(teamId, newTeamName);
     support.firePropertyChange(
-        ChangablePropertyName.CHANGED_TEAM_DATA.toString(), OLD_VALUE, NEW_VALUE);
+        ChangablePropertyName.CHANGED_TEAM_NAME.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
