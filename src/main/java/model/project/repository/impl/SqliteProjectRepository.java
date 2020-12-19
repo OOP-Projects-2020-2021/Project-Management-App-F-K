@@ -52,7 +52,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + ".StatusId = st.StatusId WHERE Name = ? and TeamId = ? ";
   private PreparedStatement getProjectByTitleTeamSt;
 
-  // Get projects of team, possibly with a given assignee, supervisor and status.
+  // Get projects of team, possibly with a given assignee, supervisor, status and status with
+  // respect to deadline. The extra wildcards are responsible for making some attributes optional.
   private static final String GET_PROJECTS_OF_TEAM =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
           + "AssigneeId, SupervisorId, StatusName From Project p "
@@ -65,7 +66,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + "((p.Deadline >= date(\"now\") AND ?) OR (p.deadline < date(\"now\") AND ?))";
   private PreparedStatement getProjectsOfTeamSt;
 
-  // Get projects possibly with a given assignee, supervisor and status.
+  // Get projects possibly with a given assignee, supervisor, status and status with respect to
+  // deadline. The extra wildcards are responsible for making some attributes optional.
   private static final String GET_PROJECTS =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
           + "AssigneeId, SupervisorId, StatusName From Project p "
@@ -91,7 +93,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   }
 
   /**
-   * The statements are prepared only once, when the reposiroy is constructed, because this way sql
+   * The statements are prepared only once, when the repository is constructed, because this way sql
    * parsing and creating a query plan is created only once, so query execution is faster.
    */
   protected void prepareStatements() throws SQLException {
@@ -106,7 +108,6 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   @Override
   public int saveProject(Project.SavableProject project) throws SQLException, InexistentDatabaseEntityException {
-    saveProjectSt.clearParameters();
     saveProjectSt.setString(1, project.getTitle());
     saveProjectSt.setInt(2, project.getTeamId());
     if (project.getDescription().isPresent()) {
@@ -119,7 +120,6 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     saveProjectSt.setInt(6, project.getSupervisorId());
     saveProjectSt.setInt(7,
             getProjectStatusId(project.getStatus()));
-    System.out.println(getProjectStatusId(Project.ProjectStatus.IN_PROGRESS));
     saveProjectSt.execute();
     Optional<Project> savedProjectOp = getProject(project.getTeamId(), project.getTitle());
     if (savedProjectOp.isEmpty()) {
