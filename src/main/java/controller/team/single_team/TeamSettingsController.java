@@ -145,11 +145,10 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     try {
       teamManager.setNewName(currentTeamId, name);
     } catch (SQLException
-        | InexistentTeamException
-        | InexistentDatabaseEntityException databaseException) {
+        | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "An internal error occurred, the new name could not be saved.");
-    } catch (UnauthorisedOperationException | NoSignedInUserException unauthorizedAccessException) {
+    } catch (UnauthorisedOperationException | NoSignedInUserException  | InexistentDatabaseEntityException unauthorizedAccessException) {
       ErrorDialogFactory.createErrorDialog(
           unauthorizedAccessException,
           frame,
@@ -161,13 +160,12 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     try {
       teamManager.regenerateTeamCode(currentTeamId);
     } catch (SQLException
-        | InexistentDatabaseEntityException
         | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException,
           frame,
           "An internal error occurred, the new code could not be generated.");
-    } catch (UnauthorisedOperationException | NoSignedInUserException unauthorisedAccessException) {
+    } catch (UnauthorisedOperationException | NoSignedInUserException | InexistentDatabaseEntityException unauthorisedAccessException) {
       ErrorDialogFactory.createErrorDialog(
           unauthorisedAccessException,
           frame,
@@ -179,7 +177,6 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     try {
       teamManager.passManagerPosition(currentTeamId, newManagerName);
     } catch (InexistentTeamException
-        | InexistentDatabaseEntityException
         | SQLException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException,
@@ -198,7 +195,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
           illegalArgumentException,
           frame,
           "The user with username " + newManagerName + "doesn't exist.");
-    } catch (NoSignedInUserException | UnauthorisedOperationException unauthorisedAccessException) {
+    } catch (NoSignedInUserException | UnauthorisedOperationException | InexistentDatabaseEntityException unauthorisedAccessException) {
       ErrorDialogFactory.createErrorDialog(
           unauthorisedAccessException,
           frame,

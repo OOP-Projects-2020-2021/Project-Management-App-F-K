@@ -10,7 +10,7 @@ public class Main {
     // JFrame signInFrame = new SignInFrame();
     UserManager u = UserManager.getInstance();
     try {
-      u.signIn("bori", "p");
+      u.signIn("anna", "8888");
     } catch (SQLException e) {
       e.printStackTrace();
       ErrorDialogFactory.createErrorDialog(e, null, null);

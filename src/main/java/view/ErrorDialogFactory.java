@@ -37,18 +37,32 @@ public class ErrorDialogFactory {
 
   /**
    * Messages that inform the user that the operation is invalid because the requested user is
-   * already a member of the requested team*.
+   * already a member of the requested team.
    */
   private static final String ALREADY_MEMBER_ERROR_TITLE = "Already member";
 
   private static final String ALREADY_MEMBER_ERROR_MESSAGE =
       "This team membership has already been registered, you can't add it again";
 
+  /**
+   * Messages that inform the user that the operation is invalid because the manager can't be removed from the members' list.
+   */
+  private static final String MANAGER_REMOVAL_ERROR_TITLE = "Removing manager";
+
+  private static final String MANAGER_REMOVAL_ERROR_MESSAGE =
+          "The manager cannot be removed from the team.";
+
   /** Messages to inform the user that the username introduced is already taken. */
   private static final String DUPLICATE_USERNAME_ERROR_TITLE = "Duplicate username!";
 
   private static final String DUPLICATE_USERNAME_ERROR_MESSAGE =
       "This username already exists, please choose another one!";
+
+  /** Messages to inform the user that the username introduced is already taken. */
+  private static final String INEXISTENT_USER_ERROR_TITLE = "Inexistent user!";
+
+  private static final String INEXISTENT_USER_ERROR_MESSAGE =
+          "No user was found with this username.\nCheck that you introduced the name correctly.";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
@@ -69,6 +83,12 @@ public class ErrorDialogFactory {
     }
     if (exception instanceof DuplicateUsernameException) {
       displayDuplicateUsernameErrorDialog(frame, message);
+    }
+    if (exception instanceof InexistentUserException) {
+      displayInexistentUserErrorDialog(frame,message);
+    }
+    if (exception instanceof ManagerRemovalException) {
+      displayManagerRemovalErrorDialog(frame,message);
     }
   }
 
@@ -115,6 +135,16 @@ public class ErrorDialogFactory {
   }
 
   /**
+   * Displays an error message when user attempts to remove the manager from the team.
+   */
+  private static void displayManagerRemovalErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+            frame,
+            MANAGER_REMOVAL_ERROR_MESSAGE + "\n" + message,
+            MANAGER_REMOVAL_ERROR_TITLE,
+            JOptionPane.ERROR_MESSAGE);
+  }
+  /**
    * Displays an error message when the user attempts to sign-up with an already existing username.
    */
   private static void displayDuplicateUsernameErrorDialog(Frame frame, String message) {
@@ -123,5 +153,15 @@ public class ErrorDialogFactory {
         DUPLICATE_USERNAME_ERROR_MESSAGE + "\n" + message,
         DUPLICATE_USERNAME_ERROR_TITLE,
         JOptionPane.ERROR_MESSAGE);
+  }
+  /**
+   * Displays an error message when the manager tries to add an inexistent user to the team.
+   */
+  private static void displayInexistentUserErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+            frame,
+            INEXISTENT_USER_ERROR_MESSAGE + "\n" + message,
+            INEXISTENT_USER_ERROR_TITLE,
+            JOptionPane.ERROR_MESSAGE);
   }
 }

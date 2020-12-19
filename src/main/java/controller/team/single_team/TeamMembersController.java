@@ -64,14 +64,12 @@ public class TeamMembersController extends TeamController implements PropertyCha
   public void addMember(String name) {
     try {
       teamManager.addMemberToTeam(currentTeamId, name);
-    } catch (SQLException sqlException) {
-      sqlException.printStackTrace();
-    } catch (InexistentTeamException | InexistentDatabaseEntityException databaseException) {
+    } catch (SQLException | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException,
           frame,
           "An internal error occurred, the member " + name + " could not be added to the team.");
-    } catch (UnauthorisedOperationException
+    } catch (UnauthorisedOperationException | InexistentDatabaseEntityException
         | NoSignedInUserException operationNotAllowedException) {
       ErrorDialogFactory.createErrorDialog(
           operationNotAllowedException,
@@ -83,9 +81,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
           frame,
           "The user "
               + name
-              + " doesn't exist.\n Check that you have introduced the name correctly.");
-      //  JOptionPane.showMessageDialog(frame,"The user " + name + " does not exist.","Rejected
-      // operation",JOptionPane.ERROR_MESSAGE);
+              + " doesn't exist.");
     } catch (AlreadyMemberException alreadyMemberException) {
       ErrorDialogFactory.createErrorDialog(
           alreadyMemberException, frame, "The user " + name + " is already a member of this team.");
@@ -118,17 +114,13 @@ public class TeamMembersController extends TeamController implements PropertyCha
             frame,
             "The user " + name + " is not a member of this team.");
       } catch (InexistentUserException inexistentUserException) {
-        // JOptionPane.showMessageDialog(frame, "The user " + name + " could not be removed, " +
-        //      "because it doesn't exist.","title",JOptionPane.ERROR_MESSAGE);
         ErrorDialogFactory.createErrorDialog(
             inexistentUserException,
             frame,
             "The user \" + name + \" could not be removed, because it doesn't exist.");
       } catch (ManagerRemovalException managerRemovalException) {
-        // JOptionPane.showMessageDialog(frame,"The manager cannot be removed from the
-        // team.","Rejected operation",JOptionPane.ERROR_MESSAGE);
         ErrorDialogFactory.createErrorDialog(
-            managerRemovalException, frame, "The manager cannot be removed from the team.");
+            managerRemovalException, frame, "The user " + name + " is the current manager of the team.");
       }
     }
   }
