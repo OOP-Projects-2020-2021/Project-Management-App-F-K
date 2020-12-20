@@ -46,6 +46,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
       membersPanel.updateMembersList();
     } else if (evt.getPropertyName()
         .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
+      setManagerAccess();
       membersPanel.enableComponents(managerAccess);
     }
   }

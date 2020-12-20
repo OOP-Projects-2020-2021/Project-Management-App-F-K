@@ -19,7 +19,7 @@ import java.sql.SQLException;
  *
  * @author Beata Keresztes
  */
-public class TeamController extends FrameController implements PropertyChangeListener {
+public class TeamController extends FrameController {
 
   protected TeamManager teamManager;
   protected UserManager userManager;
@@ -32,7 +32,6 @@ public class TeamController extends FrameController implements PropertyChangeLis
     teamManager = TeamManager.getInstance();
     userManager = UserManager.getInstance();
     TeamController.currentTeamId = currentTeamId;
-    teamManager.addPropertyChangeListener(this);
     setManagerAccess();
   }
 
@@ -61,14 +60,6 @@ public class TeamController extends FrameController implements PropertyChangeLis
 
   public boolean getManagerAccess() {
     return managerAccess;
-  }
-
-  @Override
-  public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
-      setManagerAccess();
-    }
   }
 
   public void onClose(JFrame parentFrame) {

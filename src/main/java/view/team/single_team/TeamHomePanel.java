@@ -144,14 +144,18 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     regenerateCodeButton.addActionListener(this);
   }
 
+  public void showSavedLabel(boolean enable) {
+    savedLabel.setVisible(enable);
+  }
+
   public void updateNameFieldAfterSave() {
     teamNameTextField.setEditable(false);
-    savedLabel.setVisible(true);
+    showSavedLabel(true);
   }
 
   public void updateManagerFieldAfterSave() {
     teamManagerTextField.setEditable(false);
-    savedLabel.setVisible(true);
+    showSavedLabel(true);
   }
 
   @Override

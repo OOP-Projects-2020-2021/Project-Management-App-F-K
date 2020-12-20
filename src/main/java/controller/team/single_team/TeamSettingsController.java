@@ -59,12 +59,15 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString())
-        || evt.getPropertyName()
-            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString())
-        || evt.getPropertyName()
+    if (evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString()) ||
+            evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString())) {
+      updateCurrentTeam();
+      updateHomePanel();
+    } else if(evt.getPropertyName()
             .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
       updateCurrentTeam();
+      setManagerAccess();
       updateHomePanel();
     }
   }
@@ -150,7 +153,9 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   public void regenerateTeamCode() {
     try {
-      if (teamManager.regenerateTeamCode(currentTeamId) != null) {}
+      if (teamManager.regenerateTeamCode(currentTeamId) != null) {
+        homePanel.showSavedLabel(true);
+      }
     } catch (SQLException | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new code could not be generated.");
@@ -168,6 +173,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     try {
       teamManager.passManagerPosition(currentTeamId, newManagerName);
       homePanel.updateManagerFieldAfterSave();
+      homePanel.updateNameFieldAfterSave(); // user cannot edit the name of the team anymore
     } catch (InexistentTeamException | SQLException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new manager could not be saved.");
