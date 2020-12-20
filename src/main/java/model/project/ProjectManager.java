@@ -131,12 +131,20 @@ public class ProjectManager extends Manager {
     projectRepository.updateProject(project);
   }
 
+  /**
+   * Sets a project's status from TO_DO to IN_PROGRESS.
+   *
+   * @param projectId is the id of the project to update.
+   * @throws InexistentProjectException if the Project with projectId does not exist.
+   * @throws SQLException if the operation could not be performed in the database.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws IllegalProjectStatusChangeException if the current status of the project is not TO_DO.
+   */
   public void setProjectInProgress(int projectId)
-      throws InexistentProjectException, SQLException, NoSignedInUserException,
-          InexistentDatabaseEntityException, UnauthorisedOperationException,
+      throws InexistentProjectException, SQLException,
+          InexistentDatabaseEntityException,
           IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
-    User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.ProjectStatus.TO_DO) {
       project.setStatus(Project.ProjectStatus.IN_PROGRESS);
       projectRepository.updateProject(project);
@@ -146,6 +154,18 @@ public class ProjectManager extends Manager {
     }
   }
 
+  /**
+   * Sets a project's status from IN_PROGRESS to TO_DO, but only if the current user is the asignee.
+   *
+   * @param projectId is the id of the project to update.
+   * @throws NoSignedInUserException if there is noone signed in.
+   * @throws UnauthorisedOperationException if the current user is not the assignee.
+   * @throws InexistentProjectException if the Project with projectId does not exist.
+   * @throws SQLException if the operation could not be performed in the database.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws IllegalProjectStatusChangeException if the current status of the project is not
+   * IN_PROGRESS.
+   */
   public void setProjectAsToDo(int projectId)
       throws InexistentProjectException, SQLException, NoSignedInUserException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
@@ -159,7 +179,7 @@ public class ProjectManager extends Manager {
       } else {
         throw new UnauthorisedOperationException(
             currentUser.getId(),
-            "set back the project " + "status to to do",
+            "set back the project status to to do",
             "they are not the assignee");
       }
     } else {
@@ -168,13 +188,26 @@ public class ProjectManager extends Manager {
     }
   }
 
+  /**
+   * Sets the projects status tu turned-in provided that the current user is the assignee and the
+   * status of the project is not already turned-in or finished.
+   *
+   * @param projectId is the id of the project to turn in.
+   * @throws InexistentProjectException if the project with projectId does not exist.
+   * @throws SQLException if the operation could not be performed in the database.
+   * @throws NoSignedInUserException if there is noone signed in.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws UnauthorisedOperationException if the current user is not the assignee.
+   * @throws IllegalProjectStatusChangeException if the project's current status is turned-in or
+   * finished.
+   */
   public void turnInProject(int projectId)
       throws InexistentProjectException, SQLException, NoSignedInUserException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
           IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     User currentUser = getMandatoryCurrentUser();
-    if (project.getStatus() != Project.ProjectStatus.FINISHED) {
+    if (project.getStatus() != Project.ProjectStatus.FINISHED && project.getStatus() != Project.ProjectStatus.TURNED_IN) {
       if (userIsAssignee(currentUser, project)) {
         project.setStatus(Project.ProjectStatus.TURNED_IN);
         projectRepository.updateProject(project);
@@ -188,6 +221,20 @@ public class ProjectManager extends Manager {
     }
   }
 
+  /**
+   * Removes the turn-in and sets the project's status to newStatus, which can be either TO_DO or
+   * IN_PROGRESS, provided that the current user is the assignee.
+   *
+   * @param projectId if the id of the project whose status is changed.
+   * @param newStatus is the new status of the project.
+   * @throws InexistentProjectException if the project with projectId does not exist.
+   * @throws SQLException if the operation could not be performed in the database.
+   * @throws NoSignedInUserException if there is noone signed in.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws UnauthorisedOperationException if the current user is not the assignee.
+   * @throws IllegalProjectStatusChangeException if the current status of the project is not
+   * TURNED_IN or the newStatus is not TO_DO or IN_PROGRESS.
+   */
   public void undoTurnIn(int projectId, Project.ProjectStatus newStatus)
       throws InexistentProjectException, SQLException, NoSignedInUserException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
@@ -196,8 +243,12 @@ public class ProjectManager extends Manager {
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
       if (userIsAssignee(currentUser, project)) {
-        project.setStatus(newStatus);
-        projectRepository.updateProject(project);
+        if (newStatus == Project.ProjectStatus.TO_DO || newStatus == Project.ProjectStatus.IN_PROGRESS) {
+          project.setStatus(newStatus);
+          projectRepository.updateProject(project);
+        } else {
+          throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
+        }
       } else {
         throw new UnauthorisedOperationException(
             currentUser.getId(), "undo turn in", "they " + "are not the assignee");
@@ -207,6 +258,18 @@ public class ProjectManager extends Manager {
     }
   }
 
+  /**
+   * Sets a previously turned in project's status to finished, but only if the current user is
+   * the supervisor.
+   *
+   * @param projectId is the id of the finished project.
+   * @throws InexistentProjectException if the project with projectId does not exist.
+   * @throws SQLException if the operation could not be performed in the database.
+   * @throws NoSignedInUserException if there is noone signed in.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws UnauthorisedOperationException if the current user is not the supervisor.
+   * @throws IllegalProjectStatusChangeException if the project with projectId is not yet turned in.
+   */
   public void acceptAsFinished(int projectId)
       throws InexistentProjectException, SQLException, NoSignedInUserException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
