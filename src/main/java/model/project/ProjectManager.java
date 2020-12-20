@@ -35,9 +35,9 @@ public class ProjectManager extends Manager {
   }
 
   /**
-   * Creates a new project with the specified data and saves it in the database. The supervisor
-   * of the project will be automatically the current user. There should not be another project
-   * with the same title/name in the team.
+   * Creates a new project with the specified data and saves it in the database. The supervisor of
+   * the project will be automatically the current user. There should not be another project with
+   * the same title/name in the team.
    *
    * @param projectName is the name of the project to be saved.
    * @param teamId is the id of the team to which the new project belongs.
@@ -48,13 +48,15 @@ public class ProjectManager extends Manager {
    * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentUserException if the user with assigneeName does not exist.
    * @throws InexistentTeamException if the team with teamId does not exist.
-   * @throws DuplicateProjectNameException if there is already a project with the same name in
-   * the same team. This is not allowed.
+   * @throws DuplicateProjectNameException if there is already a project with the same name in the
+   *     same team. This is not allowed.
    * @throws InexistentDatabaseEntityException should never occur.
    */
   public void createProject(
       String projectName, int teamId, String assigneeName, LocalDate deadline, String description)
-          throws NoSignedInUserException, SQLException, InexistentUserException, InexistentTeamException, DuplicateProjectNameException, InexistentDatabaseEntityException {
+      throws NoSignedInUserException, SQLException, InexistentUserException,
+          InexistentTeamException, DuplicateProjectNameException,
+          InexistentDatabaseEntityException {
     User currentUser = getMandatoryCurrentUser();
     User assignee = getMandatoryUser(assigneeName);
     Team team = getMandatoryTeam(teamId);
@@ -72,14 +74,14 @@ public class ProjectManager extends Manager {
 
   /**
    * Updates the data of the project with id projectId with the specified data, provided that all
-   * the teams and users mentions exist, and the current user is the supervisor of the project.
-   * For others, these settings are not accessible.
+   * the teams and users mentions exist, and the current user is the supervisor of the project. For
+   * others, these settings are not accessible.
    *
    * @param projectId is the id of the project to be updated.
    * @param newProjectTitle is the title to set.
    * @param newAssigneeName is the name of the new assignee.
    * @param newSupervisorName is the nam of the new supervisor.
-   * @param newDeadline  is the new deadline of the project.
+   * @param newDeadline is the new deadline of the project.
    * @param newDescription is the new description of the project.
    * @throws NoSignedInUserException is there is noone signed in.
    * @throws SQLException if the operation could not be performed in the database.
@@ -88,10 +90,10 @@ public class ProjectManager extends Manager {
    * @throws InexistentDatabaseEntityException should never occur.
    * @throws UnauthorisedOperationException if the current user is not the manager of the team.
    * @throws InexistentUserException if the user with assigneeName does not exist.
-   * @throws DuplicateProjectNameException if there is already another project in the team with
-   * the desired name.
-   * @throws UnregisteredMemberRoleException if the assignee or the supervisor to be set is not
-   * the member of the team.
+   * @throws DuplicateProjectNameException if there is already another project in the team with the
+   *     desired name.
+   * @throws UnregisteredMemberRoleException if the assignee or the supervisor to be set is not the
+   *     member of the team.
    */
   public void updateProject(
       int projectId,
@@ -100,7 +102,7 @@ public class ProjectManager extends Manager {
       String newSupervisorName,
       LocalDate newDeadline,
       String newDescription)
-          throws NoSignedInUserException, SQLException, InexistentProjectException,
+      throws NoSignedInUserException, SQLException, InexistentProjectException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
           InexistentUserException, DuplicateProjectNameException, UnregisteredMemberRoleException {
     User currentUser = getMandatoryCurrentUser();
@@ -108,15 +110,9 @@ public class ProjectManager extends Manager {
     guaranteeUserIsSupervisor(
         currentUser, project, "change data of project", "they are not the " + "supervisor");
     User assignee = getMandatoryUser(newAssigneeName);
-    guaranteeUserIsTeamMember(
-        assignee,
-        project.getTeamId(),
-        "be assignee");
+    guaranteeUserIsTeamMember(assignee, project.getTeamId(), "be assignee");
     User supervisor = getMandatoryUser(newSupervisorName);
-    guaranteeUserIsTeamMember(
-        supervisor,
-        project.getTeamId(),
-        "be supervisor");
+    guaranteeUserIsTeamMember(supervisor, project.getTeamId(), "be supervisor");
     // check that there is no other project with the new name
     if (!newProjectTitle.equals(project.getTitle())
         && projectRepository.getProject(project.getTeamId(), newProjectTitle).isPresent()) {
@@ -141,8 +137,7 @@ public class ProjectManager extends Manager {
    * @throws IllegalProjectStatusChangeException if the current status of the project is not TO_DO.
    */
   public void setProjectInProgress(int projectId)
-      throws InexistentProjectException, SQLException,
-          InexistentDatabaseEntityException,
+      throws InexistentProjectException, SQLException, InexistentDatabaseEntityException,
           IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     if (project.getStatus() == Project.ProjectStatus.TO_DO) {
@@ -164,7 +159,7 @@ public class ProjectManager extends Manager {
    * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentDatabaseEntityException should never occur.
    * @throws IllegalProjectStatusChangeException if the current status of the project is not
-   * IN_PROGRESS.
+   *     IN_PROGRESS.
    */
   public void setProjectAsToDo(int projectId)
       throws InexistentProjectException, SQLException, NoSignedInUserException,
@@ -199,7 +194,7 @@ public class ProjectManager extends Manager {
    * @throws InexistentDatabaseEntityException should never occur.
    * @throws UnauthorisedOperationException if the current user is not the assignee.
    * @throws IllegalProjectStatusChangeException if the project's current status is turned-in or
-   * finished.
+   *     finished.
    */
   public void turnInProject(int projectId)
       throws InexistentProjectException, SQLException, NoSignedInUserException,
@@ -207,7 +202,8 @@ public class ProjectManager extends Manager {
           IllegalProjectStatusChangeException {
     Project project = getMandatoryProject(projectId);
     User currentUser = getMandatoryCurrentUser();
-    if (project.getStatus() != Project.ProjectStatus.FINISHED && project.getStatus() != Project.ProjectStatus.TURNED_IN) {
+    if (project.getStatus() != Project.ProjectStatus.FINISHED
+        && project.getStatus() != Project.ProjectStatus.TURNED_IN) {
       if (userIsAssignee(currentUser, project)) {
         project.setStatus(Project.ProjectStatus.TURNED_IN);
         projectRepository.updateProject(project);
@@ -233,7 +229,7 @@ public class ProjectManager extends Manager {
    * @throws InexistentDatabaseEntityException should never occur.
    * @throws UnauthorisedOperationException if the current user is not the assignee.
    * @throws IllegalProjectStatusChangeException if the current status of the project is not
-   * TURNED_IN or the newStatus is not TO_DO or IN_PROGRESS.
+   *     TURNED_IN or the newStatus is not TO_DO or IN_PROGRESS.
    */
   public void undoTurnIn(int projectId, Project.ProjectStatus newStatus)
       throws InexistentProjectException, SQLException, NoSignedInUserException,
@@ -243,7 +239,8 @@ public class ProjectManager extends Manager {
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
       if (userIsAssignee(currentUser, project)) {
-        if (newStatus == Project.ProjectStatus.TO_DO || newStatus == Project.ProjectStatus.IN_PROGRESS) {
+        if (newStatus == Project.ProjectStatus.TO_DO
+            || newStatus == Project.ProjectStatus.IN_PROGRESS) {
           project.setStatus(newStatus);
           projectRepository.updateProject(project);
         } else {
@@ -259,8 +256,8 @@ public class ProjectManager extends Manager {
   }
 
   /**
-   * Sets a previously turned in project's status to finished, but only if the current user is
-   * the supervisor.
+   * Sets a previously turned in project's status to finished, but only if the current user is the
+   * supervisor.
    *
    * @param projectId is the id of the finished project.
    * @throws InexistentProjectException if the project with projectId does not exist.
@@ -291,8 +288,8 @@ public class ProjectManager extends Manager {
   }
 
   /**
-   * Changes the status of the project with projectId to newStatus, but unly if the current user
-   * is the supervisor.
+   * Changes the status of the project with projectId to newStatus, but unly if the current user is
+   * the supervisor.
    *
    * @param projectId is the id of the project to update.
    * @param newStatus is the new status of the project. Cannot be finished.
@@ -302,7 +299,7 @@ public class ProjectManager extends Manager {
    * @throws InexistentDatabaseEntityException should never occur.
    * @throws UnauthorisedOperationException if the current user is not the supervisor.
    * @throws IllegalProjectStatusChangeException if the current state is not TURNED_IN, or the
-   * newState is FINISHED or TURNED_IN.
+   *     newState is FINISHED or TURNED_IN.
    */
   public void discardTurnIn(int projectId, Project.ProjectStatus newStatus)
       throws InexistentProjectException, SQLException, NoSignedInUserException,
@@ -312,7 +309,8 @@ public class ProjectManager extends Manager {
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
       if (userIsSupervisor(currentUser, project)) {
-        if (newStatus != Project.ProjectStatus.FINISHED && newStatus != Project.ProjectStatus.TURNED_IN) {
+        if (newStatus != Project.ProjectStatus.FINISHED
+            && newStatus != Project.ProjectStatus.TURNED_IN) {
           project.setStatus(newStatus);
           projectRepository.updateProject(project);
         } else {
@@ -337,9 +335,9 @@ public class ProjectManager extends Manager {
    * @param queryStatus is an optional parameter. If it is ALL, it doesn't count. Othwerise, only
    *     those projects are returned, which have the status corresponding to queryStatus.
    * @param assignedToCurrentUser shows whether the returned projects should be assigned to the
-   *                              current user (true) or assigned to anyone (false).
+   *     current user (true) or assigned to anyone (false).
    * @param supervisedByCurrentUser shows whether the returned projects should be supervised by the
-   *                                current user (true) or supervised by anyone (false).
+   *     current user (true) or supervised by anyone (false).
    * @param queryDeadlineStatus is an optional parameter. If it is null, it doesn't count.
    *     Othwerise, only those projects are returned, which have the status with respect to the
    *     deadline corresponding to ueryDeadlineStatus.
@@ -380,16 +378,15 @@ public class ProjectManager extends Manager {
    * @param assigneeName is an optional parameter. If it is null, it doesn't count. Othwerise, only
    *     those projects are returned, which are assigned to the user with name assigneeName.
    * @param supervisorName is an optional parameter. If it is null, it doesn't count. Othwerise,
-   *                       only those projects are returned, which are supervised by the user
-   *                       with id supervisorName.
+   *     only those projects are returned, which are supervised by the user with id supervisorName.
    * @param queryDeadlineStatus is an optional parameter. If it is null, it doesn't count.
    *     Othwerise, only those projects are returned, which have the status with respect to the
    *     deadline corresponding to ueryDeadlineStatus.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    * @throws InexistentDatabaseEntityException should never occur.
-   * @throws InexistentUserException if the user with assigneeName or supervisorName does not
-   * exist in the database.
+   * @throws InexistentUserException if the user with assigneeName or supervisorName does not exist
+   *     in the database.
    */
   public List<Project> getProjectsOfTeam(
       int teamId,
@@ -397,7 +394,7 @@ public class ProjectManager extends Manager {
       String assigneeName,
       QueryProjectStatus queryStatus,
       QueryProjectDeadlineStatus queryDeadlineStatus)
-      throws InexistentDatabaseEntityException, SQLException, InexistentUserException{
+      throws InexistentDatabaseEntityException, SQLException, InexistentUserException {
     Integer assigneeId = null;
     if (assigneeName != null) {
       User assignee = getMandatoryUser(assigneeName);
@@ -428,7 +425,7 @@ public class ProjectManager extends Manager {
   }
 
   private void guaranteeUserIsTeamMember(User user, int teamId, String operation)
-          throws InexistentDatabaseEntityException, SQLException, UnregisteredMemberRoleException {
+      throws InexistentDatabaseEntityException, SQLException, UnregisteredMemberRoleException {
     if (!teamRepository.isMemberOfTeam(teamId, user.getId())) {
       throw new UnregisteredMemberRoleException(user.getUsername(), teamId, operation);
     }

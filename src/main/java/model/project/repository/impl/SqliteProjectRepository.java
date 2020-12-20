@@ -63,8 +63,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + "(p.SupervisorId = ? OR ?) AND "
           + "(p.AssigneeId = ? OR ?) AND "
           + "(st.StatusName = ? OR ?) AND "
-          + "(((p.Deadline >= date(\"now\") OR p.StatusId >= 3) AND ?) OR (p.deadline < date" +
-          "(\"now\") AND p.statusId <= 2 AND ?))";
+          + "(((p.Deadline >= date(\"now\") OR p.StatusId >= 3) AND ?) OR (p.deadline < date"
+          + "(\"now\") AND p.statusId <= 2 AND ?))";
   private PreparedStatement getProjectsOfTeamSt;
 
   // Get projects possibly with a given assignee, supervisor, status and status with respect to
@@ -76,8 +76,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + "WHERE (p.SupervisorId = ? OR ?) AND "
           + "(p.AssigneeId = ? OR ?) AND"
           + "(st.StatusName = ? OR ?) AND "
-          + "(((p.Deadline >= date(\"now\") OR p.StatusId >= 3) AND ?) OR (p.deadline < date" +
-              "(\"now\") AND p.statusId <= 2 AND ?))";
+          + "(((p.Deadline >= date(\"now\") OR p.StatusId >= 3) AND ?) OR (p.deadline < date"
+          + "(\"now\") AND p.statusId <= 2 AND ?))";
   private PreparedStatement getProjectsSt;
 
   // Get status id

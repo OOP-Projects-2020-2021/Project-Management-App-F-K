@@ -241,8 +241,9 @@ public class TeamManager extends Manager {
    * @throws InexistentUserException if the requested new member with userName does not exist.
    */
   public void passManagerPosition(int teamId, String newManagerName)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException, UnregisteredMemberRoleException {
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException, InexistentUserException, InexistentDatabaseEntityException,
+          UnregisteredMemberRoleException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "pass manager position of team to someone else");
