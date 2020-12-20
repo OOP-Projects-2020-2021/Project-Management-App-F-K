@@ -53,7 +53,7 @@ public interface TeamRepository {
    * @return the team with the given code, or null if it doesn't exist.
    * @throws SQLException if the operation could not be performed in the database.
    */
-  Optional<Team> getTeam(int teamId) throws SQLException, InexistentTeamException;
+  Optional<Team> getTeam(int teamId) throws SQLException;
 
   /**
    * Searches for and returns all the teams in which the user is a member.
@@ -123,7 +123,7 @@ public interface TeamRepository {
   void setNewName(int teamId, String newTeamName) throws SQLException;
 
   /**
-   * Returns the members of the given team. Used for displaying the team-members.
+   * Returns the members of the given team.
    *
    * @param teamId specifies the team
    * @return a list of members

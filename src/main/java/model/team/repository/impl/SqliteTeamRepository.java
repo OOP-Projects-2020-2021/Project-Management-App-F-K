@@ -124,7 +124,7 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
     if (savedTeam.isPresent()) {
       return savedTeam.get().getId();
     } else {
-      throw new SQLException("Saving team was unsuccesful");
+      throw new SQLException("Saving team was unsuccessful");
     }
   }
 
