@@ -8,8 +8,6 @@ import model.user.UserManager;
 import view.ErrorDialogFactory;
 
 import javax.swing.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 
 /**

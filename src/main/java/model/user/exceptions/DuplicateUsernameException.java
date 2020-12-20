@@ -1,8 +1,8 @@
 package model.user.exceptions;
 
 /**
- * DuplicateUsernameException is thrown when a user attempts to sign-in with an already existing username
- * in the database.
+ * DuplicateUsernameException is thrown when a user attempts to sign-in with an already existing
+ * username in the database.
  *
  * @author Beata Keresztes
  */

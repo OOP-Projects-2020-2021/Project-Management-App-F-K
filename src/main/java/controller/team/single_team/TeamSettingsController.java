@@ -59,13 +59,13 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString()) ||
-            evt.getPropertyName()
+    if (evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString())
+        || evt.getPropertyName()
             .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString())) {
       updateCurrentTeam();
       updateHomePanel();
-    } else if(evt.getPropertyName()
-            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
+    } else if (evt.getPropertyName()
+        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
       updateCurrentTeam();
       setManagerAccess();
       updateHomePanel();

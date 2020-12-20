@@ -2,7 +2,6 @@ package model.team.repository;
 
 import model.InexistentDatabaseEntityException;
 import model.team.Team;
-import model.team.exceptions.InexistentTeamException;
 import model.user.User;
 
 import java.sql.SQLException;
