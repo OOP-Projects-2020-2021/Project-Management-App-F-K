@@ -108,7 +108,10 @@ public abstract class Manager implements PropertyChangeObservable {
     return user;
   }
 
-  // todo add javadoc
+  /**
+   * @return the project with the given id from the database.
+   * @throws InexistentProjectException if there is no project with this name.
+   */
   protected Project getMandatoryProject(int projectId)
       throws InexistentProjectException, SQLException {
     Optional<Project> projectOp = projectRepository.getProject(projectId);
