@@ -32,13 +32,13 @@ public class TeamProjectsPanel extends JPanel {
   private JTable projectsTable;
   private TeamProjectsController controller;
   private static final String[] columnNames = {"Name", "Deadline", "Status"};
-  private static final String[] projectType = {"ALL","ASSIGNED TO ME","SUPERVISED BY ME"};
+  private static final String[] projectType = {"ALL", "ASSIGNED TO ME", "SUPERVISED BY ME"};
 
   public TeamProjectsPanel(JFrame frame, Dimension frameDimension, int currentTeamId) {
-    controller = new TeamProjectsController(this,frame,currentTeamId);
+    controller = new TeamProjectsController(this, frame, currentTeamId);
     this.setPreferredSize(frameDimension);
     this.setLayout(new BorderLayout());
-    this.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
+    this.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     initProjectsPane();
   }
 
@@ -52,9 +52,10 @@ public class TeamProjectsPanel extends JPanel {
     initTypeFilter();
     initDeadlineFilter();
   }
+
   private void initStatusFilter() {
     // todo get values from table Status + "ALL"
-    String[] projectStatus = {"ALL","TO DO", "IN PROGRESS", "TURNED_IN", "FINISHED"};
+    String[] projectStatus = {"ALL", "TO DO", "IN PROGRESS", "TURNED_IN", "FINISHED"};
 
     statusFilterButtonsPanel = new JPanel();
     statusFilterButtonsPanel.setLayout(new BoxLayout(statusFilterButtonsPanel, BoxLayout.Y_AXIS));
@@ -62,7 +63,7 @@ public class TeamProjectsPanel extends JPanel {
     ButtonGroup statusFilterButtonGroup = new ButtonGroup();
     JRadioButton[] statusFilterButtons = new JRadioButton[projectStatus.length];
 
-    for(int i=0;i<projectStatus.length;i++) {
+    for (int i = 0; i < projectStatus.length; i++) {
       statusFilterButtons[i] = new JRadioButton(projectStatus[i]);
       statusFilterButtons[i].setActionCommand(projectStatus[i]);
       statusFilterButtons[i].addActionListener(new StatusFilterActionListener());
@@ -80,7 +81,7 @@ public class TeamProjectsPanel extends JPanel {
     ButtonGroup typeFilterButtonGroup = new ButtonGroup();
     JRadioButton[] typeFilterButtons = new JRadioButton[projectType.length];
 
-    for(int i=0;i<projectType.length;i++){
+    for (int i = 0; i < projectType.length; i++) {
       typeFilterButtons[i] = new JRadioButton(projectType[i]);
       typeFilterButtons[i].setActionCommand(projectType[i]);
       typeFilterButtons[i].addActionListener(new TypeFilterActionListener());
@@ -90,17 +91,21 @@ public class TeamProjectsPanel extends JPanel {
     // initially all projects are shown
     typeFilterButtons[0].setSelected(true);
   }
+
   private void initDeadlineFilter() {
     // todo get this from the projectManager
-    String[] deadline = {"ALL","IN_TIME_TO_TURN_IN","TURNED_IN_ON_TIME","OVERDUE","TURNED_IN_LATE"};
+    String[] deadline = {
+      "ALL", "IN_TIME_TO_TURN_IN", "TURNED_IN_ON_TIME", "OVERDUE", "TURNED_IN_LATE"
+    };
 
     deadlineFilterButtonsPanel = new JPanel();
-    deadlineFilterButtonsPanel.setLayout(new BoxLayout(deadlineFilterButtonsPanel, BoxLayout.Y_AXIS));
+    deadlineFilterButtonsPanel.setLayout(
+        new BoxLayout(deadlineFilterButtonsPanel, BoxLayout.Y_AXIS));
     // grouping the buttons ensures that only one button can be selected at a time
     ButtonGroup deadlineFilterButtonGroup = new ButtonGroup();
     JRadioButton[] deadlineFilterButtons = new JRadioButton[deadline.length];
 
-    for(int i=0;i<deadline.length;i++){
+    for (int i = 0; i < deadline.length; i++) {
       deadlineFilterButtons[i] = new JRadioButton(deadline[i]);
       deadlineFilterButtons[i].setActionCommand(deadline[i]);
       deadlineFilterButtons[i].addActionListener(new DeadlineFilterActionListener());
@@ -128,61 +133,77 @@ public class TeamProjectsPanel extends JPanel {
     headerLayout.setHorizontalGroup(
         headerLayout
             .createSequentialGroup()
-                .addGroup(headerLayout
-                        .createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(filterLabel)
-                        .addComponent(statusFilterLabel)
-                        .addComponent(statusFilterButtonsPanel))
-                .addGroup(headerLayout
-                        .createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(deadlineFilterLabel)
-                        .addComponent(deadlineFilterButtonsPanel))
-                .addGroup(headerLayout
-                        .createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(typeFilterLabel)
-                        .addComponent(typeFilterButtonsPanel)));
+            .addGroup(
+                headerLayout
+                    .createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(filterLabel)
+                    .addComponent(statusFilterLabel)
+                    .addComponent(statusFilterButtonsPanel))
+            .addGroup(
+                headerLayout
+                    .createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(deadlineFilterLabel)
+                    .addComponent(deadlineFilterButtonsPanel))
+            .addGroup(
+                headerLayout
+                    .createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(typeFilterLabel)
+                    .addComponent(typeFilterButtonsPanel)));
 
     headerLayout.setVerticalGroup(
         headerLayout
             .createSequentialGroup()
-                .addComponent(filterLabel)
-                .addGroup(headerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                        .addGroup(headerLayout
-                                .createSequentialGroup()
-                                .addComponent(statusFilterLabel)
-                                .addComponent(statusFilterButtonsPanel))
-                        .addGroup(headerLayout
-                                .createSequentialGroup()
-                                .addComponent(deadlineFilterLabel)
-                                .addComponent(deadlineFilterButtonsPanel))
-                        .addGroup(headerLayout
-                                .createSequentialGroup()
-                                .addComponent(typeFilterLabel)
-                                .addComponent(typeFilterButtonsPanel))));
+            .addComponent(filterLabel)
+            .addGroup(
+                headerLayout
+                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addGroup(
+                        headerLayout
+                            .createSequentialGroup()
+                            .addComponent(statusFilterLabel)
+                            .addComponent(statusFilterButtonsPanel))
+                    .addGroup(
+                        headerLayout
+                            .createSequentialGroup()
+                            .addComponent(deadlineFilterLabel)
+                            .addComponent(deadlineFilterButtonsPanel))
+                    .addGroup(
+                        headerLayout
+                            .createSequentialGroup()
+                            .addComponent(typeFilterLabel)
+                            .addComponent(typeFilterButtonsPanel))));
 
     this.add(header, BorderLayout.NORTH);
   }
 
   private void clearProjectModel() {
-    while(projectsTableModel.getRowCount() != 0) {
+    while (projectsTableModel.getRowCount() != 0) {
       projectsTableModel.removeRow(0);
     }
   }
+
   private void fillProjectModel(List<Project> projectsList) {
-    if(!controller.isEmptyProjectList(projectsList)) {
+    if (!controller.isEmptyProjectList(projectsList)) {
       for (Project project : projectsList) {
-        projectsTableModel.addRow(new String[]{project.getTitle(), String.valueOf(project.getDeadline()), String.valueOf(project.getStatus())});
+        projectsTableModel.addRow(
+            new String[] {
+              project.getTitle(),
+              String.valueOf(project.getDeadline()),
+              String.valueOf(project.getStatus())
+            });
       }
     }
   }
+
   public void updateProjectModel(List<Project> projectsList) {
     clearProjectModel();
     fillProjectModel(projectsList);
   }
+
   private void initProjectsTable() {
     projectsTable = new ProjectTable();
 
-    projectsTableModel = (DefaultTableModel)projectsTable.getModel();
+    projectsTableModel = (DefaultTableModel) projectsTable.getModel();
     projectsTableModel.setColumnIdentifiers(columnNames);
     updateProjectModel(controller.getAllProjects());
     projectsTable.addMouseListener(new ProjectsTableMouseListener());
@@ -217,10 +238,9 @@ public class TeamProjectsPanel extends JPanel {
     }
     // the data in the tables cannot be edited only viewed
     @Override
-    public boolean isCellEditable(int row,int column) {
+    public boolean isCellEditable(int row, int column) {
       return false;
     }
-
   }
   /** Compare Strings which represent dates. */
   static class DateComparator implements Comparator<String> {
@@ -235,36 +255,38 @@ public class TeamProjectsPanel extends JPanel {
         return 0;
       }
     }
- }
+  }
+
   class StatusFilterActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       String statusFilter = actionEvent.getActionCommand();
       updateProjectModel(controller.getProjectsByStatus(statusFilter));
-      }
     }
+  }
 
   class DeadlineFilterActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       String deadlineFilter = actionEvent.getActionCommand();
       updateProjectModel(controller.getProjectsByDeadline(deadlineFilter));
-      }
     }
+  }
 
   class TypeFilterActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       String typeFilter = actionEvent.getActionCommand();
-      if(typeFilter.equals(projectType[0])) {
+      if (typeFilter.equals(projectType[0])) {
         updateProjectModel(controller.getAllProjects());
-      }else if(typeFilter.equals(projectType[1])) {
+      } else if (typeFilter.equals(projectType[1])) {
         updateProjectModel(controller.getAssignedProjects());
-      }else if(typeFilter.equals(projectType[2])) {
+      } else if (typeFilter.equals(projectType[2])) {
         updateProjectModel(controller.getSupervisedProjects());
       }
     }
   }
+
   class ProjectsTableMouseListener extends MouseAdapter {
     @Override
     public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -273,8 +295,10 @@ public class TeamProjectsPanel extends JPanel {
       if (column == 0 && evt.getClickCount() > 1) {
         // on double click
         String projectName = (String) projectsTableModel.getValueAt(row, column);
-        // todo pass this to controller, which finds the corresponding id then passes it to the project frame
-        JOptionPane.showMessageDialog(null,"you selected " + projectName,"title",JOptionPane.INFORMATION_MESSAGE);
+        // todo pass this to controller, which finds the corresponding id then passes it to the
+        // project frame
+        JOptionPane.showMessageDialog(
+            null, "you selected " + projectName, "title", JOptionPane.INFORMATION_MESSAGE);
       }
     }
   }
