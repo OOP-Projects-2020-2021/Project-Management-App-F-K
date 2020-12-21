@@ -73,19 +73,19 @@ public class ErrorDialogFactory {
 
   /** Messages to inform the user that non-members cannot leave the team. */
   private static final String UNREGISTERED_MEMBER_REMOVAL_ERROR_TITLE =
-          "Removing unregistered members!";
+      "Removing unregistered members!";
 
   private static final String UNREGISTERED_MEMBER_REMOVAL_ARGUMENT_ERROR_MESSAGE =
-          "The user you attempt to remove is not a member of this team.";
+      "The user you attempt to remove is not a member of this team.";
 
   /**
    * Messages to inform the user that a role cannot be assigne to someone not member of the team.
    */
   private static final String UNREGISTERED_MEMBER_ROLE_TITLE =
-          "Assigning role to unregistered member!";
+      "Assigning role to unregistered member!";
 
   private static final String UNREGISTERED_MEMBER_ROLE_MESSAGE =
-          "The user to whom you attempt to assign a role is not a member of this team.";
+      "The user to whom you attempt to assign a role is not a member of this team.";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
@@ -223,9 +223,9 @@ public class ErrorDialogFactory {
    */
   private static void displayUnregisteredMemberRolelErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            UNREGISTERED_MEMBER_ROLE_MESSAGE + "\n" + message,
-            UNREGISTERED_MEMBER_ROLE_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        UNREGISTERED_MEMBER_ROLE_MESSAGE + "\n" + message,
+        UNREGISTERED_MEMBER_ROLE_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
 }
