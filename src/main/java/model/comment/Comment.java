@@ -1,5 +1,7 @@
 package model.comment;
 
+import model.InexistentDatabaseEntityException;
+
 import java.time.LocalDateTime;
 
 public class Comment {
@@ -8,6 +10,18 @@ public class Comment {
     private final int senderId;
     private final LocalDateTime dateTime;
 
+    public static class SavableComment extends Comment {
+
+        public SavableComment(String text, int senderId, LocalDateTime dateTime) {
+            super(-1, text, senderId, dateTime);
+        }
+
+        @Override
+        public int getId() throws InexistentDatabaseEntityException {
+            throw new InexistentDatabaseEntityException(this);
+        }
+    }
+
     public Comment(int id, String text, int senderId, LocalDateTime dateTime) {
         this.id = id;
         this.text = text;
@@ -15,7 +29,7 @@ public class Comment {
         this.dateTime = dateTime;
     }
 
-    public int getId() {
+    public int getId() throws InexistentDatabaseEntityException {
         return id;
     }
 
