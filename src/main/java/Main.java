@@ -4,6 +4,6 @@ import javax.swing.*;
 
 public class Main {
   public static void main(String[] args) {
-    JFrame signInFrame = new SignInFrame();
+     JFrame signInFrame = new SignInFrame();
   }
 }
