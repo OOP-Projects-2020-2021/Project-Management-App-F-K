@@ -27,16 +27,7 @@ public interface CommentRepository {
    * @return a list of all comments belonging to the given project.
    * @throws SQLException if the operation could not be performed in the database.
    */
-  List<Comment> getCommentsOfProject(int
-
-
-
-
-
-
-
-
-                                             projectId) throws SQLException;
+  List<Comment> getCommentsOfProject(int projectId) throws SQLException;
 
   /**
    * Deletes all the comments which belong to a given project.

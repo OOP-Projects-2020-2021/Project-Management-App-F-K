@@ -10,11 +10,11 @@ import java.time.LocalDateTime;
  * @author Bori Fazakas
  */
 public class Comment {
-  private final int id; //the id in the database.
+  private final int id; // the id in the database.
   private final String text;
-  private final int projectId; //the id of the project to which it belongs.
-  private final int senderId; //the id of the user who sent it.
-  private final LocalDateTime dateTime; //the time when it was sent.
+  private final int projectId; // the id of the project to which it belongs.
+  private final int senderId; // the id of the user who sent it.
+  private final LocalDateTime dateTime; // the time when it was sent.
 
   /**
    * This class is used only when the comment instance is created to be saved in the database, but

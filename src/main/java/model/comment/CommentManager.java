@@ -39,12 +39,12 @@ public class CommentManager extends Manager {
    * @param projectId is the id of the project to which it will belong.
    * @throws NoSignedInUserException if there is noone signed in.
    * @throws InexistentProjectException if there is no project with id projectId.
-   * @throws SQLException if the operation could  not be performed in the database.
+   * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentDatabaseEntityException should never occur.
    * @throws InexistentTeamException if the team wo which the project belongs is not found in the
-   * database.
+   *     database.
    * @throws UnauthorisedOperationException if the current user is not the member of the team to
-   * which the project with projectId belongs.
+   *     which the project with projectId belongs.
    */
   public void addComment(String text, int projectId)
       throws NoSignedInUserException, InexistentProjectException, SQLException,
@@ -67,7 +67,7 @@ public class CommentManager extends Manager {
    *
    * @param projectId is the id of the project whose comments are listed.
    * @return a list of all comments belonging to a a project.
-   * @throws SQLException if the operation could  not be performed in the database.
+   * @throws SQLException if the operation could not be performed in the database.
    */
   public List<Comment> getOrderedCommentsOfProject(int projectId) throws SQLException {
     List<Comment> comments = commentRepository.getCommentsOfProject(projectId);
