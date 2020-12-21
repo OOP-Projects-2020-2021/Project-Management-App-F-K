@@ -4,6 +4,7 @@ import model.InexistentDatabaseEntityException;
 import model.database.Repository;
 import model.team.Team;
 import model.team.repository.TeamRepository;
+import model.user.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
 
   // Set a new code for a team.
   private static final String SET_NEW_TEAMCODE_STATEMENT =
-      "UPDATE team SET Code = ? WHERE " + "TeamId = ?";
+      "UPDATE Team SET Code = ? WHERE " + "TeamId = ?";
   private PreparedStatement setNewCodeSt;
 
   // Add a new member to a team.
@@ -65,17 +66,23 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
 
   // Set new manager for team.
   private static final String SET_MANAGER_STATEMENT =
-      "UPDATE team SET ManagerId = ? WHERE TeamId = ?";
+      "UPDATE Team SET ManagerId = ? WHERE TeamId = ?";
   private PreparedStatement setManagerSt;
 
   // Set new name for team.
-  private static final String SET_NAME_STATEMENT = "UPDATE team SET TeamName = ? WHERE TeamId = ?";
+  private static final String SET_NAME_STATEMENT = "UPDATE Team SET TeamName = ? WHERE TeamId = ?";
   private PreparedStatement setNameSt;
 
   // Check user's membership in team.
   private static final String IS_MEMBER_QUERY =
-      "Select * from MemberToTeam WHERE TeamId = ? and MemberId = ?";
+      "SELECT * FROM MemberToTeam WHERE TeamId = ? AND MemberId = ?";
   private PreparedStatement isMemberSt;
+
+  // Get all members of a team.
+  private static final String GET_TEAM_MEMBERS_QUERY =
+      "SELECT * FROM User AS u JOIN MemberToTeam AS m ON u.UserId = m.MemberId WHERE"
+          + " m.TeamId = ?";
+  private PreparedStatement getTeamMembersSt;
 
   private SqliteTeamRepository() {}
 
@@ -103,6 +110,7 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
     setManagerSt = c.prepareStatement(SET_MANAGER_STATEMENT);
     setNameSt = c.prepareStatement(SET_NAME_STATEMENT);
     isMemberSt = c.prepareStatement(IS_MEMBER_QUERY);
+    getTeamMembersSt = c.prepareStatement(GET_TEAM_MEMBERS_QUERY);
   }
 
   @Override
@@ -116,7 +124,7 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
     if (savedTeam.isPresent()) {
       return savedTeam.get().getId();
     } else {
-      throw new SQLException("Saving team was unsuccesful");
+      throw new SQLException("Saving team was unsuccessful");
     }
   }
 
@@ -218,5 +226,21 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
     setNameSt.setString(1, newTeamName);
     setNameSt.setInt(2, teamId);
     setNameSt.execute();
+  }
+
+  @Override
+  public List<User> getMembersOfTeam(int teamId) throws SQLException {
+    List<User> members = new ArrayList<>();
+    getTeamMembersSt.setInt(1, teamId);
+    ResultSet resultSet = getTeamMembersSt.executeQuery();
+    while (resultSet.next()) {
+      User member =
+          new User(
+              resultSet.getInt("UserId"),
+              resultSet.getString("UserName"),
+              resultSet.getString("Password"));
+      members.add(member);
+    }
+    return members;
   }
 }
