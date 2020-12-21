@@ -150,6 +150,24 @@ public class ProjectManager extends Manager {
   }
 
   /**
+   * Deletes all the projects of a given team, safely, after first deleting all of its their
+   * comments.
+   *
+   * @param teamId is the id of the team whose projects are deleted.
+   * @throws SQLException if the operation could not be performed in the database.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws InexistentUserException should never occur.
+   */
+  public void deleteAllProjectsOfTeam(int teamId) throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
+    List<Project> projectsOfTeam = getProjectsOfTeam(teamId, null, null, QueryProjectStatus.ALL,
+            QueryProjectDeadlineStatus.ALL);
+    for (Project project : projectsOfTeam) {
+      commentRepository.deleteAllCommentsOfProject(project.getId());
+      projectRepository.deleteProject(project.getId());
+    }
+  }
+
+  /**
    * Sets a project's status from TO_DO to IN_PROGRESS.
    *
    * @param projectId is the id of the project to update.
