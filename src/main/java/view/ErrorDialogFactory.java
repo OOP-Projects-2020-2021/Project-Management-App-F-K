@@ -37,12 +37,55 @@ public class ErrorDialogFactory {
 
   /**
    * Messages that inform the user that the operation is invalid because the requested user is
-   * already a member of the requested team*.
+   * already a member of the requested team.
    */
   private static final String ALREADY_MEMBER_ERROR_TITLE = "Already member";
 
   private static final String ALREADY_MEMBER_ERROR_MESSAGE =
       "This team membership has already been registered, you can't add it again";
+
+  /**
+   * Messages that inform the user that the operation is invalid because the manager can't be
+   * removed from the members' list.
+   */
+  private static final String MANAGER_REMOVAL_ERROR_TITLE = "Removing manager";
+
+  private static final String MANAGER_REMOVAL_ERROR_MESSAGE =
+      "The manager cannot be removed from the team.";
+
+  /** Messages to inform the user that the username introduced is already taken. */
+  private static final String DUPLICATE_USERNAME_ERROR_TITLE = "Duplicate username!";
+
+  private static final String DUPLICATE_USERNAME_ERROR_MESSAGE =
+      "This username already exists, please choose another one!";
+
+  /** Messages to inform the user that the user doesn not exist in the database. */
+  private static final String INEXISTENT_USER_ERROR_TITLE = "Inexistent user!";
+
+  private static final String INEXISTENT_USER_ERROR_MESSAGE =
+      "No user was found with this username.\nCheck that you introduced the name correctly.";
+
+  /** Messages to inform the user that arguments passed were incorrect. */
+  private static final String ILLEGAL_ARGUMENT_ERROR_TITLE = "Illegal argument!";
+
+  private static final String ILLEGAL_ARGUMENT_ERROR_MESSAGE =
+      "Check that the arguments passed are correct.";
+
+  /** Messages to inform the user that non-members cannot leave the team. */
+  private static final String UNREGISTERED_MEMBER_REMOVAL_ERROR_TITLE =
+      "Removing unregistered members!";
+
+  private static final String UNREGISTERED_MEMBER_REMOVAL_ARGUMENT_ERROR_MESSAGE =
+      "The user you attempt to remove is not a member of this team.";
+
+  /**
+   * Messages to inform the user that a role cannot be assigne to someone not member of the team.
+   */
+  private static final String UNREGISTERED_MEMBER_ROLE_TITLE =
+      "Assigning role to unregistered member!";
+
+  private static final String UNREGISTERED_MEMBER_ROLE_MESSAGE =
+      "The user to whom you attempt to assign a role is not a member of this team.";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
@@ -60,6 +103,24 @@ public class ErrorDialogFactory {
     }
     if (exception instanceof AlreadyMemberException) {
       displayAlreadyMemberErrorDialog(frame, message);
+    }
+    if (exception instanceof DuplicateUsernameException) {
+      displayDuplicateUsernameErrorDialog(frame, message);
+    }
+    if (exception instanceof InexistentUserException) {
+      displayInexistentUserErrorDialog(frame, message);
+    }
+    if (exception instanceof ManagerRemovalException) {
+      displayManagerRemovalErrorDialog(frame, message);
+    }
+    if (exception instanceof IllegalArgumentException) {
+      displayIllegalArgumentErrorDialog(frame, message);
+    }
+    if (exception instanceof UnregisteredMemberRemovalException) {
+      displayUnregisteredMemberRemovalErrorDialog(frame, message);
+    }
+    if (exception instanceof UnregisteredMemberRoleException) {
+      displayUnregisteredMemberRemovalErrorDialog(frame, message);
     }
   }
 
@@ -102,6 +163,69 @@ public class ErrorDialogFactory {
         frame,
         ALREADY_MEMBER_ERROR_MESSAGE + "\n" + message,
         ALREADY_MEMBER_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+
+  /** Displays an error message when user attempts to remove the manager from the team. */
+  private static void displayManagerRemovalErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        MANAGER_REMOVAL_ERROR_MESSAGE + "\n" + message,
+        MANAGER_REMOVAL_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+  /**
+   * Displays an error message when the user attempts to sign-up with an already existing username.
+   */
+  private static void displayDuplicateUsernameErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        DUPLICATE_USERNAME_ERROR_MESSAGE + "\n" + message,
+        DUPLICATE_USERNAME_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+  /** Displays an error message when the manager tries to add an inexistent user to the team. */
+  private static void displayInexistentUserErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        INEXISTENT_USER_ERROR_MESSAGE + "\n" + message,
+        INEXISTENT_USER_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+
+  /**
+   * Displays an error message when the manager tries to pass its position to a user which is not a
+   * member of the team.
+   */
+  private static void displayIllegalArgumentErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        ILLEGAL_ARGUMENT_ERROR_MESSAGE + "\n" + message,
+        ILLEGAL_ARGUMENT_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+
+  /**
+   * Displays an error message when the manager tries to pass its position to a user which is not a
+   * member of the team.
+   */
+  private static void displayUnregisteredMemberRemovalErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        UNREGISTERED_MEMBER_REMOVAL_ARGUMENT_ERROR_MESSAGE + "\n" + message,
+        UNREGISTERED_MEMBER_REMOVAL_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+
+  /**
+   * Displays an error message when the manager tries to pass its position to a user which is not a
+   * member of the team.
+   */
+  private static void displayUnregisteredMemberRolelErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        UNREGISTERED_MEMBER_ROLE_MESSAGE + "\n" + message,
+        UNREGISTERED_MEMBER_ROLE_TITLE,
         JOptionPane.ERROR_MESSAGE);
   }
 }

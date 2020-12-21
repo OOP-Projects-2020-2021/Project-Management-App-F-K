@@ -15,7 +15,7 @@ public class Project {
   public enum ProjectStatus {
     TO_DO,
     IN_PROGRESS,
-    MARKED_AS_DONE,
+    TURNED_IN,
     FINISHED
   }
 

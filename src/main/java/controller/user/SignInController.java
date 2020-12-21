@@ -16,7 +16,7 @@ import java.sql.SQLException;
 public class SignInController extends FrameController {
 
   /** An instance of the UserManager which manages the data in the model User. */
-  UserManager userManager;
+  private UserManager userManager;
   /**
    * The signInFlag is used to notify the windowAdapter whether the frame is closing because of a
    * successful sign-in or because the user exited the application.
@@ -76,6 +76,6 @@ public class SignInController extends FrameController {
   /** Display an error message in case of an unsuccessful sign-in attempt. */
   public void displayInvalidSignInDialog() {
     JOptionPane.showMessageDialog(
-        frame, INVALID_SIGN_IN_TITLE, INVALID_SIGN_IN_MESSAGE, JOptionPane.WARNING_MESSAGE);
+        frame, INVALID_SIGN_IN_MESSAGE, INVALID_SIGN_IN_TITLE, JOptionPane.WARNING_MESSAGE);
   }
 }
