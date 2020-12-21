@@ -37,7 +37,7 @@ public class ProjectFilterPanel extends JPanel{
     }
     private void initStatusFilter() {
         // todo get values from table Status + "ALL"
-        String[] projectStatus = {"ALL", "TO DO", "IN PROGRESS", "TURNED_IN", "FINISHED"};
+        String[] projectStatus = {"ALL", "TO DO", "IN PROGRESS", "TURNED IN", "FINISHED"};
 
         statusFilterButtonsPanel = new JPanel();
         statusFilterButtonsPanel.setLayout(new BoxLayout(statusFilterButtonsPanel, BoxLayout.Y_AXIS));
@@ -77,7 +77,7 @@ public class ProjectFilterPanel extends JPanel{
     private void initturnInTimeFilter() {
         // todo get this from the projectManager through the controller
         String[] turnInTime = {
-                "ALL", "IN_TIME_TO_TURN_IN", "TURNED_IN_ON_TIME", "OVERDUE", "TURNED_IN_LATE"
+                "ALL", "IN TIME TO TURN IN", "TURNED IN ON TIME", "OVERDUE", "TURNED IN LATE"
         };
 
         turnInTimeFilterButtonsPanel = new JPanel();
@@ -106,7 +106,7 @@ public class ProjectFilterPanel extends JPanel{
 
         JLabel filterLabel = UIFactory.createLabel("Filter projects by:", null);
         JLabel statusFilterLabel = UIFactory.createLabel("Status:", null);
-        JLabel turnInTimeFilterLabel = UIFactory.createLabel("turnInTime:", null);
+        JLabel turnInTimeFilterLabel = UIFactory.createLabel("Turn-in time:", null);
         JLabel typeFilterLabel = UIFactory.createLabel("Type:", null);
 
         layout.setHorizontalGroup(
