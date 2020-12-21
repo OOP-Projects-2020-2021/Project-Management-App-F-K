@@ -12,6 +12,7 @@ import model.user.exceptions.NoSignedInUserException;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class CommentManager extends Manager {
   private static CommentManager instance = new CommentManager();
@@ -36,5 +37,9 @@ public class CommentManager extends Manager {
     Comment.SavableComment comment =
         new Comment.SavableComment(text, projectId, currentUser.getId(), LocalDateTime.now());
     commentRepository.saveComment(comment);
+  }
+
+  public List<Comment> getCommentsOfProject(int projectId) throws SQLException {
+   return commentRepository.getCommentsOfProject(projectId);
   }
 }
