@@ -13,16 +13,13 @@ import javax.swing.*;
  */
 public class ProjectController extends FrameController {
 
-    private ProjectManager projectManager;
-    private int projectId;
-    private Project project;
+  private ProjectManager projectManager;
+  private int projectId;
+  private Project project;
 
-    public ProjectController(JFrame frame,int projectId) {
-        super(frame);
-        projectManager = ProjectManager.getInstance();
-        this.projectId = projectId;
-    }
-
-
-
+  public ProjectController(JFrame frame, int projectId) {
+    super(frame);
+    projectManager = ProjectManager.getInstance();
+    this.projectId = projectId;
+  }
 }

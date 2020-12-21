@@ -9,8 +9,8 @@ import java.util.Optional;
 
 /**
  * The TeamFrame allows the user to view the team's details, the members list and the projects.
- * Additionally the manager also has access to the teams settings and adding/removing members.
- * Upon closing this frame, the user will be redirected to the main frame.
+ * Additionally the manager also has access to the teams settings and adding/removing members. Upon
+ * closing this frame, the user will be redirected to the main frame.
  *
  * @author Beata Keresztes
  */

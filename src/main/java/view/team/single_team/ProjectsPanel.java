@@ -17,6 +17,7 @@ import java.util.Optional;
 public class ProjectsPanel extends JPanel {
 
   private ProjectTable projectsTable;
+
   public ProjectsPanel(Optional<Integer> currentTeamId) {
     setLayout(new BorderLayout());
     setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -25,7 +26,7 @@ public class ProjectsPanel extends JPanel {
   }
 
   private void initProjectsHeader(Optional<Integer> currentTeamId) {
-    ProjectFilterPanel header = new ProjectFilterPanel(projectsTable,currentTeamId);
+    ProjectFilterPanel header = new ProjectFilterPanel(projectsTable, currentTeamId);
     add(header, BorderLayout.NORTH);
   }
 
@@ -33,15 +34,16 @@ public class ProjectsPanel extends JPanel {
     projectsTable = new ProjectTable();
     addScrollPane();
   }
+
   private void addScrollPane() {
     JScrollPane scrollPane = new JScrollPane(projectsTable);
     // border and title of the list pane
     scrollPane.setBorder(
-            BorderFactory.createTitledBorder(
-                    BorderFactory.createEtchedBorder(),
-                    "Projects List",
-                    TitledBorder.CENTER,
-                    TitledBorder.TOP));
+        BorderFactory.createTitledBorder(
+            BorderFactory.createEtchedBorder(),
+            "Projects List",
+            TitledBorder.CENTER,
+            TitledBorder.TOP));
 
     add(scrollPane, BorderLayout.CENTER);
   }

@@ -18,68 +18,73 @@ import java.util.Optional;
  */
 public class ProjectFilterController implements PropertyChangeListener {
 
-    private ProjectTable projectTable;
-    private ProjectManager projectManager;
-    Optional<Integer> teamId;
+  private ProjectTable projectTable;
+  private ProjectManager projectManager;
+  Optional<Integer> teamId;
 
-    public ProjectFilterController(ProjectTable projectTable,Optional<Integer> teamId) {
-        this.projectTable = projectTable;
-        // initially all projects are listed
-        unFilteredProjects();
-        this.teamId = teamId;
-        projectManager = ProjectManager.getInstance();
-        projectManager.addPropertyChangeListener(this);
-    }
+  public ProjectFilterController(ProjectTable projectTable, Optional<Integer> teamId) {
+    this.projectTable = projectTable;
+    // initially all projects are listed
+    unFilteredProjects();
+    this.teamId = teamId;
+    projectManager = ProjectManager.getInstance();
+    projectManager.addPropertyChangeListener(this);
+  }
 
-    public void updateTableModel(List<Project> projectsList) {
-        projectTable.clearTableModel();
-        if(!isEmptyProjectList(projectsList)) {
-            projectTable.fillTableModel(projectsList);
-        }
+  public void updateTableModel(List<Project> projectsList) {
+    projectTable.clearTableModel();
+    if (!isEmptyProjectList(projectsList)) {
+      projectTable.fillTableModel(projectsList);
     }
-    private boolean isEmptyProjectList(List<Project> projects) {
-        return projects == null || projects.isEmpty();
-    }
+  }
 
-    private boolean isTeamIdPresent() {
-        return teamId.isPresent();
-    }
-    public void filterProjectsByStatus(String status) {
-        //todo
-       // check if team id is present
-        updateTableModel(getAllProjects());
-    }
-    public void filterProjectsByTurnInTime(String turnInTime) {
-        //todo
-        updateTableModel(getAllProjects());
-    }
-    public void filterAssignedProjects() {
-        //todo
-        updateTableModel(getAllProjects());
-    }
-    public void filterSupervisedProjects() {
-        //todo
-        updateTableModel(getAllProjects());
-    }
-    public void unFilteredProjects() {
-        //todo
-        updateTableModel(getAllProjects());
-    }
+  private boolean isEmptyProjectList(List<Project> projects) {
+    return projects == null || projects.isEmpty();
+  }
 
-    private List<Project> getAllProjects() {
-        // todo
-        // just some dummy data
-        List<Project> projects = new ArrayList<>();
-        for (int i = 0; i < 10; i++) {
-            projects.add(
-                    new Project(1, "Project" + i, 52, LocalDate.now(), Project.ProjectStatus.TO_DO, 2, 12));
-        }
-        return projects;
-    }
+  private boolean isTeamIdPresent() {
+    return teamId.isPresent();
+  }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        // todo if a project is deleted/created/edited(change status) from ProjectManager
-    }
+  public void filterProjectsByStatus(String status) {
+    // todo
+    // check if team id is present
+    updateTableModel(getAllProjects());
+  }
 
+  public void filterProjectsByTurnInTime(String turnInTime) {
+    // todo
+    updateTableModel(getAllProjects());
+  }
+
+  public void filterAssignedProjects() {
+    // todo
+    updateTableModel(getAllProjects());
+  }
+
+  public void filterSupervisedProjects() {
+    // todo
+    updateTableModel(getAllProjects());
+  }
+
+  public void unFilteredProjects() {
+    // todo
+    updateTableModel(getAllProjects());
+  }
+
+  private List<Project> getAllProjects() {
+    // todo
+    // just some dummy data
+    List<Project> projects = new ArrayList<>();
+    for (int i = 0; i < 10; i++) {
+      projects.add(
+          new Project(1, "Project" + i, 52, LocalDate.now(), Project.ProjectStatus.TO_DO, 2, 12));
+    }
+    return projects;
+  }
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    // todo if a project is deleted/created/edited(change status) from ProjectManager
+  }
 }

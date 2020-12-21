@@ -10,8 +10,8 @@ import java.awt.event.KeyEvent;
 /**
  * The MainMenu is the menu of the MainFrame, which provides access to the main functionalities of
  * the application: logging out (logoutItem), setting the personal data (accountSettingsItem),
- * creating a new team (createTeamItem) and joining an existing team (joinTeamItem),
- * and viewing the list of projects (viewProjects).
+ * creating a new team (createTeamItem) and joining an existing team (joinTeamItem), and viewing the
+ * list of projects (viewProjects).
  *
  * @author Bori Fazakas, Beata Keresztes
  */

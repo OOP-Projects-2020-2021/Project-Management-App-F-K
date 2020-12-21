@@ -1,6 +1,5 @@
 package controller;
 
-import controller.project.ProjectFilterController;
 import view.project.UserProjectsFrame;
 import view.user.AccountSettingsFrame;
 import view.user.SignInFrame;
