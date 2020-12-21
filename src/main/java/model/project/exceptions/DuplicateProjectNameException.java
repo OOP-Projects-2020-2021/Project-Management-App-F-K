@@ -1,4 +1,4 @@
-package model.project;
+package model.project.exceptions;
 
 /**
  * DuplicateProjectNameException is thrown when someone tries to create a project inside a team
@@ -15,5 +15,12 @@ public class DuplicateProjectNameException extends Exception {
             + " already exists in "
             + "team "
             + teamName);
+  }
+
+  public DuplicateProjectNameException(String projectName) {
+    super(
+        "Invalid project name: a project with name "
+            + projectName
+            + " already exists in this team");
   }
 }
