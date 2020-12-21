@@ -128,8 +128,8 @@ public class ProjectManager extends Manager {
   }
 
   /**
-   * Deletes the project with id projectId with all of its data (comments), but only if the
-   * current user is the supervisor of the project.
+   * Deletes the project with id projectId with all of its data (comments), but only if the current
+   * user is the supervisor of the project.
    *
    * @param projectId is the id of the project to delete.
    * @throws InexistentProjectException if the project to delete is not found.
@@ -137,14 +137,15 @@ public class ProjectManager extends Manager {
    * @throws NoSignedInUserException if there is noone signed in.
    * @throws InexistentDatabaseEntityException should never occur.
    * @throws UnauthorisedOperationException if the current user is not the supervisor of the
-   * project.
+   *     project.
    */
-  public void deleteProject(int projectId) throws InexistentProjectException, SQLException,
-          NoSignedInUserException, InexistentDatabaseEntityException, UnauthorisedOperationException {
+  public void deleteProject(int projectId)
+      throws InexistentProjectException, SQLException, NoSignedInUserException,
+          InexistentDatabaseEntityException, UnauthorisedOperationException {
     User currentUser = getMandatoryCurrentUser();
     Project project = getMandatoryProject(projectId);
-    guaranteeUserIsSupervisor(currentUser, project, "delete project", "they are not the " +
-            "supervisor");
+    guaranteeUserIsSupervisor(
+        currentUser, project, "delete project", "they are not the " + "supervisor");
     commentRepository.deleteAllCommentsOfProject(projectId);
     projectRepository.deleteProject(projectId);
   }
