@@ -11,11 +11,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * SqliteCommentRepository is an implementation of CommentRepository which provides database access
+ * to an sqlite database holding comment-related data.
+ *
+ * @author Bori Fazakas
+ */
 public class SqliteCommentRepository extends Repository implements CommentRepository {
   protected static SqliteCommentRepository instance;
 
   private SqliteCommentRepository() {}
 
+  /** Implemented with the singleton pattern. */
   public static SqliteCommentRepository getInstance() {
     if (instance == null) {
       instance = new SqliteCommentRepository();
