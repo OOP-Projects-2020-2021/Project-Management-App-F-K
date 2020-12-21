@@ -9,5 +9,5 @@ import java.util.List;
 public interface CommentRepository {
     void saveComment(Comment.SavableComment comment) throws SQLException;
 
-    List<Comment> getCommentsOfProject(int projectId);
+    List<Comment> getCommentsOfProject(int projectId) throws SQLException;
 }

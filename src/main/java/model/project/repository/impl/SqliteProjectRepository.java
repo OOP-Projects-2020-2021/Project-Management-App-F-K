@@ -281,7 +281,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     return result.getInt("StatusId");
   }
 
-  private Project getProjectFromResult(ResultSet result) throws SQLException {
+  private static Project getProjectFromResult(ResultSet result) throws SQLException {
     int id = result.getInt("ProjectId");
     String title = result.getString("Name");
     int teamId = result.getInt("TeamId");
