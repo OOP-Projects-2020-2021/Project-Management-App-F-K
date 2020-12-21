@@ -10,6 +10,16 @@ import java.sql.*;
 public class SqliteUserRepository extends Repository implements UserRepository {
   protected static SqliteUserRepository instance;
 
+  private SqliteUserRepository() {}
+
+  /** Implemented with the singleton pattern. */
+  public static SqliteUserRepository getInstance() {
+    if (instance == null) {
+      instance = new SqliteUserRepository();
+    }
+    return instance;
+  }
+
   private PreparedStatement saveUserStatement;
   private PreparedStatement getUserIdStatement;
   private PreparedStatement getUserByIdStatement;
@@ -25,15 +35,6 @@ public class SqliteUserRepository extends Repository implements UserRepository {
       "SELECT * FROM User WHERE Username = ?;";
   private static final String UPDATE_USER_STATEMENT =
       "UPDATE User SET UserName = ?, Password = ? WHERE UserId = ?;";
-
-  private SqliteUserRepository() {}
-
-  public static SqliteUserRepository getInstance() {
-    if (instance == null) {
-      instance = new SqliteUserRepository();
-    }
-    return instance;
-  }
 
   protected void prepareStatements() throws SQLException {
     saveUserStatement = c.prepareStatement(SAVE_USER_STATEMENT);

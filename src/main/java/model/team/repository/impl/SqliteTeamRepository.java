@@ -20,6 +20,16 @@ import java.util.Optional;
 public class SqliteTeamRepository extends Repository implements TeamRepository {
   protected static SqliteTeamRepository instance;
 
+  private SqliteTeamRepository() {}
+
+  /** Implemented with the singleton pattern. */
+  public static SqliteTeamRepository getInstance() {
+    if (instance == null) {
+      instance = new SqliteTeamRepository();
+    }
+    return instance;
+  }
+
   // Save a new team.
   private static final String SAVE_TEAM_STATEMENT =
       "INSERT INTO Team (TeamName, ManagerId, " + "Code) VALUES (?, ?, ?)";
@@ -83,15 +93,6 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
       "SELECT * FROM User AS u JOIN MemberToTeam AS m ON u.UserId = m.MemberId WHERE"
           + " m.TeamId = ?";
   private PreparedStatement getTeamMembersSt;
-
-  private SqliteTeamRepository() {}
-
-  public static SqliteTeamRepository getInstance() {
-    if (instance == null) {
-      instance = new SqliteTeamRepository();
-    }
-    return instance;
-  }
 
   /**
    * The statements are prepared only once, when the reposiroy is constructed, because this way sql
