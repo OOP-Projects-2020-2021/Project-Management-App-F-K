@@ -1,5 +1,7 @@
 package controller;
 
+import controller.project.ProjectFilterController;
+import view.project.UserProjectsFrame;
 import view.user.AccountSettingsFrame;
 import view.user.SignInFrame;
 import view.team.CreateTeamFrame;
@@ -49,6 +51,12 @@ public class MainMenuController extends FrameController {
   /** Provides access to the team joining functionality by opening the corresponding frame. */
   public void enableJoiningNewTeam() {
     new JoinTeamFrame(frame);
+    frame.setEnabled(false);
+  }
+
+  /** Provides access to viewing the list of projects. */
+  public void enableViewingProjects() {
+    new UserProjectsFrame(frame);
     frame.setEnabled(false);
   }
 }
