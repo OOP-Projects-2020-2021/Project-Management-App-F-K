@@ -9,4 +9,6 @@ public interface CommentRepository {
   void saveComment(Comment.SavableComment comment) throws SQLException;
 
   List<Comment> getCommentsOfProject(int projectId) throws SQLException;
+
+  void deleteAllCommentsOfProject(int projectId) throws SQLException;
 }
