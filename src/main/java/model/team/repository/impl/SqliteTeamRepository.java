@@ -176,12 +176,12 @@ public class SqliteTeamRepository extends Repository implements TeamRepository {
 
   @Override
   public void deleteTeam(int teamId) throws SQLException {
-    deleteAllMembersOfTeam(teamId);
     deleteTeamSt.setInt(1, teamId);
     deleteTeamSt.execute();
   }
 
-  private void deleteAllMembersOfTeam(int teamId) throws SQLException {
+  @Override
+  public void deleteAllMembersOfTeam(int teamId) throws SQLException {
     removeAllTeamMembersSt.setInt(1, teamId);
     removeAllTeamMembersSt.execute();
   }

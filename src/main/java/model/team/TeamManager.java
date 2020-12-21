@@ -60,6 +60,7 @@ public class TeamManager extends Manager {
   /**
    * Deletes the team with the specified id from the database, but only if the current user is its
    * manager.
+   * To do so, first, all the members of the team are deleted.
    *
    * @param teamId is the id of the team to delete.
    * @throws SQLException if the operation could not be performed in the database.
@@ -75,6 +76,7 @@ public class TeamManager extends Manager {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "delete the team");
+    teamRepository.deleteAllMembersOfTeam(teamId);
     teamRepository.deleteTeam(teamId);
     support.firePropertyChange(
         ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);

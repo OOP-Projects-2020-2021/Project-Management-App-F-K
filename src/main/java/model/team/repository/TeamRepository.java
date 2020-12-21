@@ -28,12 +28,21 @@ public interface TeamRepository {
 
   /**
    * Deletes the team with the specified id from the database. It also deletes all the memberships
-   * related to it. // todo: delete projects of the team too
+   * related to it.
+   * Requirement: all projects and members having foreign keys to teams must already be deleted.
    *
    * @param teamId is the id of the team to delete.
    * @throws SQLException if the operation could not be performed in the database.
    */
   void deleteTeam(int teamId) throws SQLException;
+
+  /**
+   * Deletes all members of the team with id teamId.
+   *
+   * @param teamId is the id of the team whose members are deleted.
+   * @throws SQLException if the operation could not be performed in the database.
+   */
+  void deleteAllMembersOfTeam(int teamId) throws SQLException;
 
   /**
    * Returns the Team with the specified code from the database, if it exists, wrapped in an
