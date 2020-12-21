@@ -1,5 +1,6 @@
 package model;
 
+import model.comment.Comment;
 import model.project.Project;
 import model.team.Team;
 import model.user.User;
@@ -21,5 +22,9 @@ public class InexistentDatabaseEntityException extends Exception {
 
   public InexistentDatabaseEntityException(User.SavableUser u) {
     super("SaveableUsers do not exist in the database yet, so id access is illegal");
+  }
+
+  public InexistentDatabaseEntityException(Comment.SavableComment c) {
+    super("SaveableComments do not exist in the database yet, so id access is illegal");
   }
 }

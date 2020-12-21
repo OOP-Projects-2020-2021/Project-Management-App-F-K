@@ -22,6 +22,16 @@ import java.util.Optional;
 public class SqliteProjectRepository extends Repository implements ProjectRepository {
   protected static SqliteProjectRepository instance;
 
+  private SqliteProjectRepository() {}
+
+  /** Implemented with the singleton pattern. */
+  public static SqliteProjectRepository getInstance() {
+    if (instance == null) {
+      instance = new SqliteProjectRepository();
+    }
+    return instance;
+  }
+
   // Save a new team.
   private static final String SAVE_PROJECT_STATEMENT =
       "INSERT INTO Project (Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
@@ -84,15 +94,6 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   private static final String GET_PROJECTS_STATUS_ID =
       "SELECT StatusId from ProjectStatus WHERE StatusName = ?";
   private PreparedStatement getProjectStatusIdSt;
-
-  private SqliteProjectRepository() {}
-
-  public static SqliteProjectRepository getInstance() {
-    if (instance == null) {
-      instance = new SqliteProjectRepository();
-    }
-    return instance;
-  }
 
   /**
    * The statements are prepared only once, when the repository is constructed, because this way sql
@@ -281,7 +282,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     return result.getInt("StatusId");
   }
 
-  private Project getProjectFromResult(ResultSet result) throws SQLException {
+  private static Project getProjectFromResult(ResultSet result) throws SQLException {
     int id = result.getInt("ProjectId");
     String title = result.getString("Name");
     int teamId = result.getInt("TeamId");
