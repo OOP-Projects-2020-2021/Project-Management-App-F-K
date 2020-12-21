@@ -159,9 +159,11 @@ public class ProjectManager extends Manager {
    * @throws InexistentDatabaseEntityException should never occur.
    * @throws InexistentUserException should never occur.
    */
-  public void deleteAllProjectsOfTeam(int teamId) throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
-    List<Project> projectsOfTeam = getProjectsOfTeam(teamId, null, null, QueryProjectStatus.ALL,
-            QueryProjectDeadlineStatus.ALL);
+  public void deleteAllProjectsOfTeam(int teamId)
+      throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
+    List<Project> projectsOfTeam =
+        getProjectsOfTeam(
+            teamId, null, null, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
     for (Project project : projectsOfTeam) {
       commentRepository.deleteAllCommentsOfProject(project.getId());
       projectRepository.deleteProject(project.getId());

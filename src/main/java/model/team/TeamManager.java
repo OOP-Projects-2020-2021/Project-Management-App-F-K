@@ -72,7 +72,7 @@ public class TeamManager extends Manager {
    * @throws InexistentUserException should never occur.
    */
   public void deleteTeam(int teamId)
-          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
           NoSignedInUserException, InexistentDatabaseEntityException, InexistentUserException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
