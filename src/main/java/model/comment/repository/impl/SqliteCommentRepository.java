@@ -16,55 +16,55 @@ public class SqliteCommentRepository extends Repository implements CommentReposi
 
   private SqliteCommentRepository() {}
 
-    public static SqliteCommentRepository getInstance() {
-        if (instance == null) {
-            instance = new SqliteCommentRepository();
-        }
-        return instance;
+  public static SqliteCommentRepository getInstance() {
+    if (instance == null) {
+      instance = new SqliteCommentRepository();
     }
+    return instance;
+  }
 
-    // Save a new comment.
-    private static final String SAVE_COMMENT_STATEMENT =
-            "INSERT INTO Comment (CommentText, ProjectId, SenderId, DateTime) VALUES (?, ?, ?, ?)";
-    private PreparedStatement saveCommentSt;
+  // Save a new comment.
+  private static final String SAVE_COMMENT_STATEMENT =
+      "INSERT INTO Comment (CommentText, ProjectId, SenderId, DateTime) VALUES (?, ?, ?, ?)";
+  private PreparedStatement saveCommentSt;
 
-    // Get comments of a project.
-    private static final String GET_COMMENTS_OF_PROJECT_STATEMENT =
-            "Select * FROM Comment WHERE projectId = ?";
-    private PreparedStatement getCommentsOfProjectSt;
+  // Get comments of a project.
+  private static final String GET_COMMENTS_OF_PROJECT_STATEMENT =
+      "Select * FROM Comment WHERE projectId = ?";
+  private PreparedStatement getCommentsOfProjectSt;
 
-    @Override
-    protected void prepareStatements() throws SQLException {
-        saveCommentSt = c.prepareStatement(SAVE_COMMENT_STATEMENT);
-        getCommentsOfProjectSt = c.prepareStatement(GET_COMMENTS_OF_PROJECT_STATEMENT);
+  @Override
+  protected void prepareStatements() throws SQLException {
+    saveCommentSt = c.prepareStatement(SAVE_COMMENT_STATEMENT);
+    getCommentsOfProjectSt = c.prepareStatement(GET_COMMENTS_OF_PROJECT_STATEMENT);
+  }
+
+  @Override
+  public void saveComment(Comment.SavableComment comment) throws SQLException {
+    saveCommentSt.setString(1, comment.getText());
+    saveCommentSt.setInt(2, comment.getProjectId());
+    saveCommentSt.setInt(3, comment.getSenderId());
+    saveCommentSt.setString(4, comment.getDateTime().toString());
+    saveCommentSt.execute();
+  }
+
+  @Override
+  public List<Comment> getCommentsOfProject(int projectId) throws SQLException {
+    getCommentsOfProjectSt.setInt(1, projectId);
+    ResultSet result = getCommentsOfProjectSt.executeQuery();
+    List<Comment> commentsOfProject = new ArrayList<>();
+    while (result.next()) {
+      commentsOfProject.add(getCommentFromResult(result));
     }
+    return commentsOfProject;
+  }
 
-    @Override
-    public void saveComment(Comment.SavableComment comment) throws SQLException {
-        saveCommentSt.setString(1, comment.getText());
-        saveCommentSt.setInt(2, comment.getProjectId());
-        saveCommentSt.setInt(3, comment.getSenderId());
-        saveCommentSt.setString(4, comment.getDateTime().toString());
-        saveCommentSt.execute();
-    }
-
-    @Override
-    public List<Comment> getCommentsOfProject(int projectId) throws SQLException {
-        getCommentsOfProjectSt.setInt(1, projectId);
-        ResultSet result = getCommentsOfProjectSt.executeQuery();
-        List<Comment> commentsOfProject = new ArrayList<>();
-        while (result.next()) {
-            commentsOfProject.add(getCommentFromResult(result));
-        }
-        return commentsOfProject;
-    }
-
-    private static Comment getCommentFromResult(ResultSet result) throws SQLException {
-        int id = result.getInt("CommentId");
-        String text = result.getString("CommentText");
-        int projectId = result.getInt("ProjectId");
-        int senderId = result.getInt("SenderId");
-        LocalDateTime dateTime = LocalDateTime.parse(result.getString("DateTime"));
-        return new Comment(id, text, projectId, senderId, dateTime);
-    }
+  private static Comment getCommentFromResult(ResultSet result) throws SQLException {
+    int id = result.getInt("CommentId");
+    String text = result.getString("CommentText");
+    int projectId = result.getInt("ProjectId");
+    int senderId = result.getInt("SenderId");
+    LocalDateTime dateTime = LocalDateTime.parse(result.getString("DateTime"));
+    return new Comment(id, text, projectId, senderId, dateTime);
+  }
 }

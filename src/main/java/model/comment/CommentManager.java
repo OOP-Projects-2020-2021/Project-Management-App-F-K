@@ -12,7 +12,6 @@ import model.user.exceptions.NoSignedInUserException;
 
 import java.sql.SQLException;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -42,8 +41,8 @@ public class CommentManager extends Manager {
   }
 
   public List<Comment> getOrderedCommentsOfProject(int projectId) throws SQLException {
-   List<Comment> comments = commentRepository.getCommentsOfProject(projectId);
-   comments.sort(Comparator.comparing(Comment::getDateTime));
-   return comments;
+    List<Comment> comments = commentRepository.getCommentsOfProject(projectId);
+    comments.sort(Comparator.comparing(Comment::getDateTime));
+    return comments;
   }
 }
