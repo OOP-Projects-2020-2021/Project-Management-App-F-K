@@ -3,6 +3,7 @@ package model.team;
 import model.InexistentDatabaseEntityException;
 import model.Manager;
 import model.UnauthorisedOperationException;
+import model.project.ProjectManager;
 import model.user.exceptions.*;
 import model.user.User;
 import model.team.exceptions.*;
@@ -59,7 +60,7 @@ public class TeamManager extends Manager {
 
   /**
    * Deletes the team with the specified id from the database, but only if the current user is its
-   * manager. To do so, first, all the members of the team are deleted.
+   * manager. To do so, first, all the members and projects of the team are deleted.
    *
    * @param teamId is the id of the team to delete.
    * @throws SQLException if the operation could not be performed in the database.
@@ -68,14 +69,16 @@ public class TeamManager extends Manager {
    *     because the user is not the manager of the team.
    * @throws NoSignedInUserException if the user is not signed in.
    * @throws InexistentDatabaseEntityException - should never occur.
+   * @throws InexistentUserException should never occur.
    */
   public void deleteTeam(int teamId)
-      throws SQLException, InexistentTeamException, UnauthorisedOperationException,
-          NoSignedInUserException, InexistentDatabaseEntityException {
+          throws SQLException, InexistentTeamException, UnauthorisedOperationException,
+          NoSignedInUserException, InexistentDatabaseEntityException, InexistentUserException {
     Team team = getMandatoryTeam(teamId);
     User currentUser = getMandatoryCurrentUser();
     guaranteeUserIsManager(team, currentUser, "delete the team");
     teamRepository.deleteAllMembersOfTeam(teamId);
+    ProjectManager.getInstance().deleteAllProjectsOfTeam(teamId);
     teamRepository.deleteTeam(teamId);
     support.firePropertyChange(
         ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
