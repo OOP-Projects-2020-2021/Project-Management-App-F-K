@@ -8,6 +8,7 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
@@ -19,32 +20,92 @@ import java.util.Date;
  *
  * @author Beata Keresztes
  */
-public class TeamProjectsPanel extends JPanel implements ActionListener {
+public class TeamProjectsPanel extends JPanel {
 
-  private JComboBox<String> statusFilterComboBox;
-  private JComboBox<String> importanceFilterComboBox;
-  private JCheckBox assignedProjectsCheckBox;
-  private JCheckBox supervisedProjectsCheckBox;
+  private JPanel statusFilterButtonsPanel;
+  private JPanel typeFilterButtonsPanel;
+  private JPanel deadlineFilterButtonsPanel;
+  private DefaultTableModel projectsTableModel;
+  private JTable projectsTable;
+
 
   public TeamProjectsPanel(Dimension parentFrameDimension) {
     this.setPreferredSize(parentFrameDimension);
     this.setLayout(new BorderLayout());
+    this.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
     initProjectsPane();
   }
 
   private void initProjectsPane() {
     initProjectsHeader();
-    initProjectsList();
+    initProjectsTable();
   }
 
   private void initHeaderComponents() {
-    // todo get this from controller
-    String[] status = {"TO DO", "IN PROGRESS", "MARKED AS DONE", "FINISHED"};
-    statusFilterComboBox = new JComboBox<>(status);
-    String[] importance = {"LOW", "HIGH", "MEDIUM"};
-    importanceFilterComboBox = new JComboBox<>(importance);
-    assignedProjectsCheckBox = new JCheckBox();
-    supervisedProjectsCheckBox = new JCheckBox();
+    initStatusFilter();
+    initTypeFilter();
+    initDeadlineFilter();
+  }
+  private void initStatusFilter() {
+    // todo get values from table Status + "ALL"
+    String[] status = {"ALL","TO DO", "IN PROGRESS", "MARKED AS DONE", "FINISHED"};
+
+    statusFilterButtonsPanel = new JPanel();
+    statusFilterButtonsPanel.setLayout(new BoxLayout(statusFilterButtonsPanel, BoxLayout.Y_AXIS));
+    // grouping the buttons ensures that only one button can be selected at a time
+    ButtonGroup statusFilterButtonGroup = new ButtonGroup();
+    JRadioButton[] statusFilterButtons = new JRadioButton[status.length];
+
+    for(int i=0;i<status.length;i++) {
+      statusFilterButtons[i] = new JRadioButton(status[i]);
+      statusFilterButtons[i].setActionCommand(status[i]);
+      statusFilterButtons[i].addActionListener(new StatusFilterActionListener());
+      statusFilterButtonGroup.add(statusFilterButtons[i]);
+      statusFilterButtonsPanel.add(statusFilterButtons[i]);
+    }
+    // initially all projects are shown
+    statusFilterButtons[0].setSelected(true);
+
+  }
+
+  private void initTypeFilter() {
+    String[] type = {"ALL","ASSIGNED TO ME","SUPERVISED BY ME"};
+
+    typeFilterButtonsPanel = new JPanel();
+    typeFilterButtonsPanel.setLayout(new BoxLayout(typeFilterButtonsPanel, BoxLayout.Y_AXIS));
+    // grouping the buttons ensures that only one button can be selected at a time
+    ButtonGroup typeFilterButtonGroup = new ButtonGroup();
+    JRadioButton[] typeFilterButtons = new JRadioButton[type.length];
+
+    for(int i=0;i<type.length;i++){
+      typeFilterButtons[i] = new JRadioButton(type[i]);
+      typeFilterButtons[i].setActionCommand(type[i]);
+      typeFilterButtons[i].addActionListener(new TypeFilterActionListener());
+      typeFilterButtonGroup.add(typeFilterButtons[i]);
+      typeFilterButtonsPanel.add(typeFilterButtons[i]);
+    }
+    // initially all projects are shown
+    typeFilterButtons[0].setSelected(true);
+  }
+  private void initDeadlineFilter() {
+    // todo get this from the projectManager
+    String[] deadline = {"ALL","IN_TIME_TO_TURN_IN","TURNED_IN_ON_TIME","OVERDUE","TURNED_IN_LATE"};
+
+    deadlineFilterButtonsPanel = new JPanel();
+    deadlineFilterButtonsPanel.setLayout(new BoxLayout(deadlineFilterButtonsPanel, BoxLayout.Y_AXIS));
+    // grouping the buttons ensures that only one button can be selected at a time
+    ButtonGroup deadlineFilterButtonGroup = new ButtonGroup();
+    JRadioButton[] deadlineFilterButtons = new JRadioButton[deadline.length];
+
+    for(int i=0;i<deadline.length;i++){
+      deadlineFilterButtons[i] = new JRadioButton(deadline[i]);
+      deadlineFilterButtons[i].setActionCommand(deadline[i]);
+      deadlineFilterButtons[i].addActionListener(new DeadlineFilterActionListener());
+      deadlineFilterButtonGroup.add(deadlineFilterButtons[i]);
+      deadlineFilterButtonsPanel.add(deadlineFilterButtons[i]);
+    }
+    // initially all projects are shown
+    deadlineFilterButtons[0].setSelected(true);
   }
 
   private void initProjectsHeader() {
@@ -58,103 +119,105 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
 
     JLabel filterLabel = UIFactory.createLabel("Filter projects by:", null);
     JLabel statusFilterLabel = UIFactory.createLabel("Status:", null);
-    JLabel importanceFilterLabel = UIFactory.createLabel("Importance:", null);
-    JLabel assignedProjectsLabel = UIFactory.createLabel("Assigned to me:", null);
-    JLabel supervisedProjectsLabel = UIFactory.createLabel("Supervised by me:", null);
+    JLabel deadlineFilterLabel = UIFactory.createLabel("Deadline:", null);
+    JLabel typeFilterLabel = UIFactory.createLabel("Type:", null);
 
     headerLayout.setHorizontalGroup(
         headerLayout
             .createSequentialGroup()
-            .addGroup(
-                headerLayout
-                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(filterLabel)
-                    .addGroup(
-                        headerLayout
-                            .createSequentialGroup()
-                            .addComponent(statusFilterLabel)
-                            .addComponent(statusFilterComboBox))
-                    .addGroup(
-                        headerLayout
-                            .createSequentialGroup()
-                            .addComponent(assignedProjectsLabel)
-                            .addComponent(assignedProjectsCheckBox)))
-            .addGroup(
-                headerLayout
-                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addGroup(
-                        headerLayout
-                            .createSequentialGroup()
-                            .addComponent(importanceFilterLabel)
-                            .addComponent(importanceFilterComboBox))
-                    .addGroup(
-                        headerLayout
-                            .createSequentialGroup()
-                            .addComponent(supervisedProjectsLabel)
-                            .addComponent(supervisedProjectsCheckBox))));
+                .addGroup(headerLayout
+                        .createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(filterLabel)
+                        .addComponent(statusFilterLabel)
+                        .addComponent(statusFilterButtonsPanel))
+                .addGroup(headerLayout
+                        .createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(deadlineFilterLabel)
+                        .addComponent(deadlineFilterButtonsPanel))
+                .addGroup(headerLayout
+                        .createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(typeFilterLabel)
+                        .addComponent(typeFilterButtonsPanel)));
 
     headerLayout.setVerticalGroup(
         headerLayout
             .createSequentialGroup()
-            .addComponent(filterLabel)
-            .addGroup(
-                headerLayout
-                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(statusFilterLabel)
-                    .addComponent(statusFilterComboBox)
-                    .addComponent(importanceFilterLabel)
-                    .addComponent(importanceFilterComboBox))
-            .addGroup(
-                headerLayout
-                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(assignedProjectsLabel)
-                    .addComponent(assignedProjectsCheckBox)
-                    .addComponent(supervisedProjectsLabel)
-                    .addComponent(supervisedProjectsCheckBox)));
+                .addComponent(filterLabel)
+                .addGroup(headerLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                        .addGroup(headerLayout
+                                .createSequentialGroup()
+                                .addComponent(statusFilterLabel)
+                                .addComponent(statusFilterButtonsPanel))
+                        .addGroup(headerLayout
+                                .createSequentialGroup()
+                                .addComponent(deadlineFilterLabel)
+                                .addComponent(deadlineFilterButtonsPanel))
+                        .addGroup(headerLayout
+                                .createSequentialGroup()
+                                .addComponent(typeFilterLabel)
+                                .addComponent(typeFilterButtonsPanel))));
 
     this.add(header, BorderLayout.NORTH);
   }
 
-  private void initProjectsList() {
+  private void updateProjectModel() {
     // todo get data from controller
-
-    String[] columnNames = {"Name", "Deadline", "Status", "Importance"};
-    int noColumn = columnNames.length;
-    int noProjects = 20;
-    String[][] projectsData = new String[noProjects][noColumn];
-    for (int i = 0; i < noProjects; i++) {
-      String status = (i % 2 == 0) ? "TO DO" : "IN PROGRESS";
-      projectsData[i] = new String[] {"Name" + i, "2020-12-" + i % 30, status, "LOW"};
+    while(projectsTableModel.getRowCount() != 0) {
+      projectsTableModel.removeRow(0);
     }
-    // the data in the tables cannot be edited only viewed
-    JTable projectsTable =
-        new JTable(projectsData, columnNames) {
-          public boolean editCellAt(int row, int column, java.util.EventObject e) {
-            return false;
-          }
-        };
-    projectsTable.setFillsViewportHeight(true);
-    projectsTable.setCellSelectionEnabled(true);
-    // the columns cannot be rearranged
-    projectsTable.getTableHeader().setReorderingAllowed(false);
+    int noProjects = 20;
+    for (int i = 0; i < noProjects; i++) {
+      // fill with dummy data
+      String status = (i % 2 == 0) ? "TO DO" : "IN PROGRESS";
+      projectsTableModel.addRow(new String[]{"Name" + i, "2020-12-" + i % 30, status});
+    }
+  }
+  private void initProjectsTable() {
+    projectsTable = new ProjectTable();
+
+    projectsTableModel = (DefaultTableModel)projectsTable.getModel();
+    String[] columnNames = {"Name", "Deadline", "Status"};
+    projectsTableModel.setColumnIdentifiers(columnNames);
+    updateProjectModel();
+
+    projectsTable.addMouseListener(new ProjectsTableMouseListener());
 
     // the projects can be sorted by deadlines when clicking on the column's header
-    TableRowSorter<TableModel> sorter = new TableRowSorter<>(projectsTable.getModel());
-    sorter.setComparator(1, new DateComparator());
+    TableRowSorter<TableModel> sorter = new TableRowSorter<>(projectsTableModel);
+    sorter.setComparator(1, new TeamProjectsPanel.DateComparator());
     projectsTable.setRowSorter(sorter);
 
     JScrollPane scrollPane = new JScrollPane(projectsTable);
-    // title of the table
+    // border and title of the list pane
     scrollPane.setBorder(
         BorderFactory.createTitledBorder(
             BorderFactory.createEtchedBorder(),
             "Projects List",
             TitledBorder.CENTER,
             TitledBorder.TOP));
+
     this.add(scrollPane, BorderLayout.CENTER);
   }
+  /** Create a table for listing the projects. */
+  class ProjectTable extends JTable {
+    public ProjectTable() {
+      this.setFillsViewportHeight(true);
+      this.setCellSelectionEnabled(true);
+      this.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+      this.setFont(UIFactory.NORMAL_TEXT_FONT);
+      this.getTableHeader().setFont(UIFactory.HIGHLIGHT_TEXT_FONT);
+      this.setRowHeight(30);
+      // the columns cannot be rearranged
+      this.getTableHeader().setReorderingAllowed(false);
+    }
+    // the data in the tables cannot be edited only viewed
+    @Override
+    public boolean isCellEditable(int row,int column) {
+      return false;
+    }
 
-  /** Compare the dates, used for sorting the column containing the deadlines. */
+  }
+  /** Compare Strings which represent dates. */
   static class DateComparator implements Comparator<String> {
     @Override
     public int compare(String s1, String s2) {
@@ -167,8 +230,51 @@ public class TeamProjectsPanel extends JPanel implements ActionListener {
         return 0;
       }
     }
+ }
+  class StatusFilterActionListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+      //todo get from controller the states
+      String statusFilter = actionEvent.getActionCommand();
+      for(int i=0;i<4;i++) {
+        if(statusFilter.equals("ALL")) {
+          // todo update projects list
+        }
+      }
+    }
   }
-
-  @Override
-  public void actionPerformed(ActionEvent actionEvent) {}
+  class DeadlineFilterActionListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+      //todo get from controller the states
+      String deadlineFilter = actionEvent.getActionCommand();
+      for(int i=0;i<4;i++) {
+        if(deadlineFilter.equals("ALL")) {
+          // todo update projects list
+        }
+      }
+    }
+  }
+  class TypeFilterActionListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+      //todo get from controller the states
+      for(int i=0;i<20;i++) {
+        // todo
+      }
+    }
+  }
+  class ProjectsTableMouseListener extends MouseAdapter {
+    @Override
+    public void mouseClicked(java.awt.event.MouseEvent evt) {
+      int row = projectsTable.getSelectedRow();
+      int column = projectsTable.getSelectedColumn();
+      if (column == 0 && evt.getClickCount() > 1) {
+        // on double click
+        String projectName = (String) projectsTableModel.getValueAt(row, column);
+        // todo pass this to controller, which finds the corresponding id then passes it to the project frame
+        JOptionPane.showMessageDialog(null,"you selected " + projectName,"title",JOptionPane.INFORMATION_MESSAGE);
+      }
+    }
+  }
 }

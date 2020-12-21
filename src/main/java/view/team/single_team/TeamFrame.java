@@ -21,14 +21,13 @@ public class TeamFrame extends JFrame {
 
   private JFrame parentFrame;
   private TeamController controller;
-  private static final Dimension DIMENSION = new Dimension(600, 500);
+  private static final Dimension DIMENSION = new Dimension(600, 600);
 
   public TeamFrame(JFrame parentFrame, int teamId) {
     super("Team");
     this.parentFrame = parentFrame;
     this.controller = new TeamController(this.parentFrame, teamId);
     this.setSize(DIMENSION);
-    this.setResizable(false);
     addTabbedPanes();
     this.addWindowListener(new TeamWindowAdapter());
     this.setVisible(true);
