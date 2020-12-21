@@ -30,9 +30,8 @@ public class TeamHomePanel extends JPanel implements ActionListener {
 
   private TeamSettingsController controller;
 
-  public TeamHomePanel(JFrame frame, Dimension frameDimension, int currentTeamId) {
+  public TeamHomePanel(JFrame frame, int currentTeamId) {
     controller = new TeamSettingsController(this, frame, currentTeamId);
-    this.setPreferredSize(frameDimension);
     this.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
     initHomePane();
   }

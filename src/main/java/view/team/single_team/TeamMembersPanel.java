@@ -28,9 +28,8 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
 
   private TeamMembersController controller;
 
-  public TeamMembersPanel(JFrame frame, Dimension frameDimension, int currentTeamId) {
+  public TeamMembersPanel(JFrame frame, int currentTeamId) {
     this.controller = new TeamMembersController(this, frame, currentTeamId);
-    this.setPreferredSize(frameDimension);
     this.setLayout(new BorderLayout());
     this.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
     initMembersPane();

@@ -5,11 +5,12 @@ import controller.team.single_team.TeamController;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.Optional;
 
 /**
  * The TeamFrame allows the user to view the team's details, the members list and the projects.
- * Additionally the manager also has access to the teams settings and adding/removing members. Upon
- * closing this frame, the user will be redirected to the main frame.
+ * Additionally the manager also has access to the teams settings and adding/removing members.
+ * Upon closing this frame, the user will be redirected to the main frame.
  *
  * @author Beata Keresztes
  */
@@ -34,9 +35,9 @@ public class TeamFrame extends JFrame {
   }
 
   private void initTabbedPanes() {
-    homeTab = new TeamHomePanel(this, DIMENSION, controller.getCurrentTeamId());
-    membersTab = new TeamMembersPanel(this, DIMENSION, controller.getCurrentTeamId());
-    projectsTab = new TeamProjectsPanel(this, DIMENSION, controller.getCurrentTeamId());
+    homeTab = new TeamHomePanel(this, controller.getCurrentTeamId());
+    membersTab = new TeamMembersPanel(this, controller.getCurrentTeamId());
+    projectsTab = new ProjectsPanel(Optional.of(controller.getCurrentTeamId()));
   }
 
   private void addTabbedPanes() {
