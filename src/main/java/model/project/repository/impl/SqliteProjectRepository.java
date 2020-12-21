@@ -62,6 +62,11 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + ".StatusId = st.StatusId WHERE Name = ? and TeamId = ? ";
   private PreparedStatement getProjectByTitleTeamSt;
 
+  // Delete project.
+  private static final String DELETE_PROJECT_STATEMENT =
+          "DELETE FROM Project WHERE ProjectId = ?";
+  private PreparedStatement deleteProjectSt;
+
   // Get projects of team, possibly with a given assignee, supervisor, status and status with
   // respect to deadline. The extra wildcards are responsible for making some attributes optional.
   private static final String GET_PROJECTS_OF_TEAM =
@@ -104,6 +109,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     getProjectByIdSt = c.prepareStatement(GET_PROJECT_BY_ID);
     updateProjectSt = c.prepareStatement(UPDATE_PROJECT);
     getProjectByTitleTeamSt = c.prepareStatement(GET_PROJECT_BY_TEAM_TITLE_STATEMENT);
+    deleteProjectSt = c.prepareStatement(DELETE_PROJECT_STATEMENT);
     getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
     getProjectsOfTeamSt = c.prepareStatement(GET_PROJECTS_OF_TEAM);
     getProjectsSt = c.prepareStatement(GET_PROJECTS);
@@ -171,6 +177,12 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     updateProjectSt.setInt(7, getProjectStatusId(project.getStatus()));
     updateProjectSt.setInt(8, project.getId());
     updateProjectSt.execute();
+  }
+
+  @Override
+  public void deleteProject(int projectId) throws SQLException {
+    deleteProjectSt.setInt(1, projectId);
+    deleteProjectSt.execute();
   }
 
   @Override
