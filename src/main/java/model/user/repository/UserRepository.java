@@ -2,6 +2,7 @@ package model.user.repository;
 
 import model.InexistentDatabaseEntityException;
 import model.user.User;
+import model.user.exceptions.DuplicateUsernameException;
 import org.jetbrains.annotations.Nullable;
 import java.sql.SQLException;
 
@@ -10,12 +11,14 @@ public interface UserRepository {
 
   /**
    * When saving the user, only the username and the password are specified. The user's id is
-   * automatically generated when the record is added to the User table.
+   * automatically generated when the record is added to the User table. The username has to be
+   * unique, there cannot be
    *
    * @param user = the user to be saved
    * @throws SQLException if the user could not be saved
+   * @throws DuplicateUsernameException if the username is already taken
    */
-  void saveUser(User user) throws SQLException;
+  void saveUser(User user) throws SQLException, DuplicateUsernameException;
   /**
    * Gets the user's id when validating the sign-in operation.
    *
