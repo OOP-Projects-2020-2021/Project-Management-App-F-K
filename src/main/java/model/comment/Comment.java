@@ -7,13 +7,14 @@ import java.time.LocalDateTime;
 public class Comment {
     private final int id;
     private final String text;
+    private final int projectId;
     private final int senderId;
     private final LocalDateTime dateTime;
 
     public static class SavableComment extends Comment {
 
-        public SavableComment(String text, int senderId, LocalDateTime dateTime) {
-            super(-1, text, senderId, dateTime);
+        public SavableComment(String text, int projectId, int senderId, LocalDateTime dateTime) {
+            super(-1, text, projectId, senderId, dateTime);
         }
 
         @Override
@@ -22,9 +23,10 @@ public class Comment {
         }
     }
 
-    public Comment(int id, String text, int senderId, LocalDateTime dateTime) {
+    public Comment(int id, String text, int projectId, int senderId, LocalDateTime dateTime) {
         this.id = id;
         this.text = text;
+        this.projectId = projectId;
         this.senderId = senderId;
         this.dateTime = dateTime;
     }
@@ -35,6 +37,10 @@ public class Comment {
 
     public String getText() {
         return text;
+    }
+
+    public int getProjectId() {
+        return projectId;
     }
 
     public int getSenderId() {
