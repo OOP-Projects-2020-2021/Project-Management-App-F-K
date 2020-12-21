@@ -4,7 +4,6 @@ import controller.team.single_team.TeamSettingsController;
 import view.UIFactory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -30,8 +29,8 @@ public class TeamHomePanel extends JPanel implements ActionListener {
 
   private TeamSettingsController controller;
 
-  public TeamHomePanel(JFrame frame, int currentTeamId) {
-    controller = new TeamSettingsController(this, frame, currentTeamId);
+  public TeamHomePanel(JFrame frame, int teamId) {
+    controller = new TeamSettingsController(this, frame, teamId);
     this.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
     initHomePane();
   }

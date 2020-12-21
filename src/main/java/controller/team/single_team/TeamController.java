@@ -22,19 +22,19 @@ public class TeamController extends FrameController {
   protected TeamManager teamManager;
   protected UserManager userManager;
 
-  protected static int currentTeamId;
+  protected static int teamId;
   protected static boolean managerAccess;
 
-  public TeamController(JFrame frame, int currentTeamId) {
+  public TeamController(JFrame frame, int teamId) {
     super(frame);
     teamManager = TeamManager.getInstance();
     userManager = UserManager.getInstance();
-    TeamController.currentTeamId = currentTeamId;
+    TeamController.teamId = teamId;
     setManagerAccess();
   }
 
-  public int getCurrentTeamId() {
-    return currentTeamId;
+  public int getTeamId() {
+    return teamId;
   }
 
   public JFrame getFrame() {
@@ -48,7 +48,7 @@ public class TeamController extends FrameController {
   protected void setManagerAccess() {
     try {
       int currentUserId = UserManager.getInstance().getCurrentUser().get().getId();
-      int currentManagerId = teamManager.getTeam(currentTeamId).getManagerId();
+      int currentManagerId = teamManager.getTeam(teamId).getManagerId();
       managerAccess = currentUserId == currentManagerId;
     } catch (SQLException | InexistentDatabaseEntityException | InexistentTeamException e) {
       ErrorDialogFactory.createErrorDialog(

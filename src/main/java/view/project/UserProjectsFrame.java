@@ -13,6 +13,7 @@ public class UserProjectsFrame extends JFrame{
     private static final Dimension DIMENSION = new Dimension(600, 600);
 
     public UserProjectsFrame(JFrame parentFrame) {
+        super("My projects");
         this.parentFrame = parentFrame;
         controller = new UserProjectsController(this);
         setSize(DIMENSION);

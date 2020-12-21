@@ -38,12 +38,12 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   private static final String AFFIRM_LEAVING_TEAM_TITLE = "Left the team ";
 
-  public TeamSettingsController(TeamHomePanel homePanel, JFrame frame, int currentTeamId) {
-    super(frame, currentTeamId);
+  public TeamSettingsController(TeamHomePanel homePanel, JFrame frame, int teamId) {
+    super(frame, teamId);
     this.homePanel = homePanel;
     teamManager.addPropertyChangeListener(this);
     try {
-      currentTeam = teamManager.getTeam(currentTeamId);
+      currentTeam = teamManager.getTeam(teamId);
     } catch (SQLException | InexistentTeamException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, "This team cannot be viewed.");
     }
@@ -113,7 +113,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   private void leaveTeam() {
     try {
-      teamManager.leaveTeam(currentTeamId);
+      teamManager.leaveTeam(teamId);
     } catch (SQLException
         | InexistentDatabaseEntityException
         | InexistentTeamException databaseException) {
@@ -136,7 +136,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   public void saveTeamName(String name) {
     try {
-      teamManager.setNewName(currentTeamId, name);
+      teamManager.setNewName(teamId, name);
       homePanel.updateNameFieldAfterSave();
     } catch (SQLException | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
@@ -153,7 +153,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   public void regenerateTeamCode() {
     try {
-      if (teamManager.regenerateTeamCode(currentTeamId) != null) {
+      if (teamManager.regenerateTeamCode(teamId) != null) {
         homePanel.showSavedLabel(true);
       }
     } catch (SQLException | InexistentTeamException databaseException) {
@@ -171,7 +171,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   public void saveTeamManager(String newManagerName) {
     try {
-      teamManager.passManagerPosition(currentTeamId, newManagerName);
+      teamManager.passManagerPosition(teamId, newManagerName);
       homePanel.updateManagerFieldAfterSave();
       homePanel.updateNameFieldAfterSave(); // user cannot edit the name of the team anymore
     } catch (InexistentTeamException | SQLException databaseException) {
