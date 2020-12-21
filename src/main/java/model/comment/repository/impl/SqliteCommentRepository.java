@@ -3,7 +3,6 @@ package model.comment.repository.impl;
 import model.comment.Comment;
 import model.comment.repository.CommentRepository;
 import model.database.Repository;
-import model.team.repository.impl.SqliteTeamRepository;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,9 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SqliteCommentRepository extends Repository implements CommentRepository {
-    protected static SqliteCommentRepository instance;
+  protected static SqliteCommentRepository instance;
 
-    private SqliteCommentRepository() {}
+  private SqliteCommentRepository() {}
 
     public static SqliteCommentRepository getInstance() {
         if (instance == null) {
