@@ -1,21 +1,35 @@
 package view.project;
-
 import controller.project.ProjectController;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 import view.UIFactory;
 
 import javax.swing.*;
+import javax.swing.text.DefaultFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Date;
+import java.util.Properties;
 
-/** @author Beata Keresztes */
-public class ProjectFrame extends JFrame implements ActionListener {
+/**
+ * Displays the details about the project, and allows the user to change the status of the project.
+ * The supervisor can edit the details of the project or delete the project.
+ *
+ *  @author Beata Keresztes
+ */
+public class ProjectFrame extends JFrame {
 
   private JFrame parentFrame;
   private ProjectController controller;
 
-  private JTextField nameTextField;
-  private JTextField deadlineTextField; // todo
+  private JTextField titleTextField;
+
+  private JDatePickerImpl deadlineDatePicker;
+  private JDatePanelImpl datePanel;
+  private UtilDateModel dateModel;
+
   private JTextArea descriptionTextArea;
   private JScrollPane descriptionScrollPane;
   private JComboBox<String> assigneeComboBox;
@@ -35,7 +49,7 @@ public class ProjectFrame extends JFrame implements ActionListener {
   // todo radio buttons
 
   private static final String[] status = {"TO DO", "IN PROGRESS", "TURNED IN", "FINISHED"};
-  private static final Dimension DIMENSION = new Dimension(500, 400);
+  private static final Dimension DIMENSION = new Dimension(600, 600);
 
   public ProjectFrame(JFrame parentFrame, int projectId) {
     super("Project");
@@ -45,7 +59,8 @@ public class ProjectFrame extends JFrame implements ActionListener {
     this.setMinimumSize(DIMENSION);
     this.setLayout(new BorderLayout());
     initComponents();
-    enableEditingTextFields(false); // todo controller
+    enableEditingTextFields(controller.isSupervisor());
+    this.setResizable(false);
     this.setVisible(true);
   }
 
@@ -57,23 +72,43 @@ public class ProjectFrame extends JFrame implements ActionListener {
   }
 
   private void initDataFields() {
-    nameTextField = UIFactory.createTextField("name");
-    deadlineTextField = UIFactory.createTextField("deadline");
+    titleTextField = UIFactory.createTextField("title");
+    initDatePicker();
+    initTextArea();
+    initTextArea();
+    initAssigneeComboBox();
+    initSupervisorComboBox();
+  }
+  private void initDatePicker() {
+    dateModel = new UtilDateModel();
+    Properties properties = new Properties();
+    properties.put("text.today", "Today");
+    properties.put("text.month", "Month");
+    properties.put("text.year", "Year");
+    datePanel = new JDatePanelImpl(dateModel,properties);
+    deadlineDatePicker = new JDatePickerImpl(datePanel,new DefaultFormatter());
+    deadlineDatePicker.addActionListener(new DateListener());
+  }
+  private void initTextArea() {
     descriptionTextArea = new JTextArea("description");
     descriptionTextArea.setLineWrap(true);
     descriptionTextArea.setWrapStyleWord(true);
     descriptionScrollPane = new JScrollPane(descriptionTextArea);
     descriptionScrollPane.setVisible(true);
+  }
+  private void initAssigneeComboBox() {
     assigneeComboBox = new JComboBox<>();
     assigneeModel = new DefaultComboBoxModel<>();
-    String[] assignees = {"bea", "anna"};
+    String[] assignees = {"user1", "user2","user3"};
     for (String s : assignees) {
       assigneeModel.addElement(s);
     }
     assigneeComboBox.setModel(assigneeModel);
+  }
+  private void initSupervisorComboBox() {
     supervisorComboBox = new JComboBox<>();
     supervisorModel = new DefaultComboBoxModel<>();
-    String[] supervisors = {"bea", "anna"};
+    String[] supervisors = {"user1", "user2","user3"};
     for (String supervisor : supervisors) {
       supervisorModel.addElement(supervisor);
     }
@@ -90,10 +125,6 @@ public class ProjectFrame extends JFrame implements ActionListener {
     inProgressButton.setActionCommand(status[1]);
     turnedInButton.setActionCommand(status[2]);
     finishedButton.setActionCommand(status[3]);
-
-    toDoButton.addActionListener(this);
-    inProgressButton.addActionListener(this);
-    finishedButton.addActionListener(this);
   }
 
   private void createRadioButtonsGroup() {
@@ -121,13 +152,13 @@ public class ProjectFrame extends JFrame implements ActionListener {
     contentLayout.setAutoCreateGaps(true);
     contentLayout.setAutoCreateContainerGaps(true);
     contentPanel.setLayout(contentLayout);
-    contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 100, 20, 100));
 
-    JLabel nameLabel = UIFactory.createLabel("Name:", null);
+    JLabel titleLabel = UIFactory.createLabel("Title:", null);
     JLabel deadlineLabel = UIFactory.createLabel("Deadline:", null);
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
     JLabel assigneeLabel = UIFactory.createLabel("Assignee:", null);
-    JLabel supervisorLabel = UIFactory.createLabel("Supervisor", null);
+    JLabel supervisorLabel = UIFactory.createLabel("Supervisor:", null);
 
     contentLayout.setHorizontalGroup(
         contentLayout
@@ -138,7 +169,7 @@ public class ProjectFrame extends JFrame implements ActionListener {
                     .addGroup(
                         contentLayout
                             .createParallelGroup()
-                            .addComponent(nameLabel)
+                            .addComponent(titleLabel)
                             .addComponent(deadlineLabel)
                             .addComponent(descriptionLabel)
                             .addComponent(assigneeLabel)
@@ -146,8 +177,8 @@ public class ProjectFrame extends JFrame implements ActionListener {
                     .addGroup(
                         contentLayout
                             .createParallelGroup()
-                            .addComponent(nameTextField)
-                            .addComponent(deadlineTextField)
+                            .addComponent(titleTextField)
+                            .addComponent(datePanel)
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox)
                             .addComponent(supervisorComboBox)))
@@ -159,13 +190,13 @@ public class ProjectFrame extends JFrame implements ActionListener {
             .addGroup(
                 contentLayout
                     .createParallelGroup()
-                    .addComponent(nameLabel)
-                    .addComponent(nameTextField))
+                    .addComponent(titleLabel)
+                    .addComponent(titleTextField))
             .addGroup(
                 contentLayout
                     .createParallelGroup()
                     .addComponent(deadlineLabel)
-                    .addComponent(deadlineTextField))
+                    .addComponent(datePanel))
             .addGroup(
                 contentLayout
                     .createParallelGroup()
@@ -189,33 +220,52 @@ public class ProjectFrame extends JFrame implements ActionListener {
   private void initButtonsPanel() {
     saveButton = UIFactory.createButton("Save Project");
     deleteButton = UIFactory.createButton("Delete Project");
-    saveButton.addActionListener(this);
-    deleteButton.addActionListener(this);
+
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     buttonsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     buttonsPanel.add(saveButton);
     buttonsPanel.add(deleteButton);
+
+    addButtonListener();
+
     this.add(buttonsPanel, BorderLayout.SOUTH);
+  }
+  public void addButtonListener() {
+    ButtonListener buttonListener = new ButtonListener();
+    saveButton.addActionListener(buttonListener);
+    deleteButton.addActionListener(buttonListener);
+    toDoButton.addActionListener(buttonListener);
+    turnedInButton.addActionListener(buttonListener);
+    inProgressButton.addActionListener(buttonListener);
+    finishedButton.addActionListener(buttonListener);
   }
 
   private void enableEditingTextFields(boolean enable) {
-    nameTextField.setEditable(enable);
+    titleTextField.setEditable(enable);
     descriptionTextArea.setEditable(enable);
-    deadlineTextField.setEditable(enable);
     assigneeComboBox.setEnabled(enable);
     supervisorComboBox.setEnabled(enable);
     finishedButton.setVisible(enable);
   }
 
-  @Override
-  public void actionPerformed(ActionEvent actionEvent) {
-    if (actionEvent.getSource() == saveButton) {
-      // todo
-    } else if (actionEvent.getSource() == deleteButton) {
-      // todo
-    } else if (actionEvent.getSource() instanceof JRadioButton) {
-      String newStatus = actionEvent.getActionCommand();
-      // todo
+  class ButtonListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+      if (actionEvent.getSource() == saveButton) {
+        // todo
+      } else if (actionEvent.getSource() == deleteButton) {
+        // todo
+      } else if (actionEvent.getSource() instanceof JRadioButton) {
+        String selectedStatus = actionEvent.getActionCommand();
+        // todo
+      }
+    }
+  }
+  class DateListener implements ActionListener {
+    @Override
+    public void actionPerformed(ActionEvent actionEvent) {
+        Date selectedDate = (Date) deadlineDatePicker.getModel().getValue();
+        System.out.println(selectedDate);
     }
   }
 }

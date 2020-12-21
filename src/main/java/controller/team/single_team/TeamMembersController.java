@@ -32,8 +32,8 @@ public class TeamMembersController extends TeamController implements PropertyCha
 
   private static final String CONFIRM_REMOVING_MEMBER_TITLE = "Removing member";
 
-  public TeamMembersController(TeamMembersPanel membersPanel, JFrame frame, int currentTeamId) {
-    super(frame, currentTeamId);
+  public TeamMembersController(TeamMembersPanel membersPanel, JFrame frame, int teamId) {
+    super(frame, teamId);
     this.membersPanel = membersPanel;
     teamManager.addPropertyChangeListener(this);
   }
@@ -59,7 +59,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
    */
   public List<User> getTeamMembers() {
     try {
-      return teamManager.getMembersOfTeam(currentTeamId);
+      return teamManager.getMembersOfTeam(teamId);
     } catch (SQLException sqlException) {
       ErrorDialogFactory.createErrorDialog(
           sqlException, frame, "The members could not be displayed.");
@@ -69,7 +69,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
 
   public void addMember(String name) {
     try {
-      teamManager.addMemberToTeam(currentTeamId, name);
+      teamManager.addMemberToTeam(teamId, name);
     } catch (SQLException | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The member \"" + name + "\" could not be added to the team.");
@@ -100,7 +100,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
             JOptionPane.YES_NO_OPTION);
     if (choice == JOptionPane.YES_OPTION) {
       try {
-        teamManager.removeTeamMember(currentTeamId, name);
+        teamManager.removeTeamMember(teamId, name);
       } catch (InexistentTeamException
           | InexistentDatabaseEntityException
           | SQLException databaseException) {
