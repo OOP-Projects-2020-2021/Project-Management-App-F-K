@@ -33,10 +33,10 @@ public class SqliteCommentRepository extends Repository implements CommentReposi
       "Select * FROM Comment WHERE projectId = ?";
   private PreparedStatement getCommentsOfProjectSt;
 
-    // Delete all comments of a project.
-    private static final String DELETE_COMMENTS_OF_PROJECT_STATEMENT =
-            "DELETE FROM Comment WHERE projectId = ?";
-    private PreparedStatement deleteCommentsOfProjectSt;
+  // Delete all comments of a project.
+  private static final String DELETE_COMMENTS_OF_PROJECT_STATEMENT =
+      "DELETE FROM Comment WHERE projectId = ?";
+  private PreparedStatement deleteCommentsOfProjectSt;
 
   @Override
   protected void prepareStatements() throws SQLException {
@@ -65,13 +65,13 @@ public class SqliteCommentRepository extends Repository implements CommentReposi
     return commentsOfProject;
   }
 
-    @Override
-    public void deleteAllCommentsOfProject(int projectId) throws SQLException {
-        deleteCommentsOfProjectSt.setInt(1, projectId);
-        deleteCommentsOfProjectSt.execute();
-    }
+  @Override
+  public void deleteAllCommentsOfProject(int projectId) throws SQLException {
+    deleteCommentsOfProjectSt.setInt(1, projectId);
+    deleteCommentsOfProjectSt.execute();
+  }
 
-    private static Comment getCommentFromResult(ResultSet result) throws SQLException {
+  private static Comment getCommentFromResult(ResultSet result) throws SQLException {
     int id = result.getInt("CommentId");
     String text = result.getString("CommentText");
     int projectId = result.getInt("ProjectId");
