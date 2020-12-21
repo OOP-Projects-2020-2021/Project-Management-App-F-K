@@ -1,6 +1,8 @@
 package controller.team;
 
 
+import view.team.single_team.TeamFrame;
+
 import javax.swing.*;
 
 /**
@@ -18,8 +20,7 @@ public class TeamLabelController {
   }
 
   public void onLabelClicked() {
-    System.out.println("Label clicked for team: " + teamId);
-    // todo: frame.setEnabled(false);
-    // todo: new TeamFrame();
+    frame.setEnabled(false);
+    new TeamFrame(frame, teamId);
   }
 }
