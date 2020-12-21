@@ -1,6 +1,5 @@
 package controller.team;
 
-
 import view.team.single_team.TeamFrame;
 
 import javax.swing.*;
