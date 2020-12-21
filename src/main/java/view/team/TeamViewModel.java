@@ -6,13 +6,13 @@ package view.team;
  * @author Bori Fazakas
  */
 public class TeamViewModel {
+  private int teamId;
   private String name;
-  private String code;
   private String managerName;
 
-  public TeamViewModel(String name, String code, String managerName) {
+  public TeamViewModel(int teamId, String name, String managerName) {
+    this.teamId = teamId;
     this.name = name;
-    this.code = code;
     this.managerName = managerName;
   }
 
@@ -20,8 +20,8 @@ public class TeamViewModel {
     return name;
   }
 
-  public String getCode() {
-    return code;
+  public int getId() {
+    return teamId;
   }
 
   public String getManagerName() {
