@@ -1,5 +1,7 @@
 package view.team.single_team;
 
+import controller.team.single_team.TeamProjectsController;
+import model.project.Project;
 import view.UIFactory;
 
 import javax.swing.*;
@@ -13,6 +15,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Displays the list of projects, which can be sorted based on the deadline or filtered based on the
@@ -27,10 +30,13 @@ public class TeamProjectsPanel extends JPanel {
   private JPanel deadlineFilterButtonsPanel;
   private DefaultTableModel projectsTableModel;
   private JTable projectsTable;
+  private TeamProjectsController controller;
+  private static final String[] columnNames = {"Name", "Deadline", "Status"};
+  private static final String[] projectType = {"ALL","ASSIGNED TO ME","SUPERVISED BY ME"};
 
-
-  public TeamProjectsPanel(Dimension parentFrameDimension) {
-    this.setPreferredSize(parentFrameDimension);
+  public TeamProjectsPanel(JFrame frame, Dimension frameDimension, int currentTeamId) {
+    controller = new TeamProjectsController(this,frame,currentTeamId);
+    this.setPreferredSize(frameDimension);
     this.setLayout(new BorderLayout());
     this.setBorder(BorderFactory.createEmptyBorder(20,20,20,20));
     initProjectsPane();
@@ -48,38 +54,35 @@ public class TeamProjectsPanel extends JPanel {
   }
   private void initStatusFilter() {
     // todo get values from table Status + "ALL"
-    String[] status = {"ALL","TO DO", "IN PROGRESS", "MARKED AS DONE", "FINISHED"};
+    String[] projectStatus = {"ALL","TO DO", "IN PROGRESS", "TURNED_IN", "FINISHED"};
 
     statusFilterButtonsPanel = new JPanel();
     statusFilterButtonsPanel.setLayout(new BoxLayout(statusFilterButtonsPanel, BoxLayout.Y_AXIS));
     // grouping the buttons ensures that only one button can be selected at a time
     ButtonGroup statusFilterButtonGroup = new ButtonGroup();
-    JRadioButton[] statusFilterButtons = new JRadioButton[status.length];
+    JRadioButton[] statusFilterButtons = new JRadioButton[projectStatus.length];
 
-    for(int i=0;i<status.length;i++) {
-      statusFilterButtons[i] = new JRadioButton(status[i]);
-      statusFilterButtons[i].setActionCommand(status[i]);
+    for(int i=0;i<projectStatus.length;i++) {
+      statusFilterButtons[i] = new JRadioButton(projectStatus[i]);
+      statusFilterButtons[i].setActionCommand(projectStatus[i]);
       statusFilterButtons[i].addActionListener(new StatusFilterActionListener());
       statusFilterButtonGroup.add(statusFilterButtons[i]);
       statusFilterButtonsPanel.add(statusFilterButtons[i]);
     }
     // initially all projects are shown
     statusFilterButtons[0].setSelected(true);
-
   }
 
   private void initTypeFilter() {
-    String[] type = {"ALL","ASSIGNED TO ME","SUPERVISED BY ME"};
-
     typeFilterButtonsPanel = new JPanel();
     typeFilterButtonsPanel.setLayout(new BoxLayout(typeFilterButtonsPanel, BoxLayout.Y_AXIS));
     // grouping the buttons ensures that only one button can be selected at a time
     ButtonGroup typeFilterButtonGroup = new ButtonGroup();
-    JRadioButton[] typeFilterButtons = new JRadioButton[type.length];
+    JRadioButton[] typeFilterButtons = new JRadioButton[projectType.length];
 
-    for(int i=0;i<type.length;i++){
-      typeFilterButtons[i] = new JRadioButton(type[i]);
-      typeFilterButtons[i].setActionCommand(type[i]);
+    for(int i=0;i<projectType.length;i++){
+      typeFilterButtons[i] = new JRadioButton(projectType[i]);
+      typeFilterButtons[i].setActionCommand(projectType[i]);
       typeFilterButtons[i].addActionListener(new TypeFilterActionListener());
       typeFilterButtonGroup.add(typeFilterButtons[i]);
       typeFilterButtonsPanel.add(typeFilterButtons[i]);
@@ -160,26 +163,28 @@ public class TeamProjectsPanel extends JPanel {
     this.add(header, BorderLayout.NORTH);
   }
 
-  private void updateProjectModel() {
-    // todo get data from controller
+  private void clearProjectModel() {
     while(projectsTableModel.getRowCount() != 0) {
       projectsTableModel.removeRow(0);
     }
-    int noProjects = 20;
-    for (int i = 0; i < noProjects; i++) {
-      // fill with dummy data
-      String status = (i % 2 == 0) ? "TO DO" : "IN PROGRESS";
-      projectsTableModel.addRow(new String[]{"Name" + i, "2020-12-" + i % 30, status});
+  }
+  private void fillProjectModel(List<Project> projectsList) {
+    if(!controller.isEmptyProjectList(projectsList)) {
+      for (Project project : projectsList) {
+        projectsTableModel.addRow(new String[]{project.getTitle(), String.valueOf(project.getDeadline()), String.valueOf(project.getStatus())});
+      }
     }
+  }
+  public void updateProjectModel(List<Project> projectsList) {
+    clearProjectModel();
+    fillProjectModel(projectsList);
   }
   private void initProjectsTable() {
     projectsTable = new ProjectTable();
 
     projectsTableModel = (DefaultTableModel)projectsTable.getModel();
-    String[] columnNames = {"Name", "Deadline", "Status"};
     projectsTableModel.setColumnIdentifiers(columnNames);
-    updateProjectModel();
-
+    updateProjectModel(controller.getAllProjects());
     projectsTable.addMouseListener(new ProjectsTableMouseListener());
 
     // the projects can be sorted by deadlines when clicking on the column's header
@@ -199,7 +204,7 @@ public class TeamProjectsPanel extends JPanel {
     this.add(scrollPane, BorderLayout.CENTER);
   }
   /** Create a table for listing the projects. */
-  class ProjectTable extends JTable {
+  static class ProjectTable extends JTable {
     public ProjectTable() {
       this.setFillsViewportHeight(true);
       this.setCellSelectionEnabled(true);
@@ -234,33 +239,29 @@ public class TeamProjectsPanel extends JPanel {
   class StatusFilterActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-      //todo get from controller the states
       String statusFilter = actionEvent.getActionCommand();
-      for(int i=0;i<4;i++) {
-        if(statusFilter.equals("ALL")) {
-          // todo update projects list
-        }
+      updateProjectModel(controller.getProjectsByStatus(statusFilter));
       }
     }
-  }
+
   class DeadlineFilterActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-      //todo get from controller the states
       String deadlineFilter = actionEvent.getActionCommand();
-      for(int i=0;i<4;i++) {
-        if(deadlineFilter.equals("ALL")) {
-          // todo update projects list
-        }
+      updateProjectModel(controller.getProjectsByDeadline(deadlineFilter));
       }
     }
-  }
+
   class TypeFilterActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-      //todo get from controller the states
-      for(int i=0;i<20;i++) {
-        // todo
+      String typeFilter = actionEvent.getActionCommand();
+      if(typeFilter.equals(projectType[0])) {
+        updateProjectModel(controller.getAllProjects());
+      }else if(typeFilter.equals(projectType[1])) {
+        updateProjectModel(controller.getAssignedProjects());
+      }else if(typeFilter.equals(projectType[2])) {
+        updateProjectModel(controller.getSupervisedProjects());
       }
     }
   }
