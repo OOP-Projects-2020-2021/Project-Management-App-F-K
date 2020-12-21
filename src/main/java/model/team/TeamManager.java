@@ -60,7 +60,7 @@ public class TeamManager extends Manager {
 
   /**
    * Deletes the team with the specified id from the database, but only if the current user is its
-   * manager. To do so, first, all the members and projects of the team are deleted.
+   * manager. To do so, first, all the memberships and projects of the team are deleted.
    *
    * @param teamId is the id of the team to delete.
    * @throws SQLException if the operation could not be performed in the database.
