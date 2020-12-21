@@ -63,8 +63,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   private PreparedStatement getProjectByTitleTeamSt;
 
   // Delete project.
-  private static final String DELETE_PROJECT_STATEMENT =
-          "DELETE FROM Project WHERE ProjectId = ?";
+  private static final String DELETE_PROJECT_STATEMENT = "DELETE FROM Project WHERE ProjectId = ?";
   private PreparedStatement deleteProjectSt;
 
   // Get projects of team, possibly with a given assignee, supervisor, status and status with

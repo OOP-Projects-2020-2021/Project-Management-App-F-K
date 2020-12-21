@@ -58,8 +58,8 @@ public interface ProjectRepository {
   void updateProject(Project project) throws SQLException, InexistentDatabaseEntityException;
 
   /**
-   * Deletes the project with the specified id from the database.
-   * Requirement: any entities having foreign keys to these projects must already be deleted.
+   * Deletes the project with the specified id from the database. Requirement: any entities having
+   * foreign keys to these projects must already be deleted.
    *
    * @param projectId is the id of the project to delete.
    * @throws SQLException if the operation could not be performed in the database.
