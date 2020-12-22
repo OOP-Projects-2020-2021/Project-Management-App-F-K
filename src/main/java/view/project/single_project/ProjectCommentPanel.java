@@ -20,7 +20,7 @@ public class ProjectCommentPanel extends JPanel {
 
   private JTextArea commentTextArea;
   private JButton sendButton;
-  private JPanel commentListPanel;
+  private JScrollPane commentListScrollPanel;
   private ProjectCommentController controller;
   private static final String LEAVE_COMMENT_MESSAGE = "Leave a comment";
 
@@ -38,8 +38,8 @@ public class ProjectCommentPanel extends JPanel {
   }
 
   private void initCommentList() {
-    commentListPanel = new JPanel(new GridLayout(3, 1)); // todo
-    for (int i = 0; i < 3; i++) {
+    JPanel commentListPanel = new JPanel(new GridLayout(10, 1)); // todo
+    for (int i = 0; i < 10; i++) {
       JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
       JLabel senderName = UIFactory.createLabel("user" + i, null);
       JLabel sendingDate = UIFactory.createLabel("2020-12-22", null);
@@ -49,6 +49,7 @@ public class ProjectCommentPanel extends JPanel {
 
       JTextArea commentArea = createUneditableCommentArea("comment" + i);
       JScrollPane commentScrollPane = new JScrollPane(commentArea);
+      commentScrollPane.setPreferredSize(new Dimension(50,50));
 
       JPanel rowPanel = new JPanel(new BorderLayout());
       rowPanel.add(headerPanel, BorderLayout.NORTH);
@@ -56,6 +57,8 @@ public class ProjectCommentPanel extends JPanel {
 
       commentListPanel.add(rowPanel);
     }
+    commentListScrollPanel = new JScrollPane(commentListPanel);
+    commentListScrollPanel.setPreferredSize(new Dimension(200,200));
   }
 
   private void initCommentArea() {
@@ -95,7 +98,7 @@ public class ProjectCommentPanel extends JPanel {
                 commentLayout
                     .createParallelGroup()
                     .addComponent(commentsLabel)
-                    .addComponent(commentListPanel)
+                    .addComponent(commentListScrollPanel)
                     .addGroup(
                         commentLayout
                             .createSequentialGroup()
@@ -105,7 +108,7 @@ public class ProjectCommentPanel extends JPanel {
         commentLayout
             .createSequentialGroup()
             .addComponent(commentsLabel)
-            .addComponent(commentListPanel)
+            .addComponent(commentListScrollPanel)
             .addGroup(
                 commentLayout
                     .createParallelGroup()
