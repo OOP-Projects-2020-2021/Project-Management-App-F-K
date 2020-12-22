@@ -21,6 +21,8 @@ public class ProjectFilterPanel extends JPanel {
   private JPanel statusFilterButtonsPanel;
   private JPanel privilegeFilterButtonsPanel;
   private JPanel turnInTimeFilterButtonsPanel;
+  private JRadioButton assignedToUserButton;
+  private JRadioButton supervisedByUserButton;
   private ProjectFilterController controller;
 
   public ProjectFilterPanel(int teamId) {
@@ -56,22 +58,19 @@ public class ProjectFilterPanel extends JPanel {
   }
 
   private void initPrivilegeFilter() {
-    String[] privilegeTypes = controller.getProjectPrivilegeTypes();
     privilegeFilterButtonsPanel = new JPanel();
     privilegeFilterButtonsPanel.setLayout(new BoxLayout(privilegeFilterButtonsPanel, BoxLayout.Y_AXIS));
-    // grouping the buttons ensures that only one button can be selected at a time
-    ButtonGroup privilegeFilterButtonGroup = new ButtonGroup();
-    JRadioButton[] privilegeFilterButtons = new JRadioButton[privilegeTypes.length];
+    // both the assigned and supervised projects are listed in the beginning, so both buttons can be selected at a time
 
-    for (int i = 0; i < privilegeTypes.length; i++) {
-      privilegeFilterButtons[i] = new JRadioButton(privilegeTypes[i]);
-      privilegeFilterButtons[i].setActionCommand(privilegeTypes[i]);
-      privilegeFilterButtons[i].addActionListener(new PrivilegeFilterActionListener());
-      privilegeFilterButtonGroup.add(privilegeFilterButtons[i]);
-      privilegeFilterButtonsPanel.add(privilegeFilterButtons[i]);
-    }
+    assignedToUserButton = new JRadioButton(ProjectFilterController.PrivilegeTypes.ASSIGNED_TO_ME.toString());
+    supervisedByUserButton = new JRadioButton(ProjectFilterController.PrivilegeTypes.SUPERVISED_BY_ME.toString());
+    assignedToUserButton.addActionListener(new PrivilegeFilterActionListener());
+    supervisedByUserButton.addActionListener(new PrivilegeFilterActionListener());
     // initially all projects are shown
-    privilegeFilterButtons[0].setSelected(true);
+    assignedToUserButton.setSelected(true);
+    supervisedByUserButton.setSelected(true);
+    privilegeFilterButtonsPanel.add(assignedToUserButton);
+    privilegeFilterButtonsPanel.add(supervisedByUserButton);
   }
 
   private void initTurnInTimeFilter() {
@@ -169,8 +168,10 @@ public class ProjectFilterPanel extends JPanel {
   class PrivilegeFilterActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-      String privilegeFilter = actionEvent.getActionCommand();
-      controller.setPrivilegeFilter(privilegeFilter);
+      boolean assignedToUser = assignedToUserButton.isSelected();
+      boolean supervisedByUser = supervisedByUserButton.isSelected();
+      boolean unFiltered = !(assignedToUser && supervisedByUser);
+      controller.setPrivilegeFilter(assignedToUser && unFiltered,supervisedByUser && unFiltered);
       controller.filterProjects();
     }
   }

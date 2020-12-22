@@ -1,15 +1,12 @@
 package controller.project;
 
 import model.InexistentDatabaseEntityException;
-import model.project.Project;
 import model.project.ProjectManager;
 import model.project.queryconstants.QueryProjectDeadlineStatus;
 import model.project.queryconstants.QueryProjectStatus;
-import model.user.User;
 import model.user.UserManager;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
-import org.jetbrains.annotations.Nullable;
 import view.ErrorDialogFactory;
 import view.project.ProjectListModel;
 
@@ -28,10 +25,11 @@ public class ProjectFilterController {
   private UserManager userManager;
   private int teamId;
   private ProjectListModel projectListModel;
-  public enum PrivilegeTypes {ALL, ASSIGNED_TO_ME, SUPERVISED_BY_ME}
+  public enum PrivilegeTypes {ASSIGNED_TO_ME, SUPERVISED_BY_ME}
   private String statusFilter;
-  private String privilegeFilter;
   private String turnInTimeFilter;
+  private boolean assignedToUser;
+  private boolean supervisedByUser;
 
   public ProjectFilterController(int teamId) {
     this.teamId = teamId;
@@ -39,16 +37,17 @@ public class ProjectFilterController {
     userManager = UserManager.getInstance();
     projectListModel = ProjectListModel.getInstance();
     statusFilter = String.valueOf(QueryProjectStatus.ALL);
-    privilegeFilter = String.valueOf(PrivilegeTypes.ALL);
     turnInTimeFilter = String.valueOf(QueryProjectDeadlineStatus.ALL);
+    assignedToUser = supervisedByUser = false;
     filterProjects();
   }
 
   public void setStatusFilter(String status) {
     statusFilter = status;
   }
-  public void setPrivilegeFilter(String privilege) {
-    privilegeFilter = privilege;
+  public void setPrivilegeFilter(boolean assignedToUser,boolean supervisedByUser) {
+    this.assignedToUser = assignedToUser;
+    this.supervisedByUser = supervisedByUser;
   }
   public void setTurnInTimeFilter(String turnInTime) {
     turnInTimeFilter = turnInTime;
@@ -62,9 +61,9 @@ public class ProjectFilterController {
   }
   private void filterProjectsOfTeam() {
     String assigneeName = null,supervisorName = null;
-    if(privilegeFilter.equals(String.valueOf(PrivilegeTypes.ASSIGNED_TO_ME))) {
+    if(assignedToUser) {
       assigneeName = userManager.getCurrentUser().get().getUsername();
-    } else if(privilegeFilter.equals(String.valueOf(PrivilegeTypes.SUPERVISED_BY_ME))) {
+    } else if(supervisedByUser) {
       supervisorName = userManager.getCurrentUser().get().getUsername();
     }
     try {
@@ -74,8 +73,6 @@ public class ProjectFilterController {
     }
   }
   private void filterProjectsOfUser() {
-    boolean assignedToUser = privilegeFilter.equals(String.valueOf(PrivilegeTypes.ASSIGNED_TO_ME));
-    boolean supervisedByUser = privilegeFilter.equals(String.valueOf(PrivilegeTypes.SUPERVISED_BY_ME));
     try {
       projectListModel.setProjectList(projectManager.getProjects(assignedToUser,supervisedByUser,QueryProjectStatus.valueOf(statusFilter),QueryProjectDeadlineStatus.valueOf(turnInTimeFilter)));
     }catch(SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
@@ -94,11 +91,5 @@ public class ProjectFilterController {
     return new String[] {String.valueOf(QueryProjectDeadlineStatus.ALL),
             String.valueOf(QueryProjectDeadlineStatus.IN_TIME),
             String.valueOf(QueryProjectDeadlineStatus.OVERDUE)};
-  }
-  public String[] getProjectPrivilegeTypes() {
-    return new String[] {String.valueOf(PrivilegeTypes.ALL),
-            String.valueOf(PrivilegeTypes.ASSIGNED_TO_ME),
-            String.valueOf(PrivilegeTypes.SUPERVISED_BY_ME)
-    };
   }
 }
