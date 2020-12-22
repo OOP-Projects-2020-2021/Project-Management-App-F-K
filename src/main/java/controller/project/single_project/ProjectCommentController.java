@@ -9,10 +9,9 @@ import model.project.ProjectManager;
  */
 public class ProjectCommentController {
 
-    private ProjectManager projectManager;
+  private ProjectManager projectManager;
 
-    public ProjectCommentController(int ProjectId){
-        projectManager = ProjectManager.getInstance();
-
-    }
+  public ProjectCommentController(int ProjectId) {
+    projectManager = ProjectManager.getInstance();
+  }
 }

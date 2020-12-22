@@ -1,4 +1,5 @@
 package view.project.single_project;
+
 import controller.project.single_project.ProjectController;
 
 import javax.swing.*;
@@ -8,7 +9,7 @@ import java.awt.*;
  * Displays the details about the project, and allows the user to change the status of the project.
  * The supervisor can edit the details of the project or delete the project.
  *
- *  @author Beata Keresztes
+ * @author Beata Keresztes
  */
 public class ProjectFrame extends JFrame {
 
@@ -42,7 +43,6 @@ public class ProjectFrame extends JFrame {
     JSplitPane splitPane = new JSplitPane();
     splitPane.setLeftComponent(detailsPanel);
     splitPane.setRightComponent(commentPanel);
-    this.add(splitPane,BorderLayout.CENTER);
+    this.add(splitPane, BorderLayout.CENTER);
   }
-
 }

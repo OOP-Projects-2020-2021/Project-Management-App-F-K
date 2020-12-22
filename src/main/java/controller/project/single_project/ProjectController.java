@@ -4,8 +4,8 @@ import controller.FrameController;
 import javax.swing.*;
 
 /**
- * Manages the ProjectFrame, which allows the user to view the details about the project,
- * mark their contribution and leave comments.
+ * Manages the ProjectFrame, which allows the user to view the details about the project, mark their
+ * contribution and leave comments.
  *
  * @author Beata Keresztes
  */
@@ -17,12 +17,14 @@ public class ProjectController extends FrameController {
     super(frame);
     this.projectId = projectId;
   }
+
   public void onClose(JFrame parentFrame) {
-      parentFrame.setVisible(true);
-      parentFrame.setEnabled(true);
-      closeFrame();
+    parentFrame.setVisible(true);
+    parentFrame.setEnabled(true);
+    closeFrame();
   }
+
   public int getProjectId() {
-      return  projectId;
+    return projectId;
   }
 }
