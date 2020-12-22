@@ -8,7 +8,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,7 +78,14 @@ public class ProjectFilterController implements PropertyChangeListener {
     List<Project> projects = new ArrayList<>();
     for (int i = 0; i < 10; i++) {
       projects.add(
-          new Project(1, "Project" + i, 52, LocalDate.of(2020,12,i+1) , Project.ProjectStatus.TO_DO, 2, 12));
+          new Project(
+              1,
+              "Project" + i,
+              52,
+              LocalDate.of(2020, 12, i + 1),
+              Project.ProjectStatus.TO_DO,
+              2,
+              12));
     }
     return projects;
   }
