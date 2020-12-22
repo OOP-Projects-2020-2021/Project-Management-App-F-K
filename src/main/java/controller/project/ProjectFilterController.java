@@ -9,19 +9,16 @@ import model.user.User;
 import model.user.UserManager;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
+import org.jetbrains.annotations.Nullable;
 import view.ErrorDialogFactory;
 import view.project.ProjectListModel;
 
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 /**
  * Controls the panel containing the filters and the table in which the projects are displayed.
+ * If the teamId is specified and it is a non-negative integer, then the only the projects related to that team are listed.
+ * Otherwise, if the teamId is a negative number, -1, then all the projects corresponding to the current user are listed, independent of the team.
  *
  * @author Beata Keresztes
  */
@@ -29,14 +26,14 @@ public class ProjectFilterController {
 
   private ProjectManager projectManager;
   private UserManager userManager;
-  Optional<Integer> teamId;
+  private int teamId;
   private ProjectListModel projectListModel;
   public enum PrivilegeTypes {ALL, ASSIGNED_TO_ME, SUPERVISED_BY_ME}
   private String statusFilter;
   private String privilegeFilter;
   private String turnInTimeFilter;
 
-  public ProjectFilterController(Optional<Integer> teamId) {
+  public ProjectFilterController(int teamId) {
     this.teamId = teamId;
     projectManager = ProjectManager.getInstance();
     userManager = UserManager.getInstance();
@@ -47,18 +44,6 @@ public class ProjectFilterController {
     filterProjects();
   }
 
-  public void filterProjectsByStatus(String status) {
-      try {
-        if(teamId.isPresent()) {
-          // only list the projects of a single team
-          projectListModel.setProjectList(projectManager.getProjectsOfTeam(teamId.get(), null, null, QueryProjectStatus.valueOf(status), null));
-        } else {
-          projectListModel.setProjectList(projectManager.getProjects(false,false,QueryProjectStatus.valueOf(status),null));
-        }
-      } catch (InexistentDatabaseEntityException | SQLException | InexistentUserException | NoSignedInUserException e) {
-        ErrorDialogFactory.createErrorDialog(e,null,null);
-      }
-  }
   public void setStatusFilter(String status) {
     statusFilter = status;
   }
@@ -69,7 +54,7 @@ public class ProjectFilterController {
     turnInTimeFilter = turnInTime;
   }
   public void filterProjects() {
-    if (teamId.isPresent()) {
+    if (teamId > 0) {
       filterProjectsOfTeam();
     } else {
       filterProjectsOfUser();
@@ -83,7 +68,7 @@ public class ProjectFilterController {
       supervisorName = userManager.getCurrentUser().get().getUsername();
     }
     try {
-      projectListModel.setProjectList(projectManager.getProjectsOfTeam(teamId.get(),supervisorName,assigneeName,QueryProjectStatus.valueOf(statusFilter),QueryProjectDeadlineStatus.valueOf(turnInTimeFilter)));
+      projectListModel.setProjectList(projectManager.getProjectsOfTeam(teamId,supervisorName,assigneeName,QueryProjectStatus.valueOf(statusFilter),QueryProjectDeadlineStatus.valueOf(turnInTimeFilter)));
     }catch(SQLException | InexistentDatabaseEntityException | InexistentUserException e) {
       ErrorDialogFactory.createErrorDialog(e,null,null);
     }

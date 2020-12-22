@@ -23,7 +23,7 @@ public class ProjectFilterPanel extends JPanel {
   private JPanel turnInTimeFilterButtonsPanel;
   private ProjectFilterController controller;
 
-  public ProjectFilterPanel(Optional<Integer> teamId) {
+  public ProjectFilterPanel(int teamId) {
     this.controller = new ProjectFilterController(teamId);
     initFilters();
     createPanelLayout();

@@ -16,7 +16,7 @@ public class ProjectsPanel extends JPanel {
   private ProjectTable projectsTable;
   private JFrame frame;
 
-  public ProjectsPanel(JFrame frame,Optional<Integer> teamId) {
+  public ProjectsPanel(JFrame frame,int teamId) {
     this.frame = frame;
     setLayout(new BorderLayout());
     setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -24,7 +24,7 @@ public class ProjectsPanel extends JPanel {
     initProjectsTable();
   }
 
-  private void initProjectsHeader(Optional<Integer> teamId) {
+  private void initProjectsHeader(int teamId) {
     ProjectFilterPanel header = new ProjectFilterPanel(teamId);
     add(header, BorderLayout.NORTH);
   }
