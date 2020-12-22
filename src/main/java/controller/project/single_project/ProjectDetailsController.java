@@ -56,6 +56,8 @@ public class ProjectDetailsController implements PropertyChangeListener {
     } else if (evt.getPropertyName()
         .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       setProject();
+      selectProjectStatusButtons();
+      panel.updateStatusLabel();
     }
   }
 
@@ -83,6 +85,10 @@ public class ProjectDetailsController implements PropertyChangeListener {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
     return false;
+  }
+
+  public boolean enableEditing() {
+    return (isSupervisor() && (project.getStatus() != Project.ProjectStatus.FINISHED));
   }
 
   public User getProjectAssignee() {
@@ -136,7 +142,7 @@ public class ProjectDetailsController implements PropertyChangeListener {
     try {
       projectManager.updateProject(
           project.getId(), title, assignee, supervisor, deadline, description);
-      displaySuccessfulSave();
+      displaySuccessfulSaveMessage();
     } catch (InexistentDatabaseEntityException | SQLException | InexistentProjectException e) {
       ErrorDialogFactory.createErrorDialog(
           e,
@@ -154,7 +160,7 @@ public class ProjectDetailsController implements PropertyChangeListener {
     }
   }
 
-  private void displaySuccessfulSave() {
+  private void displaySuccessfulSaveMessage() {
     JOptionPane.showMessageDialog(
         null,
         "The project was updated successfully!",
@@ -170,23 +176,26 @@ public class ProjectDetailsController implements PropertyChangeListener {
         "You cannot set the project from status " + project.getStatus() + " to " + newState);
   }
 
+  /**
+   * Changes the status of the project respecting the valid transition between the states.
+   * @param newStatus the new status set by the user
+   * @return boolean = true if the project could be set to the new state, otherwise false
+   */
   public boolean setProjectStatus(String newStatus) {
     try {
-      // if the project was already turned in
-      if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
+      if (newStatus.equals(Project.ProjectStatus.FINISHED.toString())) {
+        projectManager.acceptAsFinished(project.getId());
+      } else if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
+        // the new state can only be "to do" or "in progress"
         if (isSupervisor()) {
           projectManager.discardTurnIn(project.getId(), Project.ProjectStatus.valueOf(newStatus));
         } else if (isAssignee()) {
           projectManager.undoTurnIn(project.getId(), Project.ProjectStatus.valueOf(newStatus));
         }
-      } else if (newStatus.equals(Project.ProjectStatus.TO_DO.toString())) {
-        projectManager.setProjectAsToDo(project.getId());
       } else if (newStatus.equals(Project.ProjectStatus.IN_PROGRESS.toString())) {
         projectManager.setProjectInProgress(project.getId());
-      } else if (newStatus.equals(Project.ProjectStatus.TURNED_IN.toString())) {
-        projectManager.turnInProject(project.getId());
-      } else if (newStatus.equals(Project.ProjectStatus.FINISHED.toString())) {
-        projectManager.acceptAsFinished(project.getId());
+      } else if (newStatus.equals(Project.ProjectStatus.TO_DO.toString())) {
+        projectManager.setProjectAsToDo(project.getId());
       }
       return true;
     } catch (NoSignedInUserException
@@ -207,6 +216,34 @@ public class ProjectDetailsController implements PropertyChangeListener {
       ErrorDialogFactory.createErrorDialog(e, null, message);
     }
     return false;
+  }
+
+  /**
+   * Depending on the status of the project, only those options are shown which represent a valid change of state.
+   * * Finished projects cannot be revoked or edited.
+   * * Turned in projects can be undone by either the assignee or supervisor, but only the supervisor can set it as finished.
+   * * In progress projects can be changed only by the assignee, setting it back to "to do" or turning it in.
+   * * To do projects can be changed also only by the assignee, to "in progress" or turned in.
+   */
+  public void selectProjectStatusButtons() {
+    boolean enableTodo = false;
+    boolean enableInProgress = false;
+    boolean enableTurnedIn = false;
+    boolean enableFinished = false;
+    if(isSupervisor()) {
+      if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
+        enableFinished = enableInProgress = enableTodo = true;
+      }
+    } else if (isAssignee()) {
+      if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
+        enableInProgress = enableTodo = true;
+      } else if (project.getStatus() == Project.ProjectStatus.IN_PROGRESS) {
+        enableTodo = enableTurnedIn = true;
+      } else if (project.getStatus() == Project.ProjectStatus.TO_DO) {
+        enableInProgress = enableTurnedIn = true;
+      }
+    }
+    panel.enableProjectStatusButtons(enableTodo,enableInProgress,enableTurnedIn,enableFinished);
   }
 
   public void deleteProject() {

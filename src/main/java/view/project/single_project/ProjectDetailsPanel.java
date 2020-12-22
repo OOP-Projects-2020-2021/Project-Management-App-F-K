@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Allows the user to view the details about a given project, such as the title, description,
  * deadline, etc. Only the supervisor of the project can edit the details of a project or pass the
- * supervisor position.
+ * supervisor position to another member of the team.
  *
  * @author Beata Keresztes
  */
@@ -34,6 +34,7 @@ public class ProjectDetailsPanel extends JPanel {
   private JTextField titleTextField;
   private JTextArea descriptionTextArea;
   private JScrollPane descriptionScrollPane;
+  private JLabel projectStatusLabel;
 
   private JComboBox<String> assigneeComboBox;
   private DefaultComboBoxModel<String> assigneeModel;
@@ -54,9 +55,6 @@ public class ProjectDetailsPanel extends JPanel {
     controller = new ProjectDetailsController(project, this);
     this.setLayout(new BorderLayout());
     initDetailsPanel();
-    enableSupervisorAccess();
-    System.out.println(project.getTitle());
-    System.out.println(project.getStatus());
   }
 
   private void initDetailsPanel() {
@@ -65,6 +63,8 @@ public class ProjectDetailsPanel extends JPanel {
     initContentPanel();
     initButtonsPanel();
     addButtonListener();
+    enableEditFields(controller.enableEditing());
+    controller.selectProjectStatusButtons();
   }
 
   private void initDataFields() {
@@ -73,6 +73,7 @@ public class ProjectDetailsPanel extends JPanel {
     initDescriptionTextArea();
     initAssigneeComboBox();
     initSupervisorComboBox();
+    projectStatusLabel = UIFactory.createLabel(controller.getStatus(),null);
   }
 
   private void initDatePicker() {
@@ -153,29 +154,14 @@ public class ProjectDetailsPanel extends JPanel {
     System.out.println(controller.getStatus());
     switch (Project.ProjectStatus.valueOf(controller.getStatus())) {
       case IN_PROGRESS:
-        {
-          inProgressButton.setSelected(true);
-          break;
-        }
+        {inProgressButton.setSelected(true); break;}
       case TURNED_IN:
-        {
-          turnedInButton.setSelected(true);
-          break;
-        }
+        {turnedInButton.setSelected(true); break;}
       case FINISHED:
-        {
-          finishedButton.setSelected(true);
-          break;
-        }
+        {finishedButton.setSelected(true); break;}
       case TO_DO:
-        {
-          toDoButton.setSelected(true);
-          break;
-        }
-      default:
-        {
-          break;
-        }
+        {toDoButton.setSelected(true); break;}
+      default: {break;}
     }
   }
 
@@ -212,6 +198,7 @@ public class ProjectDetailsPanel extends JPanel {
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
     JLabel assigneeLabel = UIFactory.createLabel("Assignee:", null);
     JLabel supervisorLabel = UIFactory.createLabel("Supervisor:", null);
+    JLabel statusLabel = UIFactory.createLabel("Status:",null);
 
     contentLayout.setHorizontalGroup(
         contentLayout
@@ -221,12 +208,13 @@ public class ProjectDetailsPanel extends JPanel {
                     .createSequentialGroup()
                     .addGroup(
                         contentLayout
-                            .createParallelGroup()
-                            .addComponent(titleLabel)
-                            .addComponent(deadlineLabel)
-                            .addComponent(descriptionLabel)
-                            .addComponent(assigneeLabel)
-                            .addComponent(supervisorLabel))
+                                .createParallelGroup()
+                                .addComponent(titleLabel)
+                                .addComponent(deadlineLabel)
+                                .addComponent(descriptionLabel)
+                                .addComponent(assigneeLabel)
+                                .addComponent(supervisorLabel)
+                                .addComponent(statusLabel))
                     .addGroup(
                         contentLayout
                             .createParallelGroup()
@@ -234,7 +222,8 @@ public class ProjectDetailsPanel extends JPanel {
                             .addComponent(datePanel)
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox)
-                            .addComponent(supervisorComboBox)))
+                            .addComponent(supervisorComboBox)
+                            .addComponent(projectStatusLabel)))
             .addGroup(contentLayout.createSequentialGroup().addComponent(radioButtonsPanel)));
 
     contentLayout.setVerticalGroup(
@@ -265,6 +254,11 @@ public class ProjectDetailsPanel extends JPanel {
                     .createParallelGroup()
                     .addComponent(supervisorLabel)
                     .addComponent(supervisorComboBox))
+            .addGroup(
+                    contentLayout
+                    .createParallelGroup()
+                    .addComponent(statusLabel)
+                    .addComponent(projectStatusLabel))
             .addGap(20)
             .addComponent(radioButtonsPanel));
     this.add(contentPanel, BorderLayout.CENTER);
@@ -301,22 +295,34 @@ public class ProjectDetailsPanel extends JPanel {
     deadlineDatePicker.setEnabled(enable);
     assigneeComboBox.setEnabled(enable);
     supervisorComboBox.setEnabled(enable);
-    finishedButton.setVisible(enable);
   }
 
-  private void enableSupervisorAccess() {
-    enableEditingTextFields(controller.isSupervisor());
-    enableButtons(controller.isSupervisor());
+  public void enableProjectStatusButtons(boolean enableToDo,boolean enableInProgress,boolean enableTurnedIn,boolean enableFinished) {
+    toDoButton.setVisible(enableToDo);
+    inProgressButton.setVisible(enableInProgress);
+    turnedInButton.setVisible(enableTurnedIn);
+    finishedButton.setVisible(enableFinished);
+  }
+
+  private void enableEditFields(boolean enable) {
+    enableEditingTextFields(enable);
+    enableButtons(enable);
   }
 
   public void updatePanel() {
     titleTextField.setText(controller.getProjectTitle());
     descriptionTextArea.setText(controller.getProjectDescription());
+    updateStatusLabel();
     setDeadlineDate();
     selectAssigneeFromComboBox();
     selectSupervisorFromComboBox();
     selectProjectStatus();
-    enableSupervisorAccess();
+    enableEditFields(controller.enableEditing());
+    controller.selectProjectStatusButtons();
+  }
+
+  public void updateStatusLabel() {
+    projectStatusLabel.setText(controller.getStatus());
   }
 
   class ButtonListener implements ActionListener {
