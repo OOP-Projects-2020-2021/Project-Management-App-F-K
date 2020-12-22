@@ -8,8 +8,7 @@ import view.UIFactory;
 import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.Date;
 import java.util.Properties;
 
@@ -24,32 +23,29 @@ public class ProjectFrame extends JFrame {
   private JFrame parentFrame;
   private ProjectController controller;
 
-  private JTextField titleTextField;
-
   private JDatePickerImpl deadlineDatePicker;
   private JDatePanelImpl datePanel;
-  private UtilDateModel dateModel;
 
+  private JTextField titleTextField;
   private JTextArea descriptionTextArea;
   private JScrollPane descriptionScrollPane;
   private JComboBox<String> assigneeComboBox;
-  private DefaultComboBoxModel<String> assigneeModel;
   private JComboBox<String> supervisorComboBox;
-  private DefaultComboBoxModel<String> supervisorModel;
-
-  private ButtonGroup statusButtonGroup;
-  private JPanel buttonsPanel;
+  private JPanel radioButtonsPanel;
   private JRadioButton toDoButton;
   private JRadioButton turnedInButton;
   private JRadioButton inProgressButton;
   private JRadioButton finishedButton;
 
+  private JTextArea commentTextArea;
+  private JButton sendButton;
   private JButton saveButton;
   private JButton deleteButton;
-  // todo radio buttons
+  JPanel commentListPanel;
+  JPanel detailsPanel;
+  JPanel commentPanel;
 
-  private static final String[] status = {"TO DO", "IN PROGRESS", "TURNED IN", "FINISHED"};
-  private static final Dimension DIMENSION = new Dimension(600, 600);
+  private static final Dimension DIMENSION = new Dimension(800, 600);
 
   public ProjectFrame(JFrame parentFrame, int projectId) {
     super("Project");
@@ -65,22 +61,20 @@ public class ProjectFrame extends JFrame {
   }
 
   private void initComponents() {
-    initDataFields();
-    initRadioButtonsPanel();
-    initContentPanel();
-    initButtonsPanel();
+    initDetailsPanel();
+    initCommentPanel();
+    initSplitPane();
   }
 
   private void initDataFields() {
     titleTextField = UIFactory.createTextField("title");
     initDatePicker();
     initTextArea();
-    initTextArea();
     initAssigneeComboBox();
     initSupervisorComboBox();
   }
   private void initDatePicker() {
-    dateModel = new UtilDateModel();
+    UtilDateModel dateModel = new UtilDateModel();
     Properties properties = new Properties();
     properties.put("text.today", "Today");
     properties.put("text.month", "Month");
@@ -98,7 +92,7 @@ public class ProjectFrame extends JFrame {
   }
   private void initAssigneeComboBox() {
     assigneeComboBox = new JComboBox<>();
-    assigneeModel = new DefaultComboBoxModel<>();
+    DefaultComboBoxModel<String> assigneeModel = new DefaultComboBoxModel<>();
     String[] assignees = {"user1", "user2","user3"};
     for (String s : assignees) {
       assigneeModel.addElement(s);
@@ -107,7 +101,7 @@ public class ProjectFrame extends JFrame {
   }
   private void initSupervisorComboBox() {
     supervisorComboBox = new JComboBox<>();
-    supervisorModel = new DefaultComboBoxModel<>();
+    DefaultComboBoxModel<String> supervisorModel = new DefaultComboBoxModel<>();
     String[] supervisors = {"user1", "user2","user3"};
     for (String supervisor : supervisors) {
       supervisorModel.addElement(supervisor);
@@ -116,20 +110,20 @@ public class ProjectFrame extends JFrame {
   }
 
   private void initRadioButtons() {
-    toDoButton = new JRadioButton(status[0]);
-    inProgressButton = new JRadioButton(status[1]);
-    turnedInButton = new JRadioButton(status[2]);
-    finishedButton = new JRadioButton(status[3]);
+    toDoButton = new JRadioButton(ProjectController.STATUS[0]);
+    inProgressButton = new JRadioButton(ProjectController.STATUS[1]);
+    turnedInButton = new JRadioButton(ProjectController.STATUS[2]);
+    finishedButton = new JRadioButton(ProjectController.STATUS[3]);
 
-    toDoButton.setActionCommand(status[0]);
-    inProgressButton.setActionCommand(status[1]);
-    turnedInButton.setActionCommand(status[2]);
-    finishedButton.setActionCommand(status[3]);
+    toDoButton.setActionCommand(ProjectController.STATUS[0]);
+    inProgressButton.setActionCommand(ProjectController.STATUS[1]);
+    turnedInButton.setActionCommand(ProjectController.STATUS[2]);
+    finishedButton.setActionCommand(ProjectController.STATUS[3]);
   }
 
   private void createRadioButtonsGroup() {
     // add the buttons to a group so that only one can be selected at a time
-    statusButtonGroup = new ButtonGroup();
+    ButtonGroup statusButtonGroup = new ButtonGroup();
     statusButtonGroup.add(toDoButton);
     statusButtonGroup.add(inProgressButton);
     statusButtonGroup.add(turnedInButton);
@@ -139,20 +133,27 @@ public class ProjectFrame extends JFrame {
   private void initRadioButtonsPanel() {
     initRadioButtons();
     createRadioButtonsGroup();
-    buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    buttonsPanel.add(toDoButton);
-    buttonsPanel.add(inProgressButton);
-    buttonsPanel.add(turnedInButton);
-    buttonsPanel.add(finishedButton);
+    radioButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    radioButtonsPanel.add(toDoButton);
+    radioButtonsPanel.add(inProgressButton);
+    radioButtonsPanel.add(turnedInButton);
+    radioButtonsPanel.add(finishedButton);
   }
 
+  private void initDetailsPanel() {
+    detailsPanel = new JPanel(new BorderLayout());
+    initDataFields();
+    initRadioButtonsPanel();
+    initContentPanel();
+    initButtonsPanel();
+  }
   private void initContentPanel() {
     JPanel contentPanel = new JPanel();
     GroupLayout contentLayout = new GroupLayout(contentPanel);
     contentLayout.setAutoCreateGaps(true);
     contentLayout.setAutoCreateContainerGaps(true);
     contentPanel.setLayout(contentLayout);
-    contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 100, 20, 100));
+    contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
     JLabel titleLabel = UIFactory.createLabel("Title:", null);
     JLabel deadlineLabel = UIFactory.createLabel("Deadline:", null);
@@ -182,7 +183,7 @@ public class ProjectFrame extends JFrame {
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox)
                             .addComponent(supervisorComboBox)))
-            .addGroup(contentLayout.createSequentialGroup().addComponent(buttonsPanel)));
+            .addGroup(contentLayout.createSequentialGroup().addComponent(radioButtonsPanel)));
 
     contentLayout.setVerticalGroup(
         contentLayout
@@ -213,22 +214,19 @@ public class ProjectFrame extends JFrame {
                     .addComponent(supervisorLabel)
                     .addComponent(supervisorComboBox))
             .addGap(20)
-            .addComponent(buttonsPanel));
-    this.add(contentPanel, BorderLayout.CENTER);
+            .addComponent(radioButtonsPanel));
+    detailsPanel.add(contentPanel, BorderLayout.CENTER);
   }
 
   private void initButtonsPanel() {
     saveButton = UIFactory.createButton("Save Project");
     deleteButton = UIFactory.createButton("Delete Project");
-
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     buttonsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     buttonsPanel.add(saveButton);
     buttonsPanel.add(deleteButton);
-
     addButtonListener();
-
-    this.add(buttonsPanel, BorderLayout.SOUTH);
+    detailsPanel.add(buttonsPanel, BorderLayout.SOUTH);
   }
   public void addButtonListener() {
     ButtonListener buttonListener = new ButtonListener();
@@ -238,6 +236,76 @@ public class ProjectFrame extends JFrame {
     turnedInButton.addActionListener(buttonListener);
     inProgressButton.addActionListener(buttonListener);
     finishedButton.addActionListener(buttonListener);
+  }
+  private JTextArea createCommentArea(String comment) {
+    JTextArea commentArea = new JTextArea(comment);
+    commentArea.setLineWrap(true);
+    commentArea.setWrapStyleWord(true);
+    return commentArea;
+  }
+  private void initCommentList() {
+    commentListPanel = new JPanel(new GridLayout(3,1)); // todo get rows from controller
+    for(int i=0;i<3;i++) {
+      JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+      JLabel senderName = UIFactory.createLabel("user"+i,null);
+      JLabel sendingDate = UIFactory.createLabel("2020-12-22",null);
+      headerPanel.add(senderName);
+      headerPanel.add(new JLabel("-"));
+      headerPanel.add(sendingDate);
+
+      JTextArea commentArea = createCommentArea("comment"+i);
+      JScrollPane commentScrollPane = new JScrollPane(commentArea);
+      commentScrollPane.setPreferredSize(new Dimension(400,40));
+
+      JPanel rowPanel = new JPanel(new BorderLayout());
+      rowPanel.add(headerPanel,BorderLayout.NORTH);
+      rowPanel.add(commentScrollPane,BorderLayout.CENTER);
+
+      commentListPanel.add(rowPanel);
+    }
+  }
+  private void initCommentPanel() {
+    commentPanel = new JPanel();
+    GroupLayout commentLayout = new GroupLayout(commentPanel);
+    commentLayout.setAutoCreateContainerGaps(true);
+    commentLayout.setAutoCreateGaps(true);
+    commentPanel.setLayout(commentLayout);
+    JLabel commentsLabel = UIFactory.createLabel("Comments:",null);
+    initCommentList();
+    commentTextArea = createCommentArea("Leave a comment");
+    JScrollPane commentScrollPane = new JScrollPane(commentTextArea);
+    commentScrollPane.setViewportView(commentTextArea);
+    commentScrollPane.addKeyListener(new KeyAdapter() {
+      @Override
+      public void keyTyped(KeyEvent e) {
+        commentTextArea.setText("");
+      }
+    });
+    sendButton = UIFactory.createButton("Send");
+
+    commentLayout.setHorizontalGroup(
+            commentLayout.createSequentialGroup()
+            .addGroup(commentLayout.createParallelGroup()
+                    .addComponent(commentsLabel)
+                    .addComponent(commentListPanel)
+                    .addGroup(commentLayout.createSequentialGroup()
+                            .addComponent(commentScrollPane)
+                            .addComponent(sendButton)))
+    );
+    commentLayout.setVerticalGroup(
+            commentLayout.createSequentialGroup()
+                    .addComponent(commentsLabel)
+                    .addComponent(commentListPanel)
+                    .addGroup(commentLayout.createParallelGroup()
+                            .addComponent(commentScrollPane)
+                            .addComponent(sendButton)));
+  }
+
+  private void initSplitPane() {
+    JSplitPane splitPane = new JSplitPane();
+    splitPane.setLeftComponent(detailsPanel);
+    splitPane.setRightComponent(commentPanel);
+    this.add(splitPane,BorderLayout.CENTER);
   }
 
   private void enableEditingTextFields(boolean enable) {

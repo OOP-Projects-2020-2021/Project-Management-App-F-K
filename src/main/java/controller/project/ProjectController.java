@@ -20,6 +20,8 @@ public class ProjectController extends FrameController {
   private int projectId;
   private Project project;
 
+  public static final String[] STATUS = {"TO DO", "IN PROGRESS", "TURNED IN", "FINISHED"};
+
   public ProjectController(JFrame frame, int projectId) {
     super(frame);
     projectManager = ProjectManager.getInstance();
