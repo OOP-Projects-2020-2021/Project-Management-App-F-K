@@ -102,10 +102,11 @@ public class TeamHomePanel extends JPanel implements ActionListener {
   }
 
   private void clearTeamManagerModel() {
-    if(teamManagerModel.getSize() > 0) {
+    if (teamManagerModel.getSize() > 0) {
       teamManagerModel.removeAllElements();
     }
   }
+
   private void fillTeamManagerModel() {
     List<User> members = controller.getMembersOfTeam();
     if (members != null) {
@@ -115,10 +116,12 @@ public class TeamHomePanel extends JPanel implements ActionListener {
       teamManagerModel.setSelectedItem(controller.getTeamManagerName());
     }
   }
+
   public void updateTeamManagerModel() {
     clearTeamManagerModel();
     fillTeamManagerModel();
   }
+
   private void initHomePaneComponents() {
     teamNameTextField = UIFactory.createTextField(controller.getTeamName());
     teamCodeLabel = UIFactory.createLabel(controller.getTeamCode(), null);
@@ -128,14 +131,15 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     fillTeamManagerModel();
     teamManagerComboBox.setModel(teamManagerModel);
 
-    teamNameTextField.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        if (controller.getManagerAccess()) {
-            teamNameTextField.setEditable(true);
-        }
-      }
-    });
+    teamNameTextField.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            if (controller.getManagerAccess()) {
+              teamNameTextField.setEditable(true);
+            }
+          }
+        });
 
     saveTeamNameButton = UIFactory.createButton("Save");
     saveTeamManagerButton = UIFactory.createButton("Save");
@@ -166,9 +170,11 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     saveTeamManagerButton.setVisible(enable);
     regenerateCodeButton.setVisible(enable);
   }
+
   public void enableNameTextField(boolean enable) {
     teamNameTextField.setEditable(enable);
   }
+
   public void enableComponents(boolean enable) {
     enableNameTextField(enable);
     teamManagerComboBox.setEnabled(enable);
@@ -184,12 +190,11 @@ public class TeamHomePanel extends JPanel implements ActionListener {
       if (source == saveTeamNameButton) {
         controller.saveTeamName(teamNameTextField.getText());
       } else if (source == saveTeamManagerButton) {
-        System.out.println((String)teamManagerModel.getSelectedItem());
-        controller.saveTeamManager((String)teamManagerModel.getSelectedItem());
+        System.out.println((String) teamManagerModel.getSelectedItem());
+        controller.saveTeamManager((String) teamManagerModel.getSelectedItem());
       } else if (source == regenerateCodeButton) {
         controller.regenerateTeamCode();
       }
     }
   }
-
 }

@@ -101,8 +101,8 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public List<User> getMembersOfTeam() {
     try {
       return teamManager.getMembersOfTeam(currentTeam.getId());
-    }catch(InexistentDatabaseEntityException | SQLException e) {
-      JOptionPane.showMessageDialog(frame,"Members could not be listed");
+    } catch (InexistentDatabaseEntityException | SQLException e) {
+      JOptionPane.showMessageDialog(frame, "Members could not be listed");
       return null;
     }
   }

@@ -90,16 +90,19 @@ public class ErrorDialogFactory {
       "The user to whom you attempt to assign a role is not a member of this team.";
 
   /**
-   * Messages to inform the user that the state of the project cannot be changed to the specified value.
+   * Messages to inform the user that the state of the project cannot be changed to the specified
+   * value.
    */
   private static final String ILLEGAL_STATUS_CHANGE_TITLE = "Invalid status change!";
-  private static final String ILLEGAL_STATUS_CHANGE_MESSAGE = "The project cannot be updated to the new status.";
 
-  /**
-   * Messages to inform the user that he/she doesn't have access to that operation.
-   */
+  private static final String ILLEGAL_STATUS_CHANGE_MESSAGE =
+      "The project cannot be updated to the new status.";
+
+  /** Messages to inform the user that he/she doesn't have access to that operation. */
   private static final String UNAUTHORIZED_OPERATION_TITLE = "Unauthorized operation";
-  private static final String UNAUTHORIZED_OPERATION_MESSAGE = "You do not have access to perform this operation.";
+
+  private static final String UNAUTHORIZED_OPERATION_MESSAGE =
+      "You do not have access to perform this operation.";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
@@ -136,10 +139,10 @@ public class ErrorDialogFactory {
     if (exception instanceof UnregisteredMemberRoleException) {
       displayUnregisteredMemberRoleErrorDialog(frame, message);
     }
-    if(exception instanceof IllegalProjectStatusChangeException) {
+    if (exception instanceof IllegalProjectStatusChangeException) {
       displayIllegalStateChangeErrorDialog(frame, message);
     }
-    if(exception instanceof UnauthorisedOperationException) {
+    if (exception instanceof UnauthorisedOperationException) {
       displayUnauthorizedOperationErrorDialog(frame, message);
     }
   }
@@ -249,23 +252,22 @@ public class ErrorDialogFactory {
         JOptionPane.ERROR_MESSAGE);
   }
   /**
-   * Displays an error message when the user tries to set the project to a state which is not allowed.
+   * Displays an error message when the user tries to set the project to a state which is not
+   * allowed.
    */
   private static void displayIllegalStateChangeErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            ILLEGAL_STATUS_CHANGE_MESSAGE + "\n" + message,
-            ILLEGAL_STATUS_CHANGE_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        ILLEGAL_STATUS_CHANGE_MESSAGE + "\n" + message,
+        ILLEGAL_STATUS_CHANGE_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
-  /**
-   * Displays an error message to inform the user that he/she has no access to that operation.
-   */
+  /** Displays an error message to inform the user that he/she has no access to that operation. */
   private static void displayUnauthorizedOperationErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            UNAUTHORIZED_OPERATION_MESSAGE + "\n" + message,
-            UNAUTHORIZED_OPERATION_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        UNAUTHORIZED_OPERATION_MESSAGE + "\n" + message,
+        UNAUTHORIZED_OPERATION_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
 }

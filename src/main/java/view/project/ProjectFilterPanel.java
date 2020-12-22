@@ -1,13 +1,11 @@
 package view.project;
 
 import controller.project.ProjectFilterController;
-import model.project.queryconstants.QueryProjectStatus;
 import view.UIFactory;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Optional;
 
 /**
  * Creates a panel containing the filters that can be applied on the projects, including the status
@@ -59,11 +57,15 @@ public class ProjectFilterPanel extends JPanel {
 
   private void initPrivilegeFilter() {
     privilegeFilterButtonsPanel = new JPanel();
-    privilegeFilterButtonsPanel.setLayout(new BoxLayout(privilegeFilterButtonsPanel, BoxLayout.Y_AXIS));
-    // both the assigned and supervised projects are listed in the beginning, so both buttons can be selected at a time
+    privilegeFilterButtonsPanel.setLayout(
+        new BoxLayout(privilegeFilterButtonsPanel, BoxLayout.Y_AXIS));
+    // both the assigned and supervised projects are listed in the beginning, so both buttons can be
+    // selected at a time
 
-    assignedToUserButton = new JRadioButton(ProjectFilterController.PrivilegeTypes.ASSIGNED_TO_ME.toString());
-    supervisedByUserButton = new JRadioButton(ProjectFilterController.PrivilegeTypes.SUPERVISED_BY_ME.toString());
+    assignedToUserButton =
+        new JRadioButton(ProjectFilterController.PrivilegeTypes.ASSIGNED_TO_ME.toString());
+    supervisedByUserButton =
+        new JRadioButton(ProjectFilterController.PrivilegeTypes.SUPERVISED_BY_ME.toString());
     assignedToUserButton.addActionListener(new PrivilegeFilterActionListener());
     supervisedByUserButton.addActionListener(new PrivilegeFilterActionListener());
     // initially all projects are shown
@@ -165,24 +167,27 @@ public class ProjectFilterPanel extends JPanel {
       controller.filterProjects();
     }
   }
+
   class PrivilegeFilterActionListener implements ActionListener {
     private boolean isAtLeastOnePrivilegeButtonSelected() {
       return assignedToUserButton.isSelected() || supervisedByUserButton.isSelected();
     }
+
     private void selectPrivilegeButtons() {
-      if(!isAtLeastOnePrivilegeButtonSelected()) {
+      if (!isAtLeastOnePrivilegeButtonSelected()) {
         // at least one filter must always be selected
         assignedToUserButton.setSelected(true);
         supervisedByUserButton.setSelected(true);
       }
     }
+
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       boolean assignedToUser = assignedToUserButton.isSelected();
       boolean supervisedByUser = supervisedByUserButton.isSelected();
       // if both filters are selected, then all the projects will be displayed
       boolean filtered = !(assignedToUser && supervisedByUser);
-      controller.setPrivilegeFilter(assignedToUser && filtered,supervisedByUser && filtered);
+      controller.setPrivilegeFilter(assignedToUser && filtered, supervisedByUser && filtered);
       controller.filterProjects();
       selectPrivilegeButtons();
     }

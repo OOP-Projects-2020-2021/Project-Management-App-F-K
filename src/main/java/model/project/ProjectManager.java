@@ -7,7 +7,6 @@ import model.project.queryconstants.QueryProjectDeadlineStatus;
 import model.project.queryconstants.QueryProjectStatus;
 import model.project.exceptions.*;
 import model.team.Team;
-import model.team.TeamManager;
 import model.team.exceptions.InexistentTeamException;
 import model.team.exceptions.UnregisteredMemberRoleException;
 import model.user.User;
@@ -131,7 +130,8 @@ public class ProjectManager extends Manager {
     project.setTitle(newProjectTitle);
     project.setDeadline(newDeadline);
     projectRepository.updateProject(project);
-    support.firePropertyChange(ProjectChangeablePropertyName.UPDATE_PROJECT.toString(),OLD_VALUE,NEW_VALUE);
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.UPDATE_PROJECT.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -154,7 +154,8 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.IN_PROGRESS);
     }
-    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -189,7 +190,8 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.TO_DO);
     }
-    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -224,7 +226,8 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.TURNED_IN);
     }
-    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -263,7 +266,8 @@ public class ProjectManager extends Manager {
     } else {
       throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
     }
-    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -296,7 +300,8 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.FINISHED);
     }
-    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -335,7 +340,8 @@ public class ProjectManager extends Manager {
     } else {
       throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
     }
-    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
