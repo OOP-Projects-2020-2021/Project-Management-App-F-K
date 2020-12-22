@@ -1,6 +1,10 @@
 package model;
 
+import model.comment.repository.CommentRepository;
+import model.comment.repository.impl.SqliteCommentRepository;
+import model.project.Project;
 import model.project.repository.ProjectRepository;
+import model.project.exceptions.*;
 import model.project.repository.impl.SqliteProjectRepository;
 import model.team.Team;
 import model.team.repository.TeamRepository;
@@ -31,6 +35,7 @@ public abstract class Manager implements PropertyChangeObservable {
   protected static ProjectRepository projectRepository = SqliteProjectRepository.getInstance();
   protected static TeamRepository teamRepository = SqliteTeamRepository.getInstance();
   protected static UserRepository userRepository = SqliteUserRepository.getInstance();
+  protected static CommentRepository commentRepository = SqliteCommentRepository.getInstance();
 
   protected PropertyChangeSupport support = new PropertyChangeSupport(this);
   protected final int OLD_VALUE = 1; // dummy data
@@ -101,5 +106,18 @@ public abstract class Manager implements PropertyChangeObservable {
       throw new InexistentUserException(userName);
     }
     return user;
+  }
+
+  /**
+   * @return the project with the given id from the database.
+   * @throws InexistentProjectException if there is no project with this name.
+   */
+  protected Project getMandatoryProject(int projectId)
+      throws InexistentProjectException, SQLException {
+    Optional<Project> projectOp = projectRepository.getProject(projectId);
+    if (projectOp.isEmpty()) {
+      throw new InexistentProjectException(projectId);
+    }
+    return projectOp.get();
   }
 }

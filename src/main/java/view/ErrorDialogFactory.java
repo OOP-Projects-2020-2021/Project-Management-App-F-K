@@ -78,6 +78,15 @@ public class ErrorDialogFactory {
   private static final String UNREGISTERED_MEMBER_REMOVAL_ARGUMENT_ERROR_MESSAGE =
       "The user you attempt to remove is not a member of this team.";
 
+  /**
+   * Messages to inform the user that a role cannot be assigne to someone not member of the team.
+   */
+  private static final String UNREGISTERED_MEMBER_ROLE_TITLE =
+      "Assigning role to unregistered member!";
+
+  private static final String UNREGISTERED_MEMBER_ROLE_MESSAGE =
+      "The user to whom you attempt to assign a role is not a member of this team.";
+
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
       message = "";
@@ -108,6 +117,9 @@ public class ErrorDialogFactory {
       displayIllegalArgumentErrorDialog(frame, message);
     }
     if (exception instanceof UnregisteredMemberRemovalException) {
+      displayUnregisteredMemberRemovalErrorDialog(frame, message);
+    }
+    if (exception instanceof UnregisteredMemberRoleException) {
       displayUnregisteredMemberRemovalErrorDialog(frame, message);
     }
   }
@@ -202,6 +214,18 @@ public class ErrorDialogFactory {
         frame,
         UNREGISTERED_MEMBER_REMOVAL_ARGUMENT_ERROR_MESSAGE + "\n" + message,
         UNREGISTERED_MEMBER_REMOVAL_ERROR_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+
+  /**
+   * Displays an error message when the manager tries to pass its position to a user which is not a
+   * member of the team.
+   */
+  private static void displayUnregisteredMemberRolelErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        UNREGISTERED_MEMBER_ROLE_MESSAGE + "\n" + message,
+        UNREGISTERED_MEMBER_ROLE_TITLE,
         JOptionPane.ERROR_MESSAGE);
   }
 }

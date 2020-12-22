@@ -46,7 +46,7 @@ public class TeamListController implements PropertyChangeListener {
         User manager = userManager.getUserById(team.getManagerId());
         teamsViewModels.add(
             new TeamViewModel(
-                team.getName(), team.getCode(), Objects.requireNonNull(manager).getUsername()));
+                team.getId(), team.getName(), Objects.requireNonNull(manager).getUsername()));
       }
     } catch (SQLException | NoSignedInUserException | InexistentDatabaseEntityException e) {
       e.printStackTrace();

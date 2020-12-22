@@ -180,9 +180,9 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     } catch (InexistentUserException inexistentUserException) {
       ErrorDialogFactory.createErrorDialog(
           inexistentUserException, frame, "The user \"" + newManagerName + "\" doesn't exist.");
-    } catch (IllegalArgumentException illegalArgumentException) {
+    } catch (UnregisteredMemberRoleException e) {
       ErrorDialogFactory.createErrorDialog(
-          illegalArgumentException,
+          e,
           frame,
           "The user with username \"" + newManagerName + "\" is not a member of the team.");
     } catch (NoSignedInUserException

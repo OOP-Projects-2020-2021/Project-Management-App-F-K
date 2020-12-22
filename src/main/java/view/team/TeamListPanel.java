@@ -14,13 +14,15 @@ import java.util.List;
  */
 public class TeamListPanel extends JPanel {
   private TeamListController controller;
+  private JFrame frame;
 
-  public TeamListPanel(Frame frame) {
+  public TeamListPanel(JFrame frame) {
     /**
      * In order to make this panel scrollable through a JScrollPane, and keep the number of teams
      * flexible at the same time, ModifiedFlowLayout is required instead of the simpleFlowLayout.
      */
     this.setLayout(new ModifiedFlowLayout());
+    this.frame = frame;
     controller = new TeamListController(this, frame);
     updateTeams();
   }
@@ -29,7 +31,7 @@ public class TeamListPanel extends JPanel {
     this.removeAll();
     List<TeamViewModel> teams = controller.getUsersTeams();
     for (TeamViewModel team : teams) {
-      this.add(new TeamLabel(team));
+      this.add(new TeamLabel(frame, team));
     }
     this.revalidate();
   }
