@@ -46,6 +46,7 @@ public class ProjectDetailsPanel extends JPanel {
     this.setLayout(new BorderLayout());
     initDetailsPanel();
     enableEditingTextFields(controller.isSupervisor());
+    enableButtons(controller.isSupervisor());
   }
 
   private void initDetailsPanel() {
@@ -236,6 +237,11 @@ public class ProjectDetailsPanel extends JPanel {
     turnedInButton.addActionListener(buttonListener);
     inProgressButton.addActionListener(buttonListener);
     finishedButton.addActionListener(buttonListener);
+  }
+
+  private void enableButtons(boolean enable) {
+    saveButton.setVisible(enable);
+    deleteButton.setVisible(enable);
   }
 
   class ButtonListener implements ActionListener {
