@@ -3,7 +3,6 @@ package view.project;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.util.Optional;
 
 /**
  * Displays the list of projects, which can be sorted based on the deadline or filtered based on the
@@ -16,7 +15,7 @@ public class ProjectsPanel extends JPanel {
   private ProjectTable projectsTable;
   private JFrame frame;
 
-  public ProjectsPanel(JFrame frame,int teamId) {
+  public ProjectsPanel(JFrame frame, int teamId) {
     this.frame = frame;
     setLayout(new BorderLayout());
     setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));

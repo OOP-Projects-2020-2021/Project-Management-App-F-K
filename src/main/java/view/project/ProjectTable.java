@@ -35,6 +35,7 @@ public class ProjectTable extends JTable {
     // sort the rows by the deadline
     addSorter();
   }
+
   private void initTableDesign() {
     setFillsViewportHeight(true);
     setCellSelectionEnabled(true);
@@ -45,6 +46,7 @@ public class ProjectTable extends JTable {
     // the columns cannot be rearranged
     getTableHeader().setReorderingAllowed(false);
   }
+
   private void addSorter() {
     // the projects can be sorted by deadlines when clicking on the column's header
     TableRowSorter<TableModel> sorter = new TableRowSorter<>(tableModel);
@@ -57,17 +59,21 @@ public class ProjectTable extends JTable {
     tableModel.setColumnIdentifiers(columnNames);
     controller.initializeTableModel();
   }
+
   public void clearTableModel() {
-    while(tableModel.getRowCount() > 0) {
+    while (tableModel.getRowCount() > 0) {
       tableModel.removeRow(0);
     }
   }
+
   public void fillTableModel(List<Project> projectsList) {
     for (Project project : projectsList) {
-      String[] rowData = new String[]{
-        project.getTitle(),
-        String.valueOf(project.getDeadline()),
-        String.valueOf(project.getStatus())};
+      String[] rowData =
+          new String[] {
+            project.getTitle(),
+            String.valueOf(project.getDeadline()),
+            String.valueOf(project.getStatus())
+          };
       tableModel.addRow(rowData);
     }
   }
@@ -99,7 +105,7 @@ public class ProjectTable extends JTable {
       int column = getSelectedColumn();
       if (column == 0 && evt.getClickCount() > 1) {
         // on double click on the name of the project, the project frame is opened
-        controller.openProject(frame,row);
+        controller.openProject(frame, row);
       }
     }
   }

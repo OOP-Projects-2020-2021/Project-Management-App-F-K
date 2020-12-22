@@ -13,9 +13,10 @@ import view.project.ProjectListModel;
 import java.sql.SQLException;
 
 /**
- * Controls the panel containing the filters and the table in which the projects are displayed.
- * If the teamId is specified and it is a non-negative integer, then the only the projects related to that team are listed.
- * Otherwise, if the teamId is a negative number, -1, then all the projects corresponding to the current user are listed, independent of the team.
+ * Controls the panel containing the filters and the table in which the projects are displayed. If
+ * the teamId is specified and it is a non-negative integer, then the only the projects related to
+ * that team are listed. Otherwise, if the teamId is a negative number, -1, then all the projects
+ * corresponding to the current user are listed, independent of the team.
  *
  * @author Beata Keresztes
  */
@@ -25,7 +26,12 @@ public class ProjectFilterController {
   private UserManager userManager;
   private int teamId;
   private ProjectListModel projectListModel;
-  public enum PrivilegeTypes {ASSIGNED_TO_ME, SUPERVISED_BY_ME}
+
+  public enum PrivilegeTypes {
+    ASSIGNED_TO_ME,
+    SUPERVISED_BY_ME
+  }
+
   private String statusFilter;
   private String turnInTimeFilter;
   private boolean assignedToUser;
@@ -45,13 +51,16 @@ public class ProjectFilterController {
   public void setStatusFilter(String status) {
     statusFilter = status;
   }
-  public void setPrivilegeFilter(boolean assignedToUser,boolean supervisedByUser) {
+
+  public void setPrivilegeFilter(boolean assignedToUser, boolean supervisedByUser) {
     this.assignedToUser = assignedToUser;
     this.supervisedByUser = supervisedByUser;
   }
+
   public void setTurnInTimeFilter(String turnInTime) {
     turnInTimeFilter = turnInTime;
   }
+
   public void filterProjects() {
     if (teamId > 0) {
       filterProjectsOfTeam();
@@ -59,37 +68,55 @@ public class ProjectFilterController {
       filterProjectsOfUser();
     }
   }
+
   private void filterProjectsOfTeam() {
-    String assigneeName = null,supervisorName = null;
-    if(assignedToUser) {
+    String assigneeName = null, supervisorName = null;
+    if (assignedToUser) {
       assigneeName = userManager.getCurrentUser().get().getUsername();
-    } else if(supervisedByUser) {
+    } else if (supervisedByUser) {
       supervisorName = userManager.getCurrentUser().get().getUsername();
     }
     try {
-      projectListModel.setProjectList(projectManager.getProjectsOfTeam(teamId,supervisorName,assigneeName,QueryProjectStatus.valueOf(statusFilter),QueryProjectDeadlineStatus.valueOf(turnInTimeFilter)));
-    }catch(SQLException | InexistentDatabaseEntityException | InexistentUserException e) {
-      ErrorDialogFactory.createErrorDialog(e,null,null);
+      projectListModel.setProjectList(
+          projectManager.getProjectsOfTeam(
+              teamId,
+              supervisorName,
+              assigneeName,
+              QueryProjectStatus.valueOf(statusFilter),
+              QueryProjectDeadlineStatus.valueOf(turnInTimeFilter)));
+    } catch (SQLException | InexistentDatabaseEntityException | InexistentUserException e) {
+      ErrorDialogFactory.createErrorDialog(e, null, null);
     }
   }
+
   private void filterProjectsOfUser() {
     try {
-      projectListModel.setProjectList(projectManager.getProjects(assignedToUser,supervisedByUser,QueryProjectStatus.valueOf(statusFilter),QueryProjectDeadlineStatus.valueOf(turnInTimeFilter)));
-    }catch(SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
-      ErrorDialogFactory.createErrorDialog(e,null,null);
+      projectListModel.setProjectList(
+          projectManager.getProjects(
+              assignedToUser,
+              supervisedByUser,
+              QueryProjectStatus.valueOf(statusFilter),
+              QueryProjectDeadlineStatus.valueOf(turnInTimeFilter)));
+    } catch (SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
+      ErrorDialogFactory.createErrorDialog(e, null, null);
     }
   }
 
   public String[] getProjectStatusTypes() {
-    return new String[] {String.valueOf(QueryProjectStatus.ALL),
-            String.valueOf(QueryProjectStatus.TO_DO),
-            String.valueOf(QueryProjectStatus.IN_PROGRESS),
-            String.valueOf(QueryProjectStatus.TURNED_IN),
-            String.valueOf(QueryProjectStatus.FINISHED)};
+    return new String[] {
+      String.valueOf(QueryProjectStatus.ALL),
+      String.valueOf(QueryProjectStatus.TO_DO),
+      String.valueOf(QueryProjectStatus.IN_PROGRESS),
+      String.valueOf(QueryProjectStatus.TURNED_IN),
+      String.valueOf(QueryProjectStatus.FINISHED)
+    };
   }
+
   public String[] getProjectTurnInTimes() {
-    return new String[] {String.valueOf(QueryProjectDeadlineStatus.ALL),
-            String.valueOf(QueryProjectDeadlineStatus.IN_TIME),
-            String.valueOf(QueryProjectDeadlineStatus.OVERDUE)};
+    return new String[] {
+      String.valueOf(QueryProjectDeadlineStatus.ALL),
+      String.valueOf(QueryProjectDeadlineStatus.IN_TIME),
+      String.valueOf(QueryProjectDeadlineStatus.OVERDUE)
+    };
   }
 }

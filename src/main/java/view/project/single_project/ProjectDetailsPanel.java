@@ -14,7 +14,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.List;
@@ -52,7 +51,7 @@ public class ProjectDetailsPanel extends JPanel {
   private ProjectDetailsController controller;
 
   public ProjectDetailsPanel(Project project) {
-    controller = new ProjectDetailsController(project,this);
+    controller = new ProjectDetailsController(project, this);
     this.setLayout(new BorderLayout());
     initDetailsPanel();
     enableSupervisorAccess();
@@ -86,8 +85,12 @@ public class ProjectDetailsPanel extends JPanel {
     datePanel = new JDatePanelImpl(dateModel, properties);
     deadlineDatePicker = new JDatePickerImpl(datePanel, new DefaultFormatter());
   }
+
   private void setDeadlineDate() {
-    dateModel.setDate(controller.getProjectDeadline().getYear(),controller.getProjectDeadline().getMonthValue(),controller.getProjectDeadline().getDayOfMonth());
+    dateModel.setDate(
+        controller.getProjectDeadline().getYear(),
+        controller.getProjectDeadline().getMonthValue(),
+        controller.getProjectDeadline().getDayOfMonth());
     dateModel.setSelected(true);
   }
 
@@ -102,27 +105,31 @@ public class ProjectDetailsPanel extends JPanel {
   private DefaultComboBoxModel<String> createMembersComboBoxModel() {
     DefaultComboBoxModel<String> membersModel = new DefaultComboBoxModel<>();
     List<User> members = controller.getTeamMembers();
-    for (User member: members) {
+    for (User member : members) {
       membersModel.addElement(member.getUsername());
     }
     return membersModel;
   }
+
   private void selectAssigneeFromComboBox() {
-    if(controller.getProjectAssignee() != null) {
+    if (controller.getProjectAssignee() != null) {
       assigneeModel.setSelectedItem(controller.getProjectAssignee().getUsername());
     }
   }
+
   private void initAssigneeComboBox() {
     assigneeComboBox = new JComboBox<>();
     assigneeModel = createMembersComboBoxModel();
-   selectAssigneeFromComboBox();
+    selectAssigneeFromComboBox();
     assigneeComboBox.setModel(assigneeModel);
   }
+
   private void selectSupervisorFromComboBox() {
-    if(controller.getProjectSupervisor() != null) {
+    if (controller.getProjectSupervisor() != null) {
       supervisorModel.setSelectedItem(controller.getProjectSupervisor().getUsername());
     }
   }
+
   private void initSupervisorComboBox() {
     supervisorComboBox = new JComboBox<>();
     supervisorModel = createMembersComboBoxModel();
@@ -140,31 +147,36 @@ public class ProjectDetailsPanel extends JPanel {
     inProgressButton.setActionCommand(Project.ProjectStatus.IN_PROGRESS.toString());
     turnedInButton.setActionCommand(Project.ProjectStatus.TURNED_IN.toString());
     finishedButton.setActionCommand(Project.ProjectStatus.FINISHED.toString());
-
   }
+
   private void selectProjectStatus() {
     System.out.println(controller.getStatus());
-   switch(Project.ProjectStatus.valueOf(controller.getStatus())) {
-     case IN_PROGRESS: {
-       inProgressButton.setSelected(true);
-       break;
-     }
-     case TURNED_IN: {
-       turnedInButton.setSelected(true);
-       break;
-     }
-     case FINISHED: {
-       finishedButton.setSelected(true);
-       break;
-     }
-     case TO_DO:{
-       toDoButton.setSelected(true);
-       break;
-     }
-     default: {
-       break;
-     }
-   }
+    switch (Project.ProjectStatus.valueOf(controller.getStatus())) {
+      case IN_PROGRESS:
+        {
+          inProgressButton.setSelected(true);
+          break;
+        }
+      case TURNED_IN:
+        {
+          turnedInButton.setSelected(true);
+          break;
+        }
+      case FINISHED:
+        {
+          finishedButton.setSelected(true);
+          break;
+        }
+      case TO_DO:
+        {
+          toDoButton.setSelected(true);
+          break;
+        }
+      default:
+        {
+          break;
+        }
+    }
   }
 
   private void createRadioButtonsGroup() {
@@ -296,6 +308,7 @@ public class ProjectDetailsPanel extends JPanel {
     enableEditingTextFields(controller.isSupervisor());
     enableButtons(controller.isSupervisor());
   }
+
   public void updatePanel() {
     titleTextField.setText(controller.getProjectTitle());
     descriptionTextArea.setText(controller.getProjectDescription());
@@ -313,14 +326,18 @@ public class ProjectDetailsPanel extends JPanel {
         String title = titleTextField.getText();
         String assignee = Objects.requireNonNull(assigneeComboBox.getSelectedItem()).toString();
         String supervisor = Objects.requireNonNull(supervisorComboBox.getSelectedItem()).toString();
-        LocalDate selectedDate = LocalDate.of(deadlineDatePicker.getModel().getYear(),deadlineDatePicker.getModel().getMonth(),deadlineDatePicker.getModel().getDay());
+        LocalDate selectedDate =
+            LocalDate.of(
+                deadlineDatePicker.getModel().getYear(),
+                deadlineDatePicker.getModel().getMonth(),
+                deadlineDatePicker.getModel().getDay());
         String description = descriptionTextArea.getText();
-        controller.saveProject(title,assignee,supervisor,selectedDate,description);
-      } else if(actionEvent.getSource() == deleteButton) {
+        controller.saveProject(title, assignee, supervisor, selectedDate, description);
+      } else if (actionEvent.getSource() == deleteButton) {
         // todo
       } else if (actionEvent.getSource() instanceof JRadioButton) {
         String selectedStatus = actionEvent.getActionCommand();
-        if(!controller.setProjectStatus(selectedStatus)) {
+        if (!controller.setProjectStatus(selectedStatus)) {
           selectProjectStatus();
         }
       }
