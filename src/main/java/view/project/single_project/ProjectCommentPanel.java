@@ -50,7 +50,7 @@ public class ProjectCommentPanel extends JPanel {
 
       JTextArea commentArea = createUneditableCommentArea("comment" + i);
       JScrollPane commentScrollPane = new JScrollPane(commentArea);
-      commentScrollPane.setPreferredSize(new Dimension(50,50));
+      commentScrollPane.setPreferredSize(new Dimension(80,80));
 
       JPanel rowPanel = new JPanel(new BorderLayout());
       rowPanel.add(headerPanel, BorderLayout.NORTH);
