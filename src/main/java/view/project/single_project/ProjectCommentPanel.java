@@ -1,6 +1,7 @@
 package view.project.single_project;
 
 import controller.project.single_project.ProjectCommentController;
+import model.project.Project;
 import view.UIFactory;
 
 import javax.swing.*;
@@ -24,8 +25,8 @@ public class ProjectCommentPanel extends JPanel {
   private ProjectCommentController controller;
   private static final String LEAVE_COMMENT_MESSAGE = "Leave a comment";
 
-  public ProjectCommentPanel(int projectId) {
-    controller = new ProjectCommentController(projectId);
+  public ProjectCommentPanel(Project project) {
+    controller = new ProjectCommentController(project);
     initCommentPanel();
   }
 

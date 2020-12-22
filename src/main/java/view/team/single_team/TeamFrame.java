@@ -6,7 +6,6 @@ import view.project.ProjectsPanel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Optional;
 
 /**
  * The TeamFrame allows the user to view the team's details, the members list and the projects.

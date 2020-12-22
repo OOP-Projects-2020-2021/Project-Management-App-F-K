@@ -1,6 +1,8 @@
 package controller.project.single_project;
 
 import controller.FrameController;
+import model.project.Project;
+
 import javax.swing.*;
 
 /**
@@ -11,20 +13,19 @@ import javax.swing.*;
  */
 public class ProjectController extends FrameController {
 
-  private int projectId;
+  private Project project;
 
-  public ProjectController(JFrame frame, int projectId) {
+  public ProjectController(JFrame frame, Project project) {
     super(frame);
-    this.projectId = projectId;
+    this.project = project;
   }
 
   public void onClose(JFrame parentFrame) {
     parentFrame.setVisible(true);
     parentFrame.setEnabled(true);
-    closeFrame();
   }
 
-  public int getProjectId() {
-    return projectId;
+  public Project getProject() {
+    return project;
   }
 }

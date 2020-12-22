@@ -1,5 +1,6 @@
 package controller.project.single_project;
 
+import model.project.Project;
 import model.project.ProjectManager;
 
 /**
@@ -11,7 +12,7 @@ public class ProjectCommentController {
 
   private ProjectManager projectManager;
 
-  public ProjectCommentController(int ProjectId) {
+  public ProjectCommentController(Project project) {
     projectManager = ProjectManager.getInstance();
   }
 }

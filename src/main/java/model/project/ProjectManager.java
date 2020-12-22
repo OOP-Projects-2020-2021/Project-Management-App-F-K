@@ -7,6 +7,7 @@ import model.project.queryconstants.QueryProjectDeadlineStatus;
 import model.project.queryconstants.QueryProjectStatus;
 import model.project.exceptions.*;
 import model.team.Team;
+import model.team.TeamManager;
 import model.team.exceptions.InexistentTeamException;
 import model.team.exceptions.UnregisteredMemberRoleException;
 import model.user.User;
@@ -34,6 +35,11 @@ public class ProjectManager extends Manager {
     return instance;
   }
 
+  public enum ProjectChangeablePropertyName {
+    UPDATE_PROJECT, // event fires when project is updated
+    CREATE_PROJECT, // event fires when project is created
+    SET_PROJECT_STATUS // event fires when state of the project is changed
+  }
   /**
    * Creates a new project with the specified data and saves it in the database. The supervisor of
    * the project will be automatically the current user. There should not be another project with
@@ -44,7 +50,7 @@ public class ProjectManager extends Manager {
    * @param assigneeName is the name of the user to whom this project is assigned.
    * @param deadline is the deadline of the project to be saved.
    * @param description is the description of the project to be saved.
-   * @throws NoSignedInUserException if there is noone signed in.
+   * @throws NoSignedInUserException if there is no one signed in.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentUserException if the user with assigneeName does not exist.
    * @throws InexistentTeamException if the team with teamId does not exist.
@@ -125,6 +131,7 @@ public class ProjectManager extends Manager {
     project.setTitle(newProjectTitle);
     project.setDeadline(newDeadline);
     projectRepository.updateProject(project);
+    support.firePropertyChange(ProjectChangeablePropertyName.UPDATE_PROJECT.toString(),OLD_VALUE,NEW_VALUE);
   }
 
   /**
@@ -147,6 +154,7 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.IN_PROGRESS);
     }
+    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
   }
 
   /**
@@ -181,6 +189,7 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.TO_DO);
     }
+    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
   }
 
   /**
@@ -215,6 +224,7 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.TURNED_IN);
     }
+    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
   }
 
   /**
@@ -253,6 +263,7 @@ public class ProjectManager extends Manager {
     } else {
       throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
     }
+    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
   }
 
   /**
@@ -285,6 +296,7 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.FINISHED);
     }
+    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
   }
 
   /**
@@ -323,6 +335,7 @@ public class ProjectManager extends Manager {
     } else {
       throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
     }
+    support.firePropertyChange(ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(),OLD_VALUE,NEW_VALUE);
   }
 
   /**
@@ -447,5 +460,9 @@ public class ProjectManager extends Manager {
   private boolean userIsAssignee(User user, Project project)
       throws InexistentDatabaseEntityException {
     return project.getAssigneeId() == user.getId();
+  }
+
+  public Project getProjectById(int projectId) throws InexistentProjectException, SQLException {
+    return getMandatoryProject(projectId);
   }
 }

@@ -98,9 +98,8 @@ public class ProjectTable extends JTable {
       int row = getSelectedRow();
       int column = getSelectedColumn();
       if (column == 0 && evt.getClickCount() > 1) {
-        // on double click the project is opened
-        String projectTitle = (String) tableModel.getValueAt(row, column);
-        controller.openProject(frame,projectTitle,row);
+        // on double click on the name of the project, the project frame is opened
+        controller.openProject(frame,row);
       }
     }
   }

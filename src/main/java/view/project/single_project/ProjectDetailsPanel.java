@@ -1,6 +1,8 @@
 package view.project.single_project;
 
 import controller.project.single_project.ProjectDetailsController;
+import model.project.Project;
+import model.user.User;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
@@ -11,8 +13,11 @@ import javax.swing.text.DefaultFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Properties;
+import java.util.List;
 
 /**
  * Allows the user to view the details about a given project, such as the title, description,
@@ -25,12 +30,17 @@ public class ProjectDetailsPanel extends JPanel {
 
   private JDatePickerImpl deadlineDatePicker;
   private JDatePanelImpl datePanel;
+  private UtilDateModel dateModel;
 
   private JTextField titleTextField;
   private JTextArea descriptionTextArea;
   private JScrollPane descriptionScrollPane;
+
   private JComboBox<String> assigneeComboBox;
+  private DefaultComboBoxModel<String> assigneeModel;
   private JComboBox<String> supervisorComboBox;
+  private DefaultComboBoxModel<String> supervisorModel;
+
   private JPanel radioButtonsPanel;
   private JRadioButton toDoButton;
   private JRadioButton turnedInButton;
@@ -41,12 +51,13 @@ public class ProjectDetailsPanel extends JPanel {
 
   private ProjectDetailsController controller;
 
-  public ProjectDetailsPanel(int projectId) {
-    controller = new ProjectDetailsController(projectId);
+  public ProjectDetailsPanel(Project project) {
+    controller = new ProjectDetailsController(project,this);
     this.setLayout(new BorderLayout());
     initDetailsPanel();
-    enableEditingTextFields(controller.isSupervisor());
-    enableButtons(controller.isSupervisor());
+    enableSupervisorAccess();
+    System.out.println(project.getTitle());
+    System.out.println(project.getStatus());
   }
 
   private void initDetailsPanel() {
@@ -58,8 +69,7 @@ public class ProjectDetailsPanel extends JPanel {
   }
 
   private void initDataFields() {
-    // todo
-    titleTextField = UIFactory.createTextField("title");
+    titleTextField = UIFactory.createTextField(controller.getProjectTitle());
     initDatePicker();
     initDescriptionTextArea();
     initAssigneeComboBox();
@@ -67,66 +77,94 @@ public class ProjectDetailsPanel extends JPanel {
   }
 
   private void initDatePicker() {
-    // todo
-    UtilDateModel dateModel = new UtilDateModel();
-    // dateModel.setDate();
+    dateModel = new UtilDateModel();
+    setDeadlineDate();
     Properties properties = new Properties();
     properties.put("text.today", "Today");
     properties.put("text.month", "Month");
     properties.put("text.year", "Year");
     datePanel = new JDatePanelImpl(dateModel, properties);
     deadlineDatePicker = new JDatePickerImpl(datePanel, new DefaultFormatter());
-    deadlineDatePicker.addActionListener(new DateListener());
+  }
+  private void setDeadlineDate() {
+    dateModel.setDate(controller.getProjectDeadline().getYear(),controller.getProjectDeadline().getMonthValue(),controller.getProjectDeadline().getDayOfMonth());
+    dateModel.setSelected(true);
   }
 
   private void initDescriptionTextArea() {
-    // todo
-    descriptionTextArea = new JTextArea("description");
+    descriptionTextArea = new JTextArea();
+    descriptionTextArea.setText(controller.getProjectDescription());
     descriptionTextArea.setLineWrap(true);
     descriptionTextArea.setWrapStyleWord(true);
     descriptionScrollPane = new JScrollPane(descriptionTextArea);
   }
 
-  private void initAssigneeComboBox() {
-    // todo
-    assigneeComboBox = new JComboBox<>();
-    DefaultComboBoxModel<String> assigneeModel = new DefaultComboBoxModel<>();
-    String[] assignees = {"user1", "user2", "user3"};
-    for (String s : assignees) {
-      assigneeModel.addElement(s);
+  private DefaultComboBoxModel<String> createMembersComboBoxModel() {
+    DefaultComboBoxModel<String> membersModel = new DefaultComboBoxModel<>();
+    List<User> members = controller.getTeamMembers();
+    for (User member: members) {
+      membersModel.addElement(member.getUsername());
     }
+    return membersModel;
+  }
+  private void selectAssigneeFromComboBox() {
+    if(controller.getProjectAssignee() != null) {
+      assigneeModel.setSelectedItem(controller.getProjectAssignee().getUsername());
+    }
+  }
+  private void initAssigneeComboBox() {
+    assigneeComboBox = new JComboBox<>();
+    assigneeModel = createMembersComboBoxModel();
+   selectAssigneeFromComboBox();
     assigneeComboBox.setModel(assigneeModel);
   }
-
-  private void initSupervisorComboBox() {
-    // todo
-    supervisorComboBox = new JComboBox<>();
-    DefaultComboBoxModel<String> supervisorModel = new DefaultComboBoxModel<>();
-    String[] supervisors = {"user1", "user2", "user3"};
-    for (String supervisor : supervisors) {
-      supervisorModel.addElement(supervisor);
+  private void selectSupervisorFromComboBox() {
+    if(controller.getProjectSupervisor() != null) {
+      supervisorModel.setSelectedItem(controller.getProjectSupervisor().getUsername());
     }
+  }
+  private void initSupervisorComboBox() {
+    supervisorComboBox = new JComboBox<>();
+    supervisorModel = createMembersComboBoxModel();
+    selectSupervisorFromComboBox();
     supervisorComboBox.setModel(supervisorModel);
   }
 
-  private void enableEditingTextFields(boolean enable) {
-    titleTextField.setEditable(enable);
-    descriptionTextArea.setEditable(enable);
-    assigneeComboBox.setEnabled(enable);
-    supervisorComboBox.setEnabled(enable);
-    finishedButton.setVisible(enable);
-  }
-
   private void initRadioButtons() {
-    toDoButton = new JRadioButton(ProjectDetailsController.STATUS[0]);
-    inProgressButton = new JRadioButton(ProjectDetailsController.STATUS[1]);
-    turnedInButton = new JRadioButton(ProjectDetailsController.STATUS[2]);
-    finishedButton = new JRadioButton(ProjectDetailsController.STATUS[3]);
+    toDoButton = new JRadioButton(Project.ProjectStatus.TO_DO.toString());
+    inProgressButton = new JRadioButton(Project.ProjectStatus.IN_PROGRESS.toString());
+    turnedInButton = new JRadioButton(Project.ProjectStatus.TURNED_IN.toString());
+    finishedButton = new JRadioButton(Project.ProjectStatus.FINISHED.toString());
 
-    toDoButton.setActionCommand(ProjectDetailsController.STATUS[0]);
-    inProgressButton.setActionCommand(ProjectDetailsController.STATUS[1]);
-    turnedInButton.setActionCommand(ProjectDetailsController.STATUS[2]);
-    finishedButton.setActionCommand(ProjectDetailsController.STATUS[3]);
+    toDoButton.setActionCommand(Project.ProjectStatus.TO_DO.toString());
+    inProgressButton.setActionCommand(Project.ProjectStatus.IN_PROGRESS.toString());
+    turnedInButton.setActionCommand(Project.ProjectStatus.TURNED_IN.toString());
+    finishedButton.setActionCommand(Project.ProjectStatus.FINISHED.toString());
+
+  }
+  private void selectProjectStatus() {
+    System.out.println(controller.getStatus());
+   switch(Project.ProjectStatus.valueOf(controller.getStatus())) {
+     case IN_PROGRESS: {
+       inProgressButton.setSelected(true);
+       break;
+     }
+     case TURNED_IN: {
+       turnedInButton.setSelected(true);
+       break;
+     }
+     case FINISHED: {
+       finishedButton.setSelected(true);
+       break;
+     }
+     case TO_DO:{
+       toDoButton.setSelected(true);
+       break;
+     }
+     default: {
+       break;
+     }
+   }
   }
 
   private void createRadioButtonsGroup() {
@@ -141,6 +179,7 @@ public class ProjectDetailsPanel extends JPanel {
   private void initRadioButtonsPanel() {
     initRadioButtons();
     createRadioButtonsGroup();
+    selectProjectStatus();
     radioButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     radioButtonsPanel.add(toDoButton);
     radioButtonsPanel.add(inProgressButton);
@@ -244,25 +283,47 @@ public class ProjectDetailsPanel extends JPanel {
     deleteButton.setVisible(enable);
   }
 
+  private void enableEditingTextFields(boolean enable) {
+    titleTextField.setEditable(enable);
+    descriptionTextArea.setEditable(enable);
+    deadlineDatePicker.setEnabled(enable);
+    assigneeComboBox.setEnabled(enable);
+    supervisorComboBox.setEnabled(enable);
+    finishedButton.setVisible(enable);
+  }
+
+  private void enableSupervisorAccess() {
+    enableEditingTextFields(controller.isSupervisor());
+    enableButtons(controller.isSupervisor());
+  }
+  public void updatePanel() {
+    titleTextField.setText(controller.getProjectTitle());
+    descriptionTextArea.setText(controller.getProjectDescription());
+    setDeadlineDate();
+    selectAssigneeFromComboBox();
+    selectSupervisorFromComboBox();
+    selectProjectStatus();
+    enableSupervisorAccess();
+  }
+
   class ButtonListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       if (actionEvent.getSource() == saveButton) {
-        // todo
-      } else if (actionEvent.getSource() == deleteButton) {
+        String title = titleTextField.getText();
+        String assignee = Objects.requireNonNull(assigneeComboBox.getSelectedItem()).toString();
+        String supervisor = Objects.requireNonNull(supervisorComboBox.getSelectedItem()).toString();
+        LocalDate selectedDate = LocalDate.of(deadlineDatePicker.getModel().getYear(),deadlineDatePicker.getModel().getMonth(),deadlineDatePicker.getModel().getDay());
+        String description = descriptionTextArea.getText();
+        controller.saveProject(title,assignee,supervisor,selectedDate,description);
+      } else if(actionEvent.getSource() == deleteButton) {
         // todo
       } else if (actionEvent.getSource() instanceof JRadioButton) {
         String selectedStatus = actionEvent.getActionCommand();
-        // todo
+        if(!controller.setProjectStatus(selectedStatus)) {
+          selectProjectStatus();
+        }
       }
-    }
-  }
-
-  class DateListener implements ActionListener {
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-      Date selectedDate = (Date) deadlineDatePicker.getModel().getValue();
-      // todo
     }
   }
 }

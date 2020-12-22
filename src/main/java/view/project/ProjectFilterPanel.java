@@ -166,13 +166,25 @@ public class ProjectFilterPanel extends JPanel {
     }
   }
   class PrivilegeFilterActionListener implements ActionListener {
+    private boolean isAtLeastOnePrivilegeButtonSelected() {
+      return assignedToUserButton.isSelected() || supervisedByUserButton.isSelected();
+    }
+    private void selectPrivilegeButtons() {
+      if(!isAtLeastOnePrivilegeButtonSelected()) {
+        // at least one filter must always be selected
+        assignedToUserButton.setSelected(true);
+        supervisedByUserButton.setSelected(true);
+      }
+    }
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       boolean assignedToUser = assignedToUserButton.isSelected();
       boolean supervisedByUser = supervisedByUserButton.isSelected();
-      boolean unFiltered = !(assignedToUser && supervisedByUser);
-      controller.setPrivilegeFilter(assignedToUser && unFiltered,supervisedByUser && unFiltered);
+      // if both filters are selected, then all the projects will be displayed
+      boolean filtered = !(assignedToUser && supervisedByUser);
+      controller.setPrivilegeFilter(assignedToUser && filtered,supervisedByUser && filtered);
       controller.filterProjects();
+      selectPrivilegeButtons();
     }
   }
 }

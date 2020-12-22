@@ -1,7 +1,6 @@
 package controller.project;
 
-import model.InexistentDatabaseEntityException;
-import view.ErrorDialogFactory;
+import model.project.Project;
 import view.project.ProjectListModel;
 import view.project.ProjectTable;
 import view.project.single_project.ProjectFrame;
@@ -10,6 +9,12 @@ import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * Manages the project table, and it is responsible for displaying and updating the projects in the table.
+ * When a user selects a project, it will open a separate frame for viewing the details of that project.
+ *
+ * @author Beata Keresztes
+ */
 public class ProjectTableController implements PropertyChangeListener {
 
     private ProjectListModel projectListModel;
@@ -32,16 +37,12 @@ public class ProjectTableController implements PropertyChangeListener {
         }
     }
 
-    public void openProject(JFrame frame,String title,int rowNr) {
-        try {
-            int projectId = projectListModel.getProjectList().get(rowNr).getId();
-            if(projectId != -1) {
-                new ProjectFrame(frame, projectId, title);
-                frame.setEnabled(false);
-                frame.setVisible(false);
-            }
-        }catch(InexistentDatabaseEntityException e) {
-            ErrorDialogFactory.createErrorDialog(e,null,"The project with title \"" + title + "\" was not found.");
+    public void openProject(JFrame frame,int rowNr) {
+        Project project = projectListModel.getProjectList().get(rowNr);
+        if(project != null) {
+            new ProjectFrame(frame, project);
+            frame.setEnabled(false);
+            frame.setVisible(false);
         }
     }
 

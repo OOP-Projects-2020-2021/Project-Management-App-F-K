@@ -13,6 +13,5 @@ public class UserProjectsController extends FrameController {
   public void onClose(JFrame parentFrame) {
     parentFrame.setVisible(true);
     parentFrame.setEnabled(true);
-    closeFrame();
   }
 }
