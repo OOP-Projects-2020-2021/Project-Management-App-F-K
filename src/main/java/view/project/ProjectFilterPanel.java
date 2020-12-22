@@ -1,6 +1,7 @@
 package view.project;
 
 import controller.project.ProjectFilterController;
+import model.project.queryconstants.QueryProjectStatus;
 import view.UIFactory;
 
 import javax.swing.*;
@@ -18,27 +19,24 @@ import java.util.Optional;
 public class ProjectFilterPanel extends JPanel {
 
   private JPanel statusFilterButtonsPanel;
-  private JPanel typeFilterButtonsPanel;
+  private JPanel privilegeFilterButtonsPanel;
   private JPanel turnInTimeFilterButtonsPanel;
   private ProjectFilterController controller;
 
-  private static final String[] projectType = {"ALL", "ASSIGNED TO ME", "SUPERVISED BY ME"};
-
-  public ProjectFilterPanel(ProjectTable projectTable, Optional<Integer> teamId) {
-    this.controller = new ProjectFilterController(projectTable, teamId);
+  public ProjectFilterPanel(Optional<Integer> teamId) {
+    this.controller = new ProjectFilterController(teamId);
     initFilters();
     createPanelLayout();
   }
 
   private void initFilters() {
     initStatusFilter();
-    initTypeFilter();
-    initturnInTimeFilter();
+    initPrivilegeFilter();
+    initTurnInTimeFilter();
   }
 
   private void initStatusFilter() {
-    // todo get values from table Status + "ALL"
-    String[] projectStatus = {"ALL", "TO DO", "IN PROGRESS", "TURNED IN", "FINISHED"};
+    String[] projectStatus = controller.getProjectStatusTypes();
 
     statusFilterButtonsPanel = new JPanel();
     statusFilterButtonsPanel.setLayout(new BoxLayout(statusFilterButtonsPanel, BoxLayout.Y_AXIS));
@@ -57,30 +55,27 @@ public class ProjectFilterPanel extends JPanel {
     statusFilterButtons[0].setSelected(true);
   }
 
-  private void initTypeFilter() {
-    typeFilterButtonsPanel = new JPanel();
-    typeFilterButtonsPanel.setLayout(new BoxLayout(typeFilterButtonsPanel, BoxLayout.Y_AXIS));
+  private void initPrivilegeFilter() {
+    String[] privilegeTypes = controller.getProjectPrivilegeTypes();
+    privilegeFilterButtonsPanel = new JPanel();
+    privilegeFilterButtonsPanel.setLayout(new BoxLayout(privilegeFilterButtonsPanel, BoxLayout.Y_AXIS));
     // grouping the buttons ensures that only one button can be selected at a time
-    ButtonGroup typeFilterButtonGroup = new ButtonGroup();
-    JRadioButton[] typeFilterButtons = new JRadioButton[projectType.length];
+    ButtonGroup privilegeFilterButtonGroup = new ButtonGroup();
+    JRadioButton[] privilegeFilterButtons = new JRadioButton[privilegeTypes.length];
 
-    for (int i = 0; i < projectType.length; i++) {
-      typeFilterButtons[i] = new JRadioButton(projectType[i]);
-      typeFilterButtons[i].setActionCommand(projectType[i]);
-      typeFilterButtons[i].addActionListener(new TypeFilterActionListener());
-      typeFilterButtonGroup.add(typeFilterButtons[i]);
-      typeFilterButtonsPanel.add(typeFilterButtons[i]);
+    for (int i = 0; i < privilegeTypes.length; i++) {
+      privilegeFilterButtons[i] = new JRadioButton(privilegeTypes[i]);
+      privilegeFilterButtons[i].setActionCommand(privilegeTypes[i]);
+      privilegeFilterButtons[i].addActionListener(new PrivilegeFilterActionListener());
+      privilegeFilterButtonGroup.add(privilegeFilterButtons[i]);
+      privilegeFilterButtonsPanel.add(privilegeFilterButtons[i]);
     }
     // initially all projects are shown
-    typeFilterButtons[0].setSelected(true);
+    privilegeFilterButtons[0].setSelected(true);
   }
 
-  private void initturnInTimeFilter() {
-    // todo get this from the projectManager through the controller
-    String[] turnInTime = {
-      "ALL", "IN TIME TO TURN IN", "TURNED IN ON TIME", "OVERDUE", "TURNED IN LATE"
-    };
-
+  private void initTurnInTimeFilter() {
+    String[] turnInTime = controller.getProjectTurnInTimes();
     turnInTimeFilterButtonsPanel = new JPanel();
     turnInTimeFilterButtonsPanel.setLayout(
         new BoxLayout(turnInTimeFilterButtonsPanel, BoxLayout.Y_AXIS));
@@ -91,7 +86,7 @@ public class ProjectFilterPanel extends JPanel {
     for (int i = 0; i < turnInTime.length; i++) {
       turnInTimeFilterButtons[i] = new JRadioButton(turnInTime[i]);
       turnInTimeFilterButtons[i].setActionCommand(turnInTime[i]);
-      turnInTimeFilterButtons[i].addActionListener(new turnInTimeFilterActionListener());
+      turnInTimeFilterButtons[i].addActionListener(new TurnInTimeFilterActionListener());
       turnInTimeFilterButtonGroup.add(turnInTimeFilterButtons[i]);
       turnInTimeFilterButtonsPanel.add(turnInTimeFilterButtons[i]);
     }
@@ -108,7 +103,7 @@ public class ProjectFilterPanel extends JPanel {
     JLabel filterLabel = UIFactory.createLabel("Filter projects by:", null);
     JLabel statusFilterLabel = UIFactory.createLabel("Status:", null);
     JLabel turnInTimeFilterLabel = UIFactory.createLabel("Turn-in time:", null);
-    JLabel typeFilterLabel = UIFactory.createLabel("Type:", null);
+    JLabel privilegeFilterLabel = UIFactory.createLabel("Type:", null);
 
     layout.setHorizontalGroup(
         layout
@@ -127,8 +122,8 @@ public class ProjectFilterPanel extends JPanel {
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(typeFilterLabel)
-                    .addComponent(typeFilterButtonsPanel)));
+                    .addComponent(privilegeFilterLabel)
+                    .addComponent(privilegeFilterButtonsPanel)));
 
     layout.setVerticalGroup(
         layout
@@ -150,37 +145,33 @@ public class ProjectFilterPanel extends JPanel {
                     .addGroup(
                         layout
                             .createSequentialGroup()
-                            .addComponent(typeFilterLabel)
-                            .addComponent(typeFilterButtonsPanel))));
+                            .addComponent(privilegeFilterLabel)
+                            .addComponent(privilegeFilterButtonsPanel))));
   }
 
   class StatusFilterActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       String statusFilter = actionEvent.getActionCommand();
-      controller.filterProjectsByStatus(statusFilter);
+      controller.setStatusFilter(statusFilter);
+      controller.filterProjects();
     }
   }
 
-  class turnInTimeFilterActionListener implements ActionListener {
+  class TurnInTimeFilterActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       String turnInTimeFilter = actionEvent.getActionCommand();
-      controller.filterProjectsByTurnInTime(turnInTimeFilter);
+      controller.setTurnInTimeFilter(turnInTimeFilter);
+      controller.filterProjects();
     }
   }
-
-  class TypeFilterActionListener implements ActionListener {
+  class PrivilegeFilterActionListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-      String typeFilter = actionEvent.getActionCommand();
-      if (typeFilter.equals(projectType[0])) {
-        controller.unFilteredProjects();
-      } else if (typeFilter.equals(projectType[1])) {
-        controller.filterAssignedProjects();
-      } else if (typeFilter.equals(projectType[2])) {
-        controller.filterSupervisedProjects();
-      }
+      String privilegeFilter = actionEvent.getActionCommand();
+      controller.setPrivilegeFilter(privilegeFilter);
+      controller.filterProjects();
     }
   }
 }

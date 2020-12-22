@@ -1,5 +1,6 @@
 package view.project;
 
+import controller.project.ProjectTableController;
 import model.project.Project;
 import view.UIFactory;
 import javax.swing.*;
@@ -7,11 +8,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Creates a table containing to display the projects.
@@ -21,9 +21,21 @@ import java.util.List;
 public class ProjectTable extends JTable {
 
   private DefaultTableModel tableModel;
+  private ProjectTableController controller;
+  private JFrame frame;
   private static final String[] columnNames = {"Name", "Deadline", "Status"};
 
-  public ProjectTable() {
+  public ProjectTable(JFrame frame) {
+    this.controller = new ProjectTableController(this);
+    this.frame = frame;
+    initTableDesign();
+    this.addMouseListener(new TableMouseListener());
+    // initialize the model
+    initTableModel();
+    // sort the rows by the deadline
+    addSorter();
+  }
+  private void initTableDesign() {
     setFillsViewportHeight(true);
     setCellSelectionEnabled(true);
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
@@ -32,34 +44,31 @@ public class ProjectTable extends JTable {
     setRowHeight(30);
     // the columns cannot be rearranged
     getTableHeader().setReorderingAllowed(false);
-    addMouseListener(new TableMouseListener());
-    // initialize the model
-    initTableModel();
+  }
+  private void addSorter() {
     // the projects can be sorted by deadlines when clicking on the column's header
     TableRowSorter<TableModel> sorter = new TableRowSorter<>(tableModel);
     sorter.setComparator(1, new DateComparator());
-    setRowSorter(sorter);
+    this.setRowSorter(sorter);
   }
 
   private void initTableModel() {
     tableModel = (DefaultTableModel) this.getModel();
     tableModel.setColumnIdentifiers(columnNames);
+    controller.initializeTableModel();
   }
-
   public void clearTableModel() {
-    while (tableModel.getRowCount() != 0) {
+    while(tableModel.getRowCount() > 0) {
       tableModel.removeRow(0);
     }
   }
-
   public void fillTableModel(List<Project> projectsList) {
     for (Project project : projectsList) {
-      tableModel.addRow(
-          new String[] {
-            project.getTitle(),
-            String.valueOf(project.getDeadline()),
-            String.valueOf(project.getStatus())
-          });
+      String[] rowData = new String[]{
+        project.getTitle(),
+        String.valueOf(project.getDeadline()),
+        String.valueOf(project.getStatus())};
+      tableModel.addRow(rowData);
     }
   }
 
@@ -85,15 +94,13 @@ public class ProjectTable extends JTable {
 
   class TableMouseListener extends MouseAdapter {
     @Override
-    public void mouseClicked(java.awt.event.MouseEvent evt) {
+    public void mouseClicked(MouseEvent evt) {
       int row = getSelectedRow();
       int column = getSelectedColumn();
       if (column == 0 && evt.getClickCount() > 1) {
-        // on double click
-        String projectName = (String) tableModel.getValueAt(row, column);
-        // todo open the project frame based on the name
-        JOptionPane.showMessageDialog(
-            null, "you selected " + projectName, "title", JOptionPane.INFORMATION_MESSAGE);
+        // on double click the project is opened
+        String projectTitle = (String) tableModel.getValueAt(row, column);
+        controller.openProject(frame,projectTitle,row);
       }
     }
   }

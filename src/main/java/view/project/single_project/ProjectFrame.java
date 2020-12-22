@@ -21,8 +21,8 @@ public class ProjectFrame extends JFrame {
 
   private static final Dimension DIMENSION = new Dimension(800, 600);
 
-  public ProjectFrame(JFrame parentFrame, int projectId) {
-    super("Project");
+  public ProjectFrame(JFrame parentFrame, int projectId,String title) {
+    super(title);
     this.parentFrame = parentFrame;
     this.controller = new ProjectController(this, projectId);
     this.setPreferredSize(DIMENSION);

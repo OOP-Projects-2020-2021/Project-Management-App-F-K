@@ -14,21 +14,23 @@ import java.util.Optional;
 public class ProjectsPanel extends JPanel {
 
   private ProjectTable projectsTable;
+  private JFrame frame;
 
-  public ProjectsPanel(Optional<Integer> currentTeamId) {
+  public ProjectsPanel(JFrame frame,Optional<Integer> teamId) {
+    this.frame = frame;
     setLayout(new BorderLayout());
     setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+    initProjectsHeader(teamId);
     initProjectsTable();
-    initProjectsHeader(currentTeamId);
   }
 
-  private void initProjectsHeader(Optional<Integer> currentTeamId) {
-    ProjectFilterPanel header = new ProjectFilterPanel(projectsTable, currentTeamId);
+  private void initProjectsHeader(Optional<Integer> teamId) {
+    ProjectFilterPanel header = new ProjectFilterPanel(teamId);
     add(header, BorderLayout.NORTH);
   }
 
   private void initProjectsTable() {
-    projectsTable = new ProjectTable();
+    projectsTable = new ProjectTable(frame);
     addScrollPane();
   }
 

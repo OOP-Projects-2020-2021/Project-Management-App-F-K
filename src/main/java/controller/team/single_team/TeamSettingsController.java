@@ -5,6 +5,7 @@ import model.UnauthorisedOperationException;
 import model.team.Team;
 import model.team.TeamManager;
 import model.team.exceptions.*;
+import model.user.User;
 import model.user.exceptions.*;
 import view.ErrorDialogFactory;
 import view.team.single_team.TeamHomePanel;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -73,7 +75,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   }
 
   private void updateHomePanel() {
-    homePanel.enableButtons(managerAccess);
+    homePanel.enableComponents(managerAccess);
     homePanel.updateHomePaneComponents();
   }
 
@@ -94,6 +96,15 @@ public class TeamSettingsController extends TeamController implements PropertyCh
           sqlException, frame, "The new manager could not be fetched.");
     }
     return null;
+  }
+
+  public List<User> getMembersOfTeam() {
+    try {
+      return teamManager.getMembersOfTeam(currentTeam.getId());
+    }catch(InexistentDatabaseEntityException | SQLException e) {
+      JOptionPane.showMessageDialog(frame,"Members could not be listed");
+      return null;
+    }
   }
 
   public void confirmLeavingTeam() {
@@ -137,7 +148,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public void saveTeamName(String name) {
     try {
       teamManager.setNewName(teamId, name);
-      homePanel.updateNameFieldAfterSave();
+      homePanel.enableNameTextField(false);
     } catch (SQLException | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new name could not be saved.");
@@ -153,9 +164,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   public void regenerateTeamCode() {
     try {
-      if (teamManager.regenerateTeamCode(teamId) != null) {
-        homePanel.showSavedLabel(true);
-      }
+      teamManager.regenerateTeamCode(teamId);
     } catch (SQLException | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new code could not be generated.");
@@ -172,8 +181,6 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public void saveTeamManager(String newManagerName) {
     try {
       teamManager.passManagerPosition(teamId, newManagerName);
-      homePanel.updateManagerFieldAfterSave();
-      homePanel.updateNameFieldAfterSave(); // user cannot edit the name of the team anymore
     } catch (InexistentTeamException | SQLException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new manager could not be saved.");

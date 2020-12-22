@@ -24,7 +24,7 @@ public class UserProjectsFrame extends JFrame {
   }
 
   private void initPanel() {
-    ProjectsPanel panel = new ProjectsPanel(null);
+    ProjectsPanel panel = new ProjectsPanel(this, null);
     getContentPane().add(panel, BorderLayout.CENTER);
   }
 
