@@ -1,7 +1,4 @@
-package view.team.single_team;
-
-import view.project.ProjectFilterPanel;
-import view.project.ProjectTable;
+package view.project;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

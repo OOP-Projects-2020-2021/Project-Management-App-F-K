@@ -1,6 +1,7 @@
 package view.team.single_team;
 
 import controller.team.single_team.TeamController;
+import view.project.ProjectsPanel;
 
 import javax.swing.*;
 import java.awt.*;
