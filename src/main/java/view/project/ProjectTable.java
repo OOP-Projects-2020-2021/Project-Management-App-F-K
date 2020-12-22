@@ -50,7 +50,14 @@ public class ProjectTable extends JTable {
   private void addSorter() {
     // the projects can be sorted by deadlines when clicking on the column's header
     TableRowSorter<TableModel> sorter = new TableRowSorter<>(tableModel);
-    sorter.setComparator(1, new DateComparator());
+    sorter.setComparator(1, (s1,s2) -> {try {
+      Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse((String) s1);
+      Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse((String) s2);
+      return date1.compareTo(date2);
+    } catch (ParseException e) {
+      e.printStackTrace();
+      return 0;
+    }});
     this.setRowSorter(sorter);
   }
 
@@ -75,21 +82,6 @@ public class ProjectTable extends JTable {
             String.valueOf(project.getStatus())
           };
       tableModel.addRow(rowData);
-    }
-  }
-
-  /** Compare Strings which represent dates. */
-  static class DateComparator implements Comparator<String> {
-    @Override
-    public int compare(String s1, String s2) {
-      try {
-        Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(s1);
-        Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse(s2);
-        return date1.compareTo(date2);
-      } catch (ParseException e) {
-        e.printStackTrace();
-        return 0;
-      }
     }
   }
   // the data in the tables cannot be edited only viewed
