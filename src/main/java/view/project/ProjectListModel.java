@@ -10,11 +10,11 @@ import java.util.List;
 
 /**
  * ProjectListMode represents the underlying model containing the list of projects to be displayed.
- * It is implemented using the singleton pattern, so that when the data in the model changes, all of its
- * instances would be updated.
- * When a user applies a filter on the projects list in the ProjectFilterPanel, the model will be updated by the ProjectFilterPanel's
- * controller.
- * The controller which displays the actual projects in a table, listens to the changes made in the model, and updates the view.
+ * It is implemented using the singleton pattern, so that when the data in the model changes, all of
+ * its instances would be updated. When a user applies a filter on the projects list in the
+ * ProjectFilterPanel, the model will be updated by the ProjectFilterPanel's controller. The
+ * controller which displays the actual projects in a table, listens to the changes made in the
+ * model, and updates the view.
  *
  * @author Beata Keresztes
  */

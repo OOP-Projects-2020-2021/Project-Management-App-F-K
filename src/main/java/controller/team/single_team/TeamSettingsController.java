@@ -72,13 +72,13 @@ public class TeamSettingsController extends TeamController implements PropertyCh
       setManagerAccess();
       updateHomePanel();
     } else if (evt.getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString()) ||
-            evt.getPropertyName()
-                    .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
+            .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
+        || evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
       updateCurrentTeam();
       updateHomePanel();
     } else if (evt.getPropertyName()
-    .equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
+        .equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
       updateCurrentTeam();
       setManagerAccess();
       updateHomePanel();
@@ -121,23 +121,17 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   /** Displays a message dialog to ask the user to confirm that he/she wants to leave the team. */
   private int confirmLeavingTeam() {
     return JOptionPane.showConfirmDialog(
-            frame,
-            CONFIRM_LEAVING_TEAM_MESSAGE,
-            CONFIRM_LEAVING_TEAM_TITLE,
-            JOptionPane.YES_NO_OPTION);
+        frame, CONFIRM_LEAVING_TEAM_MESSAGE, CONFIRM_LEAVING_TEAM_TITLE, JOptionPane.YES_NO_OPTION);
   }
   /** Displays a message dialog to inform the user that he/she has left the team. */
   private void affirmLeavingTeam() {
     JOptionPane.showConfirmDialog(
-            frame,
-            AFFIRM_LEAVING_TEAM_MESSAGE,
-            AFFIRM_LEAVING_TEAM_TITLE,
-            JOptionPane.YES_NO_OPTION);
+        frame, AFFIRM_LEAVING_TEAM_MESSAGE, AFFIRM_LEAVING_TEAM_TITLE, JOptionPane.YES_NO_OPTION);
   }
 
   public void leaveTeam() {
     try {
-      if(confirmLeavingTeam() == JOptionPane.YES_OPTION) {
+      if (confirmLeavingTeam() == JOptionPane.YES_OPTION) {
         teamManager.leaveTeam(teamId);
         affirmLeavingTeam();
         closeFrame();

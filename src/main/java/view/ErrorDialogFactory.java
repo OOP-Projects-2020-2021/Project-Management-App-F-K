@@ -108,7 +108,7 @@ public class ErrorDialogFactory {
   private static final String EMPTY_FIELDS_LEFT_TITLE = "Empty fields left";
 
   private static final String EMPTY_FIELDS_LEFT_MESSAGE =
-          "Please fill in all the required information before continuing!";
+      "Please fill in all the required information before continuing!";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
@@ -282,9 +282,9 @@ public class ErrorDialogFactory {
   /** Displays an error message to inform the user that some data fields have not been completed. */
   private static void displayEmptyFieldsErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            EMPTY_FIELDS_LEFT_MESSAGE + "\n" + message,
-            EMPTY_FIELDS_LEFT_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        EMPTY_FIELDS_LEFT_MESSAGE + "\n" + message,
+        EMPTY_FIELDS_LEFT_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
 }

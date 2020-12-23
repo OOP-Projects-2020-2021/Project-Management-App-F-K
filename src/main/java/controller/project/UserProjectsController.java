@@ -5,8 +5,8 @@ import controller.FrameController;
 import javax.swing.*;
 
 /**
- * The UserProjectsController manages the UserProjectsFrame, and it is responsible for redirecting the user to the
- * MainFrame upon closing the UserProjectsFrame.
+ * The UserProjectsController manages the UserProjectsFrame, and it is responsible for redirecting
+ * the user to the MainFrame upon closing the UserProjectsFrame.
  *
  * @author Beata Keresztes
  */

@@ -12,10 +12,10 @@ import java.awt.event.MouseEvent;
 import java.util.List;
 
 /**
- * The TeamHomePanel displays general information about a team.
- * The general user can only view the listed data, but the manager can edit the team's attributes.
- * The user is allowed to leave the team, unless he/she is the manager, in which case the manager is only allowed to
- * leave the team, if first he/she passes the manager position to another member of the team.
+ * The TeamHomePanel displays general information about a team. The general user can only view the
+ * listed data, but the manager can edit the team's attributes. The user is allowed to leave the
+ * team, unless he/she is the manager, in which case the manager is only allowed to leave the team,
+ * if first he/she passes the manager position to another member of the team.
  *
  * @author Beata Keresztes
  */

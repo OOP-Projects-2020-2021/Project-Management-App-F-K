@@ -8,12 +8,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * The ProjectsFilterPanel contains the filters that can be applied to listing the projects, including
- * the status of the project,
- * the due time for turning in the project,
- * and whether it is a project assigned to the user or supervised by the user.
- * The user can select only one option of each, except in case of the assigned/ supervised projects, in which case
- * at least one of these options must be selected. Initially, both of them are selected, meaning that all the projects will be listed.
+ * The ProjectsFilterPanel contains the filters that can be applied to listing the projects,
+ * including the status of the project, the due time for turning in the project, and whether it is a
+ * project assigned to the user or supervised by the user. The user can select only one option of
+ * each, except in case of the assigned/ supervised projects, in which case at least one of these
+ * options must be selected. Initially, both of them are selected, meaning that all the projects
+ * will be listed.
  *
  * @author Beata Keresztes
  */

@@ -11,8 +11,9 @@ import java.awt.event.*;
 import java.util.List;
 
 /**
- * The ProjectCommentPanel allows the user to view the comments added to the given project and leave their own comments.
- * This functionality is only allowed to the members of the team to which the project belongs.
+ * The ProjectCommentPanel allows the user to view the comments added to the given project and leave
+ * their own comments. This functionality is only allowed to the members of the team to which the
+ * project belongs.
  *
  * @author Beata Keresztes
  */
@@ -27,7 +28,7 @@ public class ProjectCommentPanel extends JPanel {
   private static final String LEAVE_COMMENT_MESSAGE = "Leave a comment";
 
   public ProjectCommentPanel(Project project) {
-    controller = new ProjectCommentController(this,project);
+    controller = new ProjectCommentController(this, project);
     initCommentPanel();
   }
 
@@ -42,10 +43,12 @@ public class ProjectCommentPanel extends JPanel {
   private void clearCommentList() {
     commentListPanel.removeAll();
   }
+
   private void addCommentToPanel(Comment comment) {
     JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     JLabel senderName = UIFactory.createLabel(controller.getSenderName(comment), null);
-    JLabel sendingDate = UIFactory.createLabel(comment.getDateTime().toLocalDate().toString(), null);
+    JLabel sendingDate =
+        UIFactory.createLabel(comment.getDateTime().toLocalDate().toString(), null);
     headerPanel.add(senderName);
     headerPanel.add(new JLabel("-"));
     headerPanel.add(sendingDate);
@@ -60,15 +63,17 @@ public class ProjectCommentPanel extends JPanel {
 
     commentListPanel.add(rowPanel);
   }
+
   private void fillCommentList() {
     List<Comment> commentList = controller.getComments();
-    commentListPanel.setLayout(new GridLayout(0,1));
+    commentListPanel.setLayout(new GridLayout(0, 1));
     if (commentList != null) {
       for (Comment comment : commentList) {
         addCommentToPanel(comment);
       }
     }
   }
+
   private void initCommentList() {
     commentListPanel = new JPanel();
     commentListScrollPanel = new JScrollPane(commentListPanel);
@@ -78,15 +83,16 @@ public class ProjectCommentPanel extends JPanel {
 
   private void initCommentArea() {
     commentTextArea = createUneditableCommentArea(LEAVE_COMMENT_MESSAGE);
-    commentTextArea.addMouseListener(new MouseAdapter() {
-      @Override
-      public void mouseClicked(MouseEvent e) {
-        if (!commentTextArea.isEditable()) {
-          commentTextArea.setText("");
-          commentTextArea.setEditable(true);
-        }
-      }
-      });
+    commentTextArea.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            if (!commentTextArea.isEditable()) {
+              commentTextArea.setText("");
+              commentTextArea.setEditable(true);
+            }
+          }
+        });
     clearCommentArea();
   }
 
@@ -102,11 +108,12 @@ public class ProjectCommentPanel extends JPanel {
     JScrollPane commentScrollPane = new JScrollPane(commentTextArea);
     sendButton = UIFactory.createButton("Send");
     sendButton.setMnemonic(KeyEvent.VK_ENTER);
-    sendButton.addActionListener(e -> {
-      if (e.getSource() == sendButton) {
-        controller.addComment(commentTextArea.getText());
-      }
-    });
+    sendButton.addActionListener(
+        e -> {
+          if (e.getSource() == sendButton) {
+            controller.addComment(commentTextArea.getText());
+          }
+        });
 
     commentLayout.setHorizontalGroup(
         commentLayout
@@ -137,6 +144,7 @@ public class ProjectCommentPanel extends JPanel {
     commentTextArea.setText(LEAVE_COMMENT_MESSAGE);
     commentTextArea.setEditable(false);
   }
+
   public void updateCommentPanel() {
     clearCommentArea();
     clearCommentList();
@@ -144,7 +152,10 @@ public class ProjectCommentPanel extends JPanel {
     revalidate();
     scrollToBottom();
   }
+
   private void scrollToBottom() {
-    commentListScrollPanel.getVerticalScrollBar().addAdjustmentListener(e -> e.getAdjustable().setValue(e.getAdjustable().getMaximum()));
+    commentListScrollPanel
+        .getVerticalScrollBar()
+        .addAdjustmentListener(e -> e.getAdjustable().setValue(e.getAdjustable().getMaximum()));
   }
 }

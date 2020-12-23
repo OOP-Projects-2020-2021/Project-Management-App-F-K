@@ -62,7 +62,7 @@ public class CommentManager extends Manager {
     Comment.SavableComment comment =
         new Comment.SavableComment(text, projectId, currentUser.getId(), LocalDateTime.now());
     commentRepository.saveComment(comment);
-    support.firePropertyChange(ADD_COMMENT,OLD_VALUE,NEW_VALUE);
+    support.firePropertyChange(ADD_COMMENT, OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -77,5 +77,4 @@ public class CommentManager extends Manager {
     comments.sort(Comparator.comparing(Comment::getDateTime));
     return comments;
   }
-
 }

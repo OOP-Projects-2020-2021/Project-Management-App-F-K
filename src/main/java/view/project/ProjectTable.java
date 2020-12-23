@@ -14,9 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * ProjectTable displays the list of projects which belong to a certain team or which are related to a certain user.
- * By double clicking on the title of the project in the table, a new ProjectFrame is opened, where the user can view
- * all the details of the selected project.
+ * ProjectTable displays the list of projects which belong to a certain team or which are related to
+ * a certain user. By double clicking on the title of the project in the table, a new ProjectFrame
+ * is opened, where the user can view all the details of the selected project.
  *
  * @author Beata Keresztes
  */
@@ -52,14 +52,18 @@ public class ProjectTable extends JTable {
   private void addSorter() {
     // the projects can be sorted by deadlines when clicking on the column's header
     TableRowSorter<TableModel> sorter = new TableRowSorter<>(tableModel);
-    sorter.setComparator(1, (s1,s2) -> {try {
-      Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse((String) s1);
-      Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse((String) s2);
-      return date1.compareTo(date2);
-    } catch (ParseException e) {
-      e.printStackTrace();
-      return 0;
-    }});
+    sorter.setComparator(
+        1,
+        (s1, s2) -> {
+          try {
+            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse((String) s1);
+            Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse((String) s2);
+            return date1.compareTo(date2);
+          } catch (ParseException e) {
+            e.printStackTrace();
+            return 0;
+          }
+        });
     this.setRowSorter(sorter);
   }
 

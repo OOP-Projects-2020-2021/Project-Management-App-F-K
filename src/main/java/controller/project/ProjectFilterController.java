@@ -13,11 +13,12 @@ import view.project.ProjectListModel;
 import java.sql.SQLException;
 
 /**
- * ProjectFilterController controls the ProjectFilterPanel containing the filters applied to the projects that are displayed.
- * It is responsible for updating the ProjectListModel when a user selects a certain combination of filters.
- * If the teamId is specified and it is a non-negative integer, then only the projects related to that team are listed.
- * Otherwise, if the teamId is a negative number, for example -1, then all the projects corresponding to the current user are listed,
- * independent of the team.
+ * ProjectFilterController controls the ProjectFilterPanel containing the filters applied to the
+ * projects that are displayed. It is responsible for updating the ProjectListModel when a user
+ * selects a certain combination of filters. If the teamId is specified and it is a non-negative
+ * integer, then only the projects related to that team are listed. Otherwise, if the teamId is a
+ * negative number, for example -1, then all the projects corresponding to the current user are
+ * listed, independent of the team.
  *
  * @author Beata Keresztes
  */

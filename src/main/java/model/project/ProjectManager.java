@@ -47,12 +47,14 @@ public class ProjectManager extends Manager {
 
   /**
    * Checks if all the required (compulsory) data was introduced to create a new project.
+   *
    * @param title of the project
    * @param assignee to whom the project is assigned
    * @param deadline until which the project can be turned in
-   * @return true if all some fields are left uncompleted, if all the necessary data has been introduced it returns false
+   * @return true if all some fields are left uncompleted, if all the necessary data has been
+   *     introduced it returns false
    */
-  private boolean isMissingProjectData(String title,String assignee,LocalDate deadline) {
+  private boolean isMissingProjectData(String title, String assignee, LocalDate deadline) {
     return isEmptyText(title) || isEmptyText(assignee) || isEmptyText(deadline.toString());
   }
   /**
@@ -76,25 +78,26 @@ public class ProjectManager extends Manager {
   public void createProject(
       String projectName, int teamId, String assigneeName, LocalDate deadline, String description)
       throws NoSignedInUserException, SQLException, InexistentUserException,
-          InexistentTeamException, DuplicateProjectNameException,
-          InexistentDatabaseEntityException,EmptyFieldsException {
+          InexistentTeamException, DuplicateProjectNameException, InexistentDatabaseEntityException,
+          EmptyFieldsException {
     if (isMissingProjectData(projectName, assigneeName, deadline)) {
       throw new EmptyFieldsException();
     }
-      User currentUser = getMandatoryCurrentUser();
-      User assignee = getMandatoryUser(assigneeName);
-      Team team = getMandatoryTeam(teamId);
-      // check that there is no other project with the same name
-      if (projectRepository.getProject(teamId, projectName).isPresent()) {
-        throw new DuplicateProjectNameException(projectName, team.getName());
-      }
-      // save project
-      Project.SavableProject project =
-              new Project.SavableProject(
-                      projectName, teamId, deadline, currentUser.getId(), assignee.getId());
-      project.setDescription(description);
-      projectRepository.saveProject(project);
-      support.firePropertyChange(ProjectChangeablePropertyName.CREATE_PROJECT.toString(), OLD_VALUE, NEW_VALUE);
+    User currentUser = getMandatoryCurrentUser();
+    User assignee = getMandatoryUser(assigneeName);
+    Team team = getMandatoryTeam(teamId);
+    // check that there is no other project with the same name
+    if (projectRepository.getProject(teamId, projectName).isPresent()) {
+      throw new DuplicateProjectNameException(projectName, team.getName());
+    }
+    // save project
+    Project.SavableProject project =
+        new Project.SavableProject(
+            projectName, teamId, deadline, currentUser.getId(), assignee.getId());
+    project.setDescription(description);
+    projectRepository.saveProject(project);
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.CREATE_PROJECT.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -490,6 +493,7 @@ public class ProjectManager extends Manager {
 
   /**
    * Gets the project with the specified id.
+   *
    * @param projectId uniquely identifies the project
    * @return the project is it was found
    * @throws InexistentProjectException if the project with that id was not found

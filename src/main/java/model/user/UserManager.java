@@ -38,11 +38,12 @@ public class UserManager extends Manager {
 
   /**
    * Check if all the required data has been introduced by the user.
+   *
    * @param username = the username of the user
    * @param password = the password of the user
    * @return true if some credentials are missing, otherwise false
    */
-  private boolean isMissingCredentials(String username,String password) {
+  private boolean isMissingCredentials(String username, String password) {
     return isEmptyText(username) || isEmptyText(password);
   }
   /**
@@ -53,9 +54,9 @@ public class UserManager extends Manager {
    * @throws SQLException = in case the user could not be saved
    */
   public void signUp(String username, String password)
-      throws SQLException, DuplicateUsernameException,EmptyFieldsException {
+      throws SQLException, DuplicateUsernameException, EmptyFieldsException {
     // check if the given username is already taken
-    if(isMissingCredentials(username,password)) {
+    if (isMissingCredentials(username, password)) {
       throw new EmptyFieldsException();
     }
     User existingUser = userRepository.getUserByUsername(username);
@@ -78,8 +79,9 @@ public class UserManager extends Manager {
    * @throws SQLException if a database error occurred
    * @throws EmptyFieldsException if a user didn't introduce all the required data when signing in
    */
-  public boolean signIn(String username, String password) throws SQLException, EmptyFieldsException {
-    if(isMissingCredentials(username,password)) throw new EmptyFieldsException();
+  public boolean signIn(String username, String password)
+      throws SQLException, EmptyFieldsException {
+    if (isMissingCredentials(username, password)) throw new EmptyFieldsException();
     else {
       currentUser = userRepository.getUserByUsername(username);
       return (currentUser != null && currentUser.getPassword().equals(password));

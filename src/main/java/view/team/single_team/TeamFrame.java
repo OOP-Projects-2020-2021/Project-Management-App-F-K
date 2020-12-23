@@ -8,9 +8,9 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * The TeamFrame allows the user to view the team's details, the members list and the projects in separate tabs.
- * Additionally the manager also has access to the teams settings and adding/removing members.
- * Upon closing this frame, the user will be redirected to the main frame.
+ * The TeamFrame allows the user to view the team's details, the members list and the projects in
+ * separate tabs. Additionally the manager also has access to the teams settings and adding/removing
+ * members. Upon closing this frame, the user will be redirected to the main frame.
  *
  * @author Beata Keresztes
  */

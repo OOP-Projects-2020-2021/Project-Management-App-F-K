@@ -39,8 +39,8 @@ public class SignUpController extends FrameController {
    */
   public boolean signUp(String username, String password) {
     try {
-        userManager.signUp(username, password);
-        return true;
+      userManager.signUp(username, password);
+      return true;
     } catch (DuplicateUsernameException | SQLException | EmptyFieldsException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
@@ -62,5 +62,4 @@ public class SignUpController extends FrameController {
     JOptionPane.showMessageDialog(
         frame, FINALIZE_SIGN_UP_MESSAGE, FINALIZE_SIGN_UP_TITLE, JOptionPane.PLAIN_MESSAGE);
   }
-
 }

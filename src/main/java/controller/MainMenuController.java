@@ -37,7 +37,10 @@ public class MainMenuController extends FrameController {
     return logOutFlag;
   }
 
-  /** Provides access to the viewing and editing the account settings of the user in the respective frame. */
+  /**
+   * Provides access to the viewing and editing the account settings of the user in the respective
+   * frame.
+   */
   public void enableUserDataSettings() {
     new AccountSettingsFrame(frame);
     frame.setEnabled(false);

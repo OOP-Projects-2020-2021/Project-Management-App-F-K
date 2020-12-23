@@ -9,9 +9,9 @@ import java.awt.event.WindowEvent;
 
 /**
  * The UserProjectsFrame allows the user to view all the projects that are either assigned to them,
- * or supervised by them, independent of to which team they belong.
- * The user can visit the project if he/she double clicks on the name of the project, in which case a new frame
- * is opened allowing the user to view the project's details and change its status.
+ * or supervised by them, independent of to which team they belong. The user can visit the project
+ * if he/she double clicks on the name of the project, in which case a new frame is opened allowing
+ * the user to view the project's details and change its status.
  *
  * @author Beata Keresztes
  */

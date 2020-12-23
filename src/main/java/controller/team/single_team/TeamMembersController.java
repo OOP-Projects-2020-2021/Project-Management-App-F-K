@@ -17,8 +17,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * The TeamMembersController manages the TeamMembersPanel tab, displaying and updating the list of members of
- * a team.
+ * The TeamMembersController manages the TeamMembersPanel tab, displaying and updating the list of
+ * members of a team.
  *
  * @author Beata Keresztes
  */
@@ -52,8 +52,8 @@ public class TeamMembersController extends TeamController implements PropertyCha
   }
 
   /**
-   * Get the members of the team. The string array contains at least one element, which is the manager
-   * of the team.
+   * Get the members of the team. The string array contains at least one element, which is the
+   * manager of the team.
    *
    * @return the members of the current team
    */
