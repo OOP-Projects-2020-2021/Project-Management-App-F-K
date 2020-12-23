@@ -56,10 +56,13 @@ public class ProjectTableController implements PropertyChangeListener {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName().equals(ProjectListModel.PROJECT_LIST)||
-            evt.getPropertyName().equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString()) ||
-            evt.getPropertyName().equals(ProjectManager.ProjectChangeablePropertyName.CREATE_PROJECT.toString())||
-            evt.getPropertyName().equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
+    if (evt.getPropertyName().equals(ProjectListModel.PROJECT_LIST)
+        || evt.getPropertyName()
+            .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())
+        || evt.getPropertyName()
+            .equals(ProjectManager.ProjectChangeablePropertyName.CREATE_PROJECT.toString())
+        || evt.getPropertyName()
+            .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       updateTableModel();
     }
   }

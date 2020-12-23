@@ -8,7 +8,6 @@ import model.team.Team;
 import model.team.TeamManager;
 import model.team.exceptions.InexistentTeamException;
 import model.user.User;
-import model.user.UserManager;
 import model.user.exceptions.EmptyFieldsException;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
