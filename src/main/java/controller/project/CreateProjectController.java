@@ -8,6 +8,7 @@ import model.team.Team;
 import model.team.TeamManager;
 import model.team.exceptions.InexistentTeamException;
 import model.user.User;
+import model.user.exceptions.EmptyFieldsException;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
 import view.ErrorDialogFactory;
@@ -17,12 +18,22 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
+/**
+ * CreateProjectController manages the CreateProjectFrame, and it is responsible for updating the corresponding frame
+ * when a change in the user input occurs, to interact with the user.
+ * When the user selects a specific team, the assignee list will be updated containing only the members of the newly
+ * selected team. This way, the possibility of entering an invalid assignee name is eliminated.
+ *
+ * @author Beata Keresztes
+ */
 public class CreateProjectController extends FrameController {
 
     private TeamManager teamManager;
     private ProjectManager projectManager;
+    /** Messages to inform the user that the project was saved successfully. */
     private static final String PROJECT_SAVED_TITLE = "Project saved";
     private static final String PROJECT_SAVED_MESSAGE = "The project was successfully saved.";
+
 
     public CreateProjectController(JFrame frame) {
         super(frame);
@@ -75,14 +86,13 @@ public class CreateProjectController extends FrameController {
      * @param assignee selected by the user from the list of members of the previously specified team
      * @param description added by the user
      */
-    public void createProject(String title, String team, String assignee, LocalDate deadline,String description) {
+    public void createProject(String title, String team, Object assignee, LocalDate deadline,String description) {
        try {
-            if(getIdOfTeam(team) > 0) {
-                projectManager.createProject(title, getIdOfTeam(team), assignee, deadline, description);
-                displaySavedMessageDialog();
-                closeFrame();
-            }
-        } catch (NoSignedInUserException | SQLException | InexistentDatabaseEntityException | InexistentUserException | InexistentTeamException e) {
+           if(assignee == null) throw new EmptyFieldsException();
+           projectManager.createProject(title, getIdOfTeam(team), assignee.toString(), deadline, description);
+           displaySavedMessageDialog();
+           closeFrame();
+        } catch (NoSignedInUserException | SQLException | InexistentDatabaseEntityException | InexistentUserException | InexistentTeamException | EmptyFieldsException e) {
             ErrorDialogFactory.createErrorDialog(e,frame,null);
         } catch (DuplicateProjectNameException e) {
             ErrorDialogFactory.createErrorDialog(e,frame,"The project with title \"" + title + "\" already exists in the team \"" + team);

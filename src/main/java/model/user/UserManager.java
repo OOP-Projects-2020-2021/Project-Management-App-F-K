@@ -3,6 +3,7 @@ package model.user;
 import model.InexistentDatabaseEntityException;
 import model.Manager;
 import model.user.exceptions.DuplicateUsernameException;
+import model.user.exceptions.EmptyFieldsException;
 import model.user.exceptions.NoSignedInUserException;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,6 +28,23 @@ public class UserManager extends Manager {
     return instance;
   }
 
+  public Optional<User> getCurrentUser() {
+    return Optional.ofNullable(currentUser);
+  }
+
+  private boolean isEmptyText(String text) {
+    return text == null || text.isEmpty();
+  }
+
+  /**
+   * Check if all the required data has been introduced by the user.
+   * @param username = the username of the user
+   * @param password = the password of the user
+   * @return true if some credentials are missing, otherwise false
+   */
+  private boolean isMissingCredentials(String username,String password) {
+    return isEmptyText(username) || isEmptyText(password);
+  }
   /**
    * Creates a new user in the database.
    *
@@ -35,8 +53,11 @@ public class UserManager extends Manager {
    * @throws SQLException = in case the user could not be saved
    */
   public void signUp(String username, String password)
-      throws SQLException, DuplicateUsernameException {
+      throws SQLException, DuplicateUsernameException,EmptyFieldsException {
     // check if the given username is already taken
+    if(isMissingCredentials(username,password)) {
+      throw new EmptyFieldsException();
+    }
     User existingUser = userRepository.getUserByUsername(username);
     if (existingUser != null) {
       throw new DuplicateUsernameException(username);
@@ -55,14 +76,14 @@ public class UserManager extends Manager {
    * @param password = password introduced by the user at sign-in
    * @return boolean = true if the username and password were found in the database.
    * @throws SQLException if a database error occurred
+   * @throws EmptyFieldsException if a user didn't introduce all the required data when signing in
    */
-  public boolean signIn(String username, String password) throws SQLException {
-    currentUser = userRepository.getUserByUsername(username);
-    return (currentUser != null && currentUser.getPassword().equals(password));
-  }
-
-  public Optional<User> getCurrentUser() {
-    return Optional.ofNullable(currentUser);
+  public boolean signIn(String username, String password) throws SQLException, EmptyFieldsException {
+    if(isMissingCredentials(username,password)) throw new EmptyFieldsException();
+    else {
+      currentUser = userRepository.getUserByUsername(username);
+      return (currentUser != null && currentUser.getPassword().equals(password));
+    }
   }
 
   /**

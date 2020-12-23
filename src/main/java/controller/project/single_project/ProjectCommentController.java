@@ -5,7 +5,6 @@ import model.UnauthorisedOperationException;
 import model.comment.Comment;
 import model.comment.CommentManager;
 import model.project.Project;
-import model.project.ProjectManager;
 import model.project.exceptions.InexistentProjectException;
 import model.team.exceptions.InexistentTeamException;
 import model.user.UserManager;
@@ -20,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Manages the Comments panel, displaying and updating the list of comments.
+ * The ProjectCommentController manages the ProjectCommentPanel, displaying and updating the list of comments.
  *
  * @author Beata Keresztes
  */

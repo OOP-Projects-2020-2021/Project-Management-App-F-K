@@ -19,9 +19,12 @@ import java.util.Properties;
 import java.util.List;
 
 /**
- * Allows the user to view the details about a given project, such as the title, description,
- * deadline, etc. Only the supervisor of the project can edit the details of a project or pass the
- * supervisor position to another member of the team.
+ * ProjectDetailsPanel allows the user to view the details about a given project, such as the title, description,
+ * deadline, assignee and supervisor.
+ * The assignee of the project can change the status of the project to mark his/her contribution, but only the
+ * supervisor can declare the project to be finished.
+ * Only the supervisor of the project is allowed to edit the details of a project or pass the supervisor position
+ * to another member of the team.
  *
  * @author Beata Keresztes
  */

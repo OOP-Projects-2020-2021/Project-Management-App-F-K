@@ -11,15 +11,23 @@ import view.UIFactory;
 import javax.swing.*;
 import javax.swing.text.DefaultFormatter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Properties;
 
+
+/**
+ * The CreateProjectFrame allows the user to create a new project, introducing all the required data, such as
+ * the title of the project,
+ * the team to which the project should be added,
+ * the deadline of turning in the specific project
+ * and the assignee to whom the project is intended.
+ * The creator of the project will automatically become the supervisor.
+ *
+ * @author Beata Keresztes
+ */
 public class CreateProjectFrame extends JFrame {
 
     private JButton saveButton;
@@ -192,7 +200,7 @@ public class CreateProjectFrame extends JFrame {
         saveButton.addActionListener(e -> {
             String title = titleTextField.getText();
             String team = teamComboBox.getModel().getSelectedItem().toString();
-            String assignee = Objects.requireNonNull(assigneeComboBox.getSelectedItem()).toString();
+            Object assignee = assigneeComboBox.getSelectedItem();
             LocalDate deadline =
                     LocalDate.of(
                             deadlineDatePicker.getModel().getYear(),

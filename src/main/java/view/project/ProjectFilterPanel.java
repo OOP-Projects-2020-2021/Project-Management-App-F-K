@@ -8,9 +8,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Creates a panel containing the filters that can be applied on the projects, including the status
- * of the project, the due time for turning in the project, whether it is a project assigned to the
- * user or supervised by the user.
+ * The ProjectsFilterPanel contains the filters that can be applied to listing the projects, including
+ * the status of the project,
+ * the due time for turning in the project,
+ * and whether it is a project assigned to the user or supervised by the user.
+ * The user can select only one option of each, except in case of the assigned/ supervised projects, in which case
+ * at least one of these options must be selected. Initially, both of them are selected, meaning that all the projects will be listed.
  *
  * @author Beata Keresztes
  */
@@ -186,8 +189,7 @@ public class ProjectFilterPanel extends JPanel {
       boolean assignedToUser = assignedToUserButton.isSelected();
       boolean supervisedByUser = supervisedByUserButton.isSelected();
       // if both filters are selected, then all the projects will be displayed
-      boolean filtered = !(assignedToUser && supervisedByUser);
-      controller.setPrivilegeFilter(assignedToUser && filtered, supervisedByUser && filtered);
+      controller.setPrivilegeFilter(assignedToUser, supervisedByUser);
       controller.filterProjects();
       selectPrivilegeButtons();
     }

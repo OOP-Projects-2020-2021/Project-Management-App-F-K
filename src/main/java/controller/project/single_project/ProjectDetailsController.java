@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Manages the ProjectDetails panel, being responsible for listing and updating the project's
- * details.
+ * ProjectDetailsController manages the ProjectDetails panel, being responsible for listing and updating the currently
+ * viewed project's details.
  *
  * @author Beata Keresztes
  */
@@ -160,6 +160,7 @@ public class ProjectDetailsController implements PropertyChangeListener {
     }
   }
 
+  /** Displays a message to inform the user that the project was updated successfully. */
   private void displaySuccessfulSaveMessage() {
     JOptionPane.showMessageDialog(
         null,
@@ -168,6 +169,7 @@ public class ProjectDetailsController implements PropertyChangeListener {
         JOptionPane.INFORMATION_MESSAGE);
   }
 
+  /** Displays a message to inform the user that the attempt to change the project's state was rejected and had caused an exception. */
   private void displayIllegalStateErrorDialog(
       IllegalProjectStatusChangeException e, Project.ProjectStatus newState) {
     ErrorDialogFactory.createErrorDialog(
@@ -196,6 +198,8 @@ public class ProjectDetailsController implements PropertyChangeListener {
         projectManager.setProjectInProgress(project.getId());
       } else if (newStatus.equals(Project.ProjectStatus.TO_DO.toString())) {
         projectManager.setProjectAsToDo(project.getId());
+      } else if (newStatus.equals(Project.ProjectStatus.TURNED_IN.toString())) {
+        projectManager.turnInProject(project.getId());
       }
       return true;
     } catch (NoSignedInUserException

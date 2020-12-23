@@ -12,8 +12,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * This tab displays the list of members of a team. The manager of the team is allowed only to add
- * or remove members from this team.
+ * The TeamMembersPanel displays the list of members of a team.
+ * Only the manager of the team is allowed to add or remove members from the corresponding team.
  *
  * @author Beata Keresztes
  */

@@ -11,9 +11,9 @@ import javax.swing.*;
 import java.sql.SQLException;
 
 /**
- * This controller manages the TeamFrame. It has two static fields, the teamId, which doesn't change
- * while the frame is open, and a flag, which grants manager to the privileged users. The
- * managerAccess flag gets updated every time the manager of the currently viewed team is changed.
+ * The TeamController manages the TeamFrame. It has two static fields, the teamId, which doesn't change
+ * while the frame is open, and a flag, which grants access to the manager to modify the team's data.
+ * The managerAccess flag gets updated every time the manager of the currently viewed team is changed.
  *
  * @author Beata Keresztes
  */

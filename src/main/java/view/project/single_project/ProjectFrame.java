@@ -9,8 +9,9 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * Displays the details about the project, and allows the user to change the status of the project.
- * The supervisor can edit the details of the project or delete the project.
+ * The ProjectFrame displays the details about the project, and allows the user to change the status of the project and
+ * to leave comments in the comment section.
+ * Only the supervisor can edit the details of the project or delete the project.
  *
  * @author Beata Keresztes
  */

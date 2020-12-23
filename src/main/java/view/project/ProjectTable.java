@@ -14,7 +14,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Creates a table containing to display the projects.
+ * ProjectTable displays the list of projects which belong to a certain team or which are related to a certain user.
+ * By double clicking on the title of the project in the table, a new ProjectFrame is opened, where the user can view
+ * all the details of the selected project.
  *
  * @author Beata Keresztes
  */

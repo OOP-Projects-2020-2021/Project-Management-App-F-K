@@ -3,6 +3,7 @@ package controller.user;
 import controller.FrameController;
 import model.user.UserManager;
 import model.user.exceptions.DuplicateUsernameException;
+import model.user.exceptions.EmptyFieldsException;
 import view.ErrorDialogFactory;
 
 import javax.swing.*;
@@ -21,12 +22,6 @@ public class SignUpController extends FrameController {
   private static final String FINALIZE_SIGN_UP_MESSAGE =
       "Please sign in to your account to finalize the registration.";
 
-  /** Messages displayed to inform the user that some fields were left blank. */
-  private static final String EMPTY_FIELDS_LEFT_TITLE = "Empty fields left";
-
-  private static final String EMPTY_FIELDS_LEFT_MESSAGE =
-      "Please fill in all the required information before continuing!";
-
   private UserManager userManager;
 
   public SignUpController(JFrame signUpFrame) {
@@ -44,22 +39,13 @@ public class SignUpController extends FrameController {
    */
   public boolean signUp(String username, String password) {
     try {
-      if (isNotEmptyText(username) && isNotEmptyText(password)) {
         userManager.signUp(username, password);
         return true;
-      } else {
-        displayEmptyFieldsSignUpDialog();
-      }
-    } catch (DuplicateUsernameException | SQLException e) {
+    } catch (DuplicateUsernameException | SQLException | EmptyFieldsException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
     return false;
   }
-  /** Checks if the text from the text-field is not empty. */
-  private boolean isNotEmptyText(String text) {
-    return !(text == null || text.isEmpty());
-  }
-
   /** It closes the current frame and returns to the parent Frame. */
   public void goBack() {
     closeFrame();
@@ -76,9 +62,5 @@ public class SignUpController extends FrameController {
     JOptionPane.showMessageDialog(
         frame, FINALIZE_SIGN_UP_MESSAGE, FINALIZE_SIGN_UP_TITLE, JOptionPane.PLAIN_MESSAGE);
   }
-  /** Display warning message to inform the user that some fields were not filled. */
-  public void displayEmptyFieldsSignUpDialog() {
-    JOptionPane.showMessageDialog(
-        frame, EMPTY_FIELDS_LEFT_MESSAGE, EMPTY_FIELDS_LEFT_TITLE, JOptionPane.WARNING_MESSAGE);
-  }
+
 }

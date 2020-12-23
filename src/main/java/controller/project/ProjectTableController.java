@@ -10,9 +10,11 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**
- * Manages the project table, and it is responsible for displaying and updating the projects in the
- * table. When a user selects a project, it will open a separate frame for viewing the details of
- * that project.
+ * ProjectTableController manages the project table, and it is responsible for displaying and updating the projects in the
+ * table, with the list of projects received from the ProjectListModel.
+ * I followed the MVC pattern, such that the ProjectTableController listens to any change that occurs in the properties
+ * of the ProjectListModel, more specifically if the list of projects to be displayed changes after applying some filters on it,
+ * the ProjectTableController gets notified and it updates the corresponding table.
  *
  * @author Beata Keresztes
  */

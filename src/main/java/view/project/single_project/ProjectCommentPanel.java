@@ -8,12 +8,11 @@ import view.UIFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.time.LocalDate;
 import java.util.List;
 
 /**
- * This panel allows the user to view the comments added to the given project and leave their own
- * comments.
+ * The ProjectCommentPanel allows the user to view the comments added to the given project and leave their own comments.
+ * This functionality is only allowed to the members of the team to which the project belongs.
  *
  * @author Beata Keresztes
  */
