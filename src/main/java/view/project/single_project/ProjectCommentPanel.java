@@ -102,6 +102,7 @@ public class ProjectCommentPanel extends JPanel {
     initCommentArea();
     JScrollPane commentScrollPane = new JScrollPane(commentTextArea);
     sendButton = UIFactory.createButton("Send");
+    sendButton.setMnemonic(KeyEvent.VK_ENTER);
     sendButton.addActionListener(e -> {
       if (e.getSource() == sendButton) {
         controller.addComment(commentTextArea.getText());
