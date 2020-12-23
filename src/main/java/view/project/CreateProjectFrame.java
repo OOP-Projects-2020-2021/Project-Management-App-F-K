@@ -135,11 +135,11 @@ public class CreateProjectFrame extends JFrame {
     contentPanel.setLayout(contentLayout);
     contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
-    JLabel titleLabel = UIFactory.createLabel("Title:", null);
-    JLabel teamLabel = UIFactory.createLabel("Team:", null);
-    JLabel deadlineLabel = UIFactory.createLabel("Deadline:", null);
+    JLabel titleLabel = UIFactory.createLabel("* Title:", null);
+    JLabel teamLabel = UIFactory.createLabel("* Team:", null);
+    JLabel deadlineLabel = UIFactory.createLabel("* Deadline:", null);
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
-    JLabel assigneeLabel = UIFactory.createLabel("Assignee:", null);
+    JLabel assigneeLabel = UIFactory.createLabel("* Assignee:", null);
 
     contentLayout.setHorizontalGroup(
         contentLayout

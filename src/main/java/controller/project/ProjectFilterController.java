@@ -10,6 +10,8 @@ import model.user.exceptions.NoSignedInUserException;
 import view.ErrorDialogFactory;
 import view.project.ProjectListModel;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 
 /**
@@ -22,12 +24,21 @@ import java.sql.SQLException;
  *
  * @author Beata Keresztes
  */
-public class ProjectFilterController {
+public class ProjectFilterController implements PropertyChangeListener {
 
   private ProjectManager projectManager;
   private UserManager userManager;
   private int teamId;
   private ProjectListModel projectListModel;
+
+  @Override
+  public void propertyChange(PropertyChangeEvent evt) {
+    if(evt.getPropertyName().equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString()) ||
+            evt.getPropertyName().equals(ProjectManager.ProjectChangeablePropertyName.CREATE_PROJECT.toString()) ||
+            evt.getPropertyName().equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
+      filterProjects();
+    }
+  }
 
   public enum PrivilegeTypes {
     ASSIGNED_TO_ME,
@@ -42,6 +53,7 @@ public class ProjectFilterController {
   public ProjectFilterController(int teamId) {
     this.teamId = teamId;
     projectManager = ProjectManager.getInstance();
+    projectManager.addPropertyChangeListener(this);
     userManager = UserManager.getInstance();
     projectListModel = ProjectListModel.getInstance();
     statusFilter = String.valueOf(QueryProjectStatus.ALL);

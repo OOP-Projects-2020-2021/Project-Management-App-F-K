@@ -1,6 +1,7 @@
 package controller.project;
 
 import model.project.Project;
+import model.project.ProjectManager;
 import view.project.ProjectListModel;
 import view.project.ProjectTable;
 import view.project.single_project.ProjectFrame;
@@ -22,11 +23,14 @@ import java.beans.PropertyChangeListener;
 public class ProjectTableController implements PropertyChangeListener {
 
   private ProjectListModel projectListModel;
+  private ProjectManager projectManager;
   private ProjectTable projectTable;
 
   public ProjectTableController(ProjectTable projectTable) {
     this.projectListModel = ProjectListModel.getInstance();
     projectListModel.addPropertyChangeListener(this);
+    projectManager = ProjectManager.getInstance();
+    projectManager.addPropertyChangeListener(this);
     this.projectTable = projectTable;
   }
 
@@ -52,7 +56,10 @@ public class ProjectTableController implements PropertyChangeListener {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName().equals(ProjectListModel.PROJECT_LIST)) {
+    if (evt.getPropertyName().equals(ProjectListModel.PROJECT_LIST)||
+            evt.getPropertyName().equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString()) ||
+            evt.getPropertyName().equals(ProjectManager.ProjectChangeablePropertyName.CREATE_PROJECT.toString())||
+            evt.getPropertyName().equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       updateTableModel();
     }
   }
