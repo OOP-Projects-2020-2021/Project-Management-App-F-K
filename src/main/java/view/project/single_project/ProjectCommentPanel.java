@@ -1,15 +1,15 @@
 package view.project.single_project;
 
 import controller.project.single_project.ProjectCommentController;
+import model.comment.Comment;
 import model.project.Project;
 import view.UIFactory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.event.*;
+import java.time.LocalDate;
+import java.util.List;
 
 /**
  * This panel allows the user to view the comments added to the given project and leave their own
@@ -22,11 +22,13 @@ public class ProjectCommentPanel extends JPanel {
   private JTextArea commentTextArea;
   private JButton sendButton;
   private JScrollPane commentListScrollPanel;
+  private JPanel commentListPanel;
+
   private ProjectCommentController controller;
   private static final String LEAVE_COMMENT_MESSAGE = "Leave a comment";
 
   public ProjectCommentPanel(Project project) {
-    controller = new ProjectCommentController(project);
+    controller = new ProjectCommentController(this,project);
     initCommentPanel();
   }
 
@@ -38,45 +40,55 @@ public class ProjectCommentPanel extends JPanel {
     return commentArea;
   }
 
-  private void initCommentList() {
-    JPanel commentListPanel = new JPanel(new GridLayout(10, 1)); // todo
-    for (int i = 0; i < 10; i++) {
-      JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-      JLabel senderName = UIFactory.createLabel("user" + i, null);
-      JLabel sendingDate = UIFactory.createLabel("2020-12-22", null);
-      headerPanel.add(senderName);
-      headerPanel.add(new JLabel("-"));
-      headerPanel.add(sendingDate);
+  private void clearCommentList() {
+    commentListPanel.removeAll();
+  }
+  private void addCommentToPanel(Comment comment) {
+    JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    JLabel senderName = UIFactory.createLabel(controller.getSenderName(comment), null);
+    JLabel sendingDate = UIFactory.createLabel(comment.getDateTime().toLocalDate().toString(), null);
+    headerPanel.add(senderName);
+    headerPanel.add(new JLabel("-"));
+    headerPanel.add(sendingDate);
 
-      JTextArea commentArea = createUneditableCommentArea("comment" + i);
-      JScrollPane commentScrollPane = new JScrollPane(commentArea);
-      commentScrollPane.setPreferredSize(new Dimension(80, 80));
+    JTextArea commentArea = createUneditableCommentArea(comment.getText());
+    JScrollPane commentScrollPane = new JScrollPane(commentArea);
+    commentScrollPane.setPreferredSize(new Dimension(80, 80));
 
-      JPanel rowPanel = new JPanel(new BorderLayout());
-      rowPanel.add(headerPanel, BorderLayout.NORTH);
-      rowPanel.add(commentScrollPane, BorderLayout.CENTER);
+    JPanel rowPanel = new JPanel(new BorderLayout());
+    rowPanel.add(headerPanel, BorderLayout.NORTH);
+    rowPanel.add(commentScrollPane, BorderLayout.CENTER);
 
-      commentListPanel.add(rowPanel);
+    commentListPanel.add(rowPanel);
+  }
+  private void fillCommentList() {
+    List<Comment> commentList = controller.getComments();
+    commentListPanel.setLayout(new GridLayout(0,1));
+    if (commentList != null) {
+      for (Comment comment : commentList) {
+        addCommentToPanel(comment);
+      }
     }
+  }
+  private void initCommentList() {
+    commentListPanel = new JPanel();
     commentListScrollPanel = new JScrollPane(commentListPanel);
+    fillCommentList();
     commentListScrollPanel.setPreferredSize(new Dimension(200, 200));
   }
 
   private void initCommentArea() {
     commentTextArea = createUneditableCommentArea(LEAVE_COMMENT_MESSAGE);
-    commentTextArea.addKeyListener(
-        new KeyAdapter() {
-          @Override
-          public void keyTyped(KeyEvent e) {
-            if (commentTextArea.getText().equals(LEAVE_COMMENT_MESSAGE)) {
-              commentTextArea.setText("");
-              commentTextArea.setEditable(true);
-            } else if (commentTextArea.getText().isEmpty()) {
-              commentTextArea.setText(LEAVE_COMMENT_MESSAGE);
-              commentTextArea.setEditable(false);
-            }
-          }
-        });
+    commentTextArea.addMouseListener(new MouseAdapter() {
+      @Override
+      public void mouseClicked(MouseEvent e) {
+        if (!commentTextArea.isEditable()) {
+          commentTextArea.setText("");
+          commentTextArea.setEditable(true);
+        }
+      }
+      });
+    clearCommentArea();
   }
 
   private void initCommentPanel() {
@@ -90,7 +102,11 @@ public class ProjectCommentPanel extends JPanel {
     initCommentArea();
     JScrollPane commentScrollPane = new JScrollPane(commentTextArea);
     sendButton = UIFactory.createButton("Send");
-    sendButton.addActionListener(new ButtonListener());
+    sendButton.addActionListener(e -> {
+      if (e.getSource() == sendButton) {
+        controller.addComment(commentTextArea.getText());
+      }
+    });
 
     commentLayout.setHorizontalGroup(
         commentLayout
@@ -117,12 +133,18 @@ public class ProjectCommentPanel extends JPanel {
                     .addComponent(sendButton)));
   }
 
-  class ButtonListener implements ActionListener {
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-      if (actionEvent.getSource() == sendButton) {
-        // todo
-      }
-    }
+  private void clearCommentArea() {
+    commentTextArea.setText(LEAVE_COMMENT_MESSAGE);
+    commentTextArea.setEditable(false);
+  }
+  public void updateCommentPanel() {
+    clearCommentArea();
+    clearCommentList();
+    fillCommentList();
+    revalidate();
+    scrollToBottom();
+  }
+  private void scrollToBottom() {
+    commentListScrollPanel.getVerticalScrollBar().addAdjustmentListener(e -> e.getAdjustable().setValue(e.getAdjustable().getMaximum()));
   }
 }
