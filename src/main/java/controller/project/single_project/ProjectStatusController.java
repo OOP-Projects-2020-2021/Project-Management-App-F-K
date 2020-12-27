@@ -86,12 +86,23 @@ public class ProjectStatusController extends ProjectController implements Proper
         }
     }
 
-    public void review(Project.ProjectStatus newStatus) {
+    public void review() {
         try {
-            if (newStatus == Project.ProjectStatus.FINISHED) {
+            int answer = JOptionPane.showConfirmDialog(frame, "Do you accept this project " +
+                            "as " +
+                            "finished?",
+                    "Review project", JOptionPane.YES_NO_OPTION);
+            if (answer == JOptionPane.YES_OPTION) {
                 projectManager.acceptAsFinished(getProject().getId());
             } else {
-                projectManager.discardTurnIn(getProject().getId(), newStatus);
+                Project.ProjectStatus[] possibleAnswers = new Project.ProjectStatus[] {TO_DO,
+                        IN_PROGRESS};
+                int answerIndex = JOptionPane.showOptionDialog(frame, "To which status do you " +
+                                "want to set back the " +
+                                "project after dismissing the turn-in", "Dismiss turn-in",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, possibleAnswers,
+                        null);
+                projectManager.discardTurnIn(getProject().getId(), possibleAnswers[answerIndex]);
             }
         } catch (SQLException | InexistentDatabaseEntityException | InexistentProjectException e) {
             Exception exception = new SQLException();

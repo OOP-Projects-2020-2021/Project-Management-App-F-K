@@ -104,15 +104,15 @@ public class ProjectStatusButtonsPanel extends JPanel implements ActionListener 
     public void actionPerformed(ActionEvent actionEvent) {
         System.out.println("Button clicked");
         if (actionEvent.getSource() == markProgressButton) {
-
+            controller.markProgress();
         } else if (actionEvent.getSource() == setBackToToDoButtton) {
-
+            controller.setBackToToDo();
         } else if (actionEvent.getSource() == turnInButton) {
-
+            controller.turnIn();
         } else if (actionEvent.getSource() == undoTurnInButton) {
-
+            controller.undoTurnIn();
         } else if (actionEvent.getSource() == reviewButton) {
-
+            controller.review();
         }
     }
 }
