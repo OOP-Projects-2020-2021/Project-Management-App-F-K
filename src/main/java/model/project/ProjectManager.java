@@ -498,7 +498,7 @@ public class ProjectManager extends Manager {
    * @throws NoSignedInUserException if there is noone signed in.
    */
   public boolean currentUserIsSupervisor(Project project)
-          throws InexistentDatabaseEntityException, NoSignedInUserException {
+      throws InexistentDatabaseEntityException, NoSignedInUserException {
     return userIsSupervisor(getMandatoryCurrentUser(), project);
   }
 
@@ -509,7 +509,7 @@ public class ProjectManager extends Manager {
    * @throws NoSignedInUserException if there is noone signed in.
    */
   public boolean currentUserIsAssignee(Project project)
-          throws InexistentDatabaseEntityException, NoSignedInUserException {
+      throws InexistentDatabaseEntityException, NoSignedInUserException {
     return userIsAssignee(getMandatoryCurrentUser(), project);
   }
 
