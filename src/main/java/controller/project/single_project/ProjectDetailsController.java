@@ -53,11 +53,6 @@ public class ProjectDetailsController implements PropertyChangeListener {
         .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())) {
       setProject();
       panel.updatePanel();
-    } else if (evt.getPropertyName()
-        .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
-      setProject();
-     // todo: update status buttons
-      panel.updateStatusLabel();
     }
   }
 

@@ -1,9 +1,14 @@
 package controller.project.single_project;
 
 import controller.FrameController;
+import model.InexistentDatabaseEntityException;
 import model.project.Project;
+import model.project.ProjectManager;
+import model.project.exceptions.InexistentProjectException;
+import view.ErrorDialogFactory;
 
 import javax.swing.*;
+import java.sql.SQLException;
 
 /**
  * The ProjectController manages the ProjectFrame, which allows the user to view the details about
@@ -14,7 +19,8 @@ import javax.swing.*;
  */
 public class ProjectController extends FrameController {
 
-  private Project project;
+  protected Project project;
+  protected ProjectManager projectManager;
 
   public ProjectController(JFrame frame, Project project) {
     super(frame);
@@ -28,5 +34,13 @@ public class ProjectController extends FrameController {
 
   public Project getProject() {
     return project;
+  }
+
+  protected void setProject() {
+    try {
+      project = projectManager.getProjectById(project.getId());
+    } catch (InexistentProjectException | InexistentDatabaseEntityException | SQLException e) {
+      ErrorDialogFactory.createErrorDialog(e, null, "The project could not be updated.");
+    }
   }
 }

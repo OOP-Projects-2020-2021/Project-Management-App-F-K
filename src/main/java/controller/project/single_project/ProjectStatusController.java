@@ -11,9 +11,11 @@ import model.user.exceptions.NoSignedInUserException;
 import view.ErrorDialogFactory;
 
 import javax.swing.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 
-public class ProjectStatusController extends ProjectController {
+public class ProjectStatusController extends ProjectController implements PropertyChangeListener {
 
     ProjectManager projectManager = ProjectManager.getInstance();
 
@@ -85,6 +87,15 @@ public class ProjectStatusController extends ProjectController {
             ErrorDialogFactory.createErrorDialog(e, frame, "You can't mark a project with status " + getProject().getStatus().toString() + " as 'In Progress'");
         } catch (NoSignedInUserException | UnauthorisedOperationException e) {
             ErrorDialogFactory.createErrorDialog(e, frame, null);
+        }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
+        if (propertyChangeEvent.getPropertyName()
+                .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
+            setProject();
+            // todo update buttons
         }
     }
 }
