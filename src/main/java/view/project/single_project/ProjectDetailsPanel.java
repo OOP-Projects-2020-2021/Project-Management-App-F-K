@@ -13,7 +13,10 @@ import javax.swing.text.DefaultFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.List;
@@ -92,7 +95,8 @@ public class ProjectDetailsPanel extends JPanel {
   private void setDeadlineDate() {
     dateModel.setDate(
         controller.getProjectDeadline().getYear(),
-        controller.getProjectDeadline().getMonthValue(),
+        controller.getProjectDeadline().getMonthValue() - 1, //deadlineDatePicker counts from 0,
+            // but LocalDate from 1
         controller.getProjectDeadline().getDayOfMonth());
     dateModel.setSelected(true);
   }
@@ -236,7 +240,7 @@ public class ProjectDetailsPanel extends JPanel {
                         contentLayout
                             .createParallelGroup()
                             .addComponent(titleTextField)
-                            .addComponent(datePanel)
+                            .addComponent(deadlineDatePicker)
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox)
                             .addComponent(supervisorComboBox)
@@ -255,7 +259,7 @@ public class ProjectDetailsPanel extends JPanel {
                 contentLayout
                     .createParallelGroup()
                     .addComponent(deadlineLabel)
-                    .addComponent(datePanel))
+                    .addComponent(deadlineDatePicker))
             .addGroup(
                 contentLayout
                     .createParallelGroup()
@@ -356,7 +360,8 @@ public class ProjectDetailsPanel extends JPanel {
         LocalDate selectedDate =
             LocalDate.of(
                 deadlineDatePicker.getModel().getYear(),
-                deadlineDatePicker.getModel().getMonth(),
+                deadlineDatePicker.getModel().getMonth() + 1, //deadlineDatePicker counts from 0,
+                    // but LocalDate from 1
                 deadlineDatePicker.getModel().getDay());
         String description = descriptionTextArea.getText();
         controller.saveProject(title, assignee, supervisor, selectedDate, description);
