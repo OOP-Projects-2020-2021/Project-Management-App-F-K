@@ -9,7 +9,6 @@ import org.jdatepicker.impl.UtilDateModel;
 import view.UIFactory;
 
 import javax.swing.*;
-import javax.swing.text.DefaultFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -116,8 +115,8 @@ public class ProjectDetailsPanel extends JPanel {
   private void setDeadlineDate() {
     dateModel.setDate(
         controller.getProjectDeadline().getYear(),
-        controller.getProjectDeadline().getMonthValue() - 1, //deadlineDatePicker counts from 0,
-            // but LocalDate from 1
+        controller.getProjectDeadline().getMonthValue() - 1, // deadlineDatePicker counts from 0,
+        // but LocalDate from 1
         controller.getProjectDeadline().getDayOfMonth());
     dateModel.setSelected(true);
   }
@@ -381,8 +380,8 @@ public class ProjectDetailsPanel extends JPanel {
         LocalDate selectedDate =
             LocalDate.of(
                 deadlineDatePicker.getModel().getYear(),
-                deadlineDatePicker.getModel().getMonth() + 1, //deadlineDatePicker counts from 0,
-                    // but LocalDate from 1
+                deadlineDatePicker.getModel().getMonth() + 1, // deadlineDatePicker counts from 0,
+                // but LocalDate from 1
                 deadlineDatePicker.getModel().getDay());
         String description = descriptionTextArea.getText();
         controller.saveProject(title, assignee, supervisor, selectedDate, description);
