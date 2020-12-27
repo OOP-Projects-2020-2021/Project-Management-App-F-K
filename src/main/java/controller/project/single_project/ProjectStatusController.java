@@ -1,7 +1,5 @@
 package controller.project.single_project;
 
-import javafx.print.PageOrientation;
-import javafx.scene.control.ButtonType;
 import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
 import model.project.Project;
@@ -22,8 +20,8 @@ import static model.project.Project.ProjectStatus.*;
 
 /**
  * ProjectStatusController handles all the events related to the status change of the project,
- * including handling the clicks on any of the related buttons, and updateing the ui if the
- * status of the project has changed.
+ * including handling the clicks on any of the related buttons, and updateing the ui if the status
+ * of the project has changed.
  *
  * @author Bori Fazakas
  */
@@ -58,8 +56,8 @@ public class ProjectStatusController extends ProjectController implements Proper
   }
 
   /**
-   * If legal, marks the status of the project as TO_DO, and handles the exceptions if the
-   * operation is illegal.
+   * If legal, marks the status of the project as TO_DO, and handles the exceptions if the operation
+   * is illegal.
    */
   public void setBackToToDo() {
     try {
@@ -102,9 +100,9 @@ public class ProjectStatusController extends ProjectController implements Proper
   }
 
   /**
-   * If legal, marks the status of the previously turned-in project as TO_DO or IN_PROGRESS,
-   * based on the option chosen by the user in the dialog, and handles the exceptions if the
-   * operation is illegal.
+   * If legal, marks the status of the previously turned-in project as TO_DO or IN_PROGRESS, based
+   * on the option chosen by the user in the dialog, and handles the exceptions if the operation is
+   * illegal.
    */
   public void undoTurnIn() {
     try {
@@ -138,9 +136,9 @@ public class ProjectStatusController extends ProjectController implements Proper
   }
 
   /**
-   * If legal, marks the status of the previously turned-in project as FINISHED, if accepted,
-   * or TO_DO or IN_PROGRESS, based on the option chosen by the user in the dialog, if not
-   * accepted, and handles the exceptions if the operation is illegal.
+   * If legal, marks the status of the previously turned-in project as FINISHED, if accepted, or
+   * TO_DO or IN_PROGRESS, based on the option chosen by the user in the dialog, if not accepted,
+   * and handles the exceptions if the operation is illegal.
    */
   public void review() {
     try {
@@ -183,9 +181,7 @@ public class ProjectStatusController extends ProjectController implements Proper
     }
   }
 
-  /**
-   * Updates the UI if the status of the project has changed.
-   */
+  /** Updates the UI if the status of the project has changed. */
   @Override
   public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
     if (propertyChangeEvent
@@ -197,12 +193,12 @@ public class ProjectStatusController extends ProjectController implements Proper
   }
 
   /**
-   * @return set of the buttons corresponding to the status change actions available to the
-   * current user based on the status of the project and the role of the user.
+   * @return set of the buttons corresponding to the status change actions available to the current
+   *     user based on the status of the project and the role of the user.
    */
   public EnumSet<ProjectStatusButtonsPanel.ButtonType> getNecessaryButtonTypes() {
     EnumSet<ProjectStatusButtonsPanel.ButtonType> result =
-            EnumSet.noneOf(ProjectStatusButtonsPanel.ButtonType.class);
+        EnumSet.noneOf(ProjectStatusButtonsPanel.ButtonType.class);
     try {
       if (projectManager.currentUserIsSupervisor(project)) {
         if (project.getStatus() == TURNED_IN) {
