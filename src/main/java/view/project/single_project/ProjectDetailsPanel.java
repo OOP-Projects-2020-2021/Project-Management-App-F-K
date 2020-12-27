@@ -59,12 +59,10 @@ public class ProjectDetailsPanel extends JPanel {
 
   private void initDetailsPanel() {
     initDataFields();
-    // todo initRadioButtonsPanel();
     initContentPanel();
     initButtonsPanel();
     addButtonListener();
     enableEditFields(controller.enableEditing());
-    // todo controller.selectProjectStatusButtons();
   }
 
   private void initDataFields() {
@@ -259,9 +257,7 @@ public class ProjectDetailsPanel extends JPanel {
     setDeadlineDate();
     selectAssigneeFromComboBox();
     selectSupervisorFromComboBox();
-   //todo  selectProjectStatus();
     enableEditFields(controller.enableEditing());
-    // todo controller.selectProjectStatusButtons();
   }
 
   public void updateStatusLabel() {
