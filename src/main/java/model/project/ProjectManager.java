@@ -492,10 +492,32 @@ public class ProjectManager extends Manager {
   }
 
   /**
+   * @param project is the project whose supervisor is checked.
+   * @return true iff the current user is the supervisor of project.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws NoSignedInUserException if there is noone signed in.
+   */
+  public boolean currentUserIsSupervisor(Project project)
+          throws InexistentDatabaseEntityException, NoSignedInUserException {
+    return userIsSupervisor(getMandatoryCurrentUser(), project);
+  }
+
+  /**
+   * @param project is the project whose assignee is checked.
+   * @return true iff the current user is the assignee of project.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws NoSignedInUserException if there is noone signed in.
+   */
+  public boolean currentUserIsAssignee(Project project)
+          throws InexistentDatabaseEntityException, NoSignedInUserException {
+    return userIsAssignee(getMandatoryCurrentUser(), project);
+  }
+
+  /**
    * Gets the project with the specified id.
    *
    * @param projectId uniquely identifies the project
-   * @return the project is it was found
+   * @return the project if it was found
    * @throws InexistentProjectException if the project with that id was not found
    * @throws SQLException if a database related error occurs
    */
