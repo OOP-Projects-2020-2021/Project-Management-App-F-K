@@ -12,60 +12,56 @@ import java.util.Optional;
 
 public class ProjectStatusButtonsPanel extends JPanel implements ActionListener {
     // Status buttons.
-    private static JButton markProgressButton = UIFactory.createButton("Mark progress");; //cell 1
-    private static JButton setBackToToDoButtton = UIFactory.createButton("Set back to 'To Do'");
+    private JButton markProgressButton = UIFactory.createButton("Mark progress");; //cell 1
+    private JButton setBackToToDoButtton = UIFactory.createButton("Set back to 'To Do'");
     //cell 1
-    private static JButton turnInButton = UIFactory.createButton("Turn In"); //cell 2
-    private static JButton undoTurnInButton = UIFactory.createButton("Undo turn-in"); //cell 2
-    private static JButton reviewButton = UIFactory.createButton("Review"); //cell 3
+    private JButton turnInButton = UIFactory.createButton("Turn In"); //cell 2
+    private JButton undoTurnInButton = UIFactory.createButton("Undo turn-in"); //cell 2
+    private JButton reviewButton = UIFactory.createButton("Review"); //cell 3
 
     private ProjectStatusController controller;
 
-    public enum Cell1Button {
-        MARK_PROGRESS(markProgressButton),
-        SET_BACK_TO_TO_DO(setBackToToDoButtton),
-        NONE(null);
-
-        private JButton button;
-
-        Cell1Button(JButton button) {
-            this.button = button;
-        }
-
-        Optional<JButton> getButton() {
-            return Optional.ofNullable(button);
-        }
+    public enum Cell1ButtonType {
+        MARK_PROGRESS,
+        SET_BACK_TO_TO_DO,
+        NONE
     }
 
-    public enum Cell2Button {
-        TURN_IN(turnInButton),
-        UNDO_TURN_IN(undoTurnInButton),
-        NONE(null);
-
-        private JButton button;
-
-        Cell2Button(JButton button) {
-            this.button = button;
+    private Optional<JButton> getCell1Button(Cell1ButtonType buttonType) {
+        switch (buttonType) {
+            case MARK_PROGRESS: return Optional.of(markProgressButton);
+            case SET_BACK_TO_TO_DO: return Optional.of(setBackToToDoButtton);
+            case NONE: return Optional.empty();
         }
-
-        Optional<JButton> getButton() {
-            return Optional.ofNullable(button);
-        }
+        return Optional.empty();
     }
 
-    public enum Cell3Button {
-        REVIEW(reviewButton),
-        NONE(null);
+    public enum Cell2ButtonType {
+        TURN_IN,
+        UNDO_TURN_IN,
+        NONE
+    }
 
-        private JButton button;
-
-        Cell3Button(JButton button) {
-            this.button = button;
+    private Optional<JButton> getCell2Button(Cell2ButtonType buttonType) {
+        switch (buttonType) {
+            case TURN_IN: return Optional.of(turnInButton);
+            case UNDO_TURN_IN: return Optional.of(undoTurnInButton);
+            case NONE: return Optional.empty();
         }
+        return Optional.empty();
+    }
 
-        Optional<JButton> getButton() {
-            return Optional.ofNullable(button);
+    public enum Cell3ButtonType {
+        REVIEW,
+        NONE
+    }
+
+    private Optional<JButton> getCell3Button(Cell3ButtonType buttonType) {
+        switch (buttonType) {
+            case REVIEW: return Optional.of(reviewButton);
+            case NONE: return Optional.empty();
         }
+        return Optional.empty();
     }
 
     ProjectStatusButtonsPanel(JFrame frame, Project project) {
@@ -75,18 +71,12 @@ public class ProjectStatusButtonsPanel extends JPanel implements ActionListener 
 
     public void updateButtons() {
         this.removeAll();
-        Cell1Button cell1Button = controller.getCell1Button();
-        if (cell1Button.getButton().isPresent()) {
-            this.add(cell1Button.getButton().get());
-        }
-        Cell2Button cell2Button = controller.getCell2Button();
-        if (cell2Button.getButton().isPresent()) {
-            this.add(cell2Button.getButton().get());
-        }
-        Cell3Button cell3Button = controller.getCell3Button();
-        if (cell3Button.getButton().isPresent()) {
-            this.add(cell3Button.getButton().get());
-        }
+        Optional<JButton> cell1Button = getCell1Button(controller.getCell1ButtonType());
+        cell1Button.ifPresent(this::add);
+        Optional<JButton> cell2Button = getCell2Button(controller.getCell2ButtonType());
+        cell2Button.ifPresent(this::add);
+        Optional<JButton> cell3Button = getCell3Button(controller.getCell3ButtonType());
+        cell3Button.ifPresent(this::add);
         this.revalidate();
         this.repaint();
     }

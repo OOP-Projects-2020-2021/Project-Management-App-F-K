@@ -123,53 +123,53 @@ public class ProjectStatusController extends ProjectController implements Proper
         }
     }
 
-    public ProjectStatusButtonsPanel.Cell1Button getCell1Button() {
+    public ProjectStatusButtonsPanel.Cell1ButtonType getCell1ButtonType() {
         if (project.getStatus() == TO_DO) {
-            return ProjectStatusButtonsPanel.Cell1Button.MARK_PROGRESS;
+            return ProjectStatusButtonsPanel.Cell1ButtonType.MARK_PROGRESS;
         }
         try {
             if (project.getStatus() == IN_PROGRESS && projectManager.currentUserIsAssignee(project)) {
-                return ProjectStatusButtonsPanel.Cell1Button.SET_BACK_TO_TO_DO;
+                return ProjectStatusButtonsPanel.Cell1ButtonType.SET_BACK_TO_TO_DO;
             }
         } catch (InexistentDatabaseEntityException | NoSignedInUserException e) {
             ErrorDialogFactory.createErrorDialog(e, frame, null);
         }
-        return ProjectStatusButtonsPanel.Cell1Button.NONE;
+        return ProjectStatusButtonsPanel.Cell1ButtonType.NONE;
     }
 
-    public ProjectStatusButtonsPanel.Cell2Button getCell2Button() {
+    public ProjectStatusButtonsPanel.Cell2ButtonType getCell2ButtonType() {
         try {
             if (projectManager.currentUserIsAssignee(project)) {
                 if (project.getStatus() == TO_DO || project.getStatus() == IN_PROGRESS) {
-                    return ProjectStatusButtonsPanel.Cell2Button.TURN_IN;
+                    return ProjectStatusButtonsPanel.Cell2ButtonType.TURN_IN;
                 } else if(project.getStatus() == TURNED_IN) {
-                    return ProjectStatusButtonsPanel.Cell2Button.UNDO_TURN_IN;
+                    return ProjectStatusButtonsPanel.Cell2ButtonType.UNDO_TURN_IN;
                 } else {
-                    return ProjectStatusButtonsPanel.Cell2Button.NONE;
+                    return ProjectStatusButtonsPanel.Cell2ButtonType.NONE;
                 }
             } else {
-                return ProjectStatusButtonsPanel.Cell2Button.NONE;
+                return ProjectStatusButtonsPanel.Cell2ButtonType.NONE;
             }
         } catch (InexistentDatabaseEntityException | NoSignedInUserException e) {
             ErrorDialogFactory.createErrorDialog(e, frame, null);
-            return ProjectStatusButtonsPanel.Cell2Button.NONE;
+            return ProjectStatusButtonsPanel.Cell2ButtonType.NONE;
         }
     }
 
-    public ProjectStatusButtonsPanel.Cell3Button getCell3Button() {
+    public ProjectStatusButtonsPanel.Cell3ButtonType getCell3ButtonType() {
         try {
             if (projectManager.currentUserIsSupervisor(project)) {
                 if (project.getStatus() == TURNED_IN) {
-                    return ProjectStatusButtonsPanel.Cell3Button.REVIEW;
+                    return ProjectStatusButtonsPanel.Cell3ButtonType.REVIEW;
                 } else {
-                    return ProjectStatusButtonsPanel.Cell3Button.NONE;
+                    return ProjectStatusButtonsPanel.Cell3ButtonType.NONE;
                 }
             } else {
-                return ProjectStatusButtonsPanel.Cell3Button.NONE;
+                return ProjectStatusButtonsPanel.Cell3ButtonType.NONE;
             }
         } catch (InexistentDatabaseEntityException | NoSignedInUserException e) {
             ErrorDialogFactory.createErrorDialog(e, frame, null);
-            return ProjectStatusButtonsPanel.Cell3Button.NONE;
+            return ProjectStatusButtonsPanel.Cell3ButtonType.NONE;
         }
     }
 }
