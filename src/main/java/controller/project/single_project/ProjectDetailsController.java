@@ -50,11 +50,11 @@ public class ProjectDetailsController implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName()
-            .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())) {
+        .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())) {
       setProject();
       panel.updatePanel();
     } else if (evt.getPropertyName()
-            .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
+        .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       setProject();
       panel.updateStatusLabel();
     }
