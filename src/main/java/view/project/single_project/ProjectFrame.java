@@ -39,7 +39,7 @@ public class ProjectFrame extends JFrame {
   }
 
   private void initComponents() {
-    detailsPanel = new ProjectDetailsPanel(controller.getProject());
+    detailsPanel = new ProjectDetailsPanel(this, controller.getProject());
     commentPanel = new ProjectCommentPanel(controller.getProject());
     initSplitPane();
   }

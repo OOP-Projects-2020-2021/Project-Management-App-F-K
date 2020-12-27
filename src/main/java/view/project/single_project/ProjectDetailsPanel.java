@@ -43,14 +43,17 @@ public class ProjectDetailsPanel extends JPanel {
   private JComboBox<String> supervisorComboBox;
   private DefaultComboBoxModel<String> supervisorModel;
 
+  private ProjectStatusButtonsPanel statusButtonsPanel;
+
   private JButton saveButton;
   private JButton deleteButton;
 
   private ProjectDetailsController controller;
 
-  public ProjectDetailsPanel(Project project) {
+  public ProjectDetailsPanel(JFrame frame, Project project) {
     controller = new ProjectDetailsController(project, this);
     this.setLayout(new BorderLayout());
+    statusButtonsPanel = new ProjectStatusButtonsPanel(frame, project);
     initDetailsPanel();
   }
 
@@ -174,9 +177,8 @@ public class ProjectDetailsPanel extends JPanel {
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox)
                             .addComponent(supervisorComboBox)
-                            .addComponent(projectStatusLabel))));
-            // todo .addGroup(contentLayout.createSequentialGroup().addComponent
-            //  (radioButtonsPanel)));
+                            .addComponent(projectStatusLabel)))
+                    .addGroup(contentLayout.createSequentialGroup().addComponent(statusButtonsPanel)));
 
     contentLayout.setVerticalGroup(
         contentLayout
@@ -211,8 +213,8 @@ public class ProjectDetailsPanel extends JPanel {
                     .createParallelGroup()
                     .addComponent(statusLabel)
                     .addComponent(projectStatusLabel))
-            .addGap(20));
-            //todo .addComponent(radioButtonsPanel));
+            .addGap(20)
+            .addComponent(statusButtonsPanel));
     this.add(contentPanel, BorderLayout.CENTER);
   }
 
