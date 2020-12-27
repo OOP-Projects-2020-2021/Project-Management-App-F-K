@@ -138,7 +138,6 @@ public class ProjectDetailsPanel extends JPanel {
     supervisorComboBox.setModel(supervisorModel);
   }
 
-
   private void initContentPanel() {
     JPanel contentPanel = new JPanel();
     GroupLayout contentLayout = new GroupLayout(contentPanel);
@@ -178,7 +177,7 @@ public class ProjectDetailsPanel extends JPanel {
                             .addComponent(assigneeComboBox)
                             .addComponent(supervisorComboBox)
                             .addComponent(projectStatusLabel)))
-                    .addGroup(contentLayout.createSequentialGroup().addComponent(statusButtonsPanel)));
+            .addGroup(contentLayout.createSequentialGroup().addComponent(statusButtonsPanel)));
 
     contentLayout.setVerticalGroup(
         contentLayout
@@ -259,7 +258,7 @@ public class ProjectDetailsPanel extends JPanel {
     setDeadlineDate();
     selectAssigneeFromComboBox();
     selectSupervisorFromComboBox();
-   //todo  selectProjectStatus();
+    // todo  selectProjectStatus();
     enableEditFields(controller.enableEditing());
     // todo controller.selectProjectStatusButtons();
   }

@@ -117,7 +117,7 @@ public class ErrorDialogFactory {
   private static final String ILLEGAL_PROJECT_STATUS_CHANGE_TITLE = "Illegal status change.";
 
   private static final String ILLEGAL_PROJECT_STATUS_CHANGE_MESSAGE =
-          "This change of project status is now allowed";
+      "This change of project status is now allowed";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
@@ -304,9 +304,9 @@ public class ErrorDialogFactory {
   /** Displays an error message to inform the user that the project status change is illegal. */
   private static void displayIllegalProjectStatusChangeErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            ILLEGAL_STATUS_CHANGE_MESSAGE + "\n" + message,
-            ILLEGAL_STATUS_CHANGE_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        ILLEGAL_STATUS_CHANGE_MESSAGE + "\n" + message,
+        ILLEGAL_STATUS_CHANGE_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
 }
