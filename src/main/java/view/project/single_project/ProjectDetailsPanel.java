@@ -89,7 +89,28 @@ public class ProjectDetailsPanel extends JPanel {
     properties.put("text.month", "Month");
     properties.put("text.year", "Year");
     datePanel = new JDatePanelImpl(dateModel, properties);
-    deadlineDatePicker = new JDatePickerImpl(datePanel, new DefaultFormatter());
+    deadlineDatePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+  }
+
+  public static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
+
+    private String datePattern = "yyyy-MM-dd";
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+
+    @Override
+    public Object stringToValue(String text) throws ParseException {
+      return dateFormatter.parseObject(text);
+    }
+
+    @Override
+    public String valueToString(Object value) throws ParseException {
+      if (value != null) {
+        Calendar cal = (Calendar) value;
+        return dateFormatter.format(cal.getTime());
+      }
+
+      return "";
+    }
   }
 
   private void setDeadlineDate() {
