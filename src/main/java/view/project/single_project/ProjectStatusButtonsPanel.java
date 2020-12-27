@@ -9,7 +9,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.EnumSet;
-import java.util.Optional;
 
 /**
  * Creates a panel containing all the buttons required for changing the status of a project.
@@ -61,9 +60,7 @@ public class ProjectStatusButtonsPanel extends JPanel implements ActionListener 
     initButtons();
   }
 
-  /**
-   * Adds the necessary buttons specified by the controller.
-   */
+  /** Adds the necessary buttons specified by the controller. */
   public void updateButtons() {
     this.removeAll();
     EnumSet<ButtonType> neededButtonTypes = controller.getNecessaryButtonTypes();
