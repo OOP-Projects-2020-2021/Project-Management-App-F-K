@@ -43,11 +43,6 @@ public class ProjectDetailsPanel extends JPanel {
   private JComboBox<String> supervisorComboBox;
   private DefaultComboBoxModel<String> supervisorModel;
 
-  private JPanel radioButtonsPanel;
-  private JRadioButton toDoButton;
-  private JRadioButton turnedInButton;
-  private JRadioButton inProgressButton;
-  private JRadioButton finishedButton;
   private JButton saveButton;
   private JButton deleteButton;
 
@@ -61,12 +56,12 @@ public class ProjectDetailsPanel extends JPanel {
 
   private void initDetailsPanel() {
     initDataFields();
-    initRadioButtonsPanel();
+    // todo initRadioButtonsPanel();
     initContentPanel();
     initButtonsPanel();
     addButtonListener();
     enableEditFields(controller.enableEditing());
-    controller.selectProjectStatusButtons();
+    // todo controller.selectProjectStatusButtons();
   }
 
   private void initDataFields() {
@@ -140,67 +135,6 @@ public class ProjectDetailsPanel extends JPanel {
     supervisorComboBox.setModel(supervisorModel);
   }
 
-  private void initRadioButtons() {
-    toDoButton = new JRadioButton(Project.ProjectStatus.TO_DO.toString());
-    inProgressButton = new JRadioButton(Project.ProjectStatus.IN_PROGRESS.toString());
-    turnedInButton = new JRadioButton(Project.ProjectStatus.TURNED_IN.toString());
-    finishedButton = new JRadioButton(Project.ProjectStatus.FINISHED.toString());
-
-    toDoButton.setActionCommand(Project.ProjectStatus.TO_DO.toString());
-    inProgressButton.setActionCommand(Project.ProjectStatus.IN_PROGRESS.toString());
-    turnedInButton.setActionCommand(Project.ProjectStatus.TURNED_IN.toString());
-    finishedButton.setActionCommand(Project.ProjectStatus.FINISHED.toString());
-  }
-
-  private void selectProjectStatus() {
-    System.out.println(controller.getStatus());
-    switch (Project.ProjectStatus.valueOf(controller.getStatus())) {
-      case IN_PROGRESS:
-        {
-          inProgressButton.setSelected(true);
-          break;
-        }
-      case TURNED_IN:
-        {
-          turnedInButton.setSelected(true);
-          break;
-        }
-      case FINISHED:
-        {
-          finishedButton.setSelected(true);
-          break;
-        }
-      case TO_DO:
-        {
-          toDoButton.setSelected(true);
-          break;
-        }
-      default:
-        {
-          break;
-        }
-    }
-  }
-
-  private void createRadioButtonsGroup() {
-    // add the buttons to a group so that only one can be selected at a time
-    ButtonGroup statusButtonGroup = new ButtonGroup();
-    statusButtonGroup.add(toDoButton);
-    statusButtonGroup.add(inProgressButton);
-    statusButtonGroup.add(turnedInButton);
-    statusButtonGroup.add(finishedButton);
-  }
-
-  private void initRadioButtonsPanel() {
-    initRadioButtons();
-    createRadioButtonsGroup();
-    selectProjectStatus();
-    radioButtonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-    radioButtonsPanel.add(toDoButton);
-    radioButtonsPanel.add(inProgressButton);
-    radioButtonsPanel.add(turnedInButton);
-    radioButtonsPanel.add(finishedButton);
-  }
 
   private void initContentPanel() {
     JPanel contentPanel = new JPanel();
@@ -240,8 +174,9 @@ public class ProjectDetailsPanel extends JPanel {
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox)
                             .addComponent(supervisorComboBox)
-                            .addComponent(projectStatusLabel)))
-            .addGroup(contentLayout.createSequentialGroup().addComponent(radioButtonsPanel)));
+                            .addComponent(projectStatusLabel))));
+            // todo .addGroup(contentLayout.createSequentialGroup().addComponent
+            //  (radioButtonsPanel)));
 
     contentLayout.setVerticalGroup(
         contentLayout
@@ -276,8 +211,8 @@ public class ProjectDetailsPanel extends JPanel {
                     .createParallelGroup()
                     .addComponent(statusLabel)
                     .addComponent(projectStatusLabel))
-            .addGap(20)
-            .addComponent(radioButtonsPanel));
+            .addGap(20));
+            //todo .addComponent(radioButtonsPanel));
     this.add(contentPanel, BorderLayout.CENTER);
   }
 
@@ -295,10 +230,6 @@ public class ProjectDetailsPanel extends JPanel {
     ButtonListener buttonListener = new ButtonListener();
     saveButton.addActionListener(buttonListener);
     deleteButton.addActionListener(buttonListener);
-    toDoButton.addActionListener(buttonListener);
-    turnedInButton.addActionListener(buttonListener);
-    inProgressButton.addActionListener(buttonListener);
-    finishedButton.addActionListener(buttonListener);
   }
 
   private void enableButtons(boolean enable) {
@@ -314,17 +245,6 @@ public class ProjectDetailsPanel extends JPanel {
     supervisorComboBox.setEnabled(enable);
   }
 
-  public void enableProjectStatusButtons(
-      boolean enableToDo,
-      boolean enableInProgress,
-      boolean enableTurnedIn,
-      boolean enableFinished) {
-    toDoButton.setVisible(enableToDo);
-    inProgressButton.setVisible(enableInProgress);
-    turnedInButton.setVisible(enableTurnedIn);
-    finishedButton.setVisible(enableFinished);
-  }
-
   private void enableEditFields(boolean enable) {
     enableEditingTextFields(enable);
     enableButtons(enable);
@@ -337,9 +257,9 @@ public class ProjectDetailsPanel extends JPanel {
     setDeadlineDate();
     selectAssigneeFromComboBox();
     selectSupervisorFromComboBox();
-    selectProjectStatus();
+   //todo  selectProjectStatus();
     enableEditFields(controller.enableEditing());
-    controller.selectProjectStatusButtons();
+    // todo controller.selectProjectStatusButtons();
   }
 
   public void updateStatusLabel() {
@@ -362,11 +282,6 @@ public class ProjectDetailsPanel extends JPanel {
         controller.saveProject(title, assignee, supervisor, selectedDate, description);
       } else if (actionEvent.getSource() == deleteButton) {
         // todo
-      } else if (actionEvent.getSource() instanceof JRadioButton) {
-        String selectedStatus = actionEvent.getActionCommand();
-        if (!controller.setProjectStatus(selectedStatus)) {
-          selectProjectStatus();
-        }
       }
     }
   }

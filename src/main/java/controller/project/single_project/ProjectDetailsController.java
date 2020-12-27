@@ -56,7 +56,7 @@ public class ProjectDetailsController implements PropertyChangeListener {
     } else if (evt.getPropertyName()
         .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       setProject();
-      selectProjectStatusButtons();
+     // todo: update status buttons
       panel.updateStatusLabel();
     }
   }
@@ -224,35 +224,6 @@ public class ProjectDetailsController implements PropertyChangeListener {
       ErrorDialogFactory.createErrorDialog(e, null, message);
     }
     return false;
-  }
-
-  /**
-   * Depending on the status of the project, only those options are shown which represent a valid
-   * change of state. * Finished projects cannot be revoked or edited. * Turned in projects can be
-   * undone by either the assignee or supervisor, but only the supervisor can set it as finished. *
-   * In progress projects can be changed only by the assignee, setting it back to "to do" or turning
-   * it in. * To do projects can be changed also only by the assignee, to "in progress" or turned
-   * in.
-   */
-  public void selectProjectStatusButtons() {
-    boolean enableTodo = false;
-    boolean enableInProgress = false;
-    boolean enableTurnedIn = false;
-    boolean enableFinished = false;
-    if (isSupervisor()) {
-      if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
-        enableFinished = enableInProgress = enableTodo = true;
-      }
-    } else if (isAssignee()) {
-      if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
-        enableInProgress = enableTodo = true;
-      } else if (project.getStatus() == Project.ProjectStatus.IN_PROGRESS) {
-        enableTodo = enableTurnedIn = true;
-      } else if (project.getStatus() == Project.ProjectStatus.TO_DO) {
-        enableInProgress = enableTurnedIn = true;
-      }
-    }
-    panel.enableProjectStatusButtons(enableTodo, enableInProgress, enableTurnedIn, enableFinished);
   }
 
   public void deleteProject() {
