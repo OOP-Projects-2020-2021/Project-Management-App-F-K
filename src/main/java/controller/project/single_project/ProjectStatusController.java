@@ -196,6 +196,10 @@ public class ProjectStatusController extends ProjectController implements Proper
     }
   }
 
+  /**
+   * @return set of the buttons corresponding to the status change actions available to the
+   * current user based on the status of the project and the role of the user.
+   */
   public EnumSet<ProjectStatusButtonsPanel.ButtonType> getNecessaryButtonTypes() {
     EnumSet<ProjectStatusButtonsPanel.ButtonType> result =
             EnumSet.noneOf(ProjectStatusButtonsPanel.ButtonType.class);

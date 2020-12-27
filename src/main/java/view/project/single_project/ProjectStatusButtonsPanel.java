@@ -11,16 +11,27 @@ import java.awt.event.ActionListener;
 import java.util.EnumSet;
 import java.util.Optional;
 
+/**
+ * Creates a panel containing all the buttons required for changing the status of a project.
+ *
+ * @author Bori Fazakas
+ */
 public class ProjectStatusButtonsPanel extends JPanel implements ActionListener {
   // Status buttons.
+  // The progress can be marked by anyone if the current status is TO_DO.
   private JButton markProgressButton = UIFactory.createButton("Mark progress");
+  // The assignee can set the project back to TO_DO if the current status is IN_PROGRESS.
   private JButton setBackToToDoButtton = UIFactory.createButton("Set back to 'To Do'");
+  // The assignee can turn in the project if its status is TO_DO or IN_PROGRESS.
   private JButton turnInButton = UIFactory.createButton("Turn In");
+  // The assignee can undo the turn in if the current status is TURNED_IN.
   private JButton undoTurnInButton = UIFactory.createButton("Undo turn-in");
+  // The supervisor can review a TURNED_IN project.
   private JButton reviewButton = UIFactory.createButton("Review");
 
   private ProjectStatusController controller;
 
+  /** The controller specified using the enum the set of necessary buttons. */
   public enum ButtonType {
     MARK_PROGRESS,
     SET_BACK_TO_TO_DO,
@@ -50,6 +61,9 @@ public class ProjectStatusButtonsPanel extends JPanel implements ActionListener 
     initButtons();
   }
 
+  /**
+   * Adds the necessary buttons specified by the controller.
+   */
   public void updateButtons() {
     this.removeAll();
     EnumSet<ButtonType> neededButtonTypes = controller.getNecessaryButtonTypes();

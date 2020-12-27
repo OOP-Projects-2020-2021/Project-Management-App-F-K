@@ -15,7 +15,7 @@ import java.sql.SQLException;
  * the project, mark their contribution and leave comments, and it is responsible for redirecting
  * the user to the parentFrame upon closing the ProjectFrame.
  *
- * @author Beata Keresztes
+ * @author Beata Keresztes, Bori Fazakas
  */
 public class ProjectController extends FrameController {
 
