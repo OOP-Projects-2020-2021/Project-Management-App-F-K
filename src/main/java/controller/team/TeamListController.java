@@ -64,8 +64,10 @@ public class TeamListController implements PropertyChangeListener {
   @Override
   public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
     if (propertyChangeEvent
-        .getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
+            .getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString()) ||
+            propertyChangeEvent.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())
+    ) {
       panel.updateTeams();
     }
   }
