@@ -8,69 +8,41 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EnumSet;
 import java.util.Optional;
 
 public class ProjectStatusButtonsPanel extends JPanel implements ActionListener {
   // Status buttons.
   private JButton markProgressButton = UIFactory.createButton("Mark progress");
-  ; // cell 1
   private JButton setBackToToDoButtton = UIFactory.createButton("Set back to 'To Do'");
-  // cell 1
-  private JButton turnInButton = UIFactory.createButton("Turn In"); // cell 2
-  private JButton undoTurnInButton = UIFactory.createButton("Undo turn-in"); // cell 2
-  private JButton reviewButton = UIFactory.createButton("Review"); // cell 3
+  private JButton turnInButton = UIFactory.createButton("Turn In");
+  private JButton undoTurnInButton = UIFactory.createButton("Undo turn-in");
+  private JButton reviewButton = UIFactory.createButton("Review");
 
   private ProjectStatusController controller;
 
-  public enum Cell1ButtonType {
+  public enum ButtonType {
     MARK_PROGRESS,
     SET_BACK_TO_TO_DO,
-    NONE
-  }
-
-  private Optional<JButton> getCell1Button(Cell1ButtonType buttonType) {
-    switch (buttonType) {
-      case MARK_PROGRESS:
-        return Optional.of(markProgressButton);
-      case SET_BACK_TO_TO_DO:
-        return Optional.of(setBackToToDoButtton);
-      case NONE:
-        return Optional.empty();
-    }
-    return Optional.empty();
-  }
-
-  public enum Cell2ButtonType {
     TURN_IN,
     UNDO_TURN_IN,
-    NONE
-  }
-
-  private Optional<JButton> getCell2Button(Cell2ButtonType buttonType) {
-    switch (buttonType) {
-      case TURN_IN:
-        return Optional.of(turnInButton);
-      case UNDO_TURN_IN:
-        return Optional.of(undoTurnInButton);
-      case NONE:
-        return Optional.empty();
-    }
-    return Optional.empty();
-  }
-
-  public enum Cell3ButtonType {
     REVIEW,
-    NONE
   }
 
-  private Optional<JButton> getCell3Button(Cell3ButtonType buttonType) {
+  private JButton getButton(ButtonType buttonType) {
     switch (buttonType) {
+      case MARK_PROGRESS:
+        return markProgressButton;
+      case SET_BACK_TO_TO_DO:
+        return setBackToToDoButtton;
+      case TURN_IN:
+        return turnInButton;
+      case UNDO_TURN_IN:
+        return undoTurnInButton;
       case REVIEW:
-        return Optional.of(reviewButton);
-      case NONE:
-        return Optional.empty();
+        return reviewButton;
     }
-    return Optional.empty();
+    return new JButton();
   }
 
   ProjectStatusButtonsPanel(JFrame frame, Project project) {
@@ -80,12 +52,10 @@ public class ProjectStatusButtonsPanel extends JPanel implements ActionListener 
 
   public void updateButtons() {
     this.removeAll();
-    Optional<JButton> cell1Button = getCell1Button(controller.getCell1ButtonType());
-    cell1Button.ifPresent(this::add);
-    Optional<JButton> cell2Button = getCell2Button(controller.getCell2ButtonType());
-    cell2Button.ifPresent(this::add);
-    Optional<JButton> cell3Button = getCell3Button(controller.getCell3ButtonType());
-    cell3Button.ifPresent(this::add);
+    EnumSet<ButtonType> neededButtonTypes = controller.getNecessaryButtonTypes();
+    for (ButtonType type : neededButtonTypes) {
+      this.add(getButton(type));
+    }
     this.revalidate();
     this.repaint();
   }
@@ -101,7 +71,6 @@ public class ProjectStatusButtonsPanel extends JPanel implements ActionListener 
 
   @Override
   public void actionPerformed(ActionEvent actionEvent) {
-    System.out.println("Button clicked");
     if (actionEvent.getSource() == markProgressButton) {
       controller.markProgress();
     } else if (actionEvent.getSource() == setBackToToDoButtton) {

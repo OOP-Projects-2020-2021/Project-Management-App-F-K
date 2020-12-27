@@ -1,5 +1,7 @@
 package controller.project.single_project;
 
+import javafx.print.PageOrientation;
+import javafx.scene.control.ButtonType;
 import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
 import model.project.Project;
@@ -14,9 +16,17 @@ import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.util.EnumSet;
 
 import static model.project.Project.ProjectStatus.*;
 
+/**
+ * ProjectStatusController handles all the events related to the status change of the project,
+ * including handling the clicks on any of the related buttons, and updateing the ui if the
+ * status of the project has changed.
+ *
+ * @author Bori Fazakas
+ */
 public class ProjectStatusController extends ProjectController implements PropertyChangeListener {
 
   ProjectStatusButtonsPanel panel;
@@ -27,6 +37,10 @@ public class ProjectStatusController extends ProjectController implements Proper
     this.panel = panel;
   }
 
+  /**
+   * If legal, marks the status of the project as IN_PROGRESS, and handles the exceptions if the
+   * operation is illegal.
+   */
   public void markProgress() {
     try {
       projectManager.setProjectInProgress(getProject().getId());
@@ -43,6 +57,10 @@ public class ProjectStatusController extends ProjectController implements Proper
     }
   }
 
+  /**
+   * If legal, marks the status of the project as TO_DO, and handles the exceptions if the
+   * operation is illegal.
+   */
   public void setBackToToDo() {
     try {
       projectManager.setProjectAsToDo(getProject().getId());
@@ -61,6 +79,10 @@ public class ProjectStatusController extends ProjectController implements Proper
     }
   }
 
+  /**
+   * If legal, marks the status of the project as TURNED_IN, and handles the exceptions if the
+   * operation is illegal.
+   */
   public void turnIn() {
     try {
       projectManager.turnInProject(getProject().getId());
@@ -79,6 +101,11 @@ public class ProjectStatusController extends ProjectController implements Proper
     }
   }
 
+  /**
+   * If legal, marks the status of the previously turned-in project as TO_DO or IN_PROGRESS,
+   * based on the option chosen by the user in the dialog, and handles the exceptions if the
+   * operation is illegal.
+   */
   public void undoTurnIn() {
     try {
       Project.ProjectStatus[] possibleAnswers = new Project.ProjectStatus[] {TO_DO, IN_PROGRESS};
@@ -110,6 +137,11 @@ public class ProjectStatusController extends ProjectController implements Proper
     }
   }
 
+  /**
+   * If legal, marks the status of the previously turned-in project as FINISHED, if accepted,
+   * or TO_DO or IN_PROGRESS, based on the option chosen by the user in the dialog, if not
+   * accepted, and handles the exceptions if the operation is illegal.
+   */
   public void review() {
     try {
       int answer =
@@ -151,6 +183,9 @@ public class ProjectStatusController extends ProjectController implements Proper
     }
   }
 
+  /**
+   * Updates the UI if the status of the project has changed.
+   */
   @Override
   public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
     if (propertyChangeEvent
@@ -161,53 +196,34 @@ public class ProjectStatusController extends ProjectController implements Proper
     }
   }
 
-  public ProjectStatusButtonsPanel.Cell1ButtonType getCell1ButtonType() {
-    if (project.getStatus() == TO_DO) {
-      return ProjectStatusButtonsPanel.Cell1ButtonType.MARK_PROGRESS;
-    }
-    try {
-      if (project.getStatus() == IN_PROGRESS && projectManager.currentUserIsAssignee(project)) {
-        return ProjectStatusButtonsPanel.Cell1ButtonType.SET_BACK_TO_TO_DO;
-      }
-    } catch (InexistentDatabaseEntityException | NoSignedInUserException e) {
-      ErrorDialogFactory.createErrorDialog(e, frame, null);
-    }
-    return ProjectStatusButtonsPanel.Cell1ButtonType.NONE;
-  }
-
-  public ProjectStatusButtonsPanel.Cell2ButtonType getCell2ButtonType() {
-    try {
-      if (projectManager.currentUserIsAssignee(project)) {
-        if (project.getStatus() == TO_DO || project.getStatus() == IN_PROGRESS) {
-          return ProjectStatusButtonsPanel.Cell2ButtonType.TURN_IN;
-        } else if (project.getStatus() == TURNED_IN) {
-          return ProjectStatusButtonsPanel.Cell2ButtonType.UNDO_TURN_IN;
-        } else {
-          return ProjectStatusButtonsPanel.Cell2ButtonType.NONE;
-        }
-      } else {
-        return ProjectStatusButtonsPanel.Cell2ButtonType.NONE;
-      }
-    } catch (InexistentDatabaseEntityException | NoSignedInUserException e) {
-      ErrorDialogFactory.createErrorDialog(e, frame, null);
-      return ProjectStatusButtonsPanel.Cell2ButtonType.NONE;
-    }
-  }
-
-  public ProjectStatusButtonsPanel.Cell3ButtonType getCell3ButtonType() {
+  public EnumSet<ProjectStatusButtonsPanel.ButtonType> getNecessaryButtonTypes() {
+    EnumSet<ProjectStatusButtonsPanel.ButtonType> result =
+            EnumSet.noneOf(ProjectStatusButtonsPanel.ButtonType.class);
     try {
       if (projectManager.currentUserIsSupervisor(project)) {
         if (project.getStatus() == TURNED_IN) {
-          return ProjectStatusButtonsPanel.Cell3ButtonType.REVIEW;
-        } else {
-          return ProjectStatusButtonsPanel.Cell3ButtonType.NONE;
+          result.add(ProjectStatusButtonsPanel.ButtonType.REVIEW);
         }
-      } else {
-        return ProjectStatusButtonsPanel.Cell3ButtonType.NONE;
+      }
+      if (projectManager.currentUserIsAssignee(project)) {
+        switch (project.getStatus()) {
+          case TO_DO:
+            result.add(ProjectStatusButtonsPanel.ButtonType.TURN_IN);
+            break;
+          case IN_PROGRESS:
+            result.add(ProjectStatusButtonsPanel.ButtonType.TURN_IN);
+            result.add(ProjectStatusButtonsPanel.ButtonType.SET_BACK_TO_TO_DO);
+            break;
+          case TURNED_IN:
+            result.add(ProjectStatusButtonsPanel.ButtonType.UNDO_TURN_IN);
+        }
+      }
+      if (project.getStatus() == TO_DO) {
+        result.add(ProjectStatusButtonsPanel.ButtonType.MARK_PROGRESS);
       }
     } catch (InexistentDatabaseEntityException | NoSignedInUserException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
-      return ProjectStatusButtonsPanel.Cell3ButtonType.NONE;
     }
+    return result;
   }
 }
