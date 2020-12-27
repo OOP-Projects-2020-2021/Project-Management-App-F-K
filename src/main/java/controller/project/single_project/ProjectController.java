@@ -20,7 +20,7 @@ import java.sql.SQLException;
 public class ProjectController extends FrameController {
 
   protected Project project;
-  protected ProjectManager projectManager;
+  protected ProjectManager projectManager = ProjectManager.getInstance();
 
   public ProjectController(JFrame frame, Project project) {
     super(frame);
