@@ -181,51 +181,6 @@ public class ProjectDetailsController implements PropertyChangeListener {
         "You cannot set the project from status " + project.getStatus() + " to " + newState);
   }
 
-  /**
-   * Changes the status of the project respecting the valid transition between the states.
-   *
-   * @param newStatus the new status set by the user
-   * @return boolean = true if the project could be set to the new state, otherwise false
-   */
-  public boolean setProjectStatus(String newStatus) {
-    try {
-      if (newStatus.equals(Project.ProjectStatus.FINISHED.toString())) {
-        projectManager.acceptAsFinished(project.getId());
-      } else if (project.getStatus() == Project.ProjectStatus.TURNED_IN) {
-        // the new state can only be "to do" or "in progress"
-        if (isSupervisor()) {
-          projectManager.discardTurnIn(project.getId(), Project.ProjectStatus.valueOf(newStatus));
-        } else if (isAssignee()) {
-          projectManager.undoTurnIn(project.getId(), Project.ProjectStatus.valueOf(newStatus));
-        }
-      } else if (newStatus.equals(Project.ProjectStatus.IN_PROGRESS.toString())) {
-        projectManager.setProjectInProgress(project.getId());
-      } else if (newStatus.equals(Project.ProjectStatus.TO_DO.toString())) {
-        projectManager.setProjectAsToDo(project.getId());
-      } else if (newStatus.equals(Project.ProjectStatus.TURNED_IN.toString())) {
-        projectManager.turnInProject(project.getId());
-      }
-      return true;
-    } catch (NoSignedInUserException
-        | InexistentDatabaseEntityException
-        | SQLException
-        | InexistentProjectException e) {
-      ErrorDialogFactory.createErrorDialog(e, null, null);
-    } catch (IllegalProjectStatusChangeException e) {
-      displayIllegalStateErrorDialog(e, Project.ProjectStatus.valueOf(newStatus));
-    } catch (UnauthorisedOperationException e) {
-      String message = null;
-      if (newStatus.equals(Project.ProjectStatus.FINISHED.toString())) {
-        message = "Only the supervisor can set the project as finished.";
-      } else if (newStatus.equals(Project.ProjectStatus.IN_PROGRESS.toString())
-          || newStatus.equals(Project.ProjectStatus.TURNED_IN.toString())) {
-        message = "Only the assignee can set the project as in progress or turn in the project.";
-      }
-      ErrorDialogFactory.createErrorDialog(e, null, message);
-    }
-    return false;
-  }
-
   public void deleteProject() {
     // todo
   }
