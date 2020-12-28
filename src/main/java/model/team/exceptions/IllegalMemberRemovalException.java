@@ -11,6 +11,6 @@ public class IllegalMemberRemovalException extends Exception {
     super(
         "You are not allowed to remove member "
             + memberName
-            + ", because he/she still has unfinished projects");
+            + ", because he/she still has unfinished projects.");
   }
 }

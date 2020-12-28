@@ -29,8 +29,10 @@ public class TeamManager extends Manager {
   }
 
   public enum ChangablePropertyName {
-    CURRENT_USER_TEAM_MEMBERSHIPS, // event is fired when the user becomes member of a team/looses
+    CURRENT_USER_TEAM_MEMBERSHIPS, // event is fired when the current user becomes member of a team/looses
     // membership of a team
+    CREATE_TEAM, // event is fired when a new team is created
+    DELETE_TEAM, // event is fired when a team is deleted
     CHANGED_TEAM_NAME, // event is fired when the data of the name of the team has been changed
     CHANGED_TEAM_CODE, // event is fired when the code of the team has been changed
     CHANGED_TEAM_MANAGER, // event is fired when the manager passed it position to another member
@@ -55,7 +57,7 @@ public class TeamManager extends Manager {
             new Team.SavableTeam(name, currentUser.getId(), generateTeamCode()));
     teamRepository.addTeamMember(teamId, currentUser.getId());
     support.firePropertyChange(
-        ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
+        ChangablePropertyName.CREATE_TEAM.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -81,7 +83,7 @@ public class TeamManager extends Manager {
     ProjectManager.getInstance().deleteAllProjectsOfTeam(teamId);
     teamRepository.deleteTeam(teamId);
     support.firePropertyChange(
-        ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString(), OLD_VALUE, NEW_VALUE);
+        ChangablePropertyName.DELETE_TEAM.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**

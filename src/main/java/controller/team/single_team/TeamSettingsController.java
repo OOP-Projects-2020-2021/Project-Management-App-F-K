@@ -31,6 +31,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   private Team currentTeam;
   private TeamHomePanel homePanel;
+  private ProjectManager projectManager;
 
   /** Messages to confirm leaving the team. */
   private static final String CONFIRM_LEAVING_TEAM_MESSAGE =
@@ -44,9 +45,11 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   private static final String AFFIRM_LEAVING_TEAM_TITLE = "Left the team ";
 
+
   public TeamSettingsController(TeamHomePanel homePanel, JFrame frame, int teamId) {
     super(frame, teamId);
     this.homePanel = homePanel;
+    projectManager = ProjectManager.getInstance();
     teamManager.addPropertyChangeListener(this);
     try {
       currentTeam = teamManager.getTeam(teamId);
@@ -67,25 +70,23 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString())
         || evt.getPropertyName()
-            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString())) {
-      updateCurrentTeam();
-      updateHomePanel();
-    } else if (evt.getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
-      updateCurrentTeam();
-      setManagerAccess();
-      updateHomePanel();
-    } else if (evt.getPropertyName()
-            .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
+            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString())
         || evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
+            || evt.getPropertyName()
             .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
       updateCurrentTeam();
       updateHomePanel();
     } else if (evt.getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
+        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())
+    || evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
       updateCurrentTeam();
       setManagerAccess();
       updateHomePanel();
+    } else if (evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.DELETE_TEAM.toString())) {
+      closeFrame();
     }
   }
 
@@ -171,7 +172,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   /**
    * Check whether the current user has any unfinished projects.
    *
-   * @return true if the member doesn't have any unfinished projects, otherwise false
+   * @return true if the member has any unfinished projects, otherwise false
    * @throws NoSignedInUserException if there is no user signed in
    * @throws SQLException if an error occurred when reading the projects from the database
    * @throws InexistentDatabaseEntityException if the team or project with given id doesn't exist in
@@ -179,16 +180,15 @@ public class TeamSettingsController extends TeamController implements PropertyCh
    */
   private boolean hasUnfinishedProjects()
       throws NoSignedInUserException, SQLException, InexistentDatabaseEntityException {
-    ProjectManager projectManager = ProjectManager.getInstance();
     List<Project> projects =
         projectManager.getProjects(
             true, true, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
     for (Project project : projects) {
       if (project.getStatus() != Project.ProjectStatus.FINISHED) {
-        return false;
+        return true;
       }
     }
-    return true;
+    return false;
   }
 
   public void saveTeamName(String name) {
@@ -250,13 +250,11 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   public void deleteTeam() {
     try {
+      if(hasUnfinishedProjects(null)) {
+        throw new IllegalTeamRemovalException(currentTeam.getName());
+      }
       teamManager.deleteTeam(teamId);
-    } catch (SQLException
-        | InexistentTeamException
-        | UnauthorisedOperationException
-        | NoSignedInUserException
-        | InexistentDatabaseEntityException
-        | InexistentUserException e) {
+    } catch (SQLException | InexistentTeamException | UnauthorisedOperationException | NoSignedInUserException | InexistentDatabaseEntityException | InexistentUserException | IllegalTeamRemovalException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
   }

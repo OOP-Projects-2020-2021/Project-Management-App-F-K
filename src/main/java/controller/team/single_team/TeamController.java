@@ -2,13 +2,19 @@ package controller.team.single_team;
 
 import controller.FrameController;
 import model.InexistentDatabaseEntityException;
+import model.project.Project;
+import model.project.ProjectManager;
+import model.project.queryconstants.QueryProjectDeadlineStatus;
+import model.project.queryconstants.QueryProjectStatus;
 import model.team.TeamManager;
 import model.team.exceptions.InexistentTeamException;
 import model.user.UserManager;
+import model.user.exceptions.InexistentUserException;
 import view.ErrorDialogFactory;
 
 import javax.swing.*;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * The TeamController manages the TeamFrame. It has two static fields, the teamId, which doesn't
@@ -61,6 +67,29 @@ public class TeamController extends FrameController {
     return managerAccess;
   }
 
+  /**
+   * Check whether a member of the team has any unfinished projects.
+   *
+   * @param member = name of the member after which we inquire
+   * @return true if the member has any unfinished projects, otherwise false
+   * @throws InexistentUserException if there is no such member
+   * @throws SQLException if an error occurred when reading the projects from the database
+   * @throws InexistentDatabaseEntityException if the team or project with given id doesn't exist in
+   *     the database
+   */
+  protected boolean hasUnfinishedProjects(String member)
+          throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
+    ProjectManager projectManager = ProjectManager.getInstance();
+    List<Project> projects =
+            projectManager.getProjectsOfTeam(
+                    teamId, member, member, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
+    for (Project project : projects) {
+      if (project.getStatus() != Project.ProjectStatus.FINISHED) {
+        return true;
+      }
+    }
+    return false;
+  }
   public void onClose(JFrame parentFrame) {
     parentFrame.setVisible(true);
     parentFrame.setEnabled(true);

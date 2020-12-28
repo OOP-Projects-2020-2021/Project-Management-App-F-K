@@ -17,8 +17,8 @@ import java.sql.SQLException;
 public class CreateTeamController extends FrameController {
   TeamManager teamManager;
 
-  private static final String SUCCESFUL_TEAM_CREATION_TITLE = "Succesful operation";
-  private static final String SUCCESSFUL_TEAM_CREATION_MESSAGE = "The team was succesfully created";
+  private static final String SUCCESSFUL_TEAM_CREATION_TITLE = "Successful operation";
+  private static final String SUCCESSFUL_TEAM_CREATION_MESSAGE = "The team was successfully created";
 
   public CreateTeamController(JFrame frame) {
     super(frame);
@@ -27,7 +27,7 @@ public class CreateTeamController extends FrameController {
 
   /**
    * When the user wants to create a new team, a request to the model is sent. The user is notified
-   * about the outcome of the operation. If succesful, a new team with the given name is created.
+   * about the outcome of the operation. If successful, a new team with the given name is created.
    *
    * @param teamName is the name of the new team.
    */
@@ -37,7 +37,7 @@ public class CreateTeamController extends FrameController {
       JOptionPane.showMessageDialog(
           frame,
           SUCCESSFUL_TEAM_CREATION_MESSAGE,
-          SUCCESFUL_TEAM_CREATION_TITLE,
+          SUCCESSFUL_TEAM_CREATION_TITLE,
           JOptionPane.PLAIN_MESSAGE);
     } catch (SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
       e.printStackTrace();

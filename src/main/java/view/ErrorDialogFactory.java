@@ -120,6 +120,15 @@ public class ErrorDialogFactory {
 
   private static final String ILLEGAL_MEMBER_REMOVAL_TITLE = "Illegal member removal";
 
+  /**
+   * Messages to warn the user about attempting to delete a team, which still has assigned/supervised projects.
+   */
+  private static final String ILLEGAL_TEAM_REMOVAL_MESSAGE =
+          "The attempt to delete the team failed, \n"
+                  + "because this team still has unfinished projects.";
+
+  private static final String ILLEGAL_TEAM_REMOVAL_TITLE = "Illegal team removal";
+
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
       message = "";
@@ -166,6 +175,9 @@ public class ErrorDialogFactory {
     }
     if (exception instanceof IllegalMemberRemovalException) {
       displayIllegalMemberRemovalErrorDialog(frame, message);
+    }
+    if (exception instanceof IllegalTeamRemovalException) {
+      displayIllegalTeamRemovalErrorDialog(frame, message);
     }
   }
 
@@ -309,5 +321,13 @@ public class ErrorDialogFactory {
         ILLEGAL_MEMBER_REMOVAL_MESSAGE + "\n" + message,
         ILLEGAL_MEMBER_REMOVAL_TITLE,
         JOptionPane.ERROR_MESSAGE);
+  }
+  /** Displays an error message to warn the user that removing that team is illegal. */
+  private static void displayIllegalTeamRemovalErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+            frame,
+            ILLEGAL_TEAM_REMOVAL_MESSAGE + "\n" + message,
+            ILLEGAL_TEAM_REMOVAL_TITLE,
+            JOptionPane.ERROR_MESSAGE);
   }
 }

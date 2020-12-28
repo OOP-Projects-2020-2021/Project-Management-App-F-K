@@ -2,10 +2,6 @@ package controller.team.single_team;
 
 import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
-import model.project.Project;
-import model.project.ProjectManager;
-import model.project.queryconstants.QueryProjectDeadlineStatus;
-import model.project.queryconstants.QueryProjectStatus;
 import model.team.TeamManager;
 import model.team.exceptions.*;
 import model.user.User;
@@ -140,27 +136,4 @@ public class TeamMembersController extends TeamController implements PropertyCha
     }
   }
 
-  /**
-   * Check whether the member of the team has any unfinished projects.
-   *
-   * @param member = name of the member after which we inquire
-   * @return true if the member doesn't have any unfinished projects, otherwise false
-   * @throws InexistentUserException if there is no such member
-   * @throws SQLException if an error occurred when reading the projects from the database
-   * @throws InexistentDatabaseEntityException if the team or project with given id doesn't exist in
-   *     the database
-   */
-  private boolean hasUnfinishedProjects(String member)
-      throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
-    ProjectManager projectManager = ProjectManager.getInstance();
-    List<Project> projects =
-        projectManager.getProjectsOfTeam(
-            teamId, member, member, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
-    for (Project project : projects) {
-      if (project.getStatus() != Project.ProjectStatus.FINISHED) {
-        return false;
-      }
-    }
-    return true;
-  }
 }
