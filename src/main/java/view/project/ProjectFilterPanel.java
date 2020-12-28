@@ -146,11 +146,11 @@ public class ProjectFilterPanel extends JPanel {
     layout.setAutoCreateContainerGaps(true);
     this.setLayout(layout);
 
-    JLabel filterLabel = UIFactory.createLabel("Filter projects by:", null);
-    filterLabel.setFont(UIFactory.HIGHLIGHT_TEXT_FONT);
-    JLabel statusFilterLabel = UIFactory.createLabel(statusName + ": ", null);
-    JLabel deadlineStatusFilterLabel = UIFactory.createLabel(deadlineStatusName + ": ", null);
-    JLabel privilegeFilterLabel = UIFactory.createLabel("Type:", null);
+    JLabel filterLabel = UIFactory.createHighlightedLabel("Filter projects by:", null);
+    JLabel statusFilterLabel = UIFactory.createMediumHighlightedLabel(statusName + ": ", null);
+    JLabel deadlineStatusFilterLabel = UIFactory.createMediumHighlightedLabel(deadlineStatusName +
+            ": ", null);
+    JLabel privilegeFilterLabel = UIFactory.createMediumHighlightedLabel("Type:", null);
 
     layout.setHorizontalGroup(
             layout
@@ -160,6 +160,7 @@ public class ProjectFilterPanel extends JPanel {
                                     .createParallelGroup(GroupLayout.Alignment.LEADING)
                                     .addComponent(statusFilterLabel)
                                     .addComponent(statusFilterPanel))
+                    .addGap(90, 90, 90)
                     .addGroup(
                             layout
                                     .createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -167,6 +168,7 @@ public class ProjectFilterPanel extends JPanel {
                                     .addComponent(deadlineStatusFilterLabel)
                                     .addComponent(deadlineStatusPanel)
                                     .addComponent(listProjectsButton))
+                    .addGap(10, 10, 10)
                     .addGroup(
                             layout
                                     .createParallelGroup(GroupLayout.Alignment.LEADING)
