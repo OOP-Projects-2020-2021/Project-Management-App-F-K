@@ -19,7 +19,7 @@ public class UIFactory {
   public static final double TOP_PADDING_HEIGHT_RATIO = 0.05;
 
   public static final Font NORMAL_TEXT_FONT = new Font("Courier", Font.PLAIN, 15);
-  public static final Font HIGHLIGHT_TEXT_FONT = new Font("Courier", Font.BOLD, 15);
+  public static final Font HIGHLIGHT_TEXT_FONT = new Font("Courier", Font.BOLD, 18);
 
   public static final Dimension LABEL_DIMENSION = new Dimension(100, 50);
 

@@ -50,7 +50,7 @@ public class ProjectFilterPanel extends JPanel {
   }
 
   private void initListPorjectsButton() {
-    listProjectsButton = new JButton("List Projects");
+    listProjectsButton = UIFactory.createButton("List Projects");
     listProjectsButton.addActionListener(new ListProjectsButtonListener());
   }
 
@@ -65,8 +65,8 @@ public class ProjectFilterPanel extends JPanel {
     statusFilterPanel.setLayout(new BoxLayout(statusFilterPanel, BoxLayout.Y_AXIS));
     statusFilterList = new JList<>(Project.Status.values());
     statusFilterList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    statusFilterList.setSelectedIndex(0);
     statusFilterPanel.add(statusFilterList);
-    // todo: select sth
   }
 
   private void initPrivilegeFilter() {
@@ -136,8 +136,8 @@ public class ProjectFilterPanel extends JPanel {
     deadlineStatusPanel.setLayout(new BoxLayout(deadlineStatusPanel, BoxLayout.Y_AXIS));
     deadlineStatusFilterList = new JList<>(Project.DeadlineStatus.values());
     deadlineStatusFilterList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-    statusFilterPanel.add(deadlineStatusFilterList);
-    // todo: select sth
+    deadlineStatusFilterList.setSelectedIndex(0);
+    deadlineStatusPanel.add(deadlineStatusFilterList);
   }
 
   private void createPanelLayout() {
@@ -147,54 +147,56 @@ public class ProjectFilterPanel extends JPanel {
     this.setLayout(layout);
 
     JLabel filterLabel = UIFactory.createLabel("Filter projects by:", null);
+    filterLabel.setFont(UIFactory.HIGHLIGHT_TEXT_FONT);
     JLabel statusFilterLabel = UIFactory.createLabel(statusName + ": ", null);
     JLabel deadlineStatusFilterLabel = UIFactory.createLabel(deadlineStatusName + ": ", null);
     JLabel privilegeFilterLabel = UIFactory.createLabel("Type:", null);
 
     layout.setHorizontalGroup(
-        layout
-            .createSequentialGroup()
-            .addGroup(
-                layout
-                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(filterLabel)
-                    .addComponent(statusFilterLabel)
-                    .addComponent(statusFilterPanel)
-                    .addComponent(listProjectsButton)
-            .addGroup(
-                layout
-                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(deadlineStatusFilterLabel)
-                    .addComponent(deadlineStatusPanel))
-            .addGroup(
-                layout
-                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(privilegeFilterLabel)
-                    .addComponent(privilegeFilterButtonsPanel))));
+            layout
+                    .createSequentialGroup()
+                    .addGroup(
+                            layout
+                                    .createParallelGroup(GroupLayout.Alignment.LEADING)
+                                    .addComponent(statusFilterLabel)
+                                    .addComponent(statusFilterPanel))
+                    .addGroup(
+                            layout
+                                    .createParallelGroup(GroupLayout.Alignment.LEADING)
+                                    .addComponent(filterLabel)
+                                    .addComponent(deadlineStatusFilterLabel)
+                                    .addComponent(deadlineStatusPanel)
+                                    .addComponent(listProjectsButton))
+                    .addGroup(
+                            layout
+                                    .createParallelGroup(GroupLayout.Alignment.LEADING)
+                                    .addComponent(privilegeFilterLabel)
+                                    .addComponent(privilegeFilterButtonsPanel)));
 
     layout.setVerticalGroup(
-        layout
-            .createSequentialGroup()
-            .addComponent(filterLabel)
-            .addGroup(
-                layout
-                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
+            layout
+                    .createSequentialGroup()
+                    .addComponent(filterLabel)
+                    .addGap(10, 10, 10)
                     .addGroup(
-                        layout
-                            .createSequentialGroup()
-                            .addComponent(statusFilterLabel)
-                            .addComponent(statusFilterPanel)
-                            .addComponent(listProjectsButton)
-                    .addGroup(
-                        layout
-                            .createSequentialGroup()
-                            .addComponent(deadlineStatusFilterLabel)
-                            .addComponent(deadlineStatusPanel))
-                    .addGroup(
-                        layout
-                            .createSequentialGroup()
-                            .addComponent(privilegeFilterLabel)
-                            .addComponent(privilegeFilterButtonsPanel)))));
+                            layout
+                                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                    .addGroup(
+                                            layout
+                                                    .createSequentialGroup()
+                                                    .addComponent(statusFilterLabel)
+                                                    .addComponent(statusFilterPanel))
+                                    .addGroup(
+                                            layout
+                                                    .createSequentialGroup()
+                                                    .addComponent(deadlineStatusFilterLabel)
+                                                    .addComponent(deadlineStatusPanel)
+                                                    .addComponent(listProjectsButton))
+                                    .addGroup(
+                                            layout
+                                                    .createSequentialGroup()
+                                                    .addComponent(privilegeFilterLabel)
+                                                    .addComponent(privilegeFilterButtonsPanel))));
   }
 
   private boolean isAtLeastOnePrivilegeButtonSelected() {
