@@ -15,6 +15,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -39,15 +41,6 @@ public class ProjectFilterController implements PropertyChangeListener {
 
   public static final String ANYONE = "Anyone";
 
-  private boolean assignedToUser;
-  private boolean supervisedByUser;
-  private String assignee;
-  private String supervisor;
-
-  private List<Project.Status> projectStatuses = Arrays.asList(Project.Status.values());
-  private List<Project.DeadlineStatus> projectDeadlineStatuses =
-          Arrays.asList(Project.DeadlineStatus.values());
-
   public enum PrivilegeTypes {
     ASSIGNED_TO_ME,
     SUPERVISED_BY_ME
@@ -62,9 +55,9 @@ public class ProjectFilterController implements PropertyChangeListener {
     this.panel = panel;
 
     //todo: call filter from UI
-    assignedToUser = supervisedByUser = true;
-    assignee = supervisor = null;
-    filterProjects();
+//    assignedToUser = supervisedByUser = true;
+//    assignee = supervisor = null;
+//    filterProjects();
   }
 
   @Override
@@ -75,7 +68,7 @@ public class ProjectFilterController implements PropertyChangeListener {
             .equals(ProjectManager.ProjectChangeablePropertyName.CREATE_PROJECT.toString())
             || evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
-      filterProjects();
+      panel.applyFilter();
     } else if (enableProjectSelectionForTeam()) {
       if (evt.getPropertyName()
               .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
@@ -101,75 +94,44 @@ public class ProjectFilterController implements PropertyChangeListener {
     return teamId > 0;
   }
 
-  public void setStatusFilter(String status) {
-    statusFilter = status;
-  }
-
-  public void setPrivilegeFilter(boolean assignedToUser, boolean supervisedByUser) {
-    this.assignedToUser = assignedToUser;
-    this.supervisedByUser = supervisedByUser;
-  }
-
-  public void setAssigneeFilter(String assignee) {
-    if (assignee.equals(ANYONE)) {
-      this.assignee = null;
-    } else {
-      this.assignee = assignee;
-    }
-  }
-
-  public void setSupervisorFilter(String supervisor) {
-    if (supervisor.equals(ANYONE)) {
-      this.supervisor = null;
-    } else {
-      this.supervisor = supervisor;
-    }
-  }
-
-  public void setTurnInTimeFilter(String turnInTime) {
-    turnInTimeFilter = turnInTime;
-  }
-
-  public void filterProjects() {
-    if (enableProjectSelectionForTeam()) {
-      filterProjectsOfTeam();
-    } else {
-      filterProjectsOfUser();
-    }
-  }
-
-  private void filterProjectsOfTeam() {
+  public void filterProjectsOfTeam(List<Project.Status> selectedStatuses,
+                                    List<Project.DeadlineStatus> selectedDeadlineStatuses,
+                                    String assigneeName,
+                                    String supervisorName) {
+    assigneeName = convertAnyoneStringToNull(assigneeName);
+    supervisorName = convertAnyoneStringToNull(supervisorName);
     try {
       projectListModel.setProjectList(
               projectManager.getProjectsOfTeam(
                       teamId,
-                      supervisor,
-                      assignee,
-                      Project.Status.valueOf(statusFilter),
-                      Project.DeadlineStatus.valueOf(turnInTimeFilter)));
+                      supervisorName,
+                      assigneeName,
+                      EnumSet.copyOf(selectedStatuses),
+                      EnumSet.copyOf(selectedDeadlineStatuses)));
     } catch (SQLException | InexistentDatabaseEntityException | InexistentUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
   }
 
-  private void filterProjectsOfUser() {
+  private String convertAnyoneStringToNull(String s) {
+    if (s.equals(ANYONE)) {
+      return null;
+    }
+    return s;
+  }
+
+  public void filterProjectsOfUser(List<Project.Status> selectedStatuses,
+                                    List<Project.DeadlineStatus> selectedDeadlineStatuses,
+                                    boolean assignedToUser, boolean supervisedByUser) {
     try {
       projectListModel.setProjectList(
               projectManager.getProjects(
                       assignedToUser,
                       supervisedByUser,
-                      Project.Status.valueOf(statusFilter),
-                      Project.DeadlineStatus.valueOf(turnInTimeFilter)));
+                      EnumSet.copyOf(selectedStatuses),
+                      EnumSet.copyOf(selectedDeadlineStatuses)));
     } catch (SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
-  }
-
-  public List<String> getProjectStatusTypes() {
-    return Stream.of(projectStatuses).map(Object::toString).collect(Collectors.toList());
-  }
-
-  public List<String> getProjectDeadlineStatusTypes() {
-    return Stream.of(projectDeadlineStatuses).map(Object::toString).collect(Collectors.toList());
   }
 }
