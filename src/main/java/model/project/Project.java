@@ -49,22 +49,25 @@ public class Project {
   private int assigneeId;
   /** The id of the person who checks whether the project is properly finished. */
   private int supervisorId;
-
+  /** Status of the project. */
   private ProjectStatus status;
+  /** Turn-in date of the project, if the project is turned in or finished. Otherwise, null. */
+  private @Nullable LocalDate turnInDate;
 
+  /** Conrtuctor which sets the projects status to TO_DO. */
   public Project(
       int id, String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId) {
-    this(id, title, teamId, deadline, ProjectStatus.TO_DO, supervisorId, assigneeId);
+    this(id, title, teamId, deadline, ProjectStatus.TO_DO, supervisorId, assigneeId, null);
   }
 
   public Project(
-      int id,
-      String title,
-      int teamId,
-      LocalDate deadline,
-      ProjectStatus status,
-      int supervisorId,
-      int assigneeId) {
+          int id,
+          String title,
+          int teamId,
+          LocalDate deadline,
+          ProjectStatus status,
+          int supervisorId,
+          int assigneeId, @Nullable LocalDate turnInDate) {
     this.id = id;
     this.title = title;
     this.teamId = teamId;
@@ -72,6 +75,7 @@ public class Project {
     this.status = status;
     this.supervisorId = supervisorId;
     this.assigneeId = assigneeId;
+    this.turnInDate = turnInDate;
   }
 
   public int getId() throws InexistentDatabaseEntityException {
@@ -132,5 +136,13 @@ public class Project {
 
   public ProjectStatus getStatus() {
     return status;
+  }
+
+  public Optional<LocalDate> getTurnInDate() {
+    return Optional.ofNullable(turnInDate);
+  }
+
+  public void setTurnInDate(LocalDate turnInDate) {
+    this.turnInDate = turnInDate;
   }
 }
