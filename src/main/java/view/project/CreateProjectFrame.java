@@ -47,10 +47,10 @@ public class CreateProjectFrame extends JFrame {
 
   private static final Dimension DIMENSION = new Dimension(600, 600);
 
-  public CreateProjectFrame(JFrame parentFrame) {
+  public CreateProjectFrame(int teamId,JFrame parentFrame) {
     super("New Project");
     this.parentFrame = parentFrame;
-    controller = new CreateProjectController(this);
+    controller = new CreateProjectController(teamId,this);
     this.setMinimumSize(DIMENSION);
     this.setLayout(new BorderLayout());
     initComponents();
@@ -95,6 +95,7 @@ public class CreateProjectFrame extends JFrame {
             updateAssigneeModel(teamId);
           }
         });
+    teamComboBox.setVisible(controller.enableTeamSelection());
   }
 
   private void initAssigneeComboBox() {
@@ -137,6 +138,7 @@ public class CreateProjectFrame extends JFrame {
 
     JLabel titleLabel = UIFactory.createLabel("* Title:", null);
     JLabel teamLabel = UIFactory.createLabel("* Team:", null);
+    teamLabel.setVisible(controller.enableTeamSelection());
     JLabel deadlineLabel = UIFactory.createLabel("* Deadline:", null);
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
     JLabel assigneeLabel = UIFactory.createLabel("* Assignee:", null);
@@ -191,6 +193,7 @@ public class CreateProjectFrame extends JFrame {
                     .createParallelGroup()
                     .addComponent(assigneeLabel)
                     .addComponent(assigneeComboBox)));
+
     this.add(contentPanel, BorderLayout.CENTER);
   }
 

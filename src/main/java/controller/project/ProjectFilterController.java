@@ -50,9 +50,7 @@ public class ProjectFilterController implements PropertyChangeListener {
       if(evt.getPropertyName()
               .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
               || evt.getPropertyName()
-              .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())
-              || evt.getPropertyName()
-              .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
+              .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
         panel.updateAssigneeSupervisorFilters();
       }
     }
@@ -85,6 +83,9 @@ public class ProjectFilterController implements PropertyChangeListener {
     filterProjects();
   }
 
+  public void createNewProject() {
+
+  }
   public List<User> getTeamMembers() {
     try {
       return teamManager.getMembersOfTeam(teamId);
