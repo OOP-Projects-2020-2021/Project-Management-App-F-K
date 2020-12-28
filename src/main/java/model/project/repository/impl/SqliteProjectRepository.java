@@ -41,25 +41,29 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   // Get project based on id.
   private static final String GET_PROJECT_BY_ID =
       "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusName "
+          + "StatusName, ImportanceName "
           + "From Project p JOIN ProjectStatus st ON p"
-          + ".StatusId = st.StatusId WHERE ProjectId = ?";
+          + ".StatusId = st.StatusId "
+          + "JOIN Importance i ON i.ImportanceId = p.ImportanceId"
+          + " WHERE ProjectId = ?";
   private PreparedStatement getProjectByIdSt;
 
   // Update project bases on id.
   private static final String UPDATE_PROJECT =
       "UPDATE Project "
           + " SET Name = ?, TeamId = ?, Description = ?, Deadline = ?, AssigneeId = ?, "
-          + "SupervisorId = ?, StatusId = ?"
+          + "SupervisorId = ?, StatusId = ?, ImportanceId = ?"
           + "Where ProjectId = ?";
   private PreparedStatement updateProjectSt;
 
   // Get projects based on team and title.
   private static final String GET_PROJECT_BY_TEAM_TITLE_STATEMENT =
       "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusName "
+          + "StatusName, ImportanceName  "
           + "From Project p JOIN ProjectStatus st ON p"
-          + ".StatusId = st.StatusId WHERE Name = ? and TeamId = ? ";
+          + ".StatusId = st.StatusId "
+          + "JOIN Importance i ON i.ImportanceId = p.ImportanceId"
+          + " WHERE Name = ? and TeamId = ? ";
   private PreparedStatement getProjectByTitleTeamSt;
 
   // Delete project.
@@ -70,9 +74,10 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   // respect to deadline. The extra wildcards are responsible for making some attributes optional.
   private static final String GET_PROJECTS_OF_TEAM =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
-          + "AssigneeId, SupervisorId, StatusName From Project p "
+          + "AssigneeId, SupervisorId, StatusName, ImportanceName From Project p "
           + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
           + "JOIN Team t ON t.TeamId = p.TeamId "
+          + "JOIN Importance i ON i.ImportanceId = p.ImportanceId "
           + "WHERE t.TeamId = ? AND "
           + "(p.SupervisorId = ? OR ?) AND "
           + "(p.AssigneeId = ? OR ?) AND "
@@ -85,8 +90,9 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   // deadline. The extra wildcards are responsible for making some attributes optional.
   private static final String GET_PROJECTS =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
-          + "AssigneeId, SupervisorId, StatusName From Project p "
+          + "AssigneeId, SupervisorId, StatusName, ImportanceName From Project p "
           + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
+          + "JOIN Importance i ON i.ImportanceId = p.ImportanceId "
           + "WHERE (p.SupervisorId = ? OR ?) AND "
           + "(p.AssigneeId = ? OR ?) AND"
           + "(st.StatusName = ? OR ?) AND "
@@ -181,7 +187,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     updateProjectSt.setInt(5, project.getAssigneeId());
     updateProjectSt.setInt(6, project.getSupervisorId());
     updateProjectSt.setInt(7, getProjectStatusId(project.getStatus()));
-    updateProjectSt.setInt(8, project.getId());
+    updateProjectSt.setInt(8, getProjectImportanceId(project.getImportance()));
+    updateProjectSt.setInt(9, project.getId());
     updateProjectSt.execute();
   }
 
@@ -316,7 +323,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     int supervisorId = result.getInt("SupervisorId");
     int assigneeId = result.getInt("AssigneeId");
     Project.ProjectStatus status = Project.ProjectStatus.valueOf(result.getString("StatusName"));
-    Project project = new Project(id, title, teamId, deadline, status, supervisorId, assigneeId);
+    Project.Importance importance = Project.Importance.valueOf(result.getString("ImportanceName"));
+    Project project = new Project(id, title, teamId, deadline, status, supervisorId, assigneeId, importance);
     project.setDescription(description);
     return project;
   }
