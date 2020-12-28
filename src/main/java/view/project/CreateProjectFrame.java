@@ -6,7 +6,6 @@ import model.user.User;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
-import org.jetbrains.annotations.Nullable;
 import view.UIFactory;
 
 import javax.swing.*;

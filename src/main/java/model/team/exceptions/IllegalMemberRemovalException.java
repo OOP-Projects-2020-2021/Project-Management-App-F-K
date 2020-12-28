@@ -6,12 +6,11 @@ package model.team.exceptions;
  *
  * @author Beata Keresztes
  */
-public class IllegalMemberRemovalException extends Exception{
-    public IllegalMemberRemovalException(
-            String memberName) {
-        super(
-                "You are not allowed to remove member "
-                        + memberName
-                        + ", because he/she still has unfinished projects");
-    }
+public class IllegalMemberRemovalException extends Exception {
+  public IllegalMemberRemovalException(String memberName) {
+    super(
+        "You are not allowed to remove member "
+            + memberName
+            + ", because he/she still has unfinished projects");
+  }
 }
