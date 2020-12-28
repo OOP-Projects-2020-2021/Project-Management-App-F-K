@@ -61,13 +61,14 @@ public class Project {
   }
 
   public Project(
-          int id,
-          String title,
-          int teamId,
-          LocalDate deadline,
-          ProjectStatus status,
-          int supervisorId,
-          int assigneeId, @Nullable LocalDate turnInDate) {
+      int id,
+      String title,
+      int teamId,
+      LocalDate deadline,
+      ProjectStatus status,
+      int supervisorId,
+      int assigneeId,
+      @Nullable LocalDate turnInDate) {
     this.id = id;
     this.title = title;
     this.teamId = teamId;

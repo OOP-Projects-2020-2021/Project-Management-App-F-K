@@ -316,7 +316,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       turnInDate = LocalDate.parse(result.getString("TurnInDate"));
     }
     Project.ProjectStatus status = Project.ProjectStatus.valueOf(result.getString("StatusName"));
-    Project project = new Project(id, title, teamId, deadline, status, supervisorId, assigneeId, turnInDate);
+    Project project =
+        new Project(id, title, teamId, deadline, status, supervisorId, assigneeId, turnInDate);
     project.setDescription(description);
     return project;
   }
