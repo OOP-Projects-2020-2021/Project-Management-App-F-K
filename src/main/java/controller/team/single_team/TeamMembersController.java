@@ -104,7 +104,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
             JOptionPane.YES_NO_OPTION);
     if (choice == JOptionPane.YES_OPTION) {
       try {
-        if(hasUnfinishedProjects(name)) {
+        if (hasUnfinishedProjects(name)) {
           throw new IllegalMemberRemovalException(name);
         }
         teamManager.removeTeamMember(teamId, name);
@@ -113,10 +113,12 @@ public class TeamMembersController extends TeamController implements PropertyCha
           | SQLException databaseException) {
         ErrorDialogFactory.createErrorDialog(
             databaseException, frame, "The member \"" + name + "\" could not be removed.");
-      } catch(IllegalMemberRemovalException illegalMemberRemovalException) {
+      } catch (IllegalMemberRemovalException illegalMemberRemovalException) {
         ErrorDialogFactory.createErrorDialog(
-                illegalMemberRemovalException, frame, "The user \"" + name + "\" cannot be removed from this team.");
-      } catch(UnauthorisedOperationException | NoSignedInUserException accessDeniedException) {
+            illegalMemberRemovalException,
+            frame,
+            "The user \"" + name + "\" cannot be removed from this team.");
+      } catch (UnauthorisedOperationException | NoSignedInUserException accessDeniedException) {
         ErrorDialogFactory.createErrorDialog(
             accessDeniedException, frame, "You are not allowed to remove a member from this team.");
       } catch (UnregisteredMemberRemovalException unregisteredMemberRemovalException) {
@@ -140,17 +142,22 @@ public class TeamMembersController extends TeamController implements PropertyCha
 
   /**
    * Check whether the member of the team has any unfinished projects.
+   *
    * @param member = name of the member after which we inquire
    * @return true if the member doesn't have any unfinished projects, otherwise false
    * @throws InexistentUserException if there is no such member
    * @throws SQLException if an error occurred when reading the projects from the database
-   * @throws InexistentDatabaseEntityException if the team or project with given id doesn't exist in the database
+   * @throws InexistentDatabaseEntityException if the team or project with given id doesn't exist in
+   *     the database
    */
-  private boolean hasUnfinishedProjects(String member) throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
+  private boolean hasUnfinishedProjects(String member)
+      throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
     ProjectManager projectManager = ProjectManager.getInstance();
-    List<Project> projects = projectManager.getProjectsOfTeam(teamId,member,member, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
-    for(Project project:projects) {
-      if(project.getStatus() != Project.ProjectStatus.FINISHED) {
+    List<Project> projects =
+        projectManager.getProjectsOfTeam(
+            teamId, member, member, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
+    for (Project project : projects) {
+      if (project.getStatus() != Project.ProjectStatus.FINISHED) {
         return false;
       }
     }

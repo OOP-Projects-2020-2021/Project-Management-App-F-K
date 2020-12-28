@@ -136,7 +136,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public void leaveTeam() {
     try {
       if (confirmLeavingTeam() == JOptionPane.YES_OPTION) {
-        if(hasUnfinishedProjects()) {
+        if (hasUnfinishedProjects()) {
           throw new IllegalMemberRemovalException(userManager.getCurrentUser().get().getUsername());
         }
         teamManager.leaveTeam(teamId);
@@ -161,27 +161,36 @@ public class TeamSettingsController extends TeamController implements PropertyCh
           frame,
           "You cannot leave the team, because you are the manager.");
     } catch (IllegalMemberRemovalException illegalMemberRemovalException) {
-      ErrorDialogFactory.createErrorDialog(illegalMemberRemovalException,frame,"You are not allowed to leave the team,\n" +
-              "because you have unfinished projects left.");
+      ErrorDialogFactory.createErrorDialog(
+          illegalMemberRemovalException,
+          frame,
+          "You are not allowed to leave the team,\n"
+              + "because you have unfinished projects left.");
     }
   }
   /**
    * Check whether the current user has any unfinished projects.
+   *
    * @return true if the member doesn't have any unfinished projects, otherwise false
    * @throws NoSignedInUserException if there is no user signed in
    * @throws SQLException if an error occurred when reading the projects from the database
-   * @throws InexistentDatabaseEntityException if the team or project with given id doesn't exist in the database
+   * @throws InexistentDatabaseEntityException if the team or project with given id doesn't exist in
+   *     the database
    */
-  private boolean hasUnfinishedProjects() throws NoSignedInUserException, SQLException, InexistentDatabaseEntityException {
+  private boolean hasUnfinishedProjects()
+      throws NoSignedInUserException, SQLException, InexistentDatabaseEntityException {
     ProjectManager projectManager = ProjectManager.getInstance();
-    List<Project> projects = projectManager.getProjects(true,true, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
-    for(Project project:projects) {
-      if(project.getStatus() != Project.ProjectStatus.FINISHED) {
+    List<Project> projects =
+        projectManager.getProjects(
+            true, true, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
+    for (Project project : projects) {
+      if (project.getStatus() != Project.ProjectStatus.FINISHED) {
         return false;
       }
     }
     return true;
   }
+
   public void saveTeamName(String name) {
     try {
       teamManager.setNewName(teamId, name);
