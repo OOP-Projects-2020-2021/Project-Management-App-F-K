@@ -9,11 +9,13 @@ import org.jdatepicker.impl.UtilDateModel;
 import view.UIFactory;
 
 import javax.swing.*;
-import javax.swing.text.DefaultFormatter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.Objects;
 import java.util.Properties;
 import java.util.List;
@@ -86,13 +88,35 @@ public class ProjectDetailsPanel extends JPanel {
     properties.put("text.month", "Month");
     properties.put("text.year", "Year");
     datePanel = new JDatePanelImpl(dateModel, properties);
-    deadlineDatePicker = new JDatePickerImpl(datePanel, new DefaultFormatter());
+    deadlineDatePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+  }
+
+  public static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
+
+    private String datePattern = "yyyy-MM-dd";
+    private SimpleDateFormat dateFormatter = new SimpleDateFormat(datePattern);
+
+    @Override
+    public Object stringToValue(String text) throws ParseException {
+      return dateFormatter.parseObject(text);
+    }
+
+    @Override
+    public String valueToString(Object value) throws ParseException {
+      if (value != null) {
+        Calendar cal = (Calendar) value;
+        return dateFormatter.format(cal.getTime());
+      }
+
+      return "";
+    }
   }
 
   private void setDeadlineDate() {
     dateModel.setDate(
         controller.getProjectDeadline().getYear(),
-        controller.getProjectDeadline().getMonthValue(),
+        controller.getProjectDeadline().getMonthValue() - 1, // deadlineDatePicker counts from 0,
+        // but LocalDate from 1
         controller.getProjectDeadline().getDayOfMonth());
     dateModel.setSelected(true);
   }
@@ -236,7 +260,7 @@ public class ProjectDetailsPanel extends JPanel {
                         contentLayout
                             .createParallelGroup()
                             .addComponent(titleTextField)
-                            .addComponent(datePanel)
+                            .addComponent(deadlineDatePicker)
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox)
                             .addComponent(supervisorComboBox)
@@ -255,7 +279,7 @@ public class ProjectDetailsPanel extends JPanel {
                 contentLayout
                     .createParallelGroup()
                     .addComponent(deadlineLabel)
-                    .addComponent(datePanel))
+                    .addComponent(deadlineDatePicker))
             .addGroup(
                 contentLayout
                     .createParallelGroup()
@@ -356,7 +380,8 @@ public class ProjectDetailsPanel extends JPanel {
         LocalDate selectedDate =
             LocalDate.of(
                 deadlineDatePicker.getModel().getYear(),
-                deadlineDatePicker.getModel().getMonth(),
+                deadlineDatePicker.getModel().getMonth() + 1, // deadlineDatePicker counts from 0,
+                // but LocalDate from 1
                 deadlineDatePicker.getModel().getDay());
         String description = descriptionTextArea.getText();
         controller.saveProject(title, assignee, supervisor, selectedDate, description);
