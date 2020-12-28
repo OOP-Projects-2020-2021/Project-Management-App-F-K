@@ -31,7 +31,11 @@ public class Project {
    */
   public static class SavableProject extends Project {
     public SavableProject(
-        String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId,
+        String title,
+        int teamId,
+        LocalDate deadline,
+        int supervisorId,
+        int assigneeId,
         Importance importance) {
       super(-1, title, teamId, deadline, supervisorId, assigneeId, importance);
     }
@@ -62,7 +66,12 @@ public class Project {
   private Importance importance;
 
   public Project(
-      int id, String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId,
+      int id,
+      String title,
+      int teamId,
+      LocalDate deadline,
+      int supervisorId,
+      int assigneeId,
       Importance importance) {
     this(id, title, teamId, deadline, ProjectStatus.TO_DO, supervisorId, assigneeId, importance);
   }
