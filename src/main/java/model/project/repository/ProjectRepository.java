@@ -73,23 +73,23 @@ public interface ProjectRepository {
    * queryDeadlineStatus.
    *
    * @param teamId is the id of the team whose projects are returned.
-   * @param allowedStatuses is the set of the statuses allwoed for the returned projects.
-   *                        Projects with any other status will be discarded.
+   * @param allowedStatuses is the set of the statuses allwoed for the returned projects. Projects
+   *     with any other status will be discarded.
    * @param assigneeId is an optional parameter. If it is null, it doesn't count. Othwerise, only
    *     those projects are returned, which are assigned to the user with id assigneeId.
    * @param supervisorId is an optional parameter. If it is null, it doesn't count. Othwerise, only
    *     those projects are returned, which are supervised by the user with id supervisorId.
    * @param allowedDeadlineStatuses is the set of deadline statuses which are allowed in the query
-   *                              result.
+   *     result.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    */
   List<Project> getProjectsOfTeam(
-          int teamId,
-          EnumSet<Project.Status> allowedStatuses,
-          Integer assigneeId,
-          Integer supervisorId,
-          EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
+      int teamId,
+      EnumSet<Project.Status> allowedStatuses,
+      Integer assigneeId,
+      Integer supervisorId,
+      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
       throws SQLException;
 
   /**
@@ -99,14 +99,14 @@ public interface ProjectRepository {
    * queryStatus (possibly ALL), and a status with respect to the deadline specified by
    * queryDeadlineStatus.
    *
-   * @param allowedStatuses is the set of the statuses allwoed for the returned projects.
-   *                        Projects with any other status will be discarded.
+   * @param allowedStatuses is the set of the statuses allwoed for the returned projects. Projects
+   *     with any other status will be discarded.
    * @param assigneeId is an optional parameter. If it is null, it doesn't count. Othwerise, only
    *     those projects are returned, which are assigned to the user with id assigneeId.
    * @param supervisorId is an optional parameter. If it is null, it doesn't count. Othwerise, only
    *     those projects are returned, which are supervised by the user with id supervisorId.
    * @param allowedDeadlineStatuses is the set of deadline statuses which are allowed in the query
-   *                              result.
+   *     result.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    */

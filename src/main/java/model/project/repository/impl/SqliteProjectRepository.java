@@ -74,14 +74,14 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + "WHERE p.TeamId = ? AND "
           + "(p.SupervisorId = ? OR ?) AND "
           + "(p.AssigneeId = ? OR ?) AND "
-          + "((st.StatusName = 'TO_DO' AND ?) OR" //TO_DO allowed
-          + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" //IN_PROGRESS allowed
-          + " (st.StatusName = 'TURNED_IN' AND ?) OR" //TURNED_IN allowed
-          + " (st.StatusName = 'FINISHED' AND ?)) AND " //FINISHED allowed
-          + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " //IN_TIME_TO_FINISH
-          + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" //OVERDUE
-          + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" //FINISHED_IN_TIME
-          + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))"; //FINISHED_LATE
+          + "((st.StatusName = 'TO_DO' AND ?) OR" // TO_DO allowed
+          + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" // IN_PROGRESS allowed
+          + " (st.StatusName = 'TURNED_IN' AND ?) OR" // TURNED_IN allowed
+          + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
+          + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
+          + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
+          + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
+          + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))"; // FINISHED_LATE
   private PreparedStatement getProjectsOfTeamSt;
 
   // Get projects possibly with a given assignee, supervisor, status and status with respect to
@@ -92,14 +92,14 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
           + "WHERE (p.SupervisorId = ? OR ?) AND "
           + "(p.AssigneeId = ? OR ?) AND"
-          + "((st.StatusName = 'TO_DO' AND ?) OR" //TO_DO allowed
-          + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" //IN_PROGRESS allowed
-          + " (st.StatusName = 'TURNED_IN' AND ?) OR" //TURNED_IN allowed
-          + " (st.StatusName = 'FINISHED' AND ?)) AND " //FINISHED allowed
-          + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " //IN_TIME_TO_FINISH
-          + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" //OVERDUE
-          + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" //FINISHED_IN_TIME
-          + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))"; //FINISHED_LATE
+          + "((st.StatusName = 'TO_DO' AND ?) OR" // TO_DO allowed
+          + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" // IN_PROGRESS allowed
+          + " (st.StatusName = 'TURNED_IN' AND ?) OR" // TURNED_IN allowed
+          + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
+          + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
+          + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
+          + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
+          + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))"; // FINISHED_LATE
   private PreparedStatement getProjectsSt;
 
   // Get status id
@@ -231,14 +231,14 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     getProjectsOfTeamSt.setBoolean(7, allowedStatuses.contains(Project.Status.IN_PROGRESS));
     getProjectsOfTeamSt.setBoolean(8, allowedStatuses.contains(Project.Status.TURNED_IN));
     getProjectsOfTeamSt.setBoolean(9, allowedStatuses.contains(Project.Status.FINISHED));
-    getProjectsOfTeamSt.setBoolean(10,
-            allowedDeadlineStatuses.contains(Project.DeadlineStatus.IN_TIME_TO_FINISH));
-    getProjectsOfTeamSt.setBoolean(11,
-            allowedDeadlineStatuses.contains(Project.DeadlineStatus.OVERDUE));
-    getProjectsOfTeamSt.setBoolean(12,
-            allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_IN_TIME));
-    getProjectsOfTeamSt.setBoolean(13,
-            allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_LATE));
+    getProjectsOfTeamSt.setBoolean(
+        10, allowedDeadlineStatuses.contains(Project.DeadlineStatus.IN_TIME_TO_FINISH));
+    getProjectsOfTeamSt.setBoolean(
+        11, allowedDeadlineStatuses.contains(Project.DeadlineStatus.OVERDUE));
+    getProjectsOfTeamSt.setBoolean(
+        12, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_IN_TIME));
+    getProjectsOfTeamSt.setBoolean(
+        13, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_LATE));
     ResultSet result = getProjectsOfTeamSt.executeQuery();
     ArrayList<Project> projectsOfTeam = new ArrayList<>();
     while (result.next()) {
@@ -274,14 +274,13 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     getProjectsSt.setBoolean(6, allowedStatuses.contains(Project.Status.IN_PROGRESS));
     getProjectsSt.setBoolean(7, allowedStatuses.contains(Project.Status.TURNED_IN));
     getProjectsSt.setBoolean(8, allowedStatuses.contains(Project.Status.FINISHED));
-    getProjectsSt.setBoolean(9,
-            allowedDeadlineStatuses.contains(Project.DeadlineStatus.IN_TIME_TO_FINISH));
-    getProjectsSt.setBoolean(10,
-            allowedDeadlineStatuses.contains(Project.DeadlineStatus.OVERDUE));
-    getProjectsSt.setBoolean(11,
-            allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_IN_TIME));
-    getProjectsSt.setBoolean(12,
-            allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_LATE));
+    getProjectsSt.setBoolean(
+        9, allowedDeadlineStatuses.contains(Project.DeadlineStatus.IN_TIME_TO_FINISH));
+    getProjectsSt.setBoolean(10, allowedDeadlineStatuses.contains(Project.DeadlineStatus.OVERDUE));
+    getProjectsSt.setBoolean(
+        11, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_IN_TIME));
+    getProjectsSt.setBoolean(
+        12, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_LATE));
     ResultSet result = getProjectsSt.executeQuery();
     ArrayList<Project> projects = new ArrayList<>();
     while (result.next()) {

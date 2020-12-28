@@ -162,8 +162,11 @@ public class ProjectManager extends Manager {
       throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
     List<Project> projectsOfTeam =
         getProjectsOfTeam(
-            teamId, null, null, EnumSet.allOf(Project.Status.class),
-                EnumSet.allOf(Project.DeadlineStatus.class));
+            teamId,
+            null,
+            null,
+            EnumSet.allOf(Project.Status.class),
+            EnumSet.allOf(Project.DeadlineStatus.class));
     for (Project project : projectsOfTeam) {
       commentRepository.deleteAllCommentsOfProject(project.getId());
       projectRepository.deleteProject(project.getId());
@@ -221,8 +224,7 @@ public class ProjectManager extends Manager {
             "they are not the assignee");
       }
     } else {
-      throw new IllegalProjectStatusChangeException(
-          project.getStatus(), Project.Status.TO_DO);
+      throw new IllegalProjectStatusChangeException(project.getStatus(), Project.Status.TO_DO);
     }
   }
 
@@ -256,8 +258,7 @@ public class ProjectManager extends Manager {
             currentUser.getId(), "turn in project", "they " + "are not the assignee");
       }
     } else {
-      throw new IllegalProjectStatusChangeException(
-          project.getStatus(), Project.Status.TURNED_IN);
+      throw new IllegalProjectStatusChangeException(project.getStatus(), Project.Status.TURNED_IN);
     }
   }
 
@@ -283,8 +284,7 @@ public class ProjectManager extends Manager {
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.Status.TURNED_IN) {
       if (userIsAssignee(currentUser, project)) {
-        if (newStatus == Project.Status.TO_DO
-            || newStatus == Project.Status.IN_PROGRESS) {
+        if (newStatus == Project.Status.TO_DO || newStatus == Project.Status.IN_PROGRESS) {
           project.setStatus(newStatus);
           project.setTurnInDate(null);
           projectRepository.updateProject(project);
@@ -327,8 +327,7 @@ public class ProjectManager extends Manager {
             currentUser.getId(), "accept as finished", "they" + " are not the supervisor");
       }
     } else {
-      throw new IllegalProjectStatusChangeException(
-          project.getStatus(), Project.Status.FINISHED);
+      throw new IllegalProjectStatusChangeException(project.getStatus(), Project.Status.FINISHED);
     }
   }
 
@@ -354,8 +353,7 @@ public class ProjectManager extends Manager {
     User currentUser = getMandatoryCurrentUser();
     if (project.getStatus() == Project.Status.TURNED_IN) {
       if (userIsSupervisor(currentUser, project)) {
-        if (newStatus != Project.Status.FINISHED
-            && newStatus != Project.Status.TURNED_IN) {
+        if (newStatus != Project.Status.FINISHED && newStatus != Project.Status.TURNED_IN) {
           project.setStatus(newStatus);
           project.setTurnInDate(null);
           projectRepository.updateProject(project);
@@ -384,7 +382,7 @@ public class ProjectManager extends Manager {
    * @param supervisedByCurrentUser shows whether the returned projects should be supervised by the
    *     current user (true) or supervised by anyone (false).
    * @param allowedDeadlineStatuses is the set of deadline statuses which are allowed for the
-   *                                returned projects.
+   *     returned projects.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    * @throws InexistentDatabaseEntityException should never occur.
@@ -423,7 +421,7 @@ public class ProjectManager extends Manager {
    * @param supervisorName is an optional parameter. If it is null, it doesn't count. Othwerise,
    *     only those projects are returned, which are supervised by the user with id supervisorName.
    * @param allowedDeadlineStatuses is the set of deadline statuses which are allowed for the
-   *                                returned projects.
+   *     returned projects.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    * @throws InexistentDatabaseEntityException should never occur.
@@ -431,11 +429,11 @@ public class ProjectManager extends Manager {
    *     in the database.
    */
   public List<Project> getProjectsOfTeam(
-          int teamId,
-          String supervisorName,
-          String assigneeName,
-          EnumSet<Project.Status> allowedStatuses,
-          EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
+      int teamId,
+      String supervisorName,
+      String assigneeName,
+      EnumSet<Project.Status> allowedStatuses,
+      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
       throws InexistentDatabaseEntityException, SQLException, InexistentUserException {
     Integer assigneeId = null;
     if (assigneeName != null) {
