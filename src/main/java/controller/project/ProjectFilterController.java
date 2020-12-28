@@ -47,9 +47,9 @@ public class ProjectFilterController implements PropertyChangeListener {
             .equals(ProjectManager.ProjectChangeablePropertyName.DELETE_PROJECT.toString())) {
       filterProjects();
     } else if (evt.getPropertyName()
-              .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
-          || evt.getPropertyName()
-              .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
+            .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
+        || evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
       if (isViewedFromTeam()) {
         panel.updateAssigneeSupervisorFilters();
       }

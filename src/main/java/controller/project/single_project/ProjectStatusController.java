@@ -145,7 +145,7 @@ public class ProjectStatusController extends ProjectController implements Proper
               JOptionPane.YES_NO_OPTION);
       if (answer == JOptionPane.YES_OPTION) {
         projectManager.acceptAsFinished(getProject().getId());
-      } else if(answer == JOptionPane.NO_OPTION){
+      } else if (answer == JOptionPane.NO_OPTION) {
         Project.ProjectStatus[] possibleAnswers = new Project.ProjectStatus[] {TO_DO, IN_PROGRESS};
         int answerIndex =
             JOptionPane.showOptionDialog(
@@ -208,7 +208,7 @@ public class ProjectStatusController extends ProjectController implements Proper
             result.add(ProjectStatusButtonsPanel.ButtonType.UNDO_TURN_IN);
         }
       }
-      if(project.getStatus() == TO_DO) {
+      if (project.getStatus() == TO_DO) {
         result.add(ProjectStatusButtonsPanel.ButtonType.MARK_PROGRESS);
       }
     } catch (InexistentDatabaseEntityException | NoSignedInUserException e) {

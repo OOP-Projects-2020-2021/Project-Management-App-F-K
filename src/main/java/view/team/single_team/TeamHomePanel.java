@@ -201,7 +201,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
       controller.saveTeamManager((String) teamManagerModel.getSelectedItem());
     } else if (source == regenerateCodeButton) {
       controller.regenerateTeamCode();
-    } else if(source == deleteTeamButton) {
+    } else if (source == deleteTeamButton) {
       controller.deleteTeam();
     }
   }

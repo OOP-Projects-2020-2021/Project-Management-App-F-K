@@ -180,7 +180,7 @@ public class ProjectManager extends Manager {
     commentRepository.deleteAllCommentsOfProject(projectId);
     projectRepository.deleteProject(projectId);
     support.firePropertyChange(
-            ProjectChangeablePropertyName.DELETE_PROJECT.toString(), OLD_VALUE, NEW_VALUE);
+        ProjectChangeablePropertyName.DELETE_PROJECT.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**

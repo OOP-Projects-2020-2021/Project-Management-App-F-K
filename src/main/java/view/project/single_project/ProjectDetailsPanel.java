@@ -53,7 +53,7 @@ public class ProjectDetailsPanel extends JPanel {
   private ProjectDetailsController controller;
 
   public ProjectDetailsPanel(JFrame frame, Project project) {
-    controller = new ProjectDetailsController(frame,project, this);
+    controller = new ProjectDetailsController(frame, project, this);
     this.setLayout(new BorderLayout());
     statusButtonsPanel = new ProjectStatusButtonsPanel(frame, project);
     initDetailsPanel();

@@ -51,7 +51,9 @@ public class CreateProjectController extends FrameController {
   }
 
   /**
-   * Enables the user to select the team of the new project from the list of teams he/she is a member of.
+   * Enables the user to select the team of the new project from the list of teams he/she is a
+   * member of.
+   *
    * @return true if the id of a team is not specified
    */
   public boolean enableTeamSelection() {

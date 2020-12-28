@@ -5,7 +5,6 @@ import model.UnauthorisedOperationException;
 import model.project.Project;
 import model.project.ProjectManager;
 import model.project.exceptions.DuplicateProjectNameException;
-import model.project.exceptions.IllegalProjectStatusChangeException;
 import model.project.exceptions.InexistentProjectException;
 import model.team.TeamManager;
 import model.team.exceptions.UnregisteredMemberRoleException;
@@ -38,15 +37,18 @@ public class ProjectDetailsController extends ProjectController implements Prope
   private ProjectDetailsPanel panel;
 
   /** Messages to confirm with the user the deletion of the project. */
-  private static final String CONFIRM_DELETION_MESSAGE = "Are you sure you want to delete this project?\n" +
-          "All data related to this project will be lost.";
+  private static final String CONFIRM_DELETION_MESSAGE =
+      "Are you sure you want to delete this project?\n"
+          + "All data related to this project will be lost.";
+
   private static final String CONFIRM_DELETION_TITLE = "Deleting project";
   /** Messages to inform the user that the project was updated successfully. */
   private static final String SUCCESSFUL_UPDATE_TITLE = "Project saved";
+
   private static final String SUCCESSFUL_UPDATE_MESSAGE = "The project was updated successfully";
 
-  public ProjectDetailsController(JFrame frame,Project project, ProjectDetailsPanel panel) {
-    super(frame,project);
+  public ProjectDetailsController(JFrame frame, Project project, ProjectDetailsPanel panel) {
+    super(frame, project);
     teamManager = TeamManager.getInstance();
     userManager = UserManager.getInstance();
     projectManager = ProjectManager.getInstance();
@@ -60,13 +62,12 @@ public class ProjectDetailsController extends ProjectController implements Prope
         .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())) {
       setProject();
       panel.updatePanel();
-    }
-    else if (evt.getPropertyName()
+    } else if (evt.getPropertyName()
         .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       setProject();
       panel.updateStatusLabel();
-    } else if(evt.getPropertyName()
-            .equals(ProjectManager.ProjectChangeablePropertyName.DELETE_PROJECT.toString())) {
+    } else if (evt.getPropertyName()
+        .equals(ProjectManager.ProjectChangeablePropertyName.DELETE_PROJECT.toString())) {
       closeFrame();
     }
   }
@@ -156,19 +157,26 @@ public class ProjectDetailsController extends ProjectController implements Prope
   /** Displays a message to inform the user that the project was updated successfully. */
   private void displaySuccessfulSaveMessage() {
     JOptionPane.showMessageDialog(
-        null,
-        SUCCESSFUL_UPDATE_MESSAGE,
-        SUCCESSFUL_UPDATE_TITLE,
-        JOptionPane.INFORMATION_MESSAGE);
+        null, SUCCESSFUL_UPDATE_MESSAGE, SUCCESSFUL_UPDATE_TITLE, JOptionPane.INFORMATION_MESSAGE);
   }
 
   public void deleteProject() {
     try {
-      int option = JOptionPane.showConfirmDialog(null,CONFIRM_DELETION_MESSAGE,CONFIRM_DELETION_TITLE,JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
-      if(option == JOptionPane.YES_OPTION) {
+      int option =
+          JOptionPane.showConfirmDialog(
+              null,
+              CONFIRM_DELETION_MESSAGE,
+              CONFIRM_DELETION_TITLE,
+              JOptionPane.YES_NO_OPTION,
+              JOptionPane.WARNING_MESSAGE);
+      if (option == JOptionPane.YES_OPTION) {
         projectManager.deleteProject(project.getId());
       }
-    } catch (InexistentProjectException | SQLException | NoSignedInUserException | InexistentDatabaseEntityException | UnauthorisedOperationException e) {
+    } catch (InexistentProjectException
+        | SQLException
+        | NoSignedInUserException
+        | InexistentDatabaseEntityException
+        | UnauthorisedOperationException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
   }
