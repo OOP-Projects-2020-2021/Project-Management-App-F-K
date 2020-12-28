@@ -14,13 +14,11 @@ import java.util.List;
 /**
  * The ProjectsFilterPanel contains the filters that can be applied to listing the projects,
  * including the status of the project, the due time for finishing the project, and whether it is a
- * project assigned to/supervised by the current user/a member.
- * For status and due time for finishing the project multiple selection is allowed. At least one
- * option must be selected.
- * If the filter is applyed to projects of a user, then at least one of "assigned to
- * me"/"supervised by me" options must be selected.
- * If the filter is applied to projects of a team, then the option "assigned to anyone" and
- * "supervised by anyone" is provided.
+ * project assigned to/supervised by the current user/a member. For status and due time for
+ * finishing the project multiple selection is allowed. At least one option must be selected. If the
+ * filter is applyed to projects of a user, then at least one of "assigned to me"/"supervised by me"
+ * options must be selected. If the filter is applied to projects of a team, then the option
+ * "assigned to anyone" and "supervised by anyone" is provided.
  *
  * @author Beata Keresztes, Bori Fazakas
  */
