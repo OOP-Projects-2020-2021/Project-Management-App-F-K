@@ -47,10 +47,10 @@ public class CreateProjectFrame extends JFrame {
 
   private static final Dimension DIMENSION = new Dimension(600, 600);
 
-  public CreateProjectFrame(int teamId,JFrame parentFrame) {
+  public CreateProjectFrame(int teamId, JFrame parentFrame) {
     super("New Project");
     this.parentFrame = parentFrame;
-    controller = new CreateProjectController(teamId,this);
+    controller = new CreateProjectController(teamId, this);
     this.setMinimumSize(DIMENSION);
     this.setLayout(new BorderLayout());
     initComponents();

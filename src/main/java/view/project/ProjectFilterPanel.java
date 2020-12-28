@@ -80,13 +80,13 @@ public class ProjectFilterPanel extends JPanel {
 
   private void initPrivilegeFilterUser() {
     privilegeFilterButtonsPanel.setLayout(
-            new BoxLayout(privilegeFilterButtonsPanel, BoxLayout.Y_AXIS));
+        new BoxLayout(privilegeFilterButtonsPanel, BoxLayout.Y_AXIS));
     // both the assigned and supervised projects are listed in the beginning, so both buttons can be
     // selected at a time
     assignedToUserButton =
-            new JRadioButton(ProjectFilterController.PrivilegeTypes.ASSIGNED_TO_ME.toString());
+        new JRadioButton(ProjectFilterController.PrivilegeTypes.ASSIGNED_TO_ME.toString());
     supervisedByUserButton =
-            new JRadioButton(ProjectFilterController.PrivilegeTypes.SUPERVISED_BY_ME.toString());
+        new JRadioButton(ProjectFilterController.PrivilegeTypes.SUPERVISED_BY_ME.toString());
     assignedToUserButton.addActionListener(new PrivilegeFilterButtonListener());
     supervisedByUserButton.addActionListener(new PrivilegeFilterButtonListener());
     // initially all projects are shown

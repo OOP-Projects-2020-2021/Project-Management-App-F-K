@@ -37,7 +37,7 @@ public class CreateProjectController extends FrameController {
 
   private static final String PROJECT_SAVED_MESSAGE = "The project was successfully saved.";
 
-  public CreateProjectController(int teamId,JFrame frame) {
+  public CreateProjectController(int teamId, JFrame frame) {
     super(frame);
     this.teamId = teamId;
     teamManager = TeamManager.getInstance();
@@ -50,8 +50,9 @@ public class CreateProjectController extends FrameController {
   }
 
   public boolean enableTeamSelection() {
-    return teamId<0;
+    return teamId < 0;
   }
+
   public List<Team> getTeamsOfUser() {
     try {
       return teamManager.getTeamsOfCurrentUser();

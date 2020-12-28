@@ -4,10 +4,8 @@ import model.InexistentDatabaseEntityException;
 import model.project.ProjectManager;
 import model.project.queryconstants.QueryProjectDeadlineStatus;
 import model.project.queryconstants.QueryProjectStatus;
-import model.team.Team;
 import model.team.TeamManager;
 import model.user.User;
-import model.user.UserManager;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
 import view.ErrorDialogFactory;
@@ -46,10 +44,10 @@ public class ProjectFilterController implements PropertyChangeListener {
         || evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       filterProjects();
-    } else if(enableProjectSelectionForTeam()) {
-      if(evt.getPropertyName()
+    } else if (enableProjectSelectionForTeam()) {
+      if (evt.getPropertyName()
               .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
-              || evt.getPropertyName()
+          || evt.getPropertyName()
               .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
         panel.updateAssigneeSupervisorFilters();
       }
@@ -60,6 +58,7 @@ public class ProjectFilterController implements PropertyChangeListener {
     ASSIGNED_TO_ME,
     SUPERVISED_BY_ME
   }
+
   public static final String ANYONE = "Anyone";
 
   private String statusFilter;
@@ -69,7 +68,7 @@ public class ProjectFilterController implements PropertyChangeListener {
   private String assignee;
   private String supervisor;
 
-  public ProjectFilterController(int teamId,ProjectFilterPanel panel) {
+  public ProjectFilterController(int teamId, ProjectFilterPanel panel) {
     this.teamId = teamId;
     projectManager = ProjectManager.getInstance();
     projectManager.addPropertyChangeListener(this);
@@ -83,9 +82,8 @@ public class ProjectFilterController implements PropertyChangeListener {
     filterProjects();
   }
 
-  public void createNewProject() {
+  public void createNewProject() {}
 
-  }
   public List<User> getTeamMembers() {
     try {
       return teamManager.getMembersOfTeam(teamId);
@@ -98,22 +96,26 @@ public class ProjectFilterController implements PropertyChangeListener {
   public boolean enableProjectSelectionForTeam() {
     return teamId > 0;
   }
+
   public void setStatusFilter(String status) {
     statusFilter = status;
   }
+
   public void setPrivilegeFilter(boolean assignedToUser, boolean supervisedByUser) {
     this.assignedToUser = assignedToUser;
     this.supervisedByUser = supervisedByUser;
   }
+
   public void setAssigneeFilter(String assignee) {
-    if(assignee.equals(ANYONE)) {
+    if (assignee.equals(ANYONE)) {
       this.assignee = null;
     } else {
       this.assignee = assignee;
     }
   }
+
   public void setSupervisorFilter(String supervisor) {
-    if(supervisor.equals(ANYONE)) {
+    if (supervisor.equals(ANYONE)) {
       this.supervisor = null;
     } else {
       this.supervisor = supervisor;
