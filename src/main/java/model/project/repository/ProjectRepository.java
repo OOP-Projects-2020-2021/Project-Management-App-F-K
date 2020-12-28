@@ -74,8 +74,8 @@ public interface ProjectRepository {
    * queryDeadlineStatus.
    *
    * @param teamId is the id of the team whose projects are returned.
-   * @param queryStatus is an optional parameter. If it is ALL, it doesn't count. Othwerise, only
-   *     those projects are returned, which have the status corresponding to queryStatus.
+   * @param allowedStatuses is the set of the statuses allwoed for the returned projects.
+   *                        Projects with any other status will be discarded.
    * @param assigneeId is an optional parameter. If it is null, it doesn't count. Othwerise, only
    *     those projects are returned, which are assigned to the user with id assigneeId.
    * @param supervisorId is an optional parameter. If it is null, it doesn't count. Othwerise, only
@@ -87,7 +87,7 @@ public interface ProjectRepository {
    */
   List<Project> getProjectsOfTeam(
           int teamId,
-          QueryProjectStatus queryStatus,
+          EnumSet<Project.Status> allowedStatuses,
           Integer assigneeId,
           Integer supervisorId,
           EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
@@ -100,8 +100,8 @@ public interface ProjectRepository {
    * queryStatus (possibly ALL), and a status with respect to the deadline specified by
    * queryDeadlineStatus.
    *
-   * @param queryStatus is an optional parameter. If it is ALL, it doesn't count. Othwerise, only
-   *     those projects are returned, which have the status corresponding to queryStatus.
+   * @param allowedStatuses is the set of the statuses allwoed for the returned projects.
+   *                        Projects with any other status will be discarded.
    * @param assigneeId is an optional parameter. If it is null, it doesn't count. Othwerise, only
    *     those projects are returned, which are assigned to the user with id assigneeId.
    * @param supervisorId is an optional parameter. If it is null, it doesn't count. Othwerise, only
@@ -112,7 +112,7 @@ public interface ProjectRepository {
    * @throws SQLException if the operations could not be performed in the database.
    */
   List<Project> getProjects(
-      QueryProjectStatus queryStatus,
+      EnumSet<Project.Status> allowedStatuses,
       Integer assigneeId,
       Integer supervisorId,
       EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)

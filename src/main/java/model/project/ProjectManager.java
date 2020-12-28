@@ -163,7 +163,7 @@ public class ProjectManager extends Manager {
       throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
     List<Project> projectsOfTeam =
         getProjectsOfTeam(
-            teamId, null, null, QueryProjectStatus.ALL,
+            teamId, null, null, EnumSet.allOf(Project.Status.class),
                 EnumSet.allOf(Project.DeadlineStatus.class));
     for (Project project : projectsOfTeam) {
       commentRepository.deleteAllCommentsOfProject(project.getId());
@@ -379,8 +379,7 @@ public class ProjectManager extends Manager {
    * specified by queryStatus (possibly ALL), and a status with respect to the deadline specified by
    * queryProject.DeadlineStatus.
    *
-   * @param queryStatus is an optional parameter. If it is ALL, it doesn't count. Othwerise, only
-   *     those projects are returned, which have the status corresponding to queryStatus.
+   * @param allowedStatuses is the set of all statuses which are allowed for the returned projects.
    * @param assignedToCurrentUser shows whether the returned projects should be assigned to the
    *     current user (true) or assigned to anyone (false).
    * @param supervisedByCurrentUser shows whether the returned projects should be supervised by the
@@ -395,7 +394,7 @@ public class ProjectManager extends Manager {
   public List<Project> getProjects(
       boolean assignedToCurrentUser,
       boolean supervisedByCurrentUser,
-      QueryProjectStatus queryStatus,
+      EnumSet<Project.Status> allowedStatuses,
       EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
       throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException {
     User currentUser = getMandatoryCurrentUser();
@@ -408,7 +407,7 @@ public class ProjectManager extends Manager {
       supervisorId = currentUser.getId();
     }
     return projectRepository.getProjects(
-        queryStatus, assigneeId, supervisorId, allowedDeadlineStatuses);
+        allowedStatuses, assigneeId, supervisorId, allowedDeadlineStatuses);
   }
 
   /**
@@ -419,8 +418,7 @@ public class ProjectManager extends Manager {
    * queryProject.DeadlineStatus.
    *
    * @param teamId is the id of the team whose projects are returned.
-   * @param queryStatus is an optional parameter. If it is ALL, it doesn't count. Othwerise, only
-   *     those projects are returned, which have the status corresponding to queryStatus.
+   * @param allowedStatuses is the set of all statuses which are allowed for the returned projects.
    * @param assigneeName is an optional parameter. If it is null, it doesn't count. Othwerise, only
    *     those projects are returned, which are assigned to the user with name assigneeName.
    * @param supervisorName is an optional parameter. If it is null, it doesn't count. Othwerise,
@@ -437,7 +435,7 @@ public class ProjectManager extends Manager {
           int teamId,
           String supervisorName,
           String assigneeName,
-          QueryProjectStatus queryStatus,
+          EnumSet<Project.Status> allowedStatuses,
           EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
       throws InexistentDatabaseEntityException, SQLException, InexistentUserException {
     Integer assigneeId = null;
@@ -451,7 +449,7 @@ public class ProjectManager extends Manager {
       supervisorId = supervisor.getId();
     }
     return projectRepository.getProjectsOfTeam(
-        teamId, queryStatus, assigneeId, supervisorId, allowedDeadlineStatuses);
+        teamId, allowedStatuses, assigneeId, supervisorId, allowedDeadlineStatuses);
   }
 
   private void guaranteeUserIsSupervisor(
