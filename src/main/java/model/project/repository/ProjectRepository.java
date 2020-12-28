@@ -6,6 +6,7 @@ import model.project.queryconstants.QueryProjectDeadlineStatus;
 import model.project.queryconstants.QueryProjectStatus;
 
 import java.sql.SQLException;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -80,18 +81,17 @@ public interface ProjectRepository {
    *     those projects are returned, which are assigned to the user with id assigneeId.
    * @param supervisorId is an optional parameter. If it is null, it doesn't count. Othwerise, only
    *     those projects are returned, which are supervised by the user with id supervisorId.
-   * @param queryDeadlineStatus is an optional parameter. If it is null, it doesn't count.
-   *     Othwerise, only those projects are returned, which have the status with respect to the
-   *     deadline corresponding to ueryDeadlineStatus.
+   * @param allowedDeadlineStatuses is the set of deadline statuses which are allowed in the query
+   *                              result.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    */
   List<Project> getProjectsOfTeam(
-      int teamId,
-      QueryProjectStatus queryStatus,
-      Integer assigneeId,
-      Integer supervisorId,
-      QueryProjectDeadlineStatus queryDeadlineStatus)
+          int teamId,
+          QueryProjectStatus queryStatus,
+          Integer assigneeId,
+          Integer supervisorId,
+          EnumSet<QueryProjectDeadlineStatus> allowedDeadlineStatuses)
       throws SQLException;
 
   /**
@@ -107,9 +107,8 @@ public interface ProjectRepository {
    *     those projects are returned, which are assigned to the user with id assigneeId.
    * @param supervisorId is an optional parameter. If it is null, it doesn't count. Othwerise, only
    *     those projects are returned, which are supervised by the user with id supervisorId.
-   * @param queryDeadlineStatus is an optional parameter. If it is null, it doesn't count.
-   *     Othwerise, only those projects are returned, which have the status with respect to the
-   *     deadline corresponding to ueryDeadlineStatus.
+   * @param allowedDeadlineStatuses is the set of deadline statuses which are allowed in the query
+   *                              result.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    */
@@ -117,6 +116,6 @@ public interface ProjectRepository {
       QueryProjectStatus queryStatus,
       Integer assigneeId,
       Integer supervisorId,
-      QueryProjectDeadlineStatus queryDeadlineStatus)
+      EnumSet<QueryProjectDeadlineStatus> allowedDeadlineStatuses)
       throws SQLException;
 }
