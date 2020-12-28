@@ -1,9 +1,8 @@
 package controller.project;
 
 import model.InexistentDatabaseEntityException;
+import model.project.Project;
 import model.project.ProjectManager;
-import model.project.queryconstants.QueryProjectDeadlineStatus;
-import model.project.queryconstants.QueryProjectStatus;
 import model.user.UserManager;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
@@ -31,6 +30,19 @@ public class ProjectFilterController implements PropertyChangeListener {
   private int teamId;
   private ProjectListModel projectListModel;
 
+  private boolean assignedToUser;
+  private boolean supervisedByUser;
+
+  public ProjectFilterController(int teamId) {
+    this.teamId = teamId;
+    projectManager = ProjectManager.getInstance();
+    projectManager.addPropertyChangeListener(this);
+    userManager = UserManager.getInstance();
+    projectListModel = ProjectListModel.getInstance();
+    assignedToUser = supervisedByUser = true;
+    filterProjects();
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName()
@@ -46,23 +58,6 @@ public class ProjectFilterController implements PropertyChangeListener {
   public enum PrivilegeTypes {
     ASSIGNED_TO_ME,
     SUPERVISED_BY_ME
-  }
-
-  private String statusFilter;
-  private String turnInTimeFilter;
-  private boolean assignedToUser;
-  private boolean supervisedByUser;
-
-  public ProjectFilterController(int teamId) {
-    this.teamId = teamId;
-    projectManager = ProjectManager.getInstance();
-    projectManager.addPropertyChangeListener(this);
-    userManager = UserManager.getInstance();
-    projectListModel = ProjectListModel.getInstance();
-    statusFilter = String.valueOf(QueryProjectStatus.ALL);
-    turnInTimeFilter = String.valueOf(QueryProjectDeadlineStatus.ALL);
-    assignedToUser = supervisedByUser = true;
-    filterProjects();
   }
 
   public void setStatusFilter(String status) {
@@ -99,8 +94,8 @@ public class ProjectFilterController implements PropertyChangeListener {
               teamId,
               supervisorName,
               assigneeName,
-              QueryProjectStatus.valueOf(statusFilter),
-              QueryProjectDeadlineStatus.valueOf(turnInTimeFilter)));
+              Project.Status.valueOf(statusFilter),
+              Project.DeadlineStatus.valueOf(turnInTimeFilter)));
     } catch (SQLException | InexistentDatabaseEntityException | InexistentUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
@@ -112,8 +107,8 @@ public class ProjectFilterController implements PropertyChangeListener {
           projectManager.getProjects(
               assignedToUser,
               supervisedByUser,
-              QueryProjectStatus.valueOf(statusFilter),
-              QueryProjectDeadlineStatus.valueOf(turnInTimeFilter)));
+              Project.Status.valueOf(statusFilter),
+              Project.DeadlineStatus.valueOf(turnInTimeFilter)));
     } catch (SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
@@ -121,19 +116,19 @@ public class ProjectFilterController implements PropertyChangeListener {
 
   public String[] getProjectStatusTypes() {
     return new String[] {
-      String.valueOf(QueryProjectStatus.ALL),
-      String.valueOf(QueryProjectStatus.TO_DO),
-      String.valueOf(QueryProjectStatus.IN_PROGRESS),
-      String.valueOf(QueryProjectStatus.TURNED_IN),
-      String.valueOf(QueryProjectStatus.FINISHED)
+      String.valueOf(Project.Status.TO_DO),
+      String.valueOf(Project.Status.IN_PROGRESS),
+      String.valueOf(Project.Status.TURNED_IN),
+      String.valueOf(Project.Status.FINISHED)
     };
   }
 
   public String[] getProjectTurnInTimes() {
     return new String[] {
-      String.valueOf(QueryProjectDeadlineStatus.ALL),
-      String.valueOf(QueryProjectDeadlineStatus.IN_TIME),
-      String.valueOf(QueryProjectDeadlineStatus.OVERDUE)
+      String.valueOf(Project.DeadlineStatus.IN_TIME_TO_FINISH),
+      String.valueOf(Project.DeadlineStatus.OVERDUE),
+      String.valueOf(Project.DeadlineStatus.FINISHED_IN_TIME),
+      String.valueOf(Project.DeadlineStatus.FINISHED_LATE)
     };
   }
 }
