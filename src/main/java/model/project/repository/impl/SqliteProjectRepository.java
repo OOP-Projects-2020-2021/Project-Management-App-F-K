@@ -68,6 +68,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   // Get projects of team, possibly with a given assignee, supervisor, status and status with
   // respect to deadline. The extra wildcards are responsible for making some attributes optional.
+  // todo new turnindate status
   private static final String GET_PROJECTS_OF_TEAM =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
           + "AssigneeId, SupervisorId, StatusName, TurnInDate From Project p "
@@ -83,6 +84,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   // Get projects possibly with a given assignee, supervisor, status and status with respect to
   // deadline. The extra wildcards are responsible for making some attributes optional.
+  // todo new turnindate status
   private static final String GET_PROJECTS =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
           + "AssigneeId, SupervisorId, StatusName, TurnInDate From Project p "
