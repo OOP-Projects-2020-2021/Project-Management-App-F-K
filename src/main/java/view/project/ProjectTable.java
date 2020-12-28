@@ -27,8 +27,8 @@ public class ProjectTable extends JTable {
   private JFrame frame;
   private static final String[] columnNames = {"Name", "Deadline", "Status"};
 
-  public ProjectTable(JFrame frame) {
-    this.controller = new ProjectTableController(this);
+  public ProjectTable(JFrame frame, ProjectListModel projectListModel) {
+    this.controller = new ProjectTableController(this, projectListModel);
     this.frame = frame;
     initTableDesign();
     this.addMouseListener(new TableMouseListener());

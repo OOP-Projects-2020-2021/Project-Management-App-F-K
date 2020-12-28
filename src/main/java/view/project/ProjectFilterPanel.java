@@ -32,8 +32,8 @@ public class ProjectFilterPanel extends JPanel {
   private ProjectFilterController controller;
   private JButton filterButton;
 
-  public ProjectFilterPanel(int teamId) {
-    this.controller = new ProjectFilterController(teamId, this);
+  public ProjectFilterPanel(int teamId, ProjectListModel projectListModel) {
+    this.controller = new ProjectFilterController(teamId, this, projectListModel);
     initFilters();
     createPanelLayout();
   }

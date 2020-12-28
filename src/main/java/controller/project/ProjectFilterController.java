@@ -34,6 +34,20 @@ public class ProjectFilterController implements PropertyChangeListener {
   private ProjectListModel projectListModel;
   private ProjectFilterPanel panel;
 
+  public ProjectFilterController(int teamId, ProjectFilterPanel panel, ProjectListModel projectListModel) {
+    this.teamId = teamId;
+    projectManager = ProjectManager.getInstance();
+    projectManager.addPropertyChangeListener(this);
+    teamManager = TeamManager.getInstance();
+    this.projectListModel = projectListModel;
+    statusFilter = String.valueOf(Project.Status.ALL);
+    turnInTimeFilter = String.valueOf(Project.DeadlineStatus.ALL);
+    this.panel = panel;
+    assignedToUser = supervisedByUser = true;
+    assignee = supervisor = null;
+    filterProjects();
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName()
@@ -66,20 +80,6 @@ public class ProjectFilterController implements PropertyChangeListener {
   private boolean supervisedByUser;
   private String assignee;
   private String supervisor;
-
-  public ProjectFilterController(int teamId, ProjectFilterPanel panel) {
-    this.teamId = teamId;
-    projectManager = ProjectManager.getInstance();
-    projectManager.addPropertyChangeListener(this);
-    teamManager = TeamManager.getInstance();
-    projectListModel = ProjectListModel.getInstance();
-    statusFilter = String.valueOf(Project.Status.ALL);
-    turnInTimeFilter = String.valueOf(Project.DeadlineStatus.ALL);
-    this.panel = panel;
-    assignedToUser = supervisedByUser = true;
-    assignee = supervisor = null;
-    filterProjects();
-  }
 
   public void createNewProject() {}
 

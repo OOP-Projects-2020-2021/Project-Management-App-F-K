@@ -18,20 +18,18 @@ import java.beans.PropertyChangeListener;
  * displayed changes after applying some filters on it, the ProjectTableController gets notified and
  * it updates the corresponding table.
  *
- * @author Beata Keresztes
+ * @author Beata Keresztes, Bori Fazakas
  */
 public class ProjectTableController implements PropertyChangeListener {
 
   private ProjectListModel projectListModel;
-  private ProjectManager projectManager;
   private ProjectTable projectTable;
 
-  public ProjectTableController(ProjectTable projectTable) {
-    this.projectListModel = ProjectListModel.getInstance();
-    projectListModel.addPropertyChangeListener(this);
-    projectManager = ProjectManager.getInstance();
-    projectManager.addPropertyChangeListener(this);
+  public ProjectTableController(ProjectTable projectTable, ProjectListModel projectListModel) {
+    this.projectListModel = projectListModel;
     this.projectTable = projectTable;
+
+    projectListModel.addPropertyChangeListener(this);
   }
 
   public void initializeTableModel() {
@@ -40,9 +38,7 @@ public class ProjectTableController implements PropertyChangeListener {
 
   private void updateTableModel() {
     projectTable.clearTableModel();
-    if (!projectListModel.isEmptyProjectList()) {
-      projectTable.fillTableModel(projectListModel.getProjectList());
-    }
+    projectTable.fillTableModel(projectListModel.getProjectList());
   }
 
   public void openProject(JFrame frame, int rowNr) {
@@ -56,13 +52,7 @@ public class ProjectTableController implements PropertyChangeListener {
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
-    if (evt.getPropertyName().equals(ProjectListModel.PROJECT_LIST)
-        || evt.getPropertyName()
-            .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())
-        || evt.getPropertyName()
-            .equals(ProjectManager.ProjectChangeablePropertyName.CREATE_PROJECT.toString())
-        || evt.getPropertyName()
-            .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
+    if (evt.getPropertyName().equals(ProjectListModel.PROJECT_LIST)) {
       updateTableModel();
     }
   }

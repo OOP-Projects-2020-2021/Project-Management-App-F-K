@@ -20,17 +20,18 @@ public class ProjectsPanel extends JPanel {
     this.frame = frame;
     setLayout(new BorderLayout());
     setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-    initProjectsHeader(teamId);
-    initProjectsTable();
+    ProjectListModel projectListModel = new ProjectListModel();
+    initProjectsHeader(teamId, projectListModel);
+    initProjectsTable(projectListModel);
   }
 
-  private void initProjectsHeader(int teamId) {
-    ProjectFilterPanel header = new ProjectFilterPanel(teamId);
+  private void initProjectsHeader(int teamId, ProjectListModel projectListModel) {
+    ProjectFilterPanel header = new ProjectFilterPanel(teamId, projectListModel);
     add(header, BorderLayout.NORTH);
   }
 
-  private void initProjectsTable() {
-    projectsTable = new ProjectTable(frame);
+  private void initProjectsTable(ProjectListModel projectListModel) {
+    projectsTable = new ProjectTable(frame, projectListModel);
     addScrollPane();
   }
 
