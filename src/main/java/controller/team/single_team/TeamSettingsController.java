@@ -212,4 +212,11 @@ public class TeamSettingsController extends TeamController implements PropertyCh
           "You are not allowed to change the manager of this team.");
     }
   }
+  public void deleteTeam() {
+    try {
+      teamManager.deleteTeam(teamId);
+    } catch (SQLException | InexistentTeamException | UnauthorisedOperationException | NoSignedInUserException | InexistentDatabaseEntityException | InexistentUserException e) {
+      ErrorDialogFactory.createErrorDialog(e,frame,null);
+    }
+  }
 }
