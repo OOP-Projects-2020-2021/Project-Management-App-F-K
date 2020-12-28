@@ -59,6 +59,20 @@ public class CreateProjectFrame extends JFrame {
     this.setVisible(true);
   }
 
+  private void initComponents() {
+    initDataFields();
+    initContentPanel();
+    initButtonsPanel();
+  }
+
+  private void initDataFields() {
+    titleTextField = UIFactory.createTextField(null);
+    initDatePicker();
+    initDescriptionTextArea();
+    initTeamsComboBox();
+    initAssigneeComboBox();
+  }
+
   private void initDatePicker() {
     dateModel = new UtilDateModel();
     Properties properties = new Properties();
@@ -87,13 +101,12 @@ public class CreateProjectFrame extends JFrame {
       }
     }
     teamComboBox.setModel(teamModel);
+    teamModel.setSelectedItem(teamModel.getElementAt(0));
     teamComboBox.addActionListener(
         e -> {
           String team = teamComboBox.getModel().getSelectedItem().toString();
           int teamId = controller.getIdOfTeam(team);
-          if (teamId > 0) {
-            updateAssigneeModel(teamId);
-          }
+          updateAssigneeModel(teamId);
         });
     teamComboBox.setVisible(controller.enableTeamSelection());
   }
@@ -101,6 +114,7 @@ public class CreateProjectFrame extends JFrame {
   private void initAssigneeComboBox() {
     assigneeComboBox = new JComboBox<>();
     assigneeModel = new DefaultComboBoxModel<>();
+    updateAssigneeModel(controller.getIdOfTeam(teamModel.getElementAt(0)));
     assigneeComboBox.setModel(assigneeModel);
   }
 
@@ -114,19 +128,6 @@ public class CreateProjectFrame extends JFrame {
     }
   }
 
-  private void initDataFields() {
-    titleTextField = UIFactory.createTextField(null);
-    initDatePicker();
-    initDescriptionTextArea();
-    initAssigneeComboBox();
-    initTeamsComboBox();
-  }
-
-  private void initComponents() {
-    initDataFields();
-    initContentPanel();
-    initButtonsPanel();
-  }
 
   private void initContentPanel() {
     JPanel contentPanel = new JPanel();

@@ -52,6 +52,9 @@ public class CreateProjectController extends FrameController {
     parentFrame.setEnabled(true);
   }
 
+  public Integer getTeamId() {
+    return teamId;
+  }
   /**
    * Enables the user to select the team of the new project from the list of teams he/she is a
    * member of.
