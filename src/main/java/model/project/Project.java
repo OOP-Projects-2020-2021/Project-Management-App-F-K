@@ -19,14 +19,21 @@ public class Project {
     FINISHED
   }
 
+  public enum Importance {
+    LOW,
+    MEDIUM,
+    HIGH
+  }
+
   /**
    * This class is used only when the project instance is created to be saved in the database, but
    * does not have a valid id yet.
    */
   public static class SavableProject extends Project {
     public SavableProject(
-        String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId) {
-      super(-1, title, teamId, deadline, supervisorId, assigneeId);
+        String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId,
+        Importance importance) {
+      super(-1, title, teamId, deadline, supervisorId, assigneeId, importance);
     }
 
     @Override
@@ -52,9 +59,12 @@ public class Project {
 
   private ProjectStatus status;
 
+  private Importance importance;
+
   public Project(
-      int id, String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId) {
-    this(id, title, teamId, deadline, ProjectStatus.TO_DO, supervisorId, assigneeId);
+      int id, String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId,
+      Importance importance) {
+    this(id, title, teamId, deadline, ProjectStatus.TO_DO, supervisorId, assigneeId, importance);
   }
 
   public Project(
@@ -64,7 +74,8 @@ public class Project {
       LocalDate deadline,
       ProjectStatus status,
       int supervisorId,
-      int assigneeId) {
+      int assigneeId,
+      Importance importance) {
     this.id = id;
     this.title = title;
     this.teamId = teamId;
@@ -72,6 +83,7 @@ public class Project {
     this.status = status;
     this.supervisorId = supervisorId;
     this.assigneeId = assigneeId;
+    this.importance = importance;
   }
 
   public int getId() throws InexistentDatabaseEntityException {
@@ -132,5 +144,13 @@ public class Project {
 
   public ProjectStatus getStatus() {
     return status;
+  }
+
+  public Importance getImportance() {
+    return importance;
+  }
+
+  public void setImportance(Importance importance) {
+    this.importance = importance;
   }
 }
