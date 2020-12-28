@@ -121,11 +121,10 @@ public class ProjectTable extends JTable {
       return Color.cyan;
     }
 
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                   boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(
+        JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
       JTextField editor = new JTextField();
-      if (value != null)
-        editor.setText(value.toString());
+      if (value != null) editor.setText(value.toString());
       if (isSelected) {
         editor.setBackground(Color.LIGHT_GRAY);
       } else {
