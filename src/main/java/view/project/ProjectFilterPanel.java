@@ -6,8 +6,6 @@ import model.user.User;
 import view.UIFactory;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,8 +37,8 @@ public class ProjectFilterPanel extends JPanel {
 
   private JButton listProjectsButton;
 
-  private final static String statusName = "Project Status";
-  private final static String deadlineStatusName = "Turn-in Time";
+  private static final String statusName = "Project Status";
+  private static final String deadlineStatusName = "Turn-in Time";
 
   public ProjectFilterPanel(int teamId, ProjectListModel projectListModel) {
     this.controller = new ProjectFilterController(teamId, this, projectListModel);
@@ -148,57 +146,57 @@ public class ProjectFilterPanel extends JPanel {
 
     JLabel filterLabel = UIFactory.createHighlightedLabel("Filter projects by:", null);
     JLabel statusFilterLabel = UIFactory.createMediumHighlightedLabel(statusName + ": ", null);
-    JLabel deadlineStatusFilterLabel = UIFactory.createMediumHighlightedLabel(deadlineStatusName +
-            ": ", null);
+    JLabel deadlineStatusFilterLabel =
+        UIFactory.createMediumHighlightedLabel(deadlineStatusName + ": ", null);
     JLabel privilegeFilterLabel = UIFactory.createMediumHighlightedLabel("Type:", null);
 
     layout.setHorizontalGroup(
-            layout
-                    .createSequentialGroup()
-                    .addGroup(
-                            layout
-                                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addComponent(statusFilterLabel)
-                                    .addComponent(statusFilterPanel))
-                    .addGap(90, 90, 90)
-                    .addGroup(
-                            layout
-                                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addComponent(filterLabel)
-                                    .addComponent(deadlineStatusFilterLabel)
-                                    .addComponent(deadlineStatusPanel)
-                                    .addComponent(listProjectsButton))
-                    .addGap(10, 10, 10)
-                    .addGroup(
-                            layout
-                                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                                    .addComponent(privilegeFilterLabel)
-                                    .addComponent(privilegeFilterButtonsPanel)));
+        layout
+            .createSequentialGroup()
+            .addGroup(
+                layout
+                    .createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(statusFilterLabel)
+                    .addComponent(statusFilterPanel))
+            .addGap(90, 90, 90)
+            .addGroup(
+                layout
+                    .createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(filterLabel)
+                    .addComponent(deadlineStatusFilterLabel)
+                    .addComponent(deadlineStatusPanel)
+                    .addComponent(listProjectsButton))
+            .addGap(10, 10, 10)
+            .addGroup(
+                layout
+                    .createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(privilegeFilterLabel)
+                    .addComponent(privilegeFilterButtonsPanel)));
 
     layout.setVerticalGroup(
-            layout
-                    .createSequentialGroup()
-                    .addComponent(filterLabel)
-                    .addGap(10, 10, 10)
+        layout
+            .createSequentialGroup()
+            .addComponent(filterLabel)
+            .addGap(10, 10, 10)
+            .addGroup(
+                layout
+                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addGroup(
-                            layout
-                                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                    .addGroup(
-                                            layout
-                                                    .createSequentialGroup()
-                                                    .addComponent(statusFilterLabel)
-                                                    .addComponent(statusFilterPanel))
-                                    .addGroup(
-                                            layout
-                                                    .createSequentialGroup()
-                                                    .addComponent(deadlineStatusFilterLabel)
-                                                    .addComponent(deadlineStatusPanel)
-                                                    .addComponent(listProjectsButton))
-                                    .addGroup(
-                                            layout
-                                                    .createSequentialGroup()
-                                                    .addComponent(privilegeFilterLabel)
-                                                    .addComponent(privilegeFilterButtonsPanel))));
+                        layout
+                            .createSequentialGroup()
+                            .addComponent(statusFilterLabel)
+                            .addComponent(statusFilterPanel))
+                    .addGroup(
+                        layout
+                            .createSequentialGroup()
+                            .addComponent(deadlineStatusFilterLabel)
+                            .addComponent(deadlineStatusPanel)
+                            .addComponent(listProjectsButton))
+                    .addGroup(
+                        layout
+                            .createSequentialGroup()
+                            .addComponent(privilegeFilterLabel)
+                            .addComponent(privilegeFilterButtonsPanel))));
   }
 
   private boolean isAtLeastOnePrivilegeButtonSelected() {
@@ -214,17 +212,17 @@ public class ProjectFilterPanel extends JPanel {
     } else {
       if (controller.enableProjectSelectionForTeam()) {
         controller.filterProjectsOfTeam(
-                statusFilterList.getSelectedValuesList(),
-                deadlineStatusFilterList.getSelectedValuesList(),
-                (String) assigneeComboBoxModel.getSelectedItem(),
-                (String) supervisorComboBoxModel.getSelectedItem());
+            statusFilterList.getSelectedValuesList(),
+            deadlineStatusFilterList.getSelectedValuesList(),
+            (String) assigneeComboBoxModel.getSelectedItem(),
+            (String) supervisorComboBoxModel.getSelectedItem());
       } else {
-        if (isAtLeastOnePrivilegeButtonSelected()) { //the query is valid
+        if (isAtLeastOnePrivilegeButtonSelected()) { // the query is valid
           controller.filterProjectsOfUser(
-                  statusFilterList.getSelectedValuesList(),
-                  deadlineStatusFilterList.getSelectedValuesList(),
-                  assignedToUserButton.isSelected(),
-                  supervisedByUserButton.isSelected());
+              statusFilterList.getSelectedValuesList(),
+              deadlineStatusFilterList.getSelectedValuesList(),
+              assignedToUserButton.isSelected(),
+              supervisedByUserButton.isSelected());
         } else {
           showSelectAtLeastOnePrivilegeDialog();
         }
@@ -243,12 +241,18 @@ public class ProjectFilterPanel extends JPanel {
   }
 
   private void showSelectAtLeastOnePrivilegeDialog() {
-    JOptionPane.showMessageDialog(null, "Please select at least one of the role buttons (assigned" +
-            " to me/supervisoed by me", "Error in query", JOptionPane.ERROR_MESSAGE);
+    JOptionPane.showMessageDialog(
+        null,
+        "Please select at least one of the role buttons (assigned" + " to me/supervisoed by me",
+        "Error in query",
+        JOptionPane.ERROR_MESSAGE);
   }
 
   private void showSelectAtLeastOnStatusDialog(String statusName) {
-    JOptionPane.showMessageDialog(null, "Please select at least one of the option for " + statusName,
-            "Error in query", JOptionPane.ERROR_MESSAGE);
+    JOptionPane.showMessageDialog(
+        null,
+        "Please select at least one of the option for " + statusName,
+        "Error in query",
+        JOptionPane.ERROR_MESSAGE);
   }
 }

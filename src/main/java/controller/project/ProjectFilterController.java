@@ -14,12 +14,8 @@ import view.project.ProjectListModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * ProjectFilterController controls the ProjectFilterPanel containing the filters applied to the
@@ -46,7 +42,8 @@ public class ProjectFilterController implements PropertyChangeListener {
     SUPERVISED_BY_ME
   }
 
-  public ProjectFilterController(int teamId, ProjectFilterPanel panel, ProjectListModel projectListModel) {
+  public ProjectFilterController(
+      int teamId, ProjectFilterPanel panel, ProjectListModel projectListModel) {
     this.teamId = teamId;
     projectManager = ProjectManager.getInstance();
     projectManager.addPropertyChangeListener(this);
@@ -54,25 +51,25 @@ public class ProjectFilterController implements PropertyChangeListener {
     this.projectListModel = projectListModel;
     this.panel = panel;
 
-    //todo: call filter from UI
-//    assignedToUser = supervisedByUser = true;
-//    assignee = supervisor = null;
-//    filterProjects();
+    // todo: call filter from UI
+    //    assignedToUser = supervisedByUser = true;
+    //    assignee = supervisor = null;
+    //    filterProjects();
   }
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())
-            || evt.getPropertyName()
+        || evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.CREATE_PROJECT.toString())
-            || evt.getPropertyName()
+        || evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       panel.applyFilter();
     } else if (enableProjectSelectionForTeam()) {
       if (evt.getPropertyName()
               .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
-              || evt.getPropertyName()
+          || evt.getPropertyName()
               .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
         panel.updateAssigneeSupervisorFilters();
       }
@@ -94,20 +91,21 @@ public class ProjectFilterController implements PropertyChangeListener {
     return teamId > 0;
   }
 
-  public void filterProjectsOfTeam(List<Project.Status> selectedStatuses,
-                                    List<Project.DeadlineStatus> selectedDeadlineStatuses,
-                                    String assigneeName,
-                                    String supervisorName) {
+  public void filterProjectsOfTeam(
+      List<Project.Status> selectedStatuses,
+      List<Project.DeadlineStatus> selectedDeadlineStatuses,
+      String assigneeName,
+      String supervisorName) {
     assigneeName = convertAnyoneStringToNull(assigneeName);
     supervisorName = convertAnyoneStringToNull(supervisorName);
     try {
       projectListModel.setProjectList(
-              projectManager.getProjectsOfTeam(
-                      teamId,
-                      supervisorName,
-                      assigneeName,
-                      EnumSet.copyOf(selectedStatuses),
-                      EnumSet.copyOf(selectedDeadlineStatuses)));
+          projectManager.getProjectsOfTeam(
+              teamId,
+              supervisorName,
+              assigneeName,
+              EnumSet.copyOf(selectedStatuses),
+              EnumSet.copyOf(selectedDeadlineStatuses)));
     } catch (SQLException | InexistentDatabaseEntityException | InexistentUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
@@ -120,16 +118,18 @@ public class ProjectFilterController implements PropertyChangeListener {
     return s;
   }
 
-  public void filterProjectsOfUser(List<Project.Status> selectedStatuses,
-                                    List<Project.DeadlineStatus> selectedDeadlineStatuses,
-                                    boolean assignedToUser, boolean supervisedByUser) {
+  public void filterProjectsOfUser(
+      List<Project.Status> selectedStatuses,
+      List<Project.DeadlineStatus> selectedDeadlineStatuses,
+      boolean assignedToUser,
+      boolean supervisedByUser) {
     try {
       projectListModel.setProjectList(
-              projectManager.getProjects(
-                      assignedToUser,
-                      supervisedByUser,
-                      EnumSet.copyOf(selectedStatuses),
-                      EnumSet.copyOf(selectedDeadlineStatuses)));
+          projectManager.getProjects(
+              assignedToUser,
+              supervisedByUser,
+              EnumSet.copyOf(selectedStatuses),
+              EnumSet.copyOf(selectedDeadlineStatuses)));
     } catch (SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }

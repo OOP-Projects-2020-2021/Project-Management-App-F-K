@@ -12,8 +12,7 @@ import java.util.List;
 /**
  * ProjectListMode represents the underlying model containing the list of projects to be displayed.
  * One instance is shared among the ProjectFilterPanel (and its controller) and the corresponding
- * ProjectTable (and its controller).
- * When a user applies a filter on the projects list in the
+ * ProjectTable (and its controller). When a user applies a filter on the projects list in the
  * ProjectFilterPanel, the model will be updated by the ProjectFilterPanel's controller. The
  * controller which displays the actual projects in a table, listens to the changes made in the
  * model, and updates the view.
@@ -39,8 +38,8 @@ public class ProjectListModel implements PropertyChangeObservable {
   public void setProjectList(List<Project> newProjectList) {
     List<Project> oldProjectList = projectList;
     projectList = newProjectList;
-    support.firePropertyChange(PROJECT_LIST, oldProjectList,
-            Collections.unmodifiableCollection(projectList));
+    support.firePropertyChange(
+        PROJECT_LIST, oldProjectList, Collections.unmodifiableCollection(projectList));
   }
 
   @Override
