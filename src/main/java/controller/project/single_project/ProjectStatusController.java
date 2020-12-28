@@ -145,7 +145,7 @@ public class ProjectStatusController extends ProjectController implements Proper
               JOptionPane.YES_NO_OPTION);
       if (answer == JOptionPane.YES_OPTION) {
         projectManager.acceptAsFinished(getProject().getId());
-      } else {
+      } else if(answer == JOptionPane.NO_OPTION){
         Project.ProjectStatus[] possibleAnswers = new Project.ProjectStatus[] {TO_DO, IN_PROGRESS};
         int answerIndex =
             JOptionPane.showOptionDialog(
@@ -198,6 +198,7 @@ public class ProjectStatusController extends ProjectController implements Proper
       if (projectManager.currentUserIsAssignee(project)) {
         switch (project.getStatus()) {
           case TO_DO:
+            result.add(ProjectStatusButtonsPanel.ButtonType.MARK_PROGRESS);
             result.add(ProjectStatusButtonsPanel.ButtonType.TURN_IN);
             break;
           case IN_PROGRESS:
@@ -207,9 +208,6 @@ public class ProjectStatusController extends ProjectController implements Proper
           case TURNED_IN:
             result.add(ProjectStatusButtonsPanel.ButtonType.UNDO_TURN_IN);
         }
-      }
-      if (project.getStatus() == TO_DO) {
-        result.add(ProjectStatusButtonsPanel.ButtonType.MARK_PROGRESS);
       }
     } catch (InexistentDatabaseEntityException | NoSignedInUserException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
