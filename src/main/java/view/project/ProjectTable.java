@@ -40,7 +40,7 @@ public class ProjectTable extends JTable {
 
   private void initTableDesign() {
     setFillsViewportHeight(true);
-    setCellSelectionEnabled(true);
+    setRowSelectionAllowed(true);
     setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
     setFont(UIFactory.NORMAL_TEXT_FONT);
     getTableHeader().setFont(UIFactory.HIGHLIGHT_TEXT_FONT);
@@ -100,8 +100,7 @@ public class ProjectTable extends JTable {
     @Override
     public void mouseClicked(MouseEvent evt) {
       int row = getSelectedRow();
-      int column = getSelectedColumn();
-      if (column == 0 && evt.getClickCount() > 1) {
+      if (evt.getClickCount() > 1) {
         // on double click on the name of the project, the project frame is opened
         controller.openProject(frame, row);
       }
