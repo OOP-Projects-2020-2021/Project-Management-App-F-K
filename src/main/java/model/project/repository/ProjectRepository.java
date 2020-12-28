@@ -58,6 +58,15 @@ public interface ProjectRepository {
   void updateProject(Project project) throws SQLException, InexistentDatabaseEntityException;
 
   /**
+   * Deletes the project with the specified id from the database. Requirement: any entities having
+   * foreign keys to these projects must already be deleted.
+   *
+   * @param projectId is the id of the project to delete.
+   * @throws SQLException if the operation could not be performed in the database.
+   */
+  void deleteProject(int projectId) throws SQLException;
+
+  /**
    * Returns a list of all the projects in the team with teamId, assigned to a user with assigneeId,
    * if assigeeId is not null, otherwise assigned to any user, supervised by a user with id
    * supervisorId, if supervisorId is not null, otherwise supervised by any user, having any status

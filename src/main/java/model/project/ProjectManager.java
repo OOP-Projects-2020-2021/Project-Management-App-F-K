@@ -158,6 +158,49 @@ public class ProjectManager extends Manager {
   }
 
   /**
+   * Deletes the project with id projectId with all of its data (comments), but only if the current
+   * user is the supervisor of the project.
+   *
+   * @param projectId is the id of the project to delete.
+   * @throws InexistentProjectException if the project to delete is not found.
+   * @throws SQLException if the operation could not be performed in the database.
+   * @throws NoSignedInUserException if there is noone signed in.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws UnauthorisedOperationException if the current user is not the supervisor of the
+   *     project.
+   */
+  public void deleteProject(int projectId)
+      throws InexistentProjectException, SQLException, NoSignedInUserException,
+          InexistentDatabaseEntityException, UnauthorisedOperationException {
+    User currentUser = getMandatoryCurrentUser();
+    Project project = getMandatoryProject(projectId);
+    guaranteeUserIsSupervisor(
+        currentUser, project, "delete project", "they are not the " + "supervisor");
+    commentRepository.deleteAllCommentsOfProject(projectId);
+    projectRepository.deleteProject(projectId);
+  }
+
+  /**
+   * Deletes all the projects of a given team, safely, after first deleting all of its their
+   * comments.
+   *
+   * @param teamId is the id of the team whose projects are deleted.
+   * @throws SQLException if the operation could not be performed in the database.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws InexistentUserException should never occur.
+   */
+  public void deleteAllProjectsOfTeam(int teamId)
+      throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
+    List<Project> projectsOfTeam =
+        getProjectsOfTeam(
+            teamId, null, null, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
+    for (Project project : projectsOfTeam) {
+      commentRepository.deleteAllCommentsOfProject(project.getId());
+      projectRepository.deleteProject(project.getId());
+    }
+  }
+
+  /**
    * Sets a project's status from TO_DO to IN_PROGRESS.
    *
    * @param projectId is the id of the project to update.
