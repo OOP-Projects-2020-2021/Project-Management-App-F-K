@@ -15,6 +15,8 @@ import model.user.exceptions.NoSignedInUserException;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -163,7 +165,8 @@ public class ProjectManager extends Manager {
       throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
     List<Project> projectsOfTeam =
         getProjectsOfTeam(
-            teamId, null, null, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
+            teamId, null, null, QueryProjectStatus.ALL,
+                EnumSet.allOf(QueryProjectDeadlineStatus.class));
     for (Project project : projectsOfTeam) {
       commentRepository.deleteAllCommentsOfProject(project.getId());
       projectRepository.deleteProject(project.getId());
@@ -384,9 +387,8 @@ public class ProjectManager extends Manager {
    *     current user (true) or assigned to anyone (false).
    * @param supervisedByCurrentUser shows whether the returned projects should be supervised by the
    *     current user (true) or supervised by anyone (false).
-   * @param queryDeadlineStatus is an optional parameter. If it is null, it doesn't count.
-   *     Othwerise, only those projects are returned, which have the status with respect to the
-   *     deadline corresponding to ueryDeadlineStatus.
+   * @param allowedDeadlineStatuses is the set of deadline statuses which are allowed for the
+   *                                returned projects.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    * @throws InexistentDatabaseEntityException should never occur.
@@ -396,7 +398,7 @@ public class ProjectManager extends Manager {
       boolean assignedToCurrentUser,
       boolean supervisedByCurrentUser,
       QueryProjectStatus queryStatus,
-      QueryProjectDeadlineStatus queryDeadlineStatus)
+      EnumSet<QueryProjectDeadlineStatus> allowedDeadlineStatuses)
       throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException {
     User currentUser = getMandatoryCurrentUser();
     Integer assigneeId = null;
@@ -408,7 +410,7 @@ public class ProjectManager extends Manager {
       supervisorId = currentUser.getId();
     }
     return projectRepository.getProjects(
-        queryStatus, assigneeId, supervisorId, queryDeadlineStatus);
+        queryStatus, assigneeId, supervisorId, allowedDeadlineStatuses);
   }
 
   /**
@@ -425,9 +427,8 @@ public class ProjectManager extends Manager {
    *     those projects are returned, which are assigned to the user with name assigneeName.
    * @param supervisorName is an optional parameter. If it is null, it doesn't count. Othwerise,
    *     only those projects are returned, which are supervised by the user with id supervisorName.
-   * @param queryDeadlineStatus is an optional parameter. If it is null, it doesn't count.
-   *     Othwerise, only those projects are returned, which have the status with respect to the
-   *     deadline corresponding to ueryDeadlineStatus.
+   * @param allowedDeadlineStatuses is the set of deadline statuses which are allowed for the
+   *                                returned projects.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    * @throws InexistentDatabaseEntityException should never occur.
@@ -435,11 +436,11 @@ public class ProjectManager extends Manager {
    *     in the database.
    */
   public List<Project> getProjectsOfTeam(
-      int teamId,
-      String supervisorName,
-      String assigneeName,
-      QueryProjectStatus queryStatus,
-      QueryProjectDeadlineStatus queryDeadlineStatus)
+          int teamId,
+          String supervisorName,
+          String assigneeName,
+          QueryProjectStatus queryStatus,
+          EnumSet<QueryProjectDeadlineStatus> allowedDeadlineStatuses)
       throws InexistentDatabaseEntityException, SQLException, InexistentUserException {
     Integer assigneeId = null;
     if (assigneeName != null) {
@@ -452,7 +453,7 @@ public class ProjectManager extends Manager {
       supervisorId = supervisor.getId();
     }
     return projectRepository.getProjectsOfTeam(
-        teamId, queryStatus, assigneeId, supervisorId, queryDeadlineStatus);
+        teamId, queryStatus, assigneeId, supervisorId, allowedDeadlineStatuses);
   }
 
   private void guaranteeUserIsSupervisor(
