@@ -66,7 +66,7 @@ public class MainMenuController extends FrameController {
 
   /** Provides access to creating a new project in a separate frame. */
   public void enableCreatingProject() {
-    new CreateProjectFrame(-1, frame);
+    new CreateProjectFrame(null, frame);
     frame.setEnabled(false);
   }
 }

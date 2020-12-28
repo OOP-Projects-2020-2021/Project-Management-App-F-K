@@ -6,6 +6,7 @@ import model.user.User;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
+import org.jetbrains.annotations.Nullable;
 import view.UIFactory;
 
 import javax.swing.*;
@@ -47,7 +48,7 @@ public class CreateProjectFrame extends JFrame {
 
   private static final Dimension DIMENSION = new Dimension(600, 600);
 
-  public CreateProjectFrame(int teamId, JFrame parentFrame) {
+  public CreateProjectFrame(Integer teamId, JFrame parentFrame) {
     super("New Project");
     this.parentFrame = parentFrame;
     controller = new CreateProjectController(teamId, this);

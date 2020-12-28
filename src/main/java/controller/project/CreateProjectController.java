@@ -11,6 +11,7 @@ import model.user.User;
 import model.user.exceptions.EmptyFieldsException;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
+import org.jetbrains.annotations.Nullable;
 import view.ErrorDialogFactory;
 
 import javax.swing.*;
@@ -31,13 +32,13 @@ public class CreateProjectController extends FrameController {
 
   private TeamManager teamManager;
   private ProjectManager projectManager;
-  private int teamId;
+  private Integer teamId;
   /** Messages to inform the user that the project was saved successfully. */
   private static final String PROJECT_SAVED_TITLE = "Project saved";
 
   private static final String PROJECT_SAVED_MESSAGE = "The project was successfully saved.";
 
-  public CreateProjectController(int teamId, JFrame frame) {
+  public CreateProjectController(@Nullable Integer teamId, JFrame frame) {
     super(frame);
     this.teamId = teamId;
     teamManager = TeamManager.getInstance();
@@ -49,8 +50,12 @@ public class CreateProjectController extends FrameController {
     parentFrame.setEnabled(true);
   }
 
+  /**
+   * Enables the user to select the team of the new project from the list of teams he/she is a member of.
+   * @return true if the id of a team is not specified
+   */
   public boolean enableTeamSelection() {
-    return teamId < 0;
+    return teamId == null;
   }
 
   public List<Team> getTeamsOfUser() {
