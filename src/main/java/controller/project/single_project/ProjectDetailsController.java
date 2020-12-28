@@ -30,20 +30,27 @@ import java.util.List;
  *
  * @author Beata Keresztes
  */
-public class ProjectDetailsController implements PropertyChangeListener {
+public class ProjectDetailsController extends ProjectController implements PropertyChangeListener {
 
   private TeamManager teamManager;
   private UserManager userManager;
   private ProjectManager projectManager;
-  private Project project;
   private ProjectDetailsPanel panel;
 
-  public ProjectDetailsController(Project project, ProjectDetailsPanel panel) {
+  /** Messages to confirm with the user the deletion of the project. */
+  private static final String CONFIRM_DELETION_MESSAGE = "Are you sure you want to delete this project?\n" +
+          "All data related to this project will be lost.";
+  private static final String CONFIRM_DELETION_TITLE = "Deleting project";
+  /** Messages to inform the user that the project was updated successfully. */
+  private static final String SUCCESSFUL_UPDATE_TITLE = "Project saved";
+  private static final String SUCCESSFUL_UPDATE_MESSAGE = "The project was updated successfully";
+
+  public ProjectDetailsController(JFrame frame,Project project, ProjectDetailsPanel panel) {
+    super(frame,project);
     teamManager = TeamManager.getInstance();
     userManager = UserManager.getInstance();
     projectManager = ProjectManager.getInstance();
     projectManager.addPropertyChangeListener(this);
-    this.project = project;
     this.panel = panel;
   }
 
@@ -53,33 +60,20 @@ public class ProjectDetailsController implements PropertyChangeListener {
         .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())) {
       setProject();
       panel.updatePanel();
-    } else if (evt.getPropertyName()
+    }
+    else if (evt.getPropertyName()
         .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       setProject();
       panel.updateStatusLabel();
-    }
-  }
-
-  private void setProject() {
-    try {
-      project = projectManager.getProjectById(project.getId());
-    } catch (InexistentProjectException | InexistentDatabaseEntityException | SQLException e) {
-      ErrorDialogFactory.createErrorDialog(e, null, "The project could not be updated.");
+    } else if(evt.getPropertyName()
+            .equals(ProjectManager.ProjectChangeablePropertyName.DELETE_PROJECT.toString())) {
+      closeFrame();
     }
   }
 
   public boolean isSupervisor() {
     try {
       return userManager.getCurrentUser().get().getId() == project.getSupervisorId();
-    } catch (InexistentDatabaseEntityException e) {
-      ErrorDialogFactory.createErrorDialog(e, null, null);
-    }
-    return false;
-  }
-
-  private boolean isAssignee() {
-    try {
-      return userManager.getCurrentUser().get().getId() == project.getAssigneeId();
     } catch (InexistentDatabaseEntityException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
@@ -163,24 +157,19 @@ public class ProjectDetailsController implements PropertyChangeListener {
   private void displaySuccessfulSaveMessage() {
     JOptionPane.showMessageDialog(
         null,
-        "The project was updated successfully!",
-        "Changes saved",
+        SUCCESSFUL_UPDATE_MESSAGE,
+        SUCCESSFUL_UPDATE_TITLE,
         JOptionPane.INFORMATION_MESSAGE);
   }
 
-  /**
-   * Displays a message to inform the user that the attempt to change the project's state was
-   * rejected and had caused an exception.
-   */
-  private void displayIllegalStateErrorDialog(
-      IllegalProjectStatusChangeException e, Project.ProjectStatus newState) {
-    ErrorDialogFactory.createErrorDialog(
-        e,
-        null,
-        "You cannot set the project from status " + project.getStatus() + " to " + newState);
-  }
-
   public void deleteProject() {
-    // todo
+    try {
+      int option = JOptionPane.showConfirmDialog(null,CONFIRM_DELETION_MESSAGE,CONFIRM_DELETION_TITLE,JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+      if(option == JOptionPane.YES_OPTION) {
+        projectManager.deleteProject(project.getId());
+      }
+    } catch (InexistentProjectException | SQLException | NoSignedInUserException | InexistentDatabaseEntityException | UnauthorisedOperationException e) {
+      ErrorDialogFactory.createErrorDialog(e, null, null);
+    }
   }
 }

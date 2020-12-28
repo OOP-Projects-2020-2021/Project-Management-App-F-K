@@ -198,7 +198,6 @@ public class ProjectStatusController extends ProjectController implements Proper
       if (projectManager.currentUserIsAssignee(project)) {
         switch (project.getStatus()) {
           case TO_DO:
-            result.add(ProjectStatusButtonsPanel.ButtonType.MARK_PROGRESS);
             result.add(ProjectStatusButtonsPanel.ButtonType.TURN_IN);
             break;
           case IN_PROGRESS:
@@ -208,6 +207,9 @@ public class ProjectStatusController extends ProjectController implements Proper
           case TURNED_IN:
             result.add(ProjectStatusButtonsPanel.ButtonType.UNDO_TURN_IN);
         }
+      }
+      if(project.getStatus() == TO_DO) {
+        result.add(ProjectStatusButtonsPanel.ButtonType.MARK_PROGRESS);
       }
     } catch (InexistentDatabaseEntityException | NoSignedInUserException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);

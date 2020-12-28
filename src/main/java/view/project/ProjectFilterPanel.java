@@ -71,7 +71,7 @@ public class ProjectFilterPanel extends JPanel {
 
   private void initPrivilegeFilter() {
     privilegeFilterButtonsPanel = new JPanel();
-    if (controller.enableProjectSelectionForTeam()) {
+    if (controller.isViewedFromTeam()) {
       initPrivilegeFilterTeam();
     } else {
       initPrivilegeFilterUser();
@@ -123,11 +123,9 @@ public class ProjectFilterPanel extends JPanel {
     List<User> members = controller.getTeamMembers();
     assigneeComboBoxModel.addElement(ProjectFilterController.ANYONE);
     supervisorComboBoxModel.addElement(ProjectFilterController.ANYONE);
-    if (members != null) {
-      for (User member : members) {
-        assigneeComboBoxModel.addElement(member.getUsername());
-        supervisorComboBoxModel.addElement(member.getUsername());
-      }
+    for (User member : members) {
+      assigneeComboBoxModel.addElement(member.getUsername());
+      supervisorComboBoxModel.addElement(member.getUsername());
     }
     assigneeComboBoxModel.setSelectedItem(ProjectFilterController.ANYONE);
     supervisorComboBoxModel.setSelectedItem(ProjectFilterController.ANYONE);
@@ -252,7 +250,7 @@ public class ProjectFilterPanel extends JPanel {
   class FilterButtonListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-      if (controller.enableProjectSelectionForTeam()) {
+      if (controller.isViewedFromTeam()) {
         controller.setAssigneeFilter((String) assigneeComboBoxModel.getSelectedItem());
         controller.setSupervisorFilter((String) supervisorComboBoxModel.getSelectedItem());
       }

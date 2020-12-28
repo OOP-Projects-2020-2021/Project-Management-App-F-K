@@ -53,7 +53,7 @@ public class ProjectDetailsPanel extends JPanel {
   private ProjectDetailsController controller;
 
   public ProjectDetailsPanel(JFrame frame, Project project) {
-    controller = new ProjectDetailsController(project, this);
+    controller = new ProjectDetailsController(frame,project, this);
     this.setLayout(new BorderLayout());
     statusButtonsPanel = new ProjectStatusButtonsPanel(frame, project);
     initDetailsPanel();
@@ -303,7 +303,7 @@ public class ProjectDetailsPanel extends JPanel {
         String description = descriptionTextArea.getText();
         controller.saveProject(title, assignee, supervisor, selectedDate, description);
       } else if (actionEvent.getSource() == deleteButton) {
-        // todo
+        controller.deleteProject();
       }
     }
   }

@@ -62,7 +62,9 @@ public class ProjectTableController implements PropertyChangeListener {
         || evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.CREATE_PROJECT.toString())
         || evt.getPropertyName()
-            .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
+            .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())
+        || evt.getPropertyName()
+            .equals(ProjectManager.ProjectChangeablePropertyName.DELETE_PROJECT.toString())) {
       updateTableModel();
     }
   }

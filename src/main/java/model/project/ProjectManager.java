@@ -38,7 +38,8 @@ public class ProjectManager extends Manager {
   public enum ProjectChangeablePropertyName {
     UPDATE_PROJECT, // event fires when project is updated
     CREATE_PROJECT, // event fires when project is created
-    SET_PROJECT_STATUS // event fires when state of the project is changed
+    SET_PROJECT_STATUS, // event fires when state of the project is changed
+    DELETE_PROJECT // event is fired when a project is deleted
   }
 
   private boolean isEmptyText(String text) {
@@ -178,6 +179,8 @@ public class ProjectManager extends Manager {
         currentUser, project, "delete project", "they are not the " + "supervisor");
     commentRepository.deleteAllCommentsOfProject(projectId);
     projectRepository.deleteProject(projectId);
+    support.firePropertyChange(
+            ProjectChangeablePropertyName.DELETE_PROJECT.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**

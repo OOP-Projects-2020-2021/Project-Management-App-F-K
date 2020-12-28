@@ -42,13 +42,15 @@ public class ProjectFilterController implements PropertyChangeListener {
         || evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.CREATE_PROJECT.toString())
         || evt.getPropertyName()
-            .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
+            .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())
+        || evt.getPropertyName()
+            .equals(ProjectManager.ProjectChangeablePropertyName.DELETE_PROJECT.toString())) {
       filterProjects();
-    } else if (enableProjectSelectionForTeam()) {
-      if (evt.getPropertyName()
+    } else if (evt.getPropertyName()
               .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
           || evt.getPropertyName()
               .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
+      if (isViewedFromTeam()) {
         panel.updateAssigneeSupervisorFilters();
       }
     }
@@ -71,8 +73,10 @@ public class ProjectFilterController implements PropertyChangeListener {
   public ProjectFilterController(int teamId, ProjectFilterPanel panel) {
     this.teamId = teamId;
     projectManager = ProjectManager.getInstance();
-    projectManager.addPropertyChangeListener(this);
     teamManager = TeamManager.getInstance();
+    projectManager.addPropertyChangeListener(this);
+    teamManager.addPropertyChangeListener(this);
+
     projectListModel = ProjectListModel.getInstance();
     statusFilter = String.valueOf(QueryProjectStatus.ALL);
     turnInTimeFilter = String.valueOf(QueryProjectDeadlineStatus.ALL);
@@ -81,8 +85,6 @@ public class ProjectFilterController implements PropertyChangeListener {
     assignee = supervisor = null;
     filterProjects();
   }
-
-  public void createNewProject() {}
 
   public List<User> getTeamMembers() {
     try {
@@ -93,7 +95,7 @@ public class ProjectFilterController implements PropertyChangeListener {
     return null;
   }
 
-  public boolean enableProjectSelectionForTeam() {
+  public boolean isViewedFromTeam() {
     return teamId > 0;
   }
 
@@ -127,7 +129,7 @@ public class ProjectFilterController implements PropertyChangeListener {
   }
 
   public void filterProjects() {
-    if (enableProjectSelectionForTeam()) {
+    if (isViewedFromTeam()) {
       filterProjectsOfTeam();
     } else {
       filterProjectsOfUser();
