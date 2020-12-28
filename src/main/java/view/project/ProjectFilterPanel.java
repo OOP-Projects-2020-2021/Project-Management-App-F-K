@@ -160,6 +160,7 @@ public class ProjectFilterPanel extends JPanel {
                     .addComponent(filterLabel)
                     .addComponent(statusFilterLabel)
                     .addComponent(statusFilterPanel)
+                    .addComponent(listProjectsButton)
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -169,8 +170,7 @@ public class ProjectFilterPanel extends JPanel {
                 layout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(privilegeFilterLabel)
-                    .addComponent(privilegeFilterButtonsPanel)))
-            .addGroup(layout.createParallelGroup().addComponent(listProjectsButton)));
+                    .addComponent(privilegeFilterButtonsPanel))));
 
     layout.setVerticalGroup(
         layout
@@ -184,6 +184,7 @@ public class ProjectFilterPanel extends JPanel {
                             .createSequentialGroup()
                             .addComponent(statusFilterLabel)
                             .addComponent(statusFilterPanel)
+                            .addComponent(listProjectsButton)
                     .addGroup(
                         layout
                             .createSequentialGroup()
@@ -193,8 +194,7 @@ public class ProjectFilterPanel extends JPanel {
                         layout
                             .createSequentialGroup()
                             .addComponent(privilegeFilterLabel)
-                            .addComponent(privilegeFilterButtonsPanel)))
-                    .addGroup(layout.createParallelGroup().addComponent(listProjectsButton))));;
+                            .addComponent(privilegeFilterButtonsPanel)))));
   }
 
   private boolean isAtLeastOnePrivilegeButtonSelected() {
