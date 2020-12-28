@@ -104,11 +104,10 @@ public class TeamMembersController extends TeamController implements PropertyCha
             JOptionPane.YES_NO_OPTION);
     if (choice == JOptionPane.YES_OPTION) {
       try {
-        if(!hasUnfinishedProjects(name)) {
-          teamManager.removeTeamMember(teamId, name);
-        } else {
+        if(hasUnfinishedProjects(name)) {
           throw new IllegalMemberRemovalException(name);
         }
+        teamManager.removeTeamMember(teamId, name);
       } catch (InexistentTeamException
           | InexistentDatabaseEntityException
           | SQLException databaseException) {
