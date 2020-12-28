@@ -31,13 +31,15 @@ public class CreateProjectController extends FrameController {
 
   private TeamManager teamManager;
   private ProjectManager projectManager;
+  private int teamId;
   /** Messages to inform the user that the project was saved successfully. */
   private static final String PROJECT_SAVED_TITLE = "Project saved";
 
   private static final String PROJECT_SAVED_MESSAGE = "The project was successfully saved.";
 
-  public CreateProjectController(JFrame frame) {
+  public CreateProjectController(int teamId, JFrame frame) {
     super(frame);
+    this.teamId = teamId;
     teamManager = TeamManager.getInstance();
     projectManager = ProjectManager.getInstance();
   }
@@ -45,6 +47,10 @@ public class CreateProjectController extends FrameController {
   public void onClose(JFrame parentFrame) {
     parentFrame.setVisible(true);
     parentFrame.setEnabled(true);
+  }
+
+  public boolean enableTeamSelection() {
+    return teamId < 0;
   }
 
   public List<Team> getTeamsOfUser() {
