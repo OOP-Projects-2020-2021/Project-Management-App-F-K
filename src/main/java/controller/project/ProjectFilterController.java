@@ -14,7 +14,10 @@ import view.project.ProjectListModel;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * ProjectFilterController controls the ProjectFilterPanel containing the filters applied to the
@@ -34,15 +37,31 @@ public class ProjectFilterController implements PropertyChangeListener {
   private ProjectListModel projectListModel;
   private ProjectFilterPanel panel;
 
+  public static final String ANYONE = "Anyone";
+
+  private boolean assignedToUser;
+  private boolean supervisedByUser;
+  private String assignee;
+  private String supervisor;
+
+  private List<Project.Status> projectStatuses = Arrays.asList(Project.Status.values());
+  private List<Project.DeadlineStatus> projectDeadlineStatuses =
+          Arrays.asList(Project.DeadlineStatus.values());
+
+  public enum PrivilegeTypes {
+    ASSIGNED_TO_ME,
+    SUPERVISED_BY_ME
+  }
+
   public ProjectFilterController(int teamId, ProjectFilterPanel panel, ProjectListModel projectListModel) {
     this.teamId = teamId;
     projectManager = ProjectManager.getInstance();
     projectManager.addPropertyChangeListener(this);
     teamManager = TeamManager.getInstance();
     this.projectListModel = projectListModel;
-    statusFilter = String.valueOf(Project.Status.ALL);
-    turnInTimeFilter = String.valueOf(Project.DeadlineStatus.ALL);
     this.panel = panel;
+
+    //todo: call filter from UI
     assignedToUser = supervisedByUser = true;
     assignee = supervisor = null;
     filterProjects();
@@ -66,20 +85,6 @@ public class ProjectFilterController implements PropertyChangeListener {
       }
     }
   }
-
-  public enum PrivilegeTypes {
-    ASSIGNED_TO_ME,
-    SUPERVISED_BY_ME
-  }
-
-  public static final String ANYONE = "Anyone";
-
-  private String statusFilter;
-  private String turnInTimeFilter;
-  private boolean assignedToUser;
-  private boolean supervisedByUser;
-  private String assignee;
-  private String supervisor;
 
   public void createNewProject() {}
 
@@ -160,21 +165,11 @@ public class ProjectFilterController implements PropertyChangeListener {
     }
   }
 
-  public String[] getProjectStatusTypes() {
-    return new String[] {
-            String.valueOf(Project.Status.ALL),
-            String.valueOf(Project.Status.TO_DO),
-            String.valueOf(Project.Status.IN_PROGRESS),
-            String.valueOf(Project.Status.TURNED_IN),
-            String.valueOf(Project.Status.FINISHED)
-    };
+  public List<String> getProjectStatusTypes() {
+    return Stream.of(projectStatuses).map(Object::toString).collect(Collectors.toList());
   }
 
-  public String[] getProjectTurnInTimes() {
-    return new String[] {
-            String.valueOf(Project.DeadlineStatus.ALL),
-            String.valueOf(Project.DeadlineStatus.IN_TIME),
-            String.valueOf(Project.DeadlineStatus.OVERDUE)
-    };
+  public List<String> getProjectDeadlineStatusTypes() {
+    return Stream.of(projectDeadlineStatuses).map(Object::toString).collect(Collectors.toList());
   }
 }
