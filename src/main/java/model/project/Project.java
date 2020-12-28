@@ -12,11 +12,24 @@ import java.util.*;
  * @author Bori Fazakas
  */
 public class Project {
-  public enum ProjectStatus {
+  public enum Status {
     TO_DO,
     IN_PROGRESS,
     TURNED_IN,
     FINISHED
+  }
+
+  /**
+   * DeadlineStatus is used for database queries and specifies the required status of the
+   * project with respect to its deadline.
+   */
+  public enum DeadlineStatus {
+    IN_TIME_TO_FINISH, // the deadline is later than the current date (or today) and the project is
+    // not finished yet
+    OVERDUE, // the deadline is earlier than today and the project is not finished yet.
+    // turned in.
+    FINISHED_IN_TIME, //the project was finished until the deadline.
+    FINISHED_LATE, //the project was finished later than the deadline.
   }
 
   /**
@@ -50,14 +63,14 @@ public class Project {
   /** The id of the person who checks whether the project is properly finished. */
   private int supervisorId;
   /** Status of the project. */
-  private ProjectStatus status;
+  private Status status;
   /** Turn-in date of the project, if the project is turned in or finished. Otherwise, null. */
   private @Nullable LocalDate turnInDate;
 
   /** Conrtuctor which sets the projects status to TO_DO. */
   public Project(
       int id, String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId) {
-    this(id, title, teamId, deadline, ProjectStatus.TO_DO, supervisorId, assigneeId, null);
+    this(id, title, teamId, deadline, Status.TO_DO, supervisorId, assigneeId, null);
   }
 
   public Project(
@@ -65,7 +78,7 @@ public class Project {
       String title,
       int teamId,
       LocalDate deadline,
-      ProjectStatus status,
+      Status status,
       int supervisorId,
       int assigneeId,
       @Nullable LocalDate turnInDate) {
@@ -131,11 +144,11 @@ public class Project {
     this.supervisorId = supervisorId;
   }
 
-  public void setStatus(ProjectStatus status) {
+  public void setStatus(Status status) {
     this.status = Objects.requireNonNull(status);
   }
 
-  public ProjectStatus getStatus() {
+  public Status getStatus() {
     return status;
   }
 

@@ -2,7 +2,6 @@ package model.project.repository;
 
 import model.InexistentDatabaseEntityException;
 import model.project.Project;
-import model.project.queryconstants.QueryProjectDeadlineStatus;
 import model.project.queryconstants.QueryProjectStatus;
 
 import java.sql.SQLException;
@@ -91,7 +90,7 @@ public interface ProjectRepository {
           QueryProjectStatus queryStatus,
           Integer assigneeId,
           Integer supervisorId,
-          EnumSet<QueryProjectDeadlineStatus> allowedDeadlineStatuses)
+          EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
       throws SQLException;
 
   /**
@@ -116,6 +115,6 @@ public interface ProjectRepository {
       QueryProjectStatus queryStatus,
       Integer assigneeId,
       Integer supervisorId,
-      EnumSet<QueryProjectDeadlineStatus> allowedDeadlineStatuses)
+      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
       throws SQLException;
 }

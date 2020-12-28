@@ -9,23 +9,23 @@ import model.project.Project;
 public enum QueryProjectStatus {
   ALL(null) {
     @Override
-    public Project.ProjectStatus getCorrespondingStatus() {
+    public Project.Status getCorrespondingStatus() {
       throw new IllegalStateException(
           "All QueryProjectStatus is not bound to a single " + "status");
     }
   },
-  TO_DO(Project.ProjectStatus.TO_DO),
-  IN_PROGRESS(Project.ProjectStatus.IN_PROGRESS),
-  TURNED_IN(Project.ProjectStatus.TURNED_IN),
-  FINISHED(Project.ProjectStatus.FINISHED);
+  TO_DO(Project.Status.TO_DO),
+  IN_PROGRESS(Project.Status.IN_PROGRESS),
+  TURNED_IN(Project.Status.TURNED_IN),
+  FINISHED(Project.Status.FINISHED);
 
-  private final Project.ProjectStatus correspondingStatus;
+  private final Project.Status correspondingStatus;
 
-  QueryProjectStatus(Project.ProjectStatus correspondingStatus) {
+  QueryProjectStatus(Project.Status correspondingStatus) {
     this.correspondingStatus = correspondingStatus;
   }
 
-  public Project.ProjectStatus getCorrespondingStatus() {
+  public Project.Status getCorrespondingStatus() {
     return correspondingStatus;
   }
 }
