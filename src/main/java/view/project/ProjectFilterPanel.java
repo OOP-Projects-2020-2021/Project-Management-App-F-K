@@ -32,9 +32,8 @@ public class ProjectFilterPanel extends JPanel {
   private ProjectFilterController controller;
   private JButton filterButton;
 
-
   public ProjectFilterPanel(int teamId) {
-    this.controller = new ProjectFilterController(teamId,this);
+    this.controller = new ProjectFilterController(teamId, this);
     initFilters();
     createPanelLayout();
   }
@@ -72,12 +71,13 @@ public class ProjectFilterPanel extends JPanel {
 
   private void initPrivilegeFilter() {
     privilegeFilterButtonsPanel = new JPanel();
-    if(controller.enableProjectSelectionForTeam()) {
+    if (controller.enableProjectSelectionForTeam()) {
       initPrivilegeFilterTeam();
     } else {
       initPrivilegeFilterUser();
     }
   }
+
   private void initPrivilegeFilterUser() {
     privilegeFilterButtonsPanel.setLayout(
         new BoxLayout(privilegeFilterButtonsPanel, BoxLayout.Y_AXIS));
@@ -95,15 +95,16 @@ public class ProjectFilterPanel extends JPanel {
     privilegeFilterButtonsPanel.add(assignedToUserButton);
     privilegeFilterButtonsPanel.add(supervisedByUserButton);
   }
+
   private void initPrivilegeFilterTeam() {
-    privilegeFilterButtonsPanel.setLayout(new GridLayout(4,1));
-    JLabel assigneeLabel = UIFactory.createLabel("Assignee:",null);
+    privilegeFilterButtonsPanel.setLayout(new GridLayout(4, 1));
+    JLabel assigneeLabel = UIFactory.createLabel("Assignee:", null);
     assigneeLabel.setHorizontalAlignment(JLabel.LEFT);
     JComboBox<String> assigneeComboBox = new JComboBox<>();
     assigneeComboBoxModel = new DefaultComboBoxModel<>();
     assigneeComboBox.setModel(assigneeComboBoxModel);
 
-    JLabel supervisorLabel = UIFactory.createLabel("Supervisor:",null);
+    JLabel supervisorLabel = UIFactory.createLabel("Supervisor:", null);
     supervisorLabel.setHorizontalAlignment(JLabel.LEFT);
     JComboBox<String> supervisorComboBox = new JComboBox<>();
     supervisorComboBoxModel = new DefaultComboBoxModel<>();
@@ -122,8 +123,8 @@ public class ProjectFilterPanel extends JPanel {
     List<User> members = controller.getTeamMembers();
     assigneeComboBoxModel.addElement(ProjectFilterController.ANYONE);
     supervisorComboBoxModel.addElement(ProjectFilterController.ANYONE);
-    if(members != null) {
-      for(User member:members) {
+    if (members != null) {
+      for (User member : members) {
         assigneeComboBoxModel.addElement(member.getUsername());
         supervisorComboBoxModel.addElement(member.getUsername());
       }
@@ -240,17 +241,18 @@ public class ProjectFilterPanel extends JPanel {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        boolean assignedToUser = assignedToUserButton.isSelected();
-        boolean supervisedByUser = supervisedByUserButton.isSelected();
-        // if both filters are selected, then all the projects will be displayed
-        controller.setPrivilegeFilter(assignedToUser, supervisedByUser);
-        selectPrivilegeButtons();
+      boolean assignedToUser = assignedToUserButton.isSelected();
+      boolean supervisedByUser = supervisedByUserButton.isSelected();
+      // if both filters are selected, then all the projects will be displayed
+      controller.setPrivilegeFilter(assignedToUser, supervisedByUser);
+      selectPrivilegeButtons();
     }
   }
+
   class FilterButtonListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-      if(controller.enableProjectSelectionForTeam()) {
+      if (controller.enableProjectSelectionForTeam()) {
         controller.setAssigneeFilter((String) assigneeComboBoxModel.getSelectedItem());
         controller.setSupervisorFilter((String) supervisorComboBoxModel.getSelectedItem());
       }
