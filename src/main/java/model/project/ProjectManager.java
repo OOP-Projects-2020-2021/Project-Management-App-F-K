@@ -3,7 +3,6 @@ package model.project;
 import model.InexistentDatabaseEntityException;
 import model.Manager;
 import model.UnauthorisedOperationException;
-import model.project.queryconstants.QueryProjectStatus;
 import model.project.exceptions.*;
 import model.team.Team;
 import model.team.exceptions.InexistentTeamException;

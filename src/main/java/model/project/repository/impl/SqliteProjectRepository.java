@@ -3,7 +3,6 @@ package model.project.repository.impl;
 import model.InexistentDatabaseEntityException;
 import model.database.Repository;
 import model.project.Project;
-import model.project.queryconstants.QueryProjectStatus;
 import model.project.repository.ProjectRepository;
 
 import java.sql.*;

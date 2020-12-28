@@ -2,7 +2,6 @@ package model.project.repository;
 
 import model.InexistentDatabaseEntityException;
 import model.project.Project;
-import model.project.queryconstants.QueryProjectStatus;
 
 import java.sql.SQLException;
 import java.util.EnumSet;
