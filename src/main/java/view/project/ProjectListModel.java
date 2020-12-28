@@ -39,7 +39,7 @@ public class ProjectListModel implements PropertyChangeObservable {
   public void setProjectList(List<Project> newProjectList) {
     List<Project> oldProjectList = projectList;
     projectList = newProjectList;
-    support.firePropertyChange(PROJECT_LIST, Collections.unmodifiableList(oldProjectList),
+    support.firePropertyChange(PROJECT_LIST, oldProjectList,
             Collections.unmodifiableCollection(projectList));
   }
 
