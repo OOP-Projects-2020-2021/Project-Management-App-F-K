@@ -32,9 +32,8 @@ public class ProjectFilterPanel extends JPanel {
   private ProjectFilterController controller;
   private JButton filterButton;
 
-
   public ProjectFilterPanel(int teamId) {
-    this.controller = new ProjectFilterController(teamId,this);
+    this.controller = new ProjectFilterController(teamId, this);
     initFilters();
     createPanelLayout();
   }
@@ -78,6 +77,7 @@ public class ProjectFilterPanel extends JPanel {
       initPrivilegeFilterUser();
     }
   }
+
   private void initPrivilegeFilterUser() {
     privilegeFilterButtonsPanel.setLayout(
             new BoxLayout(privilegeFilterButtonsPanel, BoxLayout.Y_AXIS));
@@ -241,11 +241,11 @@ public class ProjectFilterPanel extends JPanel {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-        boolean assignedToUser = assignedToUserButton.isSelected();
-        boolean supervisedByUser = supervisedByUserButton.isSelected();
-        // if both filters are selected, then all the projects will be displayed
-        controller.setPrivilegeFilter(assignedToUser, supervisedByUser);
-        selectPrivilegeButtons();
+      boolean assignedToUser = assignedToUserButton.isSelected();
+      boolean supervisedByUser = supervisedByUserButton.isSelected();
+      // if both filters are selected, then all the projects will be displayed
+      controller.setPrivilegeFilter(assignedToUser, supervisedByUser);
+      selectPrivilegeButtons();
     }
   }
 
