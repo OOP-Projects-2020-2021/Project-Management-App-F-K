@@ -3,15 +3,18 @@ package controller.project;
 import model.InexistentDatabaseEntityException;
 import model.project.Project;
 import model.project.ProjectManager;
-import model.user.UserManager;
+import model.team.TeamManager;
+import model.user.User;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
 import view.ErrorDialogFactory;
+import view.project.ProjectFilterPanel;
 import view.project.ProjectListModel;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * ProjectFilterController controls the ProjectFilterPanel containing the filters applied to the
@@ -26,38 +29,71 @@ import java.sql.SQLException;
 public class ProjectFilterController implements PropertyChangeListener {
 
   private ProjectManager projectManager;
-  private UserManager userManager;
+  private TeamManager teamManager;
   private int teamId;
   private ProjectListModel projectListModel;
-
-  private boolean assignedToUser;
-  private boolean supervisedByUser;
-
-  public ProjectFilterController(int teamId) {
-    this.teamId = teamId;
-    projectManager = ProjectManager.getInstance();
-    projectManager.addPropertyChangeListener(this);
-    userManager = UserManager.getInstance();
-    projectListModel = ProjectListModel.getInstance();
-    assignedToUser = supervisedByUser = true;
-    filterProjects();
-  }
+  private ProjectFilterPanel panel;
 
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())
-        || evt.getPropertyName()
+            || evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.CREATE_PROJECT.toString())
-        || evt.getPropertyName()
+            || evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       filterProjects();
+    } else if (enableProjectSelectionForTeam()) {
+      if (evt.getPropertyName()
+              .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
+              || evt.getPropertyName()
+              .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
+        panel.updateAssigneeSupervisorFilters();
+      }
     }
   }
 
   public enum PrivilegeTypes {
     ASSIGNED_TO_ME,
     SUPERVISED_BY_ME
+  }
+
+  public static final String ANYONE = "Anyone";
+
+  private String statusFilter;
+  private String turnInTimeFilter;
+  private boolean assignedToUser;
+  private boolean supervisedByUser;
+  private String assignee;
+  private String supervisor;
+
+  public ProjectFilterController(int teamId, ProjectFilterPanel panel) {
+    this.teamId = teamId;
+    projectManager = ProjectManager.getInstance();
+    projectManager.addPropertyChangeListener(this);
+    teamManager = TeamManager.getInstance();
+    projectListModel = ProjectListModel.getInstance();
+    statusFilter = String.valueOf(Project.Status.ALL);
+    turnInTimeFilter = String.valueOf(Project.DeadlineStatus.ALL);
+    this.panel = panel;
+    assignedToUser = supervisedByUser = true;
+    assignee = supervisor = null;
+    filterProjects();
+  }
+
+  public void createNewProject() {}
+
+  public List<User> getTeamMembers() {
+    try {
+      return teamManager.getMembersOfTeam(teamId);
+    } catch (SQLException e) {
+      ErrorDialogFactory.createErrorDialog(e, null, null);
+    }
+    return null;
+  }
+
+  public boolean enableProjectSelectionForTeam() {
+    return teamId > 0;
   }
 
   public void setStatusFilter(String status) {
@@ -69,12 +105,28 @@ public class ProjectFilterController implements PropertyChangeListener {
     this.supervisedByUser = supervisedByUser;
   }
 
+  public void setAssigneeFilter(String assignee) {
+    if (assignee.equals(ANYONE)) {
+      this.assignee = null;
+    } else {
+      this.assignee = assignee;
+    }
+  }
+
+  public void setSupervisorFilter(String supervisor) {
+    if (supervisor.equals(ANYONE)) {
+      this.supervisor = null;
+    } else {
+      this.supervisor = supervisor;
+    }
+  }
+
   public void setTurnInTimeFilter(String turnInTime) {
     turnInTimeFilter = turnInTime;
   }
 
   public void filterProjects() {
-    if (teamId > 0) {
+    if (enableProjectSelectionForTeam()) {
       filterProjectsOfTeam();
     } else {
       filterProjectsOfUser();
@@ -82,20 +134,14 @@ public class ProjectFilterController implements PropertyChangeListener {
   }
 
   private void filterProjectsOfTeam() {
-    String assigneeName = null, supervisorName = null;
-    if (assignedToUser) {
-      assigneeName = userManager.getCurrentUser().get().getUsername();
-    } else if (supervisedByUser) {
-      supervisorName = userManager.getCurrentUser().get().getUsername();
-    }
     try {
       projectListModel.setProjectList(
-          projectManager.getProjectsOfTeam(
-              teamId,
-              supervisorName,
-              assigneeName,
-              Project.Status.valueOf(statusFilter),
-              Project.DeadlineStatus.valueOf(turnInTimeFilter)));
+              projectManager.getProjectsOfTeam(
+                      teamId,
+                      supervisor,
+                      assignee,
+                      Project.Status.valueOf(statusFilter),
+                      Project.DeadlineStatus.valueOf(turnInTimeFilter)));
     } catch (SQLException | InexistentDatabaseEntityException | InexistentUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
@@ -104,11 +150,11 @@ public class ProjectFilterController implements PropertyChangeListener {
   private void filterProjectsOfUser() {
     try {
       projectListModel.setProjectList(
-          projectManager.getProjects(
-              assignedToUser,
-              supervisedByUser,
-              Project.Status.valueOf(statusFilter),
-              Project.DeadlineStatus.valueOf(turnInTimeFilter)));
+              projectManager.getProjects(
+                      assignedToUser,
+                      supervisedByUser,
+                      Project.Status.valueOf(statusFilter),
+                      Project.DeadlineStatus.valueOf(turnInTimeFilter)));
     } catch (SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
@@ -116,19 +162,19 @@ public class ProjectFilterController implements PropertyChangeListener {
 
   public String[] getProjectStatusTypes() {
     return new String[] {
-      String.valueOf(Project.Status.TO_DO),
-      String.valueOf(Project.Status.IN_PROGRESS),
-      String.valueOf(Project.Status.TURNED_IN),
-      String.valueOf(Project.Status.FINISHED)
+            String.valueOf(Project.Status.ALL),
+            String.valueOf(Project.Status.TO_DO),
+            String.valueOf(Project.Status.IN_PROGRESS),
+            String.valueOf(Project.Status.TURNED_IN),
+            String.valueOf(Project.Status.FINISHED)
     };
   }
 
   public String[] getProjectTurnInTimes() {
     return new String[] {
-      String.valueOf(Project.DeadlineStatus.IN_TIME_TO_FINISH),
-      String.valueOf(Project.DeadlineStatus.OVERDUE),
-      String.valueOf(Project.DeadlineStatus.FINISHED_IN_TIME),
-      String.valueOf(Project.DeadlineStatus.FINISHED_LATE)
+            String.valueOf(Project.DeadlineStatus.ALL),
+            String.valueOf(Project.DeadlineStatus.IN_TIME),
+            String.valueOf(Project.DeadlineStatus.OVERDUE)
     };
   }
 }
