@@ -35,7 +35,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   // Save a new team.
   private static final String SAVE_PROJECT_STATEMENT =
       "INSERT INTO Project (Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+          + "StatusId, ImportanceId) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
   private PreparedStatement saveProjectSt;
 
   // Get project based on id.
@@ -94,10 +94,15 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
           + "(\"now\") AND p.statusId <= 2 AND ?))";
   private PreparedStatement getProjectsSt;
 
-  // Get status id
+  // Get status id.
   private static final String GET_PROJECTS_STATUS_ID =
       "SELECT StatusId from ProjectStatus WHERE StatusName = ?";
   private PreparedStatement getProjectStatusIdSt;
+
+  // Get importance id.
+  private static final String GET_PROJECTS_IMPORTANCE_ID =
+          "SELECT ImportanceId from Importance WHERE ImportanceName = ?";
+  private PreparedStatement getProjectImportanceIdSt;
 
   /**
    * The statements are prepared only once, when the repository is constructed, because this way sql
@@ -112,6 +117,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
     getProjectsOfTeamSt = c.prepareStatement(GET_PROJECTS_OF_TEAM);
     getProjectsSt = c.prepareStatement(GET_PROJECTS);
+    getProjectImportanceIdSt = c.prepareStatement(GET_PROJECTS_IMPORTANCE_ID);
   }
 
   @Override
@@ -128,6 +134,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     saveProjectSt.setInt(5, project.getAssigneeId());
     saveProjectSt.setInt(6, project.getSupervisorId());
     saveProjectSt.setInt(7, getProjectStatusId(project.getStatus()));
+    saveProjectSt.setInt(8, getProjectImportanceId(project.getImportance()));
     saveProjectSt.execute();
     Optional<Project> savedProjectOp = getProject(project.getTeamId(), project.getTitle());
     if (savedProjectOp.isEmpty()) {
@@ -291,6 +298,13 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     ResultSet result = getProjectStatusIdSt.executeQuery();
     result.next();
     return result.getInt("StatusId");
+  }
+
+  private int getProjectImportanceId(Project.Importance importance) throws SQLException {
+    getProjectImportanceIdSt.setString(1, importance.toString());
+    ResultSet result = getProjectImportanceIdSt.executeQuery();
+    result.next();
+    return result.getInt("ImportanceId");
   }
 
   private static Project getProjectFromResult(ResultSet result) throws SQLException {

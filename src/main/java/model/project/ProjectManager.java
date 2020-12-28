@@ -76,7 +76,8 @@ public class ProjectManager extends Manager {
    * @throws InexistentDatabaseEntityException should never occur.
    */
   public void createProject(
-      String projectName, int teamId, String assigneeName, LocalDate deadline, String description)
+      String projectName, int teamId, String assigneeName, LocalDate deadline, String description
+          , Project.Importance importance)
       throws NoSignedInUserException, SQLException, InexistentUserException,
           InexistentTeamException, DuplicateProjectNameException, InexistentDatabaseEntityException,
           EmptyFieldsException {
@@ -93,7 +94,7 @@ public class ProjectManager extends Manager {
     // save project
     Project.SavableProject project =
         new Project.SavableProject(
-            projectName, teamId, deadline, currentUser.getId(), assignee.getId());
+            projectName, teamId, deadline, currentUser.getId(), assignee.getId(), importance);
     project.setDescription(description);
     projectRepository.saveProject(project);
     support.firePropertyChange(
