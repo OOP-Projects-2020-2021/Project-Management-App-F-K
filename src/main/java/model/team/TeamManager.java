@@ -296,7 +296,7 @@ public class TeamManager extends Manager {
   }
 
   /**
-   * Generates a new teamcode with the length specidied in Team.CODE_LENGTH, consisting of digits
+   * Generates a new teamcode with the length specified in Team.CODE_LENGTH, consisting of digits
    * only. This code must be unique, meaning that it is not used by any other team.
    *
    * @return the newly generated code.

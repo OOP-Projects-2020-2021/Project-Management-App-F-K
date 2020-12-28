@@ -1,15 +1,16 @@
 package view.team.single_team;
 
 import controller.team.single_team.TeamController;
+import view.project.ProjectsPanel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
 /**
- * The TeamFrame allows the user to view the team's details, the members list and the projects.
- * Additionally the manager also has access to the teams settings and adding/removing members. Upon
- * closing this frame, the user will be redirected to the main frame.
+ * The TeamFrame allows the user to view the team's details, the members list and the projects in
+ * separate tabs. Additionally the manager also has access to the teams settings and adding/removing
+ * members. Upon closing this frame, the user will be redirected to the main frame.
  *
  * @author Beata Keresztes
  */
@@ -21,23 +22,22 @@ public class TeamFrame extends JFrame {
 
   private JFrame parentFrame;
   private TeamController controller;
-  private static final Dimension DIMENSION = new Dimension(600, 500);
+  private static final Dimension DIMENSION = new Dimension(600, 600);
 
   public TeamFrame(JFrame parentFrame, int teamId) {
     super("Team");
     this.parentFrame = parentFrame;
     this.controller = new TeamController(this.parentFrame, teamId);
     this.setSize(DIMENSION);
-    this.setResizable(false);
     addTabbedPanes();
     this.addWindowListener(new TeamWindowAdapter());
     this.setVisible(true);
   }
 
   private void initTabbedPanes() {
-    homeTab = new TeamHomePanel(this, DIMENSION, controller.getCurrentTeamId());
-    membersTab = new TeamMembersPanel(this, DIMENSION, controller.getCurrentTeamId());
-    projectsTab = new TeamProjectsPanel(DIMENSION);
+    homeTab = new TeamHomePanel(this, controller.getTeamId());
+    membersTab = new TeamMembersPanel(this, controller.getTeamId());
+    projectsTab = new ProjectsPanel(this, controller.getTeamId());
   }
 
   private void addTabbedPanes() {

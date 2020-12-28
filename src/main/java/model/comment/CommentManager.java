@@ -32,6 +32,8 @@ public class CommentManager extends Manager {
     return instance;
   }
 
+  public static final String ADD_COMMENT = "Add comment";
+
   /**
    * Adds a new comment to project with id projectId, from the current user, with the content text.
    *
@@ -60,6 +62,7 @@ public class CommentManager extends Manager {
     Comment.SavableComment comment =
         new Comment.SavableComment(text, projectId, currentUser.getId(), LocalDateTime.now());
     commentRepository.saveComment(comment);
+    support.firePropertyChange(ADD_COMMENT, OLD_VALUE, NEW_VALUE);
   }
 
   /**

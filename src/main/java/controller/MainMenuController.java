@@ -1,5 +1,7 @@
 package controller;
 
+import view.project.CreateProjectFrame;
+import view.project.UserProjectsFrame;
 import view.user.AccountSettingsFrame;
 import view.user.SignInFrame;
 import view.team.CreateTeamFrame;
@@ -35,6 +37,10 @@ public class MainMenuController extends FrameController {
     return logOutFlag;
   }
 
+  /**
+   * Provides access to the viewing and editing the account settings of the user in the respective
+   * frame.
+   */
   public void enableUserDataSettings() {
     new AccountSettingsFrame(frame);
     frame.setEnabled(false);
@@ -49,6 +55,18 @@ public class MainMenuController extends FrameController {
   /** Provides access to the team joining functionality by opening the corresponding frame. */
   public void enableJoiningNewTeam() {
     new JoinTeamFrame(frame);
+    frame.setEnabled(false);
+  }
+
+  /** Provides access to viewing the list of projects in the respective frame. */
+  public void enableViewingProjects() {
+    new UserProjectsFrame(frame);
+    frame.setEnabled(false);
+  }
+
+  /** Provides access to creating a new project in a separate frame. */
+  public void enableCreatingProject() {
+    new CreateProjectFrame(frame);
     frame.setEnabled(false);
   }
 }

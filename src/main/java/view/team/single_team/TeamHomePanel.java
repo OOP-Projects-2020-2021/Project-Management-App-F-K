@@ -1,18 +1,21 @@
 package view.team.single_team;
 
 import controller.team.single_team.TeamSettingsController;
+import model.user.User;
 import view.UIFactory;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 /**
- * This panel displays general information about a team. The general user can only view the listed
- * data, but the manager can edit the team's attributes.
+ * The TeamHomePanel displays general information about a team. The general user can only view the
+ * listed data, but the manager can edit the team's attributes. The user is allowed to leave the
+ * team, unless he/she is the manager, in which case the manager is only allowed to leave the team,
+ * if first he/she passes the manager position to another member of the team.
  *
  * @author Beata Keresztes
  */
@@ -20,8 +23,8 @@ public class TeamHomePanel extends JPanel implements ActionListener {
 
   private JTextField teamNameTextField;
   private JLabel teamCodeLabel;
-  private JTextField teamManagerTextField;
-  private JLabel savedLabel;
+  private DefaultComboBoxModel<String> teamManagerModel;
+  private JComboBox<String> teamManagerComboBox;
 
   private JButton saveTeamNameButton;
   private JButton saveTeamManagerButton;
@@ -30,10 +33,9 @@ public class TeamHomePanel extends JPanel implements ActionListener {
 
   private TeamSettingsController controller;
 
-  public TeamHomePanel(JFrame frame, Dimension frameDimension, int currentTeamId) {
-    controller = new TeamSettingsController(this, frame, currentTeamId);
-    this.setPreferredSize(frameDimension);
-    this.setBorder(BorderFactory.createEmptyBorder(50, 100, 50, 100));
+  public TeamHomePanel(JFrame frame, int teamId) {
+    controller = new TeamSettingsController(this, frame, teamId);
+    this.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
     initHomePane();
   }
 
@@ -64,14 +66,13 @@ public class TeamHomePanel extends JPanel implements ActionListener {
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(teamCodeLabel)
                     .addComponent(teamNameTextField)
-                    .addComponent(teamManagerTextField))
+                    .addComponent(teamManagerComboBox))
             .addGroup(
                 homeLayout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(regenerateCodeButton)
                     .addComponent(saveTeamNameButton)
-                    .addComponent(saveTeamManagerButton)
-                    .addComponent(savedLabel)));
+                    .addComponent(saveTeamManagerButton)));
 
     homeLayout.setVerticalGroup(
         homeLayout
@@ -93,47 +94,69 @@ public class TeamHomePanel extends JPanel implements ActionListener {
                 homeLayout
                     .createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(managerLabel)
-                    .addComponent(teamManagerTextField)
+                    .addComponent(teamManagerComboBox)
                     .addComponent(saveTeamManagerButton))
             .addGap(30)
             .addGroup(
                 homeLayout
                     .createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(leaveTeamButton)
-                    .addComponent(savedLabel)));
+                    .addComponent(leaveTeamButton)));
+  }
+
+  private void clearTeamManagerModel() {
+    if (teamManagerModel.getSize() > 0) {
+      teamManagerModel.removeAllElements();
+    }
+  }
+
+  private void fillTeamManagerModel() {
+    List<User> members = controller.getMembersOfTeam();
+    if (members != null) {
+      for (User member : members) {
+        teamManagerModel.addElement(member.getUsername());
+      }
+      teamManagerModel.setSelectedItem(controller.getTeamManagerName());
+    }
+  }
+
+  public void updateTeamManagerModel() {
+    clearTeamManagerModel();
+    fillTeamManagerModel();
   }
 
   private void initHomePaneComponents() {
     teamNameTextField = UIFactory.createTextField(controller.getTeamName());
     teamCodeLabel = UIFactory.createLabel(controller.getTeamCode(), null);
-    teamManagerTextField = UIFactory.createTextField(controller.getTeamManagerName());
-    teamNameTextField.setEditable(false);
-    teamManagerTextField.setEditable(false);
 
-    HomeMouseAdapter homeMouseAdapter = new HomeMouseAdapter();
-    teamNameTextField.addMouseListener(homeMouseAdapter);
-    teamManagerTextField.addMouseListener(homeMouseAdapter);
+    teamManagerComboBox = new JComboBox<>();
+    teamManagerModel = new DefaultComboBoxModel<>();
+    fillTeamManagerModel();
+    teamManagerComboBox.setModel(teamManagerModel);
+
+    teamNameTextField.addMouseListener(
+        new MouseAdapter() {
+          @Override
+          public void mouseClicked(MouseEvent e) {
+            if (controller.getManagerAccess()) {
+              teamNameTextField.setEditable(true);
+            }
+          }
+        });
 
     saveTeamNameButton = UIFactory.createButton("Save");
     saveTeamManagerButton = UIFactory.createButton("Save");
     regenerateCodeButton = UIFactory.createButton("Regenerate code");
-    enableButtons(controller.getManagerAccess());
-
-    savedLabel = UIFactory.createLabel("*Saved.", null);
-    savedLabel.setVisible(false);
     leaveTeamButton = UIFactory.createButton("Leave Team");
     addButtonListeners();
-  }
 
-  public void enableButtons(boolean enable) {
-    saveTeamNameButton.setVisible(enable);
-    saveTeamManagerButton.setVisible(enable);
-    regenerateCodeButton.setVisible(enable);
+    enableNameTextField(false);
+    teamManagerComboBox.setEnabled(controller.getManagerAccess());
+    enableButtons(controller.getManagerAccess());
   }
 
   public void updateHomePaneComponents() {
     teamNameTextField.setText(controller.getTeamName());
-    teamManagerTextField.setText(controller.getTeamManagerName());
+    updateTeamManagerModel();
     teamCodeLabel.setText(controller.getTeamCode());
   }
 
@@ -144,47 +167,35 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     regenerateCodeButton.addActionListener(this);
   }
 
-  public void showSavedLabel(boolean enable) {
-    savedLabel.setVisible(enable);
+  private void enableButtons(boolean enable) {
+    saveTeamNameButton.setVisible(enable);
+    saveTeamManagerButton.setVisible(enable);
+    regenerateCodeButton.setVisible(enable);
   }
 
-  public void updateNameFieldAfterSave() {
-    teamNameTextField.setEditable(false);
-    showSavedLabel(true);
+  public void enableNameTextField(boolean enable) {
+    teamNameTextField.setEditable(enable);
   }
 
-  public void updateManagerFieldAfterSave() {
-    teamManagerTextField.setEditable(false);
-    showSavedLabel(true);
+  public void enableComponents(boolean enable) {
+    enableNameTextField(enable);
+    teamManagerComboBox.setEnabled(enable);
+    enableButtons(enable);
   }
 
   @Override
   public void actionPerformed(ActionEvent actionEvent) {
     Object source = actionEvent.getSource();
     if (source == leaveTeamButton) {
-      controller.confirmLeavingTeam();
+      controller.leaveTeam();
     } else {
       if (source == saveTeamNameButton) {
         controller.saveTeamName(teamNameTextField.getText());
       } else if (source == saveTeamManagerButton) {
-        controller.saveTeamManager(teamManagerTextField.getText());
+        System.out.println((String) teamManagerModel.getSelectedItem());
+        controller.saveTeamManager((String) teamManagerModel.getSelectedItem());
       } else if (source == regenerateCodeButton) {
         controller.regenerateTeamCode();
-      }
-    }
-  }
-
-  private class HomeMouseAdapter extends MouseAdapter {
-
-    @Override
-    public void mouseClicked(MouseEvent evt) {
-      if (controller.getManagerAccess()) {
-        if (evt.getSource() == teamNameTextField) {
-          teamNameTextField.setEditable(true);
-        } else if (evt.getSource() == teamManagerTextField) {
-          teamManagerTextField.setEditable(true);
-        }
-        savedLabel.setVisible(false);
       }
     }
   }
