@@ -25,7 +25,7 @@ import java.util.List;
  * negative number, for example -1, then all the projects corresponding to the current user are
  * listed, independent of the team.
  *
- * @author Beata Keresztes
+ * @author Beata Keresztes, Bori Fazakas
  */
 public class ProjectFilterController implements PropertyChangeListener {
 
@@ -50,11 +50,6 @@ public class ProjectFilterController implements PropertyChangeListener {
     teamManager = TeamManager.getInstance();
     this.projectListModel = projectListModel;
     this.panel = panel;
-
-    // todo: call filter from UI
-    //    assignedToUser = supervisedByUser = true;
-    //    assignee = supervisor = null;
-    //    filterProjects();
   }
 
   @Override
