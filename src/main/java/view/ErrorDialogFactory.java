@@ -1,6 +1,8 @@
 package view;
 
 import model.InexistentDatabaseEntityException;
+import model.UnauthorisedOperationException;
+import model.project.exceptions.IllegalProjectStatusChangeException;
 import model.team.exceptions.*;
 import model.user.exceptions.*;
 
@@ -87,6 +89,36 @@ public class ErrorDialogFactory {
   private static final String UNREGISTERED_MEMBER_ROLE_MESSAGE =
       "The user to whom you attempt to assign a role is not a member of this team.";
 
+  /**
+   * Messages to inform the user that the state of the project cannot be changed to the specified
+   * value.
+   */
+  private static final String ILLEGAL_STATUS_CHANGE_TITLE = "Invalid status change!";
+
+  private static final String ILLEGAL_STATUS_CHANGE_MESSAGE =
+      "The project cannot be updated to the new status.";
+
+  /** Messages to inform the user that he/she doesn't have access to that operation. */
+  private static final String UNAUTHORIZED_OPERATION_TITLE = "Unauthorized operation";
+
+  private static final String UNAUTHORIZED_OPERATION_MESSAGE =
+      "You do not have access to perform this operation.";
+
+  /** Messages displayed to inform the user that some fields were left blank. */
+  private static final String EMPTY_FIELDS_LEFT_TITLE = "Empty fields left";
+
+  private static final String EMPTY_FIELDS_LEFT_MESSAGE =
+      "Please fill in all the required information before continuing!";
+
+  /**
+   * Messages displayed to inform the user that the status change requested for a project is
+   * illegal.
+   */
+  private static final String ILLEGAL_PROJECT_STATUS_CHANGE_TITLE = "Illegal status change.";
+
+  private static final String ILLEGAL_PROJECT_STATUS_CHANGE_MESSAGE =
+      "This change of project status is now allowed";
+
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     if (message == null) {
       message = "";
@@ -120,7 +152,19 @@ public class ErrorDialogFactory {
       displayUnregisteredMemberRemovalErrorDialog(frame, message);
     }
     if (exception instanceof UnregisteredMemberRoleException) {
-      displayUnregisteredMemberRemovalErrorDialog(frame, message);
+      displayUnregisteredMemberRoleErrorDialog(frame, message);
+    }
+    if (exception instanceof IllegalProjectStatusChangeException) {
+      displayIllegalStateChangeErrorDialog(frame, message);
+    }
+    if (exception instanceof UnauthorisedOperationException) {
+      displayUnauthorizedOperationErrorDialog(frame, message);
+    }
+    if (exception instanceof EmptyFieldsException) {
+      displayEmptyFieldsErrorDialog(frame, message);
+    }
+    if (exception instanceof IllegalProjectStatusChangeException) {
+      displayEmptyFieldsErrorDialog(frame, message);
     }
   }
 
@@ -221,11 +265,48 @@ public class ErrorDialogFactory {
    * Displays an error message when the manager tries to pass its position to a user which is not a
    * member of the team.
    */
-  private static void displayUnregisteredMemberRolelErrorDialog(Frame frame, String message) {
+  private static void displayUnregisteredMemberRoleErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
         frame,
         UNREGISTERED_MEMBER_ROLE_MESSAGE + "\n" + message,
         UNREGISTERED_MEMBER_ROLE_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+  /**
+   * Displays an error message when the user tries to set the project to a state which is not
+   * allowed.
+   */
+  private static void displayIllegalStateChangeErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        ILLEGAL_STATUS_CHANGE_MESSAGE + "\n" + message,
+        ILLEGAL_STATUS_CHANGE_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+  /** Displays an error message to inform the user that he/she has no access to that operation. */
+  private static void displayUnauthorizedOperationErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        UNAUTHORIZED_OPERATION_MESSAGE + "\n" + message,
+        UNAUTHORIZED_OPERATION_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+
+  /** Displays an error message to inform the user that some data fields have not been completed. */
+  private static void displayEmptyFieldsErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        EMPTY_FIELDS_LEFT_MESSAGE + "\n" + message,
+        EMPTY_FIELDS_LEFT_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+
+  /** Displays an error message to inform the user that the project status change is illegal. */
+  private static void displayIllegalProjectStatusChangeErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        ILLEGAL_STATUS_CHANGE_MESSAGE + "\n" + message,
+        ILLEGAL_STATUS_CHANGE_TITLE,
         JOptionPane.ERROR_MESSAGE);
   }
 }

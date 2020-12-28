@@ -10,6 +10,7 @@ import model.team.Team;
 import model.team.exceptions.InexistentTeamException;
 import model.team.exceptions.UnregisteredMemberRoleException;
 import model.user.User;
+import model.user.exceptions.EmptyFieldsException;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
 
@@ -34,6 +35,28 @@ public class ProjectManager extends Manager {
     return instance;
   }
 
+  public enum ProjectChangeablePropertyName {
+    UPDATE_PROJECT, // event fires when project is updated
+    CREATE_PROJECT, // event fires when project is created
+    SET_PROJECT_STATUS // event fires when state of the project is changed
+  }
+
+  private boolean isEmptyText(String text) {
+    return text == null || text.isEmpty();
+  }
+
+  /**
+   * Checks if all the required (compulsory) data was introduced to create a new project.
+   *
+   * @param title of the project
+   * @param assignee to whom the project is assigned
+   * @param deadline until which the project can be turned in
+   * @return true if all some fields are left uncompleted, if all the necessary data has been
+   *     introduced it returns false
+   */
+  private boolean isMissingProjectData(String title, String assignee, LocalDate deadline) {
+    return isEmptyText(title) || isEmptyText(assignee) || isEmptyText(deadline.toString());
+  }
   /**
    * Creates a new project with the specified data and saves it in the database. The supervisor of
    * the project will be automatically the current user. There should not be another project with
@@ -44,7 +67,7 @@ public class ProjectManager extends Manager {
    * @param assigneeName is the name of the user to whom this project is assigned.
    * @param deadline is the deadline of the project to be saved.
    * @param description is the description of the project to be saved.
-   * @throws NoSignedInUserException if there is noone signed in.
+   * @throws NoSignedInUserException if there is no one signed in.
    * @throws SQLException if the operation could not be performed in the database.
    * @throws InexistentUserException if the user with assigneeName does not exist.
    * @throws InexistentTeamException if the team with teamId does not exist.
@@ -55,8 +78,11 @@ public class ProjectManager extends Manager {
   public void createProject(
       String projectName, int teamId, String assigneeName, LocalDate deadline, String description)
       throws NoSignedInUserException, SQLException, InexistentUserException,
-          InexistentTeamException, DuplicateProjectNameException,
-          InexistentDatabaseEntityException {
+          InexistentTeamException, DuplicateProjectNameException, InexistentDatabaseEntityException,
+          EmptyFieldsException {
+    if (isMissingProjectData(projectName, assigneeName, deadline)) {
+      throw new EmptyFieldsException();
+    }
     User currentUser = getMandatoryCurrentUser();
     User assignee = getMandatoryUser(assigneeName);
     Team team = getMandatoryTeam(teamId);
@@ -70,6 +96,8 @@ public class ProjectManager extends Manager {
             projectName, teamId, deadline, currentUser.getId(), assignee.getId());
     project.setDescription(description);
     projectRepository.saveProject(project);
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.CREATE_PROJECT.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -125,6 +153,8 @@ public class ProjectManager extends Manager {
     project.setTitle(newProjectTitle);
     project.setDeadline(newDeadline);
     projectRepository.updateProject(project);
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.UPDATE_PROJECT.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -190,6 +220,8 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.IN_PROGRESS);
     }
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -224,6 +256,8 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.TO_DO);
     }
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -258,6 +292,8 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.TURNED_IN);
     }
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -296,6 +332,8 @@ public class ProjectManager extends Manager {
     } else {
       throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
     }
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -328,6 +366,8 @@ public class ProjectManager extends Manager {
       throw new IllegalProjectStatusChangeException(
           project.getStatus(), Project.ProjectStatus.FINISHED);
     }
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -366,6 +406,8 @@ public class ProjectManager extends Manager {
     } else {
       throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
     }
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -476,7 +518,7 @@ public class ProjectManager extends Manager {
 
   private void guaranteeUserIsSupervisorOrAssignee(
       User user, Project project, String operation, String reason)
-      throws UnauthorisedOperationException, InexistentDatabaseEntityException, SQLException {
+      throws UnauthorisedOperationException, InexistentDatabaseEntityException {
     if (!userIsAssignee(user, project) && !userIsSupervisor(user, project)) {
       throw new UnauthorisedOperationException(user.getId(), operation, reason);
     }
@@ -490,5 +532,39 @@ public class ProjectManager extends Manager {
   private boolean userIsAssignee(User user, Project project)
       throws InexistentDatabaseEntityException {
     return project.getAssigneeId() == user.getId();
+  }
+
+  /**
+   * @param project is the project whose supervisor is checked.
+   * @return true iff the current user is the supervisor of project.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws NoSignedInUserException if there is noone signed in.
+   */
+  public boolean currentUserIsSupervisor(Project project)
+      throws InexistentDatabaseEntityException, NoSignedInUserException {
+    return userIsSupervisor(getMandatoryCurrentUser(), project);
+  }
+
+  /**
+   * @param project is the project whose assignee is checked.
+   * @return true iff the current user is the assignee of project.
+   * @throws InexistentDatabaseEntityException should never occur.
+   * @throws NoSignedInUserException if there is noone signed in.
+   */
+  public boolean currentUserIsAssignee(Project project)
+      throws InexistentDatabaseEntityException, NoSignedInUserException {
+    return userIsAssignee(getMandatoryCurrentUser(), project);
+  }
+
+  /**
+   * Gets the project with the specified id.
+   *
+   * @param projectId uniquely identifies the project
+   * @return the project if it was found
+   * @throws InexistentProjectException if the project with that id was not found
+   * @throws SQLException if a database related error occurs
+   */
+  public Project getProjectById(int projectId) throws InexistentProjectException, SQLException {
+    return getMandatoryProject(projectId);
   }
 }

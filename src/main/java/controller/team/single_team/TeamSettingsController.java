@@ -5,6 +5,7 @@ import model.UnauthorisedOperationException;
 import model.team.Team;
 import model.team.TeamManager;
 import model.team.exceptions.*;
+import model.user.User;
 import model.user.exceptions.*;
 import view.ErrorDialogFactory;
 import view.team.single_team.TeamHomePanel;
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -38,12 +40,12 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   private static final String AFFIRM_LEAVING_TEAM_TITLE = "Left the team ";
 
-  public TeamSettingsController(TeamHomePanel homePanel, JFrame frame, int currentTeamId) {
-    super(frame, currentTeamId);
+  public TeamSettingsController(TeamHomePanel homePanel, JFrame frame, int teamId) {
+    super(frame, teamId);
     this.homePanel = homePanel;
     teamManager.addPropertyChangeListener(this);
     try {
-      currentTeam = teamManager.getTeam(currentTeamId);
+      currentTeam = teamManager.getTeam(teamId);
     } catch (SQLException | InexistentTeamException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, "This team cannot be viewed.");
     }
@@ -69,11 +71,22 @@ public class TeamSettingsController extends TeamController implements PropertyCh
       updateCurrentTeam();
       setManagerAccess();
       updateHomePanel();
+    } else if (evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
+        || evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
+      updateCurrentTeam();
+      updateHomePanel();
+    } else if (evt.getPropertyName()
+        .equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
+      updateCurrentTeam();
+      setManagerAccess();
+      updateHomePanel();
     }
   }
 
   private void updateHomePanel() {
-    homePanel.enableButtons(managerAccess);
+    homePanel.enableComponents(managerAccess);
     homePanel.updateHomePaneComponents();
   }
 
@@ -96,24 +109,33 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     return null;
   }
 
-  public void confirmLeavingTeam() {
-    int answer =
-        JOptionPane.showConfirmDialog(
-            frame,
-            CONFIRM_LEAVING_TEAM_MESSAGE,
-            CONFIRM_LEAVING_TEAM_TITLE,
-            JOptionPane.YES_NO_OPTION);
-    if (answer == JOptionPane.YES_OPTION) {
-      leaveTeam();
-      JOptionPane.showMessageDialog(
-          frame, AFFIRM_LEAVING_TEAM_MESSAGE, AFFIRM_LEAVING_TEAM_TITLE, JOptionPane.PLAIN_MESSAGE);
-      closeFrame();
+  public List<User> getMembersOfTeam() {
+    try {
+      return teamManager.getMembersOfTeam(currentTeam.getId());
+    } catch (InexistentDatabaseEntityException | SQLException e) {
+      JOptionPane.showMessageDialog(frame, "Members could not be listed");
+      return null;
     }
   }
 
-  private void leaveTeam() {
+  /** Displays a message dialog to ask the user to confirm that he/she wants to leave the team. */
+  private int confirmLeavingTeam() {
+    return JOptionPane.showConfirmDialog(
+        frame, CONFIRM_LEAVING_TEAM_MESSAGE, CONFIRM_LEAVING_TEAM_TITLE, JOptionPane.YES_NO_OPTION);
+  }
+  /** Displays a message dialog to inform the user that he/she has left the team. */
+  private void affirmLeavingTeam() {
+    JOptionPane.showConfirmDialog(
+        frame, AFFIRM_LEAVING_TEAM_MESSAGE, AFFIRM_LEAVING_TEAM_TITLE, JOptionPane.YES_NO_OPTION);
+  }
+
+  public void leaveTeam() {
     try {
-      teamManager.leaveTeam(currentTeamId);
+      if (confirmLeavingTeam() == JOptionPane.YES_OPTION) {
+        teamManager.leaveTeam(teamId);
+        affirmLeavingTeam();
+        closeFrame();
+      }
     } catch (SQLException
         | InexistentDatabaseEntityException
         | InexistentTeamException databaseException) {
@@ -136,8 +158,8 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   public void saveTeamName(String name) {
     try {
-      teamManager.setNewName(currentTeamId, name);
-      homePanel.updateNameFieldAfterSave();
+      teamManager.setNewName(teamId, name);
+      homePanel.enableNameTextField(false);
     } catch (SQLException | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new name could not be saved.");
@@ -153,9 +175,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   public void regenerateTeamCode() {
     try {
-      if (teamManager.regenerateTeamCode(currentTeamId) != null) {
-        homePanel.showSavedLabel(true);
-      }
+      teamManager.regenerateTeamCode(teamId);
     } catch (SQLException | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new code could not be generated.");
@@ -171,9 +191,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   public void saveTeamManager(String newManagerName) {
     try {
-      teamManager.passManagerPosition(currentTeamId, newManagerName);
-      homePanel.updateManagerFieldAfterSave();
-      homePanel.updateNameFieldAfterSave(); // user cannot edit the name of the team anymore
+      teamManager.passManagerPosition(teamId, newManagerName);
     } catch (InexistentTeamException | SQLException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new manager could not be saved.");

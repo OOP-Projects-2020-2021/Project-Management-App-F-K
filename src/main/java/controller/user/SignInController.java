@@ -2,6 +2,7 @@ package controller.user;
 
 import controller.FrameController;
 import model.user.UserManager;
+import model.user.exceptions.EmptyFieldsException;
 import view.ErrorDialogFactory;
 import view.main.MainFrame;
 import view.user.SignUpFrame;
@@ -47,19 +48,12 @@ public class SignInController extends FrameController {
    */
   public boolean validateSignIn(String username, String password) {
     try {
-      if (isNotEmptyText(username) && isNotEmptyText(password)) {
-        return userManager.signIn(username, password);
-      }
-    } catch (SQLException sqlException) {
-      ErrorDialogFactory.createErrorDialog(sqlException, frame, null);
+      return userManager.signIn(username, password);
+    } catch (SQLException | EmptyFieldsException e) {
+      ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
     return false;
   }
-  /** Checks if the text from the text-field is not empty. */
-  private boolean isNotEmptyText(String text) {
-    return !(text == null || text.isEmpty());
-  }
-
   /** Opens the main menu on successful sign-in. */
   public void enableSigningIn() {
     new MainFrame();
