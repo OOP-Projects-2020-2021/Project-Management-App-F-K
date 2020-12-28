@@ -76,8 +76,12 @@ public class ProjectManager extends Manager {
    * @throws InexistentDatabaseEntityException should never occur.
    */
   public void createProject(
-      String projectName, int teamId, String assigneeName, LocalDate deadline, String description
-          , Project.Importance importance)
+      String projectName,
+      int teamId,
+      String assigneeName,
+      LocalDate deadline,
+      String description,
+      Project.Importance importance)
       throws NoSignedInUserException, SQLException, InexistentUserException,
           InexistentTeamException, DuplicateProjectNameException, InexistentDatabaseEntityException,
           EmptyFieldsException {

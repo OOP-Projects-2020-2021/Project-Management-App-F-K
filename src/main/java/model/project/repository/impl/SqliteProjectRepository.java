@@ -107,7 +107,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   // Get importance id.
   private static final String GET_PROJECTS_IMPORTANCE_ID =
-          "SELECT ImportanceId from Importance WHERE ImportanceName = ?";
+      "SELECT ImportanceId from Importance WHERE ImportanceName = ?";
   private PreparedStatement getProjectImportanceIdSt;
 
   /**
@@ -324,7 +324,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     int assigneeId = result.getInt("AssigneeId");
     Project.ProjectStatus status = Project.ProjectStatus.valueOf(result.getString("StatusName"));
     Project.Importance importance = Project.Importance.valueOf(result.getString("ImportanceName"));
-    Project project = new Project(id, title, teamId, deadline, status, supervisorId, assigneeId, importance);
+    Project project =
+        new Project(id, title, teamId, deadline, status, supervisorId, assigneeId, importance);
     project.setDescription(description);
     return project;
   }
