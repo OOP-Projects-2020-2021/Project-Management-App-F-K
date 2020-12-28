@@ -249,6 +249,7 @@ public class ProjectManager extends Manager {
         && project.getStatus() != Project.ProjectStatus.TURNED_IN) {
       if (userIsAssignee(currentUser, project)) {
         project.setStatus(Project.ProjectStatus.TURNED_IN);
+        project.setTurnInDate(LocalDate.now());
         projectRepository.updateProject(project);
       } else {
         throw new UnauthorisedOperationException(
@@ -285,6 +286,7 @@ public class ProjectManager extends Manager {
         if (newStatus == Project.ProjectStatus.TO_DO
             || newStatus == Project.ProjectStatus.IN_PROGRESS) {
           project.setStatus(newStatus);
+          project.setTurnInDate(null);
           projectRepository.updateProject(project);
         } else {
           throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
@@ -355,6 +357,7 @@ public class ProjectManager extends Manager {
         if (newStatus != Project.ProjectStatus.FINISHED
             && newStatus != Project.ProjectStatus.TURNED_IN) {
           project.setStatus(newStatus);
+          project.setTurnInDate(null);
           projectRepository.updateProject(project);
         } else {
           throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);

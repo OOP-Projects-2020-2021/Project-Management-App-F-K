@@ -311,7 +311,10 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     LocalDate deadline = LocalDate.parse(result.getString("Deadline"));
     int supervisorId = result.getInt("SupervisorId");
     int assigneeId = result.getInt("AssigneeId");
-    LocalDate turnInDate = LocalDate.parse(result.getString("TurnInDate"));
+    LocalDate turnInDate = null;
+    if (result.getString("TurnInDate") != null) {
+      turnInDate = LocalDate.parse(result.getString("TurnInDate"));
+    }
     Project.ProjectStatus status = Project.ProjectStatus.valueOf(result.getString("StatusName"));
     Project project = new Project(id, title, teamId, deadline, status, supervisorId, assigneeId, turnInDate);
     project.setDescription(description);
