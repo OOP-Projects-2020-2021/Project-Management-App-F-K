@@ -48,6 +48,7 @@ public class ProjectFilterPanel extends JPanel {
     initFilters();
     initListPorjectsButton();
     createPanelLayout();
+    applyFilter();
   }
 
   private void initListPorjectsButton() {
