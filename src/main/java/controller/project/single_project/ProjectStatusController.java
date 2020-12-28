@@ -123,10 +123,10 @@ public class ProjectStatusController extends ProjectController implements Proper
     } catch (SQLException | InexistentDatabaseEntityException | InexistentProjectException e) {
       Exception exception = new SQLException();
       ErrorDialogFactory.createErrorDialog(exception, frame, null);
-    } catch (IllegalProjectStatusChangeException | NoSignedInUserException | UnauthorisedOperationException e) {
-      ErrorDialogFactory.createErrorDialog(
-          e,
-          frame, null);
+    } catch (IllegalProjectStatusChangeException
+        | NoSignedInUserException
+        | UnauthorisedOperationException e) {
+      ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
   }
 
@@ -164,11 +164,10 @@ public class ProjectStatusController extends ProjectController implements Proper
     } catch (SQLException | InexistentDatabaseEntityException | InexistentProjectException e) {
       Exception exception = new SQLException();
       ErrorDialogFactory.createErrorDialog(exception, frame, null);
-    } catch (IllegalProjectStatusChangeException | NoSignedInUserException | UnauthorisedOperationException e) {
-      ErrorDialogFactory.createErrorDialog(
-          e,
-          frame,
-          null);
+    } catch (IllegalProjectStatusChangeException
+        | NoSignedInUserException
+        | UnauthorisedOperationException e) {
+      ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
   }
 
