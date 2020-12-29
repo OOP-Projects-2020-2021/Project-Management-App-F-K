@@ -39,6 +39,12 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   private static final String CONFIRM_LEAVING_TEAM_TITLE = "Leaving team";
 
+  /** Messages to confirm deleting the team. */
+  private static final String CONFIRM_DELETING_TEAM_MESSAGE =
+          "Are you sure that you want to delete this team?";
+
+  private static final String CONFIRM_DELETING_TEAM_TITLE = "Deleting team";
+
   /** Messages to inform the user that they left the team. */
   private static final String AFFIRM_LEAVING_TEAM_MESSAGE =
       "Now you are not a member of this team anymore.";
@@ -250,10 +256,13 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   public void deleteTeam() {
     try {
-      if(hasUnfinishedProjects(null)) {
-        throw new IllegalTeamRemovalException(currentTeam.getName());
+      int option = JOptionPane.showConfirmDialog(frame,CONFIRM_DELETING_TEAM_MESSAGE,CONFIRM_DELETING_TEAM_TITLE,JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
+      if(option == JOptionPane.YES_OPTION) {
+        if (hasUnfinishedProjects(null)) {
+          throw new IllegalTeamRemovalException(currentTeam.getName());
+        }
+        teamManager.deleteTeam(teamId);
       }
-      teamManager.deleteTeam(teamId);
     } catch (SQLException | InexistentTeamException | UnauthorisedOperationException | NoSignedInUserException | InexistentDatabaseEntityException | InexistentUserException | IllegalTeamRemovalException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
