@@ -140,12 +140,15 @@ public class TeamSettingsController extends TeamController implements PropertyCh
         frame, AFFIRM_LEAVING_TEAM_MESSAGE, AFFIRM_LEAVING_TEAM_TITLE, JOptionPane.YES_NO_OPTION);
   }
 
+  /**
+   * Before leaving the team, the user is prompted a message dialog to confirm deleting the team,
+   * and it is checked whether the current member has any unfinished projects assigned to or supervised by
+   * them, in which case they cannot leave the team.
+   */
   public void leaveTeam() {
     try {
       if (confirmLeavingTeam() == JOptionPane.YES_OPTION) {
-        if (hasUnfinishedProjects()) {
-          throw new IllegalMemberRemovalException(userManager.getCurrentUser().get().getUsername());
-        }
+        projectManager.guaranteeNoUnfinishedAssignedOrSupervisedProjects(userManager.getCurrentUser().get().getUsername(),teamId);
         teamManager.leaveTeam(teamId);
         affirmLeavingTeam();
         closeFrame();
@@ -155,8 +158,8 @@ public class TeamSettingsController extends TeamController implements PropertyCh
         | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "You could not be removed from the team.");
-    } catch (NoSignedInUserException noSignedInUserException) {
-      ErrorDialogFactory.createErrorDialog(noSignedInUserException, frame, null);
+    } catch (NoSignedInUserException | InexistentUserException userException) {
+      ErrorDialogFactory.createErrorDialog(userException, frame, null);
     } catch (UnregisteredMemberRemovalException unregisteredMemberRemovalException) {
       ErrorDialogFactory.createErrorDialog(
           unregisteredMemberRemovalException,
@@ -171,30 +174,8 @@ public class TeamSettingsController extends TeamController implements PropertyCh
       ErrorDialogFactory.createErrorDialog(
           illegalMemberRemovalException,
           frame,
-          "You are not allowed to leave the team,\n"
-              + "because you have unfinished projects left.");
+          "You are not allowed to leave the team.\n");
     }
-  }
-  /**
-   * Check whether the current user has any unfinished projects.
-   *
-   * @return true if the member has any unfinished projects, otherwise false
-   * @throws NoSignedInUserException if there is no user signed in
-   * @throws SQLException if an error occurred when reading the projects from the database
-   * @throws InexistentDatabaseEntityException if the team or project with given id doesn't exist in
-   *     the database
-   */
-  private boolean hasUnfinishedProjects()
-      throws NoSignedInUserException, SQLException, InexistentDatabaseEntityException {
-    List<Project> projects =
-        projectManager.getProjects(
-            true, true, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
-    for (Project project : projects) {
-      if (project.getStatus() != Project.ProjectStatus.FINISHED) {
-        return true;
-      }
-    }
-    return false;
   }
 
   public void saveTeamName(String name) {
@@ -254,13 +235,16 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     }
   }
 
+  /**
+   * Before deleting a team, a message dialog asks the user to confirm the removal of the team,
+   * and it is checked whether the team contains any unfinished projects.
+   * If so, the operation fails and the team cannot be deleted.
+   */
   public void deleteTeam() {
     try {
       int option = JOptionPane.showConfirmDialog(frame,CONFIRM_DELETING_TEAM_MESSAGE,CONFIRM_DELETING_TEAM_TITLE,JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
       if(option == JOptionPane.YES_OPTION) {
-        if (hasUnfinishedProjects(null)) {
-          throw new IllegalTeamRemovalException(currentTeam.getName());
-        }
+        projectManager.guaranteeNoUnfinishedAssignedOrSupervisedProjects(teamId);
         teamManager.deleteTeam(teamId);
       }
     } catch (SQLException | InexistentTeamException | UnauthorisedOperationException | NoSignedInUserException | InexistentDatabaseEntityException | InexistentUserException | IllegalTeamRemovalException e) {

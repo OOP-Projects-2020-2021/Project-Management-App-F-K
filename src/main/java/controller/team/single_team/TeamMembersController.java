@@ -2,6 +2,7 @@ package controller.team.single_team;
 
 import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
+import model.project.ProjectManager;
 import model.team.TeamManager;
 import model.team.exceptions.*;
 import model.user.User;
@@ -25,6 +26,7 @@ import java.util.List;
 public class TeamMembersController extends TeamController implements PropertyChangeListener {
 
   private TeamMembersPanel membersPanel;
+  private ProjectManager projectManager;
 
   /** Messages to confirm the removal of a member from the team. */
   private static final String CONFIRM_REMOVING_MEMBER_MESSAGE =
@@ -35,6 +37,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
   public TeamMembersController(TeamMembersPanel membersPanel, JFrame frame, int teamId) {
     super(frame, teamId);
     this.membersPanel = membersPanel;
+    projectManager = ProjectManager.getInstance();
     teamManager.addPropertyChangeListener(this);
   }
 
@@ -100,38 +103,36 @@ public class TeamMembersController extends TeamController implements PropertyCha
             JOptionPane.YES_NO_OPTION);
     if (choice == JOptionPane.YES_OPTION) {
       try {
-        if (hasUnfinishedProjects(name)) {
-          throw new IllegalMemberRemovalException(name);
-        }
+        projectManager.guaranteeNoUnfinishedAssignedOrSupervisedProjects(name, teamId);
         teamManager.removeTeamMember(teamId, name);
       } catch (InexistentTeamException
-          | InexistentDatabaseEntityException
-          | SQLException databaseException) {
+              | InexistentDatabaseEntityException
+              | SQLException databaseException) {
         ErrorDialogFactory.createErrorDialog(
-            databaseException, frame, "The member \"" + name + "\" could not be removed.");
-      } catch (IllegalMemberRemovalException illegalMemberRemovalException) {
-        ErrorDialogFactory.createErrorDialog(
-            illegalMemberRemovalException,
-            frame,
-            "The user \"" + name + "\" cannot be removed from this team.");
+                databaseException, frame, "The member \"" + name + "\" could not be removed.");
       } catch (UnauthorisedOperationException | NoSignedInUserException accessDeniedException) {
         ErrorDialogFactory.createErrorDialog(
-            accessDeniedException, frame, "You are not allowed to remove a member from this team.");
+                accessDeniedException, frame, "You are not allowed to remove a member from this team.");
       } catch (UnregisteredMemberRemovalException unregisteredMemberRemovalException) {
         ErrorDialogFactory.createErrorDialog(
-            unregisteredMemberRemovalException,
-            frame,
-            "The user \" " + name + "\" is not a member of this team.");
+                unregisteredMemberRemovalException,
+                frame,
+                "The user \" " + name + "\" is not a member of this team.");
       } catch (InexistentUserException inexistentUserException) {
         ErrorDialogFactory.createErrorDialog(
-            inexistentUserException,
-            frame,
-            "The user \" + name + \" could not be removed, because it doesn't exist.");
+                inexistentUserException,
+                frame,
+                "The user \" + name + \" could not be removed, because it doesn't exist.");
       } catch (ManagerRemovalException managerRemovalException) {
         ErrorDialogFactory.createErrorDialog(
-            managerRemovalException,
-            frame,
-            "The user \"" + name + "\" is the current manager of the team.");
+                managerRemovalException,
+                frame,
+                "The user \"" + name + "\" is the current manager of the team.");
+      } catch (IllegalMemberRemovalException illegalMemberRemovalException) {
+        ErrorDialogFactory.createErrorDialog(
+                illegalMemberRemovalException,
+                frame,
+                "The user \"" + name + "\" cannot be removed from this team.");
       }
     }
   }

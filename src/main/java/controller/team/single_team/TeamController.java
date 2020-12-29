@@ -67,29 +67,6 @@ public class TeamController extends FrameController {
     return managerAccess;
   }
 
-  /**
-   * Check whether a member of the team has any unfinished projects.
-   *
-   * @param member = name of the member after which we inquire
-   * @return true if the member has any unfinished projects, otherwise false
-   * @throws InexistentUserException if there is no such member
-   * @throws SQLException if an error occurred when reading the projects from the database
-   * @throws InexistentDatabaseEntityException if the team or project with given id doesn't exist in
-   *     the database
-   */
-  protected boolean hasUnfinishedProjects(String member)
-          throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
-    ProjectManager projectManager = ProjectManager.getInstance();
-    List<Project> projects =
-            projectManager.getProjectsOfTeam(
-                    teamId, member, member, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
-    for (Project project : projects) {
-      if (project.getStatus() != Project.ProjectStatus.FINISHED) {
-        return true;
-      }
-    }
-    return false;
-  }
   public void onClose(JFrame parentFrame) {
     parentFrame.setVisible(true);
     parentFrame.setEnabled(true);
