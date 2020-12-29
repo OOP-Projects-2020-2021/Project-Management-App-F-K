@@ -114,8 +114,9 @@ public class ErrorDialogFactory {
    * illegal.
    */
   private static final String ILLEGAL_PROJECT_STATUS_CHANGE_TITLE = "Illegal status change.";
+
   private static final String ILLEGAL_PROJECT_STATUS_CHANGE_MESSAGE =
-          "This change of project status is now allowed";
+      "This change of project status is now allowed";
   /**
    * Messages to warn the user about attempting to delete a member of a team, while that member
    * still has assigned/supervised projects.
@@ -127,11 +128,12 @@ public class ErrorDialogFactory {
   private static final String ILLEGAL_MEMBER_REMOVAL_TITLE = "Illegal member removal";
 
   /**
-   * Messages to warn the user about attempting to delete a team, which still has assigned/supervised projects.
+   * Messages to warn the user about attempting to delete a team, which still has
+   * assigned/supervised projects.
    */
   private static final String ILLEGAL_TEAM_REMOVAL_MESSAGE =
-          "The attempt to delete the team failed, \n"
-                  + "because this team still has unfinished projects.";
+      "The attempt to delete the team failed, \n"
+          + "because this team still has unfinished projects.";
 
   private static final String ILLEGAL_TEAM_REMOVAL_TITLE = "Illegal team removal";
 
@@ -334,17 +336,17 @@ public class ErrorDialogFactory {
   /** Displays an error message to warn the user that removing that team is illegal. */
   private static void displayIllegalTeamRemovalErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            ILLEGAL_TEAM_REMOVAL_MESSAGE + "\n" + message,
-            ILLEGAL_TEAM_REMOVAL_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        ILLEGAL_TEAM_REMOVAL_MESSAGE + "\n" + message,
+        ILLEGAL_TEAM_REMOVAL_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
   /** Displays an error message to inform the user that the project status change is illegal. */
   private static void displayIllegalProjectStatusChangeErrorDialog(Frame frame, String message) {
-      JOptionPane.showMessageDialog(
-              frame,
-              ILLEGAL_STATUS_CHANGE_MESSAGE + "\n" + message,
-              ILLEGAL_STATUS_CHANGE_TITLE,
-              JOptionPane.ERROR_MESSAGE);
-    }
+    JOptionPane.showMessageDialog(
+        frame,
+        ILLEGAL_STATUS_CHANGE_MESSAGE + "\n" + message,
+        ILLEGAL_STATUS_CHANGE_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
 }

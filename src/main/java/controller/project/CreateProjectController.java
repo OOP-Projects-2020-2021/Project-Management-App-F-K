@@ -15,8 +15,6 @@ import org.jetbrains.annotations.Nullable;
 import view.ErrorDialogFactory;
 
 import javax.swing.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;

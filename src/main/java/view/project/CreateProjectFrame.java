@@ -128,7 +128,6 @@ public class CreateProjectFrame extends JFrame {
     }
   }
 
-
   private void initContentPanel() {
     JPanel contentPanel = new JPanel();
     GroupLayout contentLayout = new GroupLayout(contentPanel);

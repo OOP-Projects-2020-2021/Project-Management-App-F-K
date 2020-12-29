@@ -18,7 +18,8 @@ public class CreateTeamController extends FrameController {
   TeamManager teamManager;
 
   private static final String SUCCESSFUL_TEAM_CREATION_TITLE = "Successful operation";
-  private static final String SUCCESSFUL_TEAM_CREATION_MESSAGE = "The team was successfully created";
+  private static final String SUCCESSFUL_TEAM_CREATION_MESSAGE =
+      "The team was successfully created";
 
   public CreateTeamController(JFrame frame) {
     super(frame);

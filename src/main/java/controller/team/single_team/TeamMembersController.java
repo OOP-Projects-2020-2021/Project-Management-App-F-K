@@ -106,35 +106,34 @@ public class TeamMembersController extends TeamController implements PropertyCha
         projectManager.guaranteeNoUnfinishedAssignedOrSupervisedProjects(name, teamId);
         teamManager.removeTeamMember(teamId, name);
       } catch (InexistentTeamException
-              | InexistentDatabaseEntityException
-              | SQLException databaseException) {
+          | InexistentDatabaseEntityException
+          | SQLException databaseException) {
         ErrorDialogFactory.createErrorDialog(
-                databaseException, frame, "The member \"" + name + "\" could not be removed.");
+            databaseException, frame, "The member \"" + name + "\" could not be removed.");
       } catch (UnauthorisedOperationException | NoSignedInUserException accessDeniedException) {
         ErrorDialogFactory.createErrorDialog(
-                accessDeniedException, frame, "You are not allowed to remove a member from this team.");
+            accessDeniedException, frame, "You are not allowed to remove a member from this team.");
       } catch (UnregisteredMemberRemovalException unregisteredMemberRemovalException) {
         ErrorDialogFactory.createErrorDialog(
-                unregisteredMemberRemovalException,
-                frame,
-                "The user \" " + name + "\" is not a member of this team.");
+            unregisteredMemberRemovalException,
+            frame,
+            "The user \" " + name + "\" is not a member of this team.");
       } catch (InexistentUserException inexistentUserException) {
         ErrorDialogFactory.createErrorDialog(
-                inexistentUserException,
-                frame,
-                "The user \" + name + \" could not be removed, because it doesn't exist.");
+            inexistentUserException,
+            frame,
+            "The user \" + name + \" could not be removed, because it doesn't exist.");
       } catch (ManagerRemovalException managerRemovalException) {
         ErrorDialogFactory.createErrorDialog(
-                managerRemovalException,
-                frame,
-                "The user \"" + name + "\" is the current manager of the team.");
+            managerRemovalException,
+            frame,
+            "The user \"" + name + "\" is the current manager of the team.");
       } catch (IllegalMemberRemovalException illegalMemberRemovalException) {
         ErrorDialogFactory.createErrorDialog(
-                illegalMemberRemovalException,
-                frame,
-                "The user \"" + name + "\" cannot be removed from this team.");
+            illegalMemberRemovalException,
+            frame,
+            "The user \"" + name + "\" cannot be removed from this team.");
       }
     }
   }
-
 }

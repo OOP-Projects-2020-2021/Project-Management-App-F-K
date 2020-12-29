@@ -2,19 +2,13 @@ package controller.team.single_team;
 
 import controller.FrameController;
 import model.InexistentDatabaseEntityException;
-import model.project.Project;
-import model.project.ProjectManager;
-import model.project.queryconstants.QueryProjectDeadlineStatus;
-import model.project.queryconstants.QueryProjectStatus;
 import model.team.TeamManager;
 import model.team.exceptions.InexistentTeamException;
 import model.user.UserManager;
-import model.user.exceptions.InexistentUserException;
 import view.ErrorDialogFactory;
 
 import javax.swing.*;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * The TeamController manages the TeamFrame. It has two static fields, the teamId, which doesn't

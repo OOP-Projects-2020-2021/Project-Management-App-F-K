@@ -15,7 +15,6 @@ import model.user.User;
 import model.user.exceptions.EmptyFieldsException;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
-import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
@@ -575,7 +574,9 @@ public class ProjectManager extends Manager {
   }
 
   /**
-   * Guarantee that the member of the given team has no unfinished projects assigned to them or supervised by them.
+   * Guarantee that the member of the given team has no unfinished projects assigned to them or
+   * supervised by them.
+   *
    * @param member = the name of the member
    * @param teamId = id of the team of the given member
    * @throws SQLException in case a database error occurs
@@ -585,16 +586,22 @@ public class ProjectManager extends Manager {
    * @throws IllegalMemberRemovalException if the given member has any unfinished projects left
    */
   public void guaranteeNoUnfinishedAssignedOrSupervisedProjects(String member, int teamId)
-          throws SQLException, InexistentDatabaseEntityException, InexistentUserException, NoSignedInUserException, IllegalMemberRemovalException{
-      boolean unfinishedProjectsOfTeam = (hasUnfinishedProjectsOfTeam(member,null,teamId) || hasUnfinishedProjectsOfTeam(null,member,teamId));
-      boolean unfinishedProjectsOfUser = (hasUnfinishedProjectsOfCurrentUser(true,false) || hasUnfinishedProjectsOfCurrentUser(false,true));
-      if((isMemberCurrentUser(member) && unfinishedProjectsOfUser) || unfinishedProjectsOfTeam) {
-        throw new IllegalMemberRemovalException(member);
+      throws SQLException, InexistentDatabaseEntityException, InexistentUserException,
+          NoSignedInUserException, IllegalMemberRemovalException {
+    boolean unfinishedProjectsOfTeam =
+        (hasUnfinishedProjectsOfTeam(member, null, teamId)
+            || hasUnfinishedProjectsOfTeam(null, member, teamId));
+    boolean unfinishedProjectsOfUser =
+        (hasUnfinishedProjectsOfCurrentUser(true, false)
+            || hasUnfinishedProjectsOfCurrentUser(false, true));
+    if ((isMemberCurrentUser(member) && unfinishedProjectsOfUser) || unfinishedProjectsOfTeam) {
+      throw new IllegalMemberRemovalException(member);
     }
   }
 
   /**
    * Guarantee that the given team has any unfinished projects.
+   *
    * @param teamId = id of the team
    * @throws SQLException in case a database error occurs
    * @throws InexistentDatabaseEntityException in case there is no team with the given id
@@ -602,20 +609,25 @@ public class ProjectManager extends Manager {
    * @throws IllegalTeamRemovalException if the given team has any unfinished projects left
    */
   public void guaranteeNoUnfinishedAssignedOrSupervisedProjects(int teamId)
-          throws SQLException, InexistentDatabaseEntityException, InexistentUserException, IllegalTeamRemovalException {
-    boolean unfinishedProjectsOfTeam = (hasUnfinishedProjectsOfTeam(null,null,teamId) || hasUnfinishedProjectsOfTeam(null,null,teamId));
-    if(unfinishedProjectsOfTeam) {
+      throws SQLException, InexistentDatabaseEntityException, InexistentUserException,
+          IllegalTeamRemovalException {
+    boolean unfinishedProjectsOfTeam =
+        (hasUnfinishedProjectsOfTeam(null, null, teamId)
+            || hasUnfinishedProjectsOfTeam(null, null, teamId));
+    if (unfinishedProjectsOfTeam) {
       throw new IllegalTeamRemovalException(teamRepository.getTeam(teamId).get().getName());
     }
   }
 
-  /** Checks whether the given member is the current user.
+  /**
+   * Checks whether the given member is the current user.
    *
    * @param member = name of the member being tested
    * @return true if the given member is the current user, otherwise false
    * @throws NoSignedInUserException if no user is currently signed in
    */
-  private boolean isMemberCurrentUser(String member) throws NullPointerException,NoSignedInUserException {
+  private boolean isMemberCurrentUser(String member)
+      throws NullPointerException, NoSignedInUserException {
     return member.equals(getMandatoryCurrentUser().getUsername());
   }
   /**
@@ -629,9 +641,11 @@ public class ProjectManager extends Manager {
    * @throws InexistentDatabaseEntityException if the team with given id cannot be found
    * @throws InexistentUserException if the assignee or supervisor don't exist
    */
-  private boolean hasUnfinishedProjectsOfTeam(String assignee,String supervisor,int teamId) throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
-    List<Project> projects = getProjectsOfTeam(
-                    teamId, supervisor,assignee, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
+  private boolean hasUnfinishedProjectsOfTeam(String assignee, String supervisor, int teamId)
+      throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
+    List<Project> projects =
+        getProjectsOfTeam(
+            teamId, supervisor, assignee, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
     for (Project project : projects) {
       if (project.getStatus() != Project.ProjectStatus.FINISHED) {
         return true;
@@ -650,10 +664,10 @@ public class ProjectManager extends Manager {
    * @throws InexistentDatabaseEntityException if the team or project with given id doesn't exist in
    *     the database
    */
-  private boolean hasUnfinishedProjectsOfCurrentUser(boolean assigned,boolean supervised)
-          throws NoSignedInUserException, SQLException, InexistentDatabaseEntityException {
-    List<Project> projects = getProjects(
-                    assigned,supervised, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
+  private boolean hasUnfinishedProjectsOfCurrentUser(boolean assigned, boolean supervised)
+      throws NoSignedInUserException, SQLException, InexistentDatabaseEntityException {
+    List<Project> projects =
+        getProjects(assigned, supervised, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
     for (Project project : projects) {
       if (project.getStatus() != Project.ProjectStatus.FINISHED) {
         return true;

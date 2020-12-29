@@ -2,10 +2,7 @@ package controller.team.single_team;
 
 import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
-import model.project.Project;
 import model.project.ProjectManager;
-import model.project.queryconstants.QueryProjectDeadlineStatus;
-import model.project.queryconstants.QueryProjectStatus;
 import model.team.Team;
 import model.team.TeamManager;
 import model.team.exceptions.*;
@@ -41,7 +38,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   /** Messages to confirm deleting the team. */
   private static final String CONFIRM_DELETING_TEAM_MESSAGE =
-          "Are you sure that you want to delete this team?";
+      "Are you sure that you want to delete this team?";
 
   private static final String CONFIRM_DELETING_TEAM_TITLE = "Deleting team";
 
@@ -50,7 +47,6 @@ public class TeamSettingsController extends TeamController implements PropertyCh
       "Now you are not a member of this team anymore.";
 
   private static final String AFFIRM_LEAVING_TEAM_TITLE = "Left the team ";
-
 
   public TeamSettingsController(TeamHomePanel homePanel, JFrame frame, int teamId) {
     super(frame, teamId);
@@ -79,19 +75,19 @@ public class TeamSettingsController extends TeamController implements PropertyCh
             .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString())
         || evt.getPropertyName()
             .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
-            || evt.getPropertyName()
+        || evt.getPropertyName()
             .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
       updateCurrentTeam();
       updateHomePanel();
     } else if (evt.getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())
-    || evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())
+        || evt.getPropertyName()
             .equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
       updateCurrentTeam();
       setManagerAccess();
       updateHomePanel();
     } else if (evt.getPropertyName()
-            .equals(TeamManager.ChangablePropertyName.DELETE_TEAM.toString())) {
+        .equals(TeamManager.ChangablePropertyName.DELETE_TEAM.toString())) {
       closeFrame();
     }
   }
@@ -142,13 +138,14 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   /**
    * Before leaving the team, the user is prompted a message dialog to confirm deleting the team,
-   * and it is checked whether the current member has any unfinished projects assigned to or supervised by
-   * them, in which case they cannot leave the team.
+   * and it is checked whether the current member has any unfinished projects assigned to or
+   * supervised by them, in which case they cannot leave the team.
    */
   public void leaveTeam() {
     try {
       if (confirmLeavingTeam() == JOptionPane.YES_OPTION) {
-        projectManager.guaranteeNoUnfinishedAssignedOrSupervisedProjects(userManager.getCurrentUser().get().getUsername(),teamId);
+        projectManager.guaranteeNoUnfinishedAssignedOrSupervisedProjects(
+            userManager.getCurrentUser().get().getUsername(), teamId);
         teamManager.leaveTeam(teamId);
         affirmLeavingTeam();
         closeFrame();
@@ -172,9 +169,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
           "You cannot leave the team, because you are the manager.");
     } catch (IllegalMemberRemovalException illegalMemberRemovalException) {
       ErrorDialogFactory.createErrorDialog(
-          illegalMemberRemovalException,
-          frame,
-          "You are not allowed to leave the team.\n");
+          illegalMemberRemovalException, frame, "You are not allowed to leave the team.\n");
     }
   }
 
@@ -236,18 +231,30 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   }
 
   /**
-   * Before deleting a team, a message dialog asks the user to confirm the removal of the team,
-   * and it is checked whether the team contains any unfinished projects.
-   * If so, the operation fails and the team cannot be deleted.
+   * Before deleting a team, a message dialog asks the user to confirm the removal of the team, and
+   * it is checked whether the team contains any unfinished projects. If so, the operation fails and
+   * the team cannot be deleted.
    */
   public void deleteTeam() {
     try {
-      int option = JOptionPane.showConfirmDialog(frame,CONFIRM_DELETING_TEAM_MESSAGE,CONFIRM_DELETING_TEAM_TITLE,JOptionPane.YES_NO_OPTION,JOptionPane.WARNING_MESSAGE);
-      if(option == JOptionPane.YES_OPTION) {
+      int option =
+          JOptionPane.showConfirmDialog(
+              frame,
+              CONFIRM_DELETING_TEAM_MESSAGE,
+              CONFIRM_DELETING_TEAM_TITLE,
+              JOptionPane.YES_NO_OPTION,
+              JOptionPane.WARNING_MESSAGE);
+      if (option == JOptionPane.YES_OPTION) {
         projectManager.guaranteeNoUnfinishedAssignedOrSupervisedProjects(teamId);
         teamManager.deleteTeam(teamId);
       }
-    } catch (SQLException | InexistentTeamException | UnauthorisedOperationException | NoSignedInUserException | InexistentDatabaseEntityException | InexistentUserException | IllegalTeamRemovalException e) {
+    } catch (SQLException
+        | InexistentTeamException
+        | UnauthorisedOperationException
+        | NoSignedInUserException
+        | InexistentDatabaseEntityException
+        | InexistentUserException
+        | IllegalTeamRemovalException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
   }
