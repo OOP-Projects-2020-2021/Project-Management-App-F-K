@@ -9,8 +9,7 @@ import model.project.Project;
  * @author Bori Fazakas
  */
 public class IllegalProjectStatusChangeException extends Exception {
-  public IllegalProjectStatusChangeException(
-      Project.ProjectStatus oldStatus, Project.ProjectStatus newStatus) {
+  public IllegalProjectStatusChangeException(Project.Status oldStatus, Project.Status newStatus) {
     super(
         "You are not allowed to change the project's status from "
             + oldStatus

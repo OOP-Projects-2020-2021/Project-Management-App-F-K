@@ -82,7 +82,7 @@ public class ProjectDetailsController extends ProjectController implements Prope
   }
 
   public boolean enableEditing() {
-    return (isSupervisor() && (project.getStatus() != Project.ProjectStatus.FINISHED));
+    return (isSupervisor() && (project.getStatus() != Project.Status.FINISHED));
   }
 
   public User getProjectAssignee() {

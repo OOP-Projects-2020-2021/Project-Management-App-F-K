@@ -1,6 +1,7 @@
 package view.project;
 
 import controller.project.ProjectFilterController;
+import model.project.Project;
 import model.user.User;
 import view.UIFactory;
 
@@ -12,66 +13,65 @@ import java.util.List;
 
 /**
  * The ProjectsFilterPanel contains the filters that can be applied to listing the projects,
- * including the status of the project, the due time for turning in the project, and whether it is a
- * project assigned to the user or supervised by the user. The user can select only one option of
- * each, except in case of the assigned/ supervised projects, in which case at least one of these
- * options must be selected. Initially, both of them are selected, meaning that all the projects
- * will be listed.
+ * including the status of the project, the due time for finishing the project, and whether it is a
+ * project assigned to/supervised by the current user/a member. For status and due time for
+ * finishing the project multiple selection is allowed. At least one option must be selected. If the
+ * filter is applyed to projects of a user, then at least one of "assigned to me"/"supervised by me"
+ * options must be selected. If the filter is applied to projects of a team, then the option
+ * "assigned to anyone" and "supervised by anyone" is provided.
  *
- * @author Beata Keresztes
+ * @author Beata Keresztes, Bori Fazakas
  */
 public class ProjectFilterPanel extends JPanel {
 
-  private JPanel statusFilterButtonsPanel;
-  private JPanel turnInTimeFilterButtonsPanel;
   private JPanel privilegeFilterButtonsPanel;
   private JRadioButton assignedToUserButton;
   private JRadioButton supervisedByUserButton;
   private DefaultComboBoxModel<String> assigneeComboBoxModel;
   private DefaultComboBoxModel<String> supervisorComboBoxModel;
   private ProjectFilterController controller;
-  private JButton filterButton;
 
-  public ProjectFilterPanel(int teamId) {
-    this.controller = new ProjectFilterController(teamId, this);
+  private JPanel statusFilterPanel;
+  private JList<Project.Status> statusFilterList;
+  private JPanel deadlineStatusPanel;
+  private JList<Project.DeadlineStatus> deadlineStatusFilterList;
+
+  private JButton listProjectsButton;
+
+  private static final String statusName = "Project Status";
+  private static final String deadlineStatusName = "Turn-in Time";
+
+  public ProjectFilterPanel(int teamId, ProjectListModel projectListModel) {
+    this.controller = new ProjectFilterController(teamId, this, projectListModel);
     initFilters();
+    initListPorjectsButton();
     createPanelLayout();
+    applyFilter();
+  }
+
+  private void initListPorjectsButton() {
+    listProjectsButton = UIFactory.createButton("List Projects");
+    listProjectsButton.addActionListener(new ListProjectsButtonListener());
   }
 
   private void initFilters() {
     initStatusFilter();
     initPrivilegeFilter();
-    initTurnInTimeFilter();
-    initFilterButton();
-  }
-
-  private void initFilterButton() {
-    filterButton = UIFactory.createButton("Filter projects");
-    filterButton.addActionListener(new FilterButtonListener());
+    initDeadlineStatusFilter();
   }
 
   private void initStatusFilter() {
-    statusFilterButtonsPanel = new JPanel();
-    statusFilterButtonsPanel.setLayout(new BoxLayout(statusFilterButtonsPanel, BoxLayout.Y_AXIS));
-    // grouping the buttons ensures that only one button can be selected at a time
-    ButtonGroup statusFilterButtonGroup = new ButtonGroup();
-    String[] projectStatus = controller.getProjectStatusTypes();
-    JRadioButton[] statusFilterButtons = new JRadioButton[projectStatus.length];
-
-    for (int i = 0; i < projectStatus.length; i++) {
-      statusFilterButtons[i] = new JRadioButton(projectStatus[i]);
-      statusFilterButtons[i].setActionCommand(projectStatus[i]);
-      statusFilterButtons[i].addActionListener(new StatusFilterActionListener());
-      statusFilterButtonGroup.add(statusFilterButtons[i]);
-      statusFilterButtonsPanel.add(statusFilterButtons[i]);
-    }
-    // initially all projects are shown
-    statusFilterButtons[0].setSelected(true);
+    statusFilterPanel = new JPanel();
+    statusFilterPanel.setLayout(new BoxLayout(statusFilterPanel, BoxLayout.Y_AXIS));
+    statusFilterList = new JList<>(Project.Status.values());
+    statusFilterList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    statusFilterList.setSelectedIndex(0);
+    statusFilterPanel.add(statusFilterList);
   }
 
   private void initPrivilegeFilter() {
     privilegeFilterButtonsPanel = new JPanel();
-    if (controller.isViewedFromTeam()) {
+    if (controller.enableProjectSelectionForTeam()) {
       initPrivilegeFilterTeam();
     } else {
       initPrivilegeFilterUser();
@@ -87,8 +87,6 @@ public class ProjectFilterPanel extends JPanel {
         new JRadioButton(ProjectFilterController.PrivilegeTypes.ASSIGNED_TO_ME.toString());
     supervisedByUserButton =
         new JRadioButton(ProjectFilterController.PrivilegeTypes.SUPERVISED_BY_ME.toString());
-    assignedToUserButton.addActionListener(new PrivilegeFilterButtonListener());
-    supervisedByUserButton.addActionListener(new PrivilegeFilterButtonListener());
     // initially all projects are shown
     assignedToUserButton.setSelected(true);
     supervisedByUserButton.setSelected(true);
@@ -123,32 +121,23 @@ public class ProjectFilterPanel extends JPanel {
     List<User> members = controller.getTeamMembers();
     assigneeComboBoxModel.addElement(ProjectFilterController.ANYONE);
     supervisorComboBoxModel.addElement(ProjectFilterController.ANYONE);
-    for (User member : members) {
-      assigneeComboBoxModel.addElement(member.getUsername());
-      supervisorComboBoxModel.addElement(member.getUsername());
+    if (members != null) {
+      for (User member : members) {
+        assigneeComboBoxModel.addElement(member.getUsername());
+        supervisorComboBoxModel.addElement(member.getUsername());
+      }
     }
     assigneeComboBoxModel.setSelectedItem(ProjectFilterController.ANYONE);
     supervisorComboBoxModel.setSelectedItem(ProjectFilterController.ANYONE);
   }
 
-  private void initTurnInTimeFilter() {
-    String[] turnInTime = controller.getProjectTurnInTimes();
-    turnInTimeFilterButtonsPanel = new JPanel();
-    turnInTimeFilterButtonsPanel.setLayout(
-        new BoxLayout(turnInTimeFilterButtonsPanel, BoxLayout.Y_AXIS));
-    // grouping the buttons ensures that only one button can be selected at a time
-    ButtonGroup turnInTimeFilterButtonGroup = new ButtonGroup();
-    JRadioButton[] turnInTimeFilterButtons = new JRadioButton[turnInTime.length];
-
-    for (int i = 0; i < turnInTime.length; i++) {
-      turnInTimeFilterButtons[i] = new JRadioButton(turnInTime[i]);
-      turnInTimeFilterButtons[i].setActionCommand(turnInTime[i]);
-      turnInTimeFilterButtons[i].addActionListener(new TurnInTimeFilterActionListener());
-      turnInTimeFilterButtonGroup.add(turnInTimeFilterButtons[i]);
-      turnInTimeFilterButtonsPanel.add(turnInTimeFilterButtons[i]);
-    }
-    // initially all projects are shown
-    turnInTimeFilterButtons[0].setSelected(true);
+  private void initDeadlineStatusFilter() {
+    deadlineStatusPanel = new JPanel();
+    deadlineStatusPanel.setLayout(new BoxLayout(deadlineStatusPanel, BoxLayout.Y_AXIS));
+    deadlineStatusFilterList = new JList<>(Project.DeadlineStatus.values());
+    deadlineStatusFilterList.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+    deadlineStatusFilterList.setSelectedIndex(0);
+    deadlineStatusPanel.add(deadlineStatusFilterList);
   }
 
   private void createPanelLayout() {
@@ -157,10 +146,11 @@ public class ProjectFilterPanel extends JPanel {
     layout.setAutoCreateContainerGaps(true);
     this.setLayout(layout);
 
-    JLabel filterLabel = UIFactory.createLabel("Filter projects by:", null);
-    JLabel statusFilterLabel = UIFactory.createLabel("Status:", null);
-    JLabel turnInTimeFilterLabel = UIFactory.createLabel("Turn-in time:", null);
-    JLabel privilegeFilterLabel = UIFactory.createLabel("Type:", null);
+    JLabel filterLabel = UIFactory.createHighlightedLabel("Filter projects by:", null);
+    JLabel statusFilterLabel = UIFactory.createMediumHighlightedLabel(statusName + ": ", null);
+    JLabel deadlineStatusFilterLabel =
+        UIFactory.createMediumHighlightedLabel(deadlineStatusName + ": ", null);
+    JLabel privilegeFilterLabel = UIFactory.createMediumHighlightedLabel("Type:", null);
 
     layout.setHorizontalGroup(
         layout
@@ -168,15 +158,17 @@ public class ProjectFilterPanel extends JPanel {
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(filterLabel)
                     .addComponent(statusFilterLabel)
-                    .addComponent(statusFilterButtonsPanel)
-                    .addComponent(filterButton))
+                    .addComponent(statusFilterPanel))
+            .addGap(90, 90, 90)
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(turnInTimeFilterLabel)
-                    .addComponent(turnInTimeFilterButtonsPanel))
+                    .addComponent(filterLabel)
+                    .addComponent(deadlineStatusFilterLabel)
+                    .addComponent(deadlineStatusPanel)
+                    .addComponent(listProjectsButton))
+            .addGap(10, 10, 10)
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
@@ -187,6 +179,7 @@ public class ProjectFilterPanel extends JPanel {
         layout
             .createSequentialGroup()
             .addComponent(filterLabel)
+            .addGap(10, 10, 10)
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -194,13 +187,13 @@ public class ProjectFilterPanel extends JPanel {
                         layout
                             .createSequentialGroup()
                             .addComponent(statusFilterLabel)
-                            .addComponent(statusFilterButtonsPanel)
-                            .addComponent(filterButton))
+                            .addComponent(statusFilterPanel))
                     .addGroup(
                         layout
                             .createSequentialGroup()
-                            .addComponent(turnInTimeFilterLabel)
-                            .addComponent(turnInTimeFilterButtonsPanel))
+                            .addComponent(deadlineStatusFilterLabel)
+                            .addComponent(deadlineStatusPanel)
+                            .addComponent(listProjectsButton))
                     .addGroup(
                         layout
                             .createSequentialGroup()
@@ -208,53 +201,60 @@ public class ProjectFilterPanel extends JPanel {
                             .addComponent(privilegeFilterButtonsPanel))));
   }
 
-  class StatusFilterActionListener implements ActionListener {
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-      String statusFilter = actionEvent.getActionCommand();
-      controller.setStatusFilter(statusFilter);
-    }
+  private boolean isAtLeastOnePrivilegeButtonSelected() {
+    return assignedToUserButton.isSelected() || supervisedByUserButton.isSelected();
   }
 
-  class TurnInTimeFilterActionListener implements ActionListener {
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-      String turnInTimeFilter = actionEvent.getActionCommand();
-      controller.setTurnInTimeFilter(turnInTimeFilter);
-    }
-  }
-
-  class PrivilegeFilterButtonListener implements ActionListener {
-    private boolean isAtLeastOnePrivilegeButtonSelected() {
-      return assignedToUserButton.isSelected() || supervisedByUserButton.isSelected();
-    }
-
-    private void selectPrivilegeButtons() {
-      if (!isAtLeastOnePrivilegeButtonSelected()) {
-        // at least one filter must always be selected
-        assignedToUserButton.setSelected(true);
-        supervisedByUserButton.setSelected(true);
+  public void applyFilter() {
+    // don't allow empty selection
+    if (statusFilterList.getSelectedIndices().length == 0) {
+      showSelectAtLeastOnStatusDialog(statusName);
+    } else if (deadlineStatusFilterList.getSelectedIndices().length == 0) {
+      showSelectAtLeastOnStatusDialog(deadlineStatusName);
+    } else {
+      if (controller.enableProjectSelectionForTeam()) {
+        controller.filterProjectsOfTeam(
+            statusFilterList.getSelectedValuesList(),
+            deadlineStatusFilterList.getSelectedValuesList(),
+            (String) assigneeComboBoxModel.getSelectedItem(),
+            (String) supervisorComboBoxModel.getSelectedItem());
+      } else {
+        if (isAtLeastOnePrivilegeButtonSelected()) { // the query is valid
+          controller.filterProjectsOfUser(
+              statusFilterList.getSelectedValuesList(),
+              deadlineStatusFilterList.getSelectedValuesList(),
+              assignedToUserButton.isSelected(),
+              supervisedByUserButton.isSelected());
+        } else {
+          showSelectAtLeastOnePrivilegeDialog();
+        }
       }
     }
+  }
+
+  class ListProjectsButtonListener implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
-      boolean assignedToUser = assignedToUserButton.isSelected();
-      boolean supervisedByUser = supervisedByUserButton.isSelected();
-      // if both filters are selected, then all the projects will be displayed
-      controller.setPrivilegeFilter(assignedToUser, supervisedByUser);
-      selectPrivilegeButtons();
+      if (actionEvent.getSource() == listProjectsButton) {
+        applyFilter();
+      }
     }
   }
 
-  class FilterButtonListener implements ActionListener {
-    @Override
-    public void actionPerformed(ActionEvent actionEvent) {
-      if (controller.isViewedFromTeam()) {
-        controller.setAssigneeFilter((String) assigneeComboBoxModel.getSelectedItem());
-        controller.setSupervisorFilter((String) supervisorComboBoxModel.getSelectedItem());
-      }
-      controller.filterProjects();
-    }
+  private void showSelectAtLeastOnePrivilegeDialog() {
+    JOptionPane.showMessageDialog(
+        null,
+        "Please select at least one of the role buttons (assigned" + " to me/supervisoed by me",
+        "Error in query",
+        JOptionPane.ERROR_MESSAGE);
+  }
+
+  private void showSelectAtLeastOnStatusDialog(String statusName) {
+    JOptionPane.showMessageDialog(
+        null,
+        "Please select at least one of the option for " + statusName,
+        "Error in query",
+        JOptionPane.ERROR_MESSAGE);
   }
 }

@@ -16,7 +16,8 @@ import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.EnumSet;
 
-import static model.project.Project.ProjectStatus.*;
+import static model.project.Project.Status.*;
+import static model.project.Project.Status.TO_DO;
 
 /**
  * ProjectStatusController handles all the events related to the status change of the project,
@@ -106,7 +107,7 @@ public class ProjectStatusController extends ProjectController implements Proper
    */
   public void undoTurnIn() {
     try {
-      Project.ProjectStatus[] possibleAnswers = new Project.ProjectStatus[] {TO_DO, IN_PROGRESS};
+      Project.Status[] possibleAnswers = new Project.Status[] {TO_DO, IN_PROGRESS};
       int answerIndex =
           JOptionPane.showOptionDialog(
               frame,
@@ -146,7 +147,7 @@ public class ProjectStatusController extends ProjectController implements Proper
       if (answer == JOptionPane.YES_OPTION) {
         projectManager.acceptAsFinished(getProject().getId());
       } else if (answer == JOptionPane.NO_OPTION) {
-        Project.ProjectStatus[] possibleAnswers = new Project.ProjectStatus[] {TO_DO, IN_PROGRESS};
+        Project.Status[] possibleAnswers = new Project.Status[] {TO_DO, IN_PROGRESS};
         int answerIndex =
             JOptionPane.showOptionDialog(
                 frame,

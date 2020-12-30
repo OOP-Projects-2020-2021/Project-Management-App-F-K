@@ -3,13 +3,12 @@ package model.project.repository.impl;
 import model.InexistentDatabaseEntityException;
 import model.database.Repository;
 import model.project.Project;
-import model.project.queryconstants.QueryProjectDeadlineStatus;
-import model.project.queryconstants.QueryProjectStatus;
 import model.project.repository.ProjectRepository;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,13 +34,13 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   // Save a new team.
   private static final String SAVE_PROJECT_STATEMENT =
       "INSERT INTO Project (Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusId) VALUES (?, ?, ?, ?, ?, ?, ?)";
+          + "StatusId, TurnInDate) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
   private PreparedStatement saveProjectSt;
 
   // Get project based on id.
   private static final String GET_PROJECT_BY_ID =
       "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusName "
+          + "StatusName, TurnInDate "
           + "From Project p JOIN ProjectStatus st ON p"
           + ".StatusId = st.StatusId WHERE ProjectId = ?";
   private PreparedStatement getProjectByIdSt;
@@ -50,14 +49,14 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   private static final String UPDATE_PROJECT =
       "UPDATE Project "
           + " SET Name = ?, TeamId = ?, Description = ?, Deadline = ?, AssigneeId = ?, "
-          + "SupervisorId = ?, StatusId = ?"
+          + "SupervisorId = ?, StatusId = ?, TurnInDate = ? "
           + "Where ProjectId = ?";
   private PreparedStatement updateProjectSt;
 
   // Get projects based on team and title.
   private static final String GET_PROJECT_BY_TEAM_TITLE_STATEMENT =
       "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusName "
+          + "StatusName, TurnInDate "
           + "From Project p JOIN ProjectStatus st ON p"
           + ".StatusId = st.StatusId WHERE Name = ? and TeamId = ? ";
   private PreparedStatement getProjectByTitleTeamSt;
@@ -70,28 +69,37 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   // respect to deadline. The extra wildcards are responsible for making some attributes optional.
   private static final String GET_PROJECTS_OF_TEAM =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
-          + "AssigneeId, SupervisorId, StatusName From Project p "
+          + "AssigneeId, SupervisorId, StatusName, TurnInDate From Project p "
           + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
-          + "JOIN Team t ON t.TeamId = p.TeamId "
-          + "WHERE t.TeamId = ? AND "
+          + "WHERE p.TeamId = ? AND "
           + "(p.SupervisorId = ? OR ?) AND "
           + "(p.AssigneeId = ? OR ?) AND "
-          + "(st.StatusName = ? OR ?) AND "
-          + "(((p.Deadline >= date(\"now\") OR p.StatusId >= 3) AND ?) OR (p.deadline < date"
-          + "(\"now\") AND p.statusId <= 2 AND ?))";
+          + "((st.StatusName = 'TO_DO' AND ?) OR" // TO_DO allowed
+          + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" // IN_PROGRESS allowed
+          + " (st.StatusName = 'TURNED_IN' AND ?) OR" // TURNED_IN allowed
+          + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
+          + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
+          + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
+          + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
+          + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))"; // FINISHED_LATE
   private PreparedStatement getProjectsOfTeamSt;
 
   // Get projects possibly with a given assignee, supervisor, status and status with respect to
   // deadline. The extra wildcards are responsible for making some attributes optional.
   private static final String GET_PROJECTS =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
-          + "AssigneeId, SupervisorId, StatusName From Project p "
+          + "AssigneeId, SupervisorId, StatusName, TurnInDate From Project p "
           + "JOIN ProjectStatus st ON p.StatusId = st.StatusId "
           + "WHERE (p.SupervisorId = ? OR ?) AND "
           + "(p.AssigneeId = ? OR ?) AND"
-          + "(st.StatusName = ? OR ?) AND "
-          + "(((p.Deadline >= date(\"now\") OR p.StatusId >= 3) AND ?) OR (p.deadline < date"
-          + "(\"now\") AND p.statusId <= 2 AND ?))";
+          + "((st.StatusName = 'TO_DO' AND ?) OR" // TO_DO allowed
+          + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" // IN_PROGRESS allowed
+          + " (st.StatusName = 'TURNED_IN' AND ?) OR" // TURNED_IN allowed
+          + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
+          + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
+          + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
+          + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
+          + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))"; // FINISHED_LATE
   private PreparedStatement getProjectsSt;
 
   // Get status id
@@ -128,6 +136,11 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     saveProjectSt.setInt(5, project.getAssigneeId());
     saveProjectSt.setInt(6, project.getSupervisorId());
     saveProjectSt.setInt(7, getProjectStatusId(project.getStatus()));
+    if (project.getTurnInDate().isPresent()) {
+      saveProjectSt.setString(8, project.getTurnInDate().get().toString());
+    } else {
+      saveProjectSt.setNull(8, Types.NVARCHAR);
+    }
     saveProjectSt.execute();
     Optional<Project> savedProjectOp = getProject(project.getTeamId(), project.getTitle());
     if (savedProjectOp.isEmpty()) {
@@ -174,7 +187,12 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     updateProjectSt.setInt(5, project.getAssigneeId());
     updateProjectSt.setInt(6, project.getSupervisorId());
     updateProjectSt.setInt(7, getProjectStatusId(project.getStatus()));
-    updateProjectSt.setInt(8, project.getId());
+    if (project.getTurnInDate().isPresent()) {
+      updateProjectSt.setString(8, project.getTurnInDate().get().toString());
+    } else {
+      updateProjectSt.setNull(8, Types.NVARCHAR);
+    }
+    updateProjectSt.setInt(9, project.getId());
     updateProjectSt.execute();
   }
 
@@ -187,10 +205,10 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   @Override
   public List<Project> getProjectsOfTeam(
       int teamId,
-      QueryProjectStatus queryStatus,
+      EnumSet<Project.Status> allowedStatuses,
       Integer assigneeId,
       Integer supervisorId,
-      QueryProjectDeadlineStatus queryDeadlineStatus)
+      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
       throws SQLException {
     getProjectsOfTeamSt.setInt(1, teamId);
     // if supervisorid is null, it is don't care
@@ -209,25 +227,18 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       getProjectsOfTeamSt.setNull(4, Types.INTEGER);
       getProjectsOfTeamSt.setBoolean(5, true);
     }
-    if (queryStatus == QueryProjectStatus.ALL) {
-      getProjectsOfTeamSt.setNull(6, Types.NVARCHAR);
-      getProjectsOfTeamSt.setBoolean(7, true);
-    } else {
-      getProjectsOfTeamSt.setString(6, queryStatus.getCorrespondingStatus().toString());
-      getProjectsOfTeamSt.setBoolean(7, false);
-    }
-    if (queryDeadlineStatus == QueryProjectDeadlineStatus.IN_TIME
-        || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
-      getProjectsOfTeamSt.setBoolean(8, true);
-    } else {
-      getProjectsOfTeamSt.setBoolean(8, false);
-    }
-    if (queryDeadlineStatus == QueryProjectDeadlineStatus.OVERDUE
-        || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
-      getProjectsOfTeamSt.setBoolean(9, true);
-    } else {
-      getProjectsOfTeamSt.setBoolean(9, false);
-    }
+    getProjectsOfTeamSt.setBoolean(6, allowedStatuses.contains(Project.Status.TO_DO));
+    getProjectsOfTeamSt.setBoolean(7, allowedStatuses.contains(Project.Status.IN_PROGRESS));
+    getProjectsOfTeamSt.setBoolean(8, allowedStatuses.contains(Project.Status.TURNED_IN));
+    getProjectsOfTeamSt.setBoolean(9, allowedStatuses.contains(Project.Status.FINISHED));
+    getProjectsOfTeamSt.setBoolean(
+        10, allowedDeadlineStatuses.contains(Project.DeadlineStatus.IN_TIME_TO_FINISH));
+    getProjectsOfTeamSt.setBoolean(
+        11, allowedDeadlineStatuses.contains(Project.DeadlineStatus.OVERDUE));
+    getProjectsOfTeamSt.setBoolean(
+        12, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_IN_TIME));
+    getProjectsOfTeamSt.setBoolean(
+        13, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_LATE));
     ResultSet result = getProjectsOfTeamSt.executeQuery();
     ArrayList<Project> projectsOfTeam = new ArrayList<>();
     while (result.next()) {
@@ -238,10 +249,10 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   @Override
   public List<Project> getProjects(
-      QueryProjectStatus queryStatus,
+      EnumSet<Project.Status> allowedStatuses,
       Integer assigneeId,
       Integer supervisorId,
-      QueryProjectDeadlineStatus queryDeadlineStatus)
+      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
       throws SQLException {
     // if supervisorid is null, it is don't care
     if (supervisorId != null) {
@@ -259,25 +270,17 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       getProjectsSt.setNull(3, Types.INTEGER);
       getProjectsSt.setBoolean(4, true);
     }
-    if (queryStatus == QueryProjectStatus.ALL) {
-      getProjectsSt.setNull(5, Types.NVARCHAR);
-      getProjectsSt.setBoolean(6, true);
-    } else {
-      getProjectsSt.setString(5, queryStatus.getCorrespondingStatus().toString());
-      getProjectsSt.setBoolean(6, false);
-    }
-    if (queryDeadlineStatus == QueryProjectDeadlineStatus.IN_TIME
-        || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
-      getProjectsSt.setBoolean(7, true);
-    } else {
-      getProjectsSt.setBoolean(7, false);
-    }
-    if (queryDeadlineStatus == QueryProjectDeadlineStatus.OVERDUE
-        || queryDeadlineStatus == QueryProjectDeadlineStatus.ALL) {
-      getProjectsSt.setBoolean(8, true);
-    } else {
-      getProjectsSt.setBoolean(8, false);
-    }
+    getProjectsSt.setBoolean(5, allowedStatuses.contains(Project.Status.TO_DO));
+    getProjectsSt.setBoolean(6, allowedStatuses.contains(Project.Status.IN_PROGRESS));
+    getProjectsSt.setBoolean(7, allowedStatuses.contains(Project.Status.TURNED_IN));
+    getProjectsSt.setBoolean(8, allowedStatuses.contains(Project.Status.FINISHED));
+    getProjectsSt.setBoolean(
+        9, allowedDeadlineStatuses.contains(Project.DeadlineStatus.IN_TIME_TO_FINISH));
+    getProjectsSt.setBoolean(10, allowedDeadlineStatuses.contains(Project.DeadlineStatus.OVERDUE));
+    getProjectsSt.setBoolean(
+        11, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_IN_TIME));
+    getProjectsSt.setBoolean(
+        12, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_LATE));
     ResultSet result = getProjectsSt.executeQuery();
     ArrayList<Project> projects = new ArrayList<>();
     while (result.next()) {
@@ -286,7 +289,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     return projects;
   }
 
-  private int getProjectStatusId(Project.ProjectStatus status) throws SQLException {
+  private int getProjectStatusId(Project.Status status) throws SQLException {
     getProjectStatusIdSt.setString(1, status.toString());
     ResultSet result = getProjectStatusIdSt.executeQuery();
     result.next();
@@ -301,8 +304,13 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     LocalDate deadline = LocalDate.parse(result.getString("Deadline"));
     int supervisorId = result.getInt("SupervisorId");
     int assigneeId = result.getInt("AssigneeId");
-    Project.ProjectStatus status = Project.ProjectStatus.valueOf(result.getString("StatusName"));
-    Project project = new Project(id, title, teamId, deadline, status, supervisorId, assigneeId);
+    LocalDate turnInDate = null;
+    if (result.getString("TurnInDate") != null) {
+      turnInDate = LocalDate.parse(result.getString("TurnInDate"));
+    }
+    Project.Status status = Project.Status.valueOf(result.getString("StatusName"));
+    Project project =
+        new Project(id, title, teamId, deadline, status, supervisorId, assigneeId, turnInDate);
     project.setDescription(description);
     return project;
   }

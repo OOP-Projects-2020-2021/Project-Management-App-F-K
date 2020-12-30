@@ -59,6 +59,7 @@ public class ProjectCommentController implements PropertyChangeListener {
     return null;
   }
 
+  // todo: move joined query (comment + sender) to the model
   public String getSenderName(Comment comment) {
     try {
       return Objects.requireNonNull(userManager.getUserById(comment.getSenderId())).getUsername();
