@@ -1,7 +1,6 @@
 package view.project;
 
 import controller.project.CreateProjectController;
-import model.team.Team;
 import model.user.User;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -147,10 +146,7 @@ public class CreateProjectFrame extends JFrame {
                     .createParallelGroup()
                     .addComponent(titleLabel)
                     .addComponent(titleTextField))
-            .addGroup(
-                contentLayout
-                    .createParallelGroup()
-                    .addComponent(teamLabel))
+            .addGroup(contentLayout.createParallelGroup().addComponent(teamLabel))
             .addGroup(
                 contentLayout
                     .createParallelGroup()
@@ -182,7 +178,7 @@ public class CreateProjectFrame extends JFrame {
                   deadlineDatePicker.getModel().getMonth(),
                   deadlineDatePicker.getModel().getDay());
           String description = descriptionTextArea.getText();
-          controller.createProject(title,assignee, deadline, description);
+          controller.createProject(title, assignee, deadline, description);
         });
 
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
