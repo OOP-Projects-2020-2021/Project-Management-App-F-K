@@ -18,8 +18,9 @@ import java.util.Properties;
 
 /**
  * The CreateProjectFrame allows the user to create a new project, introducing all the required
- * data, such as the title of the project, the deadline of turning in the specific project and the assignee
- * to whom the project is intended. The creator of the project will automatically become the supervisor.
+ * data, such as the title of the project, the deadline of turning in the specific project and the
+ * assignee to whom the project is intended. The creator of the project will automatically become
+ * the supervisor.
  *
  * @author Beata Keresztes
  */
