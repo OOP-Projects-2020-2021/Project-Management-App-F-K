@@ -242,6 +242,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
               JOptionPane.WARNING_MESSAGE);
       if (option == JOptionPane.YES_OPTION) {
         teamManager.deleteTeam(teamId);
+        closeFrame();
       }
     } catch (SQLException
         | InexistentTeamException

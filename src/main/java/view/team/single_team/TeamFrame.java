@@ -54,7 +54,7 @@ public class TeamFrame extends JFrame implements ActionListener {
     createProjectButton.addActionListener(this);
     projectButtonPanel.add(UIFactory.createLabel("Create a new project:", null));
     projectButtonPanel.add(createProjectButton);
-    projectsTab.add(projectButtonPanel, BorderLayout.BEFORE_FIRST_LINE);
+    projectsTab.add(projectButtonPanel, BorderLayout.NORTH);
   }
 
   private void initProjectListPanel() {
