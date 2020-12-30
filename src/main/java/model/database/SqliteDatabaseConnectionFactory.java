@@ -17,7 +17,8 @@ public class SqliteDatabaseConnectionFactory {
   private static void connect() {
     try {
       Class.forName("org.sqlite.JDBC");
-      c = DriverManager.getConnection("jdbc:sqlite:project_management_app.db?foreign_keys=on");
+      c = DriverManager.getConnection("jdbc:sqlite::resource:project_management_app"+
+              ".db?foreign_keys=on");
     } catch (ClassNotFoundException | SQLException e) {
       e.printStackTrace();
       System.exit(1);
