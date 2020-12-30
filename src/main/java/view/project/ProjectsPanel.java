@@ -1,8 +1,12 @@
 package view.project;
 
+import view.UIFactory;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * ProjectsPanel displays the list of projects, which can be sorted based on the deadline or
@@ -16,7 +20,7 @@ public class ProjectsPanel extends JPanel {
   private ProjectTable projectsTable;
   private JFrame frame;
 
-  public ProjectsPanel(JFrame frame, int teamId) {
+  public ProjectsPanel(JFrame frame, Integer teamId) {
     this.frame = frame;
     setLayout(new BorderLayout());
     setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));

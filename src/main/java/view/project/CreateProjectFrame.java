@@ -114,10 +114,17 @@ public class CreateProjectFrame extends JFrame {
   private void initAssigneeComboBox() {
     assigneeComboBox = new JComboBox<>();
     assigneeModel = new DefaultComboBoxModel<>();
-    updateAssigneeModel(controller.getIdOfTeam(teamModel.getElementAt(0)));
+    initAssigneeModel();
     assigneeComboBox.setModel(assigneeModel);
   }
 
+  private void initAssigneeModel() {
+    if(controller.enableTeamSelection()) {
+      updateAssigneeModel(controller.getIdOfTeam(teamModel.getElementAt(0)));
+    } else {
+      updateAssigneeModel(controller.getTeamId());
+    }
+  }
   private void updateAssigneeModel(int teamId) {
     assigneeModel.removeAllElements();
     List<User> members = controller.getTeamMembers(teamId);
@@ -136,12 +143,12 @@ public class CreateProjectFrame extends JFrame {
     contentPanel.setLayout(contentLayout);
     contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
-    JLabel titleLabel = UIFactory.createLabel("* Title:", null);
-    JLabel teamLabel = UIFactory.createLabel("* Team:", null);
+    JLabel titleLabel = UIFactory.createLabel("*Title:", null);
+    JLabel teamLabel = UIFactory.createLabel("*Team:", null);
     teamLabel.setVisible(controller.enableTeamSelection());
-    JLabel deadlineLabel = UIFactory.createLabel("* Deadline:", null);
+    JLabel deadlineLabel = UIFactory.createLabel("*Deadline:", null);
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
-    JLabel assigneeLabel = UIFactory.createLabel("* Assignee:", null);
+    JLabel assigneeLabel = UIFactory.createLabel("*Assignee:", null);
 
     contentLayout.setHorizontalGroup(
         contentLayout

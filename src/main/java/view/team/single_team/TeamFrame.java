@@ -1,6 +1,7 @@
 package view.team.single_team;
 
 import controller.team.single_team.TeamController;
+import view.UIFactory;
 import view.project.ProjectsPanel;
 
 import javax.swing.*;
@@ -14,7 +15,7 @@ import java.awt.event.*;
  *
  * @author Beata Keresztes
  */
-public class TeamFrame extends JFrame {
+public class TeamFrame extends JFrame implements ActionListener{
 
   private JPanel homeTab;
   private JPanel membersTab;
@@ -22,6 +23,7 @@ public class TeamFrame extends JFrame {
 
   private JFrame parentFrame;
   private TeamController controller;
+  private JButton createProjectButton;
   private static final Dimension DIMENSION = new Dimension(600, 600);
 
   public TeamFrame(JFrame parentFrame, int teamId) {
@@ -37,9 +39,25 @@ public class TeamFrame extends JFrame {
   private void initTabbedPanes() {
     homeTab = new TeamHomePanel(this, controller.getTeamId());
     membersTab = new TeamMembersPanel(this, controller.getTeamId());
-    projectsTab = new ProjectsPanel(this, controller.getTeamId());
+    initProjectsTab();
   }
-
+  private void initProjectsTab() {
+    projectsTab = new JPanel(new BorderLayout());
+    initProjectButtonPanel();
+    initProjectListPanel();
+  }
+  private void initProjectButtonPanel() {
+    JPanel projectButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+    createProjectButton = UIFactory.createButton("Create Project");
+    createProjectButton.addActionListener(this);
+    projectButtonPanel.add(UIFactory.createLabel("Create a new project:",null));
+    projectButtonPanel.add(createProjectButton);
+    projectsTab.add(projectButtonPanel,BorderLayout.BEFORE_FIRST_LINE);
+  }
+  private void initProjectListPanel() {
+    JPanel projectsListPanel = new ProjectsPanel(this, controller.getTeamId());
+    projectsTab.add(projectsListPanel,BorderLayout.CENTER);
+  }
   private void addTabbedPanes() {
     JTabbedPane mainPane = new JTabbedPane();
     initTabbedPanes();
@@ -57,6 +75,13 @@ public class TeamFrame extends JFrame {
     @Override
     public void windowClosing(WindowEvent e) {
       controller.onClose(parentFrame);
+    }
+  }
+
+  @Override
+  public void actionPerformed(ActionEvent e) {
+    if(e.getSource() == createProjectButton) {
+      controller.enableProjectCreation(this);
     }
   }
 }
