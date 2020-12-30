@@ -30,7 +30,7 @@ public class TeamManager extends Manager {
 
   public enum ChangablePropertyName {
     CURRENT_USER_TEAM_MEMBERSHIPS, // event is fired when the current user becomes member of a
-                                   // team/looses
+    // team/looses
     // membership of a team
     CREATE_TEAM, // event is fired when a new team is created
     DELETE_TEAM, // event is fired when a team is deleted

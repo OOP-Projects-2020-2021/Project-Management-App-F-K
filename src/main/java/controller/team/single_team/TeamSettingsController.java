@@ -230,9 +230,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     }
   }
 
-  /**
-   * Before deleting a team, a message dialog asks the user to confirm the removal of the team.
-   */
+  /** Before deleting a team, a message dialog asks the user to confirm the removal of the team. */
   public void deleteTeam() {
     try {
       int option =
