@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 /**
@@ -52,6 +53,7 @@ public class ProjectFilterPanel extends JPanel {
   private void initListProjectsButton() {
     listProjectsButton = UIFactory.createButton("List Projects");
     listProjectsButton.addActionListener(new ListProjectsButtonListener());
+    listProjectsButton.setMnemonic(KeyEvent.VK_ENTER);
   }
 
   private void initFilters() {
