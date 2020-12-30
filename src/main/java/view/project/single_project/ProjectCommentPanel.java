@@ -6,9 +6,6 @@ import model.project.Project;
 import view.UIFactory;
 
 import javax.swing.*;
-import javax.swing.event.AncestorEvent;
-import javax.swing.event.AncestorListener;
-import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
@@ -85,6 +82,7 @@ public class ProjectCommentPanel extends JPanel {
       }
     }
   }
+
   private void initAdjustmentListener() {
     adjustmentListener = e -> e.getAdjustable().setValue(e.getAdjustable().getMaximum());
   }
@@ -95,7 +93,11 @@ public class ProjectCommentPanel extends JPanel {
     fillCommentList();
     commentListScrollPanel.setPreferredSize(COMMENT_PANEL_DIMENSION);
     initAdjustmentListener();
-    commentListScrollPanel.addMouseWheelListener(e->commentListScrollPanel.getVerticalScrollBar().removeAdjustmentListener(adjustmentListener));
+    commentListScrollPanel.addMouseWheelListener(
+        e ->
+            commentListScrollPanel
+                .getVerticalScrollBar()
+                .removeAdjustmentListener(adjustmentListener));
   }
 
   private void initCommentArea() {
@@ -171,8 +173,6 @@ public class ProjectCommentPanel extends JPanel {
   }
 
   private void scrollToBottom() {
-    commentListScrollPanel
-            .getVerticalScrollBar()
-            .addAdjustmentListener(adjustmentListener);
+    commentListScrollPanel.getVerticalScrollBar().addAdjustmentListener(adjustmentListener);
   }
 }
