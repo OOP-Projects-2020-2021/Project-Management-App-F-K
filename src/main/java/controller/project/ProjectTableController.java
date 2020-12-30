@@ -1,6 +1,7 @@
 package controller.project;
 
 import model.project.Project;
+import model.project.ProjectManager;
 import view.project.ProjectListModel;
 import view.project.ProjectTable;
 import view.project.single_project.ProjectFrame;

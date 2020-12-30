@@ -15,6 +15,7 @@ import model.user.exceptions.NoSignedInUserException;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Collections;
 import java.util.List;
@@ -579,14 +580,13 @@ public class ProjectManager extends Manager {
    * @throws SQLException in case a database error occurs
    * @throws InexistentDatabaseEntityException in case there is no team with the given id
    * @throws InexistentUserException if no member exists with given name
-   * @throws NoSignedInUserException if no user is signed in
    * @throws IllegalMemberRemovalException if the given member has any unfinished projects left
    */
   public void guaranteeNoUnfinishedAssignedOrSupervisedProjects(String member, int teamId)
-      throws SQLException, InexistentDatabaseEntityException, InexistentUserException,
-          NoSignedInUserException, IllegalMemberRemovalException {
-    List<Project> unFinishedProjects = Collections.emptyList();
-    if (!unFinishedProjects.isEmpty()) {
+      throws SQLException, InexistentDatabaseEntityException, InexistentUserException, IllegalMemberRemovalException {
+    List<Project> unFinishedAssignedProjects = getProjectsOfTeam(teamId,null,member,EnumSet.range(Project.Status.TO_DO,Project.Status.TURNED_IN), EnumSet.allOf(Project.DeadlineStatus.class));
+    List<Project> unFinishedSupervisedProjects = getProjectsOfTeam(teamId,member,null,EnumSet.range(Project.Status.TO_DO,Project.Status.TURNED_IN), EnumSet.allOf(Project.DeadlineStatus.class));
+    if (!unFinishedAssignedProjects.isEmpty() || !unFinishedSupervisedProjects.isEmpty()) {
       throw new IllegalMemberRemovalException(member);
     }
   }
