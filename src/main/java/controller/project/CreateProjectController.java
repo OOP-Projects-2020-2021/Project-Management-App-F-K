@@ -87,13 +87,12 @@ public class CreateProjectController extends FrameController {
    *
    * @param title introduced by the user
    * @param deadline selected by the user from the DatePicker
-   * @param assignee selected by the user from the list of members of the current team,
-   *                 it is an Object type, because in case it would be null, an EmptyFieldsException is thrown when
-   *                 trying to save the project
+   * @param assignee selected by the user from the list of members of the current team, it is an
+   *     Object type, because in case it would be null, an EmptyFieldsException is thrown when
+   *     trying to save the project
    * @param description added by the user
    */
-  public void createProject(
-      String title, Object assignee, LocalDate deadline, String description) {
+  public void createProject(String title, Object assignee, LocalDate deadline, String description) {
     try {
       projectManager.createProject(title, teamId, assignee.toString(), deadline, description);
       displaySavedMessageDialog();
@@ -106,10 +105,8 @@ public class CreateProjectController extends FrameController {
         | EmptyFieldsException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     } catch (DuplicateProjectNameException e) {
-        ErrorDialogFactory.createErrorDialog(
-            e,
-            frame,
-            "The project with title \"" + title + "\" already exists in this team.");
+      ErrorDialogFactory.createErrorDialog(
+          e, frame, "The project with title \"" + title + "\" already exists in this team.");
     }
   }
 

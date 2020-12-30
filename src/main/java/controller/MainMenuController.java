@@ -1,6 +1,5 @@
 package controller;
 
-import view.project.CreateProjectFrame;
 import view.project.UserProjectsFrame;
 import view.user.AccountSettingsFrame;
 import view.user.SignInFrame;
@@ -63,5 +62,4 @@ public class MainMenuController extends FrameController {
     new UserProjectsFrame(frame);
     frame.setEnabled(false);
   }
-
 }
