@@ -47,6 +47,7 @@ public class CreateTeamFrame extends JFrame implements ActionListener {
     JPanel buttonPanel = new JPanel();
     submitBtn = UIFactory.createButton(SUBMIT_BUTTON_TEXT);
     submitBtn.addActionListener(this);
+    getRootPane().setDefaultButton(submitBtn);
     buttonPanel.add(submitBtn);
 
     JPanel contentPanel = new JPanel();
@@ -62,8 +63,6 @@ public class CreateTeamFrame extends JFrame implements ActionListener {
     this.add(buttonPanel, BorderLayout.SOUTH);
     this.setResizable(false);
     this.setVisible(true);
-    System.out.println(teamNameTextField.getWidth());
-    System.out.println(teamNameTextField.getHeight());
   }
 
   @Override

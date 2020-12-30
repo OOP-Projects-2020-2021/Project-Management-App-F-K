@@ -169,6 +169,7 @@ public class CreateProjectFrame extends JFrame {
 
   private void initButtonsPanel() {
     saveButton = UIFactory.createButton("Save Project");
+    getRootPane().setDefaultButton(saveButton);
     saveButton.addActionListener(
         e -> {
           String title = titleTextField.getText();
