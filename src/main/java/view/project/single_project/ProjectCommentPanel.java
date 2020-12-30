@@ -8,6 +8,8 @@ import view.UIFactory;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.time.format.DateTimeFormatter;
+import java.time.format.FormatStyle;
 import java.util.List;
 
 /**
@@ -48,7 +50,7 @@ public class ProjectCommentPanel extends JPanel {
     JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     JLabel senderName = UIFactory.createLabel(controller.getSenderName(comment), null);
     JLabel sendingDate =
-        UIFactory.createLabel(comment.getDateTime().toLocalDate().toString(), null);
+        UIFactory.createLabel(comment.getDateTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)), null);
     headerPanel.add(senderName);
     headerPanel.add(new JLabel("-"));
     headerPanel.add(sendingDate);
@@ -56,6 +58,7 @@ public class ProjectCommentPanel extends JPanel {
     JTextArea commentArea = createUneditableCommentArea(comment.getText());
     JScrollPane commentScrollPane = new JScrollPane(commentArea);
     commentScrollPane.setPreferredSize(new Dimension(80, 80));
+    commentScrollPane.setWheelScrollingEnabled(true);
 
     JPanel rowPanel = new JPanel(new BorderLayout());
     rowPanel.add(headerPanel, BorderLayout.NORTH);
