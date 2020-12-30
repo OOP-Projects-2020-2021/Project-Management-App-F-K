@@ -37,8 +37,6 @@ public class CreateProjectFrame extends JFrame {
   private JTextArea descriptionTextArea;
   private JScrollPane descriptionScrollPane;
 
-  private JComboBox<String> teamComboBox;
-  private DefaultComboBoxModel<String> teamModel;
   private JComboBox<String> assigneeComboBox;
   private DefaultComboBoxModel<String> assigneeModel;
 
@@ -69,7 +67,6 @@ public class CreateProjectFrame extends JFrame {
     titleTextField = UIFactory.createTextField(null);
     initDatePicker();
     initDescriptionTextArea();
-    initTeamsComboBox();
     initAssigneeComboBox();
   }
 
@@ -91,26 +88,6 @@ public class CreateProjectFrame extends JFrame {
     descriptionScrollPane = new JScrollPane(descriptionTextArea);
   }
 
-  private void initTeamsComboBox() {
-    teamComboBox = new JComboBox<>();
-    teamModel = new DefaultComboBoxModel<>();
-    List<Team> teamList = controller.getTeamsOfUser();
-    if (teamList != null) {
-      for (Team team : teamList) {
-        teamModel.addElement(team.getName());
-      }
-    }
-    teamComboBox.setModel(teamModel);
-    teamModel.setSelectedItem(teamModel.getElementAt(0));
-    teamComboBox.addActionListener(
-        e -> {
-          String team = teamComboBox.getModel().getSelectedItem().toString();
-          int teamId = controller.getIdOfTeam(team);
-          updateAssigneeModel(teamId);
-        });
-    teamComboBox.setVisible(controller.enableTeamSelection());
-  }
-
   private void initAssigneeComboBox() {
     assigneeComboBox = new JComboBox<>();
     assigneeModel = new DefaultComboBoxModel<>();
@@ -119,16 +96,7 @@ public class CreateProjectFrame extends JFrame {
   }
 
   private void initAssigneeModel() {
-    if (controller.enableTeamSelection()) {
-      updateAssigneeModel(controller.getIdOfTeam(teamModel.getElementAt(0)));
-    } else {
-      updateAssigneeModel(controller.getTeamId());
-    }
-  }
-
-  private void updateAssigneeModel(int teamId) {
-    assigneeModel.removeAllElements();
-    List<User> members = controller.getTeamMembers(teamId);
+    List<User> members = controller.getTeamMembers();
     if (members != null) {
       for (User member : members) {
         assigneeModel.addElement(member.getUsername());
@@ -169,7 +137,6 @@ public class CreateProjectFrame extends JFrame {
                         contentLayout
                             .createParallelGroup()
                             .addComponent(titleTextField)
-                            .addComponent(teamComboBox)
                             .addComponent(datePanel)
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox))));
@@ -184,8 +151,7 @@ public class CreateProjectFrame extends JFrame {
             .addGroup(
                 contentLayout
                     .createParallelGroup()
-                    .addComponent(teamLabel)
-                    .addComponent(teamComboBox))
+                    .addComponent(teamLabel))
             .addGroup(
                 contentLayout
                     .createParallelGroup()
@@ -210,7 +176,6 @@ public class CreateProjectFrame extends JFrame {
     saveButton.addActionListener(
         e -> {
           String title = titleTextField.getText();
-          String team = teamComboBox.getModel().getSelectedItem().toString();
           Object assignee = assigneeComboBox.getSelectedItem();
           LocalDate deadline =
               LocalDate.of(
@@ -218,7 +183,7 @@ public class CreateProjectFrame extends JFrame {
                   deadlineDatePicker.getModel().getMonth(),
                   deadlineDatePicker.getModel().getDay());
           String description = descriptionTextArea.getText();
-          controller.createProject(title, team, assignee, deadline, description);
+          controller.createProject(title,assignee, deadline, description);
         });
 
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

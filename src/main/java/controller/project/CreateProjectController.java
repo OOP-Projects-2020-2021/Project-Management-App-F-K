@@ -72,7 +72,7 @@ public class CreateProjectController extends FrameController {
     return null;
   }
 
-  public List<User> getTeamMembers(int teamId) {
+  public List<User> getTeamMembers() {
     try {
       return teamManager.getMembersOfTeam(teamId);
     } catch (SQLException e) {
@@ -81,37 +81,21 @@ public class CreateProjectController extends FrameController {
     return null;
   }
 
-  public int getIdOfTeam(String teamName) {
-    List<Team> teams = getTeamsOfUser();
-    try {
-      for (Team team : teams) {
-        if (team.getName().equals(teamName)) {
-          return team.getId();
-        }
-      }
-    } catch (InexistentDatabaseEntityException e) {
-      ErrorDialogFactory.createErrorDialog(
-          e, frame, "No team with name \"" + teamName + "\" exists.");
-    }
-    return -1;
-  }
-
   /**
    * Creates a project with the data introduced by the user. It displays a confirmation message if
    * all the data was successfully saved and closes the frame.
    *
    * @param title introduced by the user
-   * @param team selected by the user from the list of teams in which he/she is a member
    * @param deadline selected by the user from the DatePicker
-   * @param assignee selected by the user from the list of members of the previously specified team
+   * @param assignee selected by the user from the list of members of the current team,
+   *                 it is an Object type, because in case it would be null, an EmptyFieldsException is thrown when
+   *                 trying to save the project
    * @param description added by the user
    */
   public void createProject(
-      String title, String team, Object assignee, LocalDate deadline, String description) {
+      String title, Object assignee, LocalDate deadline, String description) {
     try {
-      if (assignee == null) throw new EmptyFieldsException();
-      int id = (teamId == null) ? getIdOfTeam(team) : teamId;
-      projectManager.createProject(title, id, assignee.toString(), deadline, description);
+      projectManager.createProject(title, teamId, assignee.toString(), deadline, description);
       displaySavedMessageDialog();
       closeFrame();
     } catch (NoSignedInUserException
@@ -122,10 +106,10 @@ public class CreateProjectController extends FrameController {
         | EmptyFieldsException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     } catch (DuplicateProjectNameException e) {
-      ErrorDialogFactory.createErrorDialog(
-          e,
-          frame,
-          "The project with title \"" + title + "\" already exists in the team \"" + team);
+        ErrorDialogFactory.createErrorDialog(
+            e,
+            frame,
+            "The project with title \"" + title + "\" already exists in this team.");
     }
   }
 
