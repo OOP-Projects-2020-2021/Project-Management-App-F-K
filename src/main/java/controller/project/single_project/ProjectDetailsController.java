@@ -87,7 +87,7 @@ public class ProjectDetailsController implements PropertyChangeListener {
   }
 
   public boolean enableEditing() {
-    return (isSupervisor() && (project.getStatus() != Project.ProjectStatus.FINISHED));
+    return (isSupervisor() && (project.getStatus() != Project.Status.FINISHED));
   }
 
   public User getProjectAssignee() {
@@ -173,7 +173,7 @@ public class ProjectDetailsController implements PropertyChangeListener {
    * rejected and had caused an exception.
    */
   private void displayIllegalStateErrorDialog(
-      IllegalProjectStatusChangeException e, Project.ProjectStatus newState) {
+      IllegalProjectStatusChangeException e, Project.Status newState) {
     ErrorDialogFactory.createErrorDialog(
         e,
         null,
