@@ -25,7 +25,7 @@ public class ProjectsPanel extends JPanel {
     initProjectsTable(projectListModel);
   }
 
-  private void initProjectsHeader(int teamId, ProjectListModel projectListModel) {
+  private void initProjectsHeader(Integer teamId, ProjectListModel projectListModel) {
     ProjectFilterPanel header = new ProjectFilterPanel(teamId, projectListModel);
     add(header, BorderLayout.NORTH);
   }

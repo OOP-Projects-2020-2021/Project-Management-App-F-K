@@ -25,8 +25,8 @@ import java.util.List;
 public class ProjectFilterPanel extends JPanel {
 
   private JPanel privilegeFilterButtonsPanel;
-  private JRadioButton assignedToUserButton;
-  private JRadioButton supervisedByUserButton;
+  private JCheckBox assignedToUserButton;
+  private JCheckBox supervisedByUserButton;
   private DefaultComboBoxModel<String> assigneeComboBoxModel;
   private DefaultComboBoxModel<String> supervisorComboBoxModel;
   private ProjectFilterController controller;
@@ -44,12 +44,12 @@ public class ProjectFilterPanel extends JPanel {
   public ProjectFilterPanel(Integer teamId, ProjectListModel projectListModel) {
     this.controller = new ProjectFilterController(teamId, this, projectListModel);
     initFilters();
-    initListPorjectsButton();
+    initListProjectsButton();
     createPanelLayout();
     applyFilter();
   }
 
-  private void initListPorjectsButton() {
+  private void initListProjectsButton() {
     listProjectsButton = UIFactory.createButton("List Projects");
     listProjectsButton.addActionListener(new ListProjectsButtonListener());
   }
@@ -84,9 +84,9 @@ public class ProjectFilterPanel extends JPanel {
     // both the assigned and supervised projects are listed in the beginning, so both buttons can be
     // selected at a time
     assignedToUserButton =
-        new JRadioButton(ProjectFilterController.PrivilegeTypes.ASSIGNED_TO_ME.toString());
+        new JCheckBox(ProjectFilterController.PrivilegeTypes.ASSIGNED_TO_ME.toString());
     supervisedByUserButton =
-        new JRadioButton(ProjectFilterController.PrivilegeTypes.SUPERVISED_BY_ME.toString());
+        new JCheckBox(ProjectFilterController.PrivilegeTypes.SUPERVISED_BY_ME.toString());
     // initially all projects are shown
     assignedToUserButton.setSelected(true);
     supervisedByUserButton.setSelected(true);
