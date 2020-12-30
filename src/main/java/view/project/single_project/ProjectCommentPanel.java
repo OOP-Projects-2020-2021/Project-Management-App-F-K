@@ -6,6 +6,9 @@ import model.project.Project;
 import view.UIFactory;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
+import javax.swing.text.DefaultCaret;
 import java.awt.*;
 import java.awt.event.*;
 import java.time.format.DateTimeFormatter;
@@ -25,9 +28,13 @@ public class ProjectCommentPanel extends JPanel {
   private JButton sendButton;
   private JScrollPane commentListScrollPanel;
   private JPanel commentListPanel;
+  private AdjustmentListener adjustmentListener;
 
   private ProjectCommentController controller;
   private static final String LEAVE_COMMENT_MESSAGE = "Leave a comment";
+
+  private static final Dimension COMMENT_PANEL_DIMENSION = new Dimension(200, 200);
+  private static final Dimension COMMENT_AREA_DIMENSION = new Dimension(80, 80);
 
   public ProjectCommentPanel(Project project) {
     controller = new ProjectCommentController(this, project);
@@ -57,7 +64,7 @@ public class ProjectCommentPanel extends JPanel {
 
     JTextArea commentArea = createUneditableCommentArea(comment.getText());
     JScrollPane commentScrollPane = new JScrollPane(commentArea);
-    commentScrollPane.setPreferredSize(new Dimension(80, 80));
+    commentScrollPane.setPreferredSize(COMMENT_AREA_DIMENSION);
     commentScrollPane.setWheelScrollingEnabled(true);
 
     JPanel rowPanel = new JPanel(new BorderLayout());
@@ -76,12 +83,17 @@ public class ProjectCommentPanel extends JPanel {
       }
     }
   }
+  private void initAdjustmentListener() {
+    adjustmentListener = e -> e.getAdjustable().setValue(e.getAdjustable().getMaximum());
+  }
 
   private void initCommentList() {
     commentListPanel = new JPanel();
     commentListScrollPanel = new JScrollPane(commentListPanel);
     fillCommentList();
-    commentListScrollPanel.setPreferredSize(new Dimension(200, 200));
+    commentListScrollPanel.setPreferredSize(COMMENT_PANEL_DIMENSION);
+    initAdjustmentListener();
+    commentListScrollPanel.addMouseWheelListener(e->commentListScrollPanel.getVerticalScrollBar().removeAdjustmentListener(adjustmentListener));
   }
 
   private void initCommentArea() {
@@ -158,7 +170,7 @@ public class ProjectCommentPanel extends JPanel {
 
   private void scrollToBottom() {
     commentListScrollPanel
-        .getVerticalScrollBar()
-        .addAdjustmentListener(e -> e.getAdjustable().setValue(e.getAdjustable().getMaximum()));
+            .getVerticalScrollBar()
+            .addAdjustmentListener(adjustmentListener);
   }
 }
