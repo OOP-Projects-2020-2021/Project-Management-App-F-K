@@ -8,7 +8,6 @@ import model.project.queryconstants.QueryProjectStatus;
 import model.project.exceptions.*;
 import model.team.Team;
 import model.team.exceptions.IllegalMemberRemovalException;
-import model.team.exceptions.IllegalTeamRemovalException;
 import model.team.exceptions.InexistentTeamException;
 import model.team.exceptions.UnregisteredMemberRoleException;
 import model.user.User;
@@ -18,6 +17,7 @@ import model.user.exceptions.NoSignedInUserException;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -588,91 +588,9 @@ public class ProjectManager extends Manager {
   public void guaranteeNoUnfinishedAssignedOrSupervisedProjects(String member, int teamId)
       throws SQLException, InexistentDatabaseEntityException, InexistentUserException,
           NoSignedInUserException, IllegalMemberRemovalException {
-    boolean unfinishedProjectsOfTeam =
-        (hasUnfinishedProjectsOfTeam(member, null, teamId)
-            || hasUnfinishedProjectsOfTeam(null, member, teamId));
-    boolean unfinishedProjectsOfUser =
-        (hasUnfinishedProjectsOfCurrentUser(true, false)
-            || hasUnfinishedProjectsOfCurrentUser(false, true));
-    if ((isMemberCurrentUser(member) && unfinishedProjectsOfUser) || unfinishedProjectsOfTeam) {
+    List<Project> unFinishedProjects = Collections.emptyList();
+    if (!unFinishedProjects.isEmpty()) {
       throw new IllegalMemberRemovalException(member);
     }
-  }
-
-  /**
-   * Guarantee that the given team has any unfinished projects.
-   *
-   * @param teamId = id of the team
-   * @throws SQLException in case a database error occurs
-   * @throws InexistentDatabaseEntityException in case there is no team with the given id
-   * @throws InexistentUserException if no member exists with given name
-   * @throws IllegalTeamRemovalException if the given team has any unfinished projects left
-   */
-  public void guaranteeNoUnfinishedAssignedOrSupervisedProjects(int teamId)
-      throws SQLException, InexistentDatabaseEntityException, InexistentUserException,
-          IllegalTeamRemovalException {
-    boolean unfinishedProjectsOfTeam =
-        (hasUnfinishedProjectsOfTeam(null, null, teamId)
-            || hasUnfinishedProjectsOfTeam(null, null, teamId));
-    if (unfinishedProjectsOfTeam) {
-      throw new IllegalTeamRemovalException(teamRepository.getTeam(teamId).get().getName());
-    }
-  }
-
-  /**
-   * Checks whether the given member is the current user.
-   *
-   * @param member = name of the member being tested
-   * @return true if the given member is the current user, otherwise false
-   * @throws NoSignedInUserException if no user is currently signed in
-   */
-  private boolean isMemberCurrentUser(String member)
-      throws NullPointerException, NoSignedInUserException {
-    return member.equals(getMandatoryCurrentUser().getUsername());
-  }
-  /**
-   * Checks if the list of projects of a team contains unfinished ones.
-   *
-   * @param assignee = name of the assignee, if null then it is not considered
-   * @param supervisor = name of the supervisor, if null then it is not considered
-   * @param teamId = id of the team in which we search
-   * @return true if there are unfinished projects, otherwise false
-   * @throws SQLException if a database error occurs
-   * @throws InexistentDatabaseEntityException if the team with given id cannot be found
-   * @throws InexistentUserException if the assignee or supervisor don't exist
-   */
-  private boolean hasUnfinishedProjectsOfTeam(String assignee, String supervisor, int teamId)
-      throws SQLException, InexistentDatabaseEntityException, InexistentUserException {
-    List<Project> projects =
-        getProjectsOfTeam(
-            teamId, supervisor, assignee, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
-    for (Project project : projects) {
-      if (project.getStatus() != Project.ProjectStatus.FINISHED) {
-        return true;
-      }
-    }
-    return false;
-  }
-  /**
-   * Checks if the current user has any unfinished projects.
-   *
-   * @param assigned = shows that the projects are assigned to the current user
-   * @param supervised = shows that the projects are supervised by the current user
-   * @return true if the current user has any unfinished projects, otherwise false
-   * @throws NoSignedInUserException if there is no user signed in
-   * @throws SQLException if an error occurred when reading the projects from the database
-   * @throws InexistentDatabaseEntityException if the team or project with given id doesn't exist in
-   *     the database
-   */
-  private boolean hasUnfinishedProjectsOfCurrentUser(boolean assigned, boolean supervised)
-      throws NoSignedInUserException, SQLException, InexistentDatabaseEntityException {
-    List<Project> projects =
-        getProjects(assigned, supervised, QueryProjectStatus.ALL, QueryProjectDeadlineStatus.ALL);
-    for (Project project : projects) {
-      if (project.getStatus() != Project.ProjectStatus.FINISHED) {
-        return true;
-      }
-    }
-    return false;
   }
 }

@@ -231,9 +231,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   }
 
   /**
-   * Before deleting a team, a message dialog asks the user to confirm the removal of the team, and
-   * it is checked whether the team contains any unfinished projects. If so, the operation fails and
-   * the team cannot be deleted.
+   * Before deleting a team, a message dialog asks the user to confirm the removal of the team.
    */
   public void deleteTeam() {
     try {
@@ -245,7 +243,6 @@ public class TeamSettingsController extends TeamController implements PropertyCh
               JOptionPane.YES_NO_OPTION,
               JOptionPane.WARNING_MESSAGE);
       if (option == JOptionPane.YES_OPTION) {
-        projectManager.guaranteeNoUnfinishedAssignedOrSupervisedProjects(teamId);
         teamManager.deleteTeam(teamId);
       }
     } catch (SQLException
@@ -253,8 +250,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
         | UnauthorisedOperationException
         | NoSignedInUserException
         | InexistentDatabaseEntityException
-        | InexistentUserException
-        | IllegalTeamRemovalException e) {
+        | InexistentUserException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
   }
