@@ -146,7 +146,7 @@ public class ProjectStatusController extends ProjectController implements Proper
               JOptionPane.YES_NO_OPTION);
       if (answer == JOptionPane.YES_OPTION) {
         projectManager.acceptAsFinished(getProject().getId());
-      } else {
+      } else if (answer == JOptionPane.NO_OPTION) {
         Project.Status[] possibleAnswers = new Project.Status[] {TO_DO, IN_PROGRESS};
         int answerIndex =
             JOptionPane.showOptionDialog(

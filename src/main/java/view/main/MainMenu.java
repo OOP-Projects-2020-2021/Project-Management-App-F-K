@@ -30,7 +30,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
 
   // Items for projectsMenu
   private JMenuItem viewProjectsItem = new JMenuItem("View projects");
-  private JMenuItem newProjectItem = new JMenuItem("New project");
 
   private MainMenuController controller;
 
@@ -44,7 +43,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
     teamsMenu.add(joinTeamItem);
 
     projectsMenu.add(viewProjectsItem);
-    projectsMenu.add(newProjectItem);
 
     this.add(accountMenu);
     this.add(teamsMenu);
@@ -70,7 +68,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
     joinTeamItem.setMnemonic(KeyEvent.VK_J);
 
     viewProjectsItem.setMnemonic(KeyEvent.VK_V);
-    newProjectItem.setMnemonic(KeyEvent.VK_N);
   }
 
   private void addListeners() {
@@ -79,7 +76,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
     createTeamItem.addActionListener(this);
     joinTeamItem.addActionListener(this);
     viewProjectsItem.addActionListener(this);
-    newProjectItem.addActionListener(this);
   }
 
   @Override
@@ -94,8 +90,6 @@ public class MainMenu extends JMenuBar implements ActionListener {
       controller.enableJoiningNewTeam();
     } else if (actionEvent.getSource() == viewProjectsItem) {
       controller.enableViewingProjects();
-    } else if (actionEvent.getSource() == newProjectItem) {
-      controller.enableCreatingProject();
     }
   }
 }

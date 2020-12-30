@@ -2,6 +2,7 @@ package controller.team.single_team;
 
 import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
+import model.project.ProjectManager;
 import model.team.Team;
 import model.team.TeamManager;
 import model.team.exceptions.*;
@@ -27,12 +28,19 @@ public class TeamSettingsController extends TeamController implements PropertyCh
 
   private Team currentTeam;
   private TeamHomePanel homePanel;
+  private ProjectManager projectManager;
 
   /** Messages to confirm leaving the team. */
   private static final String CONFIRM_LEAVING_TEAM_MESSAGE =
       "Are you sure that you want to leave this team?";
 
   private static final String CONFIRM_LEAVING_TEAM_TITLE = "Leaving team";
+
+  /** Messages to confirm deleting the team. */
+  private static final String CONFIRM_DELETING_TEAM_MESSAGE =
+      "Are you sure that you want to delete this team?";
+
+  private static final String CONFIRM_DELETING_TEAM_TITLE = "Deleting team";
 
   /** Messages to inform the user that they left the team. */
   private static final String AFFIRM_LEAVING_TEAM_MESSAGE =
@@ -43,6 +51,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public TeamSettingsController(TeamHomePanel homePanel, JFrame frame, int teamId) {
     super(frame, teamId);
     this.homePanel = homePanel;
+    projectManager = ProjectManager.getInstance();
     teamManager.addPropertyChangeListener(this);
     try {
       currentTeam = teamManager.getTeam(teamId);
@@ -63,25 +72,23 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName().equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString())
         || evt.getPropertyName()
-            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString())) {
-      updateCurrentTeam();
-      updateHomePanel();
-    } else if (evt.getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())) {
-      updateCurrentTeam();
-      setManagerAccess();
-      updateHomePanel();
-    } else if (evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_CODE.toString())
+        || evt.getPropertyName()
             .equals(TeamManager.ChangablePropertyName.ADDED_TEAM_MEMBER.toString())
         || evt.getPropertyName()
             .equals(TeamManager.ChangablePropertyName.REMOVED_TEAM_MEMBER.toString())) {
       updateCurrentTeam();
       updateHomePanel();
     } else if (evt.getPropertyName()
-        .equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
+            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())
+        || evt.getPropertyName()
+            .equals(TeamManager.ChangablePropertyName.CURRENT_USER_TEAM_MEMBERSHIPS.toString())) {
       updateCurrentTeam();
       setManagerAccess();
       updateHomePanel();
+    } else if (evt.getPropertyName()
+        .equals(TeamManager.ChangablePropertyName.DELETE_TEAM.toString())) {
+      closeFrame();
     }
   }
 
@@ -129,9 +136,16 @@ public class TeamSettingsController extends TeamController implements PropertyCh
         frame, AFFIRM_LEAVING_TEAM_MESSAGE, AFFIRM_LEAVING_TEAM_TITLE, JOptionPane.YES_NO_OPTION);
   }
 
+  /**
+   * Before leaving the team, the user is prompted a message dialog to confirm deleting the team,
+   * and it is checked whether the current member has any unfinished projects assigned to or
+   * supervised by them, in which case they cannot leave the team.
+   */
   public void leaveTeam() {
     try {
       if (confirmLeavingTeam() == JOptionPane.YES_OPTION) {
+        projectManager.guaranteeNoUnfinishedAssignedOrSupervisedProjects(
+            userManager.getCurrentUser().get().getUsername(), teamId);
         teamManager.leaveTeam(teamId);
         affirmLeavingTeam();
         closeFrame();
@@ -141,8 +155,8 @@ public class TeamSettingsController extends TeamController implements PropertyCh
         | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "You could not be removed from the team.");
-    } catch (NoSignedInUserException noSignedInUserException) {
-      ErrorDialogFactory.createErrorDialog(noSignedInUserException, frame, null);
+    } catch (NoSignedInUserException | InexistentUserException userException) {
+      ErrorDialogFactory.createErrorDialog(userException, frame, null);
     } catch (UnregisteredMemberRemovalException unregisteredMemberRemovalException) {
       ErrorDialogFactory.createErrorDialog(
           unregisteredMemberRemovalException,
@@ -153,6 +167,9 @@ public class TeamSettingsController extends TeamController implements PropertyCh
           managerRemovalException,
           frame,
           "You cannot leave the team, because you are the manager.");
+    } catch (IllegalMemberRemovalException illegalMemberRemovalException) {
+      ErrorDialogFactory.createErrorDialog(
+          illegalMemberRemovalException, frame, "You are not allowed to leave the team.\n");
     }
   }
 
@@ -210,6 +227,29 @@ public class TeamSettingsController extends TeamController implements PropertyCh
           unauthorisedAccessException,
           frame,
           "You are not allowed to change the manager of this team.");
+    }
+  }
+
+  /** Before deleting a team, a message dialog asks the user to confirm the removal of the team. */
+  public void deleteTeam() {
+    try {
+      int option =
+          JOptionPane.showConfirmDialog(
+              frame,
+              CONFIRM_DELETING_TEAM_MESSAGE,
+              CONFIRM_DELETING_TEAM_TITLE,
+              JOptionPane.YES_NO_OPTION,
+              JOptionPane.WARNING_MESSAGE);
+      if (option == JOptionPane.YES_OPTION) {
+        teamManager.deleteTeam(teamId);
+      }
+    } catch (SQLException
+        | InexistentTeamException
+        | UnauthorisedOperationException
+        | NoSignedInUserException
+        | InexistentDatabaseEntityException
+        | InexistentUserException e) {
+      ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
   }
 }

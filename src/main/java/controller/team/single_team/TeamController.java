@@ -6,6 +6,7 @@ import model.team.TeamManager;
 import model.team.exceptions.InexistentTeamException;
 import model.user.UserManager;
 import view.ErrorDialogFactory;
+import view.project.CreateProjectFrame;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -64,5 +65,10 @@ public class TeamController extends FrameController {
   public void onClose(JFrame parentFrame) {
     parentFrame.setVisible(true);
     parentFrame.setEnabled(true);
+  }
+
+  public void enableProjectCreation(JFrame frame) {
+    new CreateProjectFrame(teamId, frame);
+    frame.setEnabled(false);
   }
 }

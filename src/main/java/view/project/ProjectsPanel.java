@@ -16,7 +16,7 @@ public class ProjectsPanel extends JPanel {
   private ProjectTable projectsTable;
   private JFrame frame;
 
-  public ProjectsPanel(JFrame frame, int teamId) {
+  public ProjectsPanel(JFrame frame, Integer teamId) {
     this.frame = frame;
     setLayout(new BorderLayout());
     setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));

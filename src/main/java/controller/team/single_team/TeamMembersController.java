@@ -2,6 +2,7 @@ package controller.team.single_team;
 
 import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
+import model.project.ProjectManager;
 import model.team.TeamManager;
 import model.team.exceptions.*;
 import model.user.User;
@@ -24,7 +25,8 @@ import java.util.List;
  */
 public class TeamMembersController extends TeamController implements PropertyChangeListener {
 
-  TeamMembersPanel membersPanel;
+  private TeamMembersPanel membersPanel;
+  private ProjectManager projectManager;
 
   /** Messages to confirm the removal of a member from the team. */
   private static final String CONFIRM_REMOVING_MEMBER_MESSAGE =
@@ -35,6 +37,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
   public TeamMembersController(TeamMembersPanel membersPanel, JFrame frame, int teamId) {
     super(frame, teamId);
     this.membersPanel = membersPanel;
+    projectManager = ProjectManager.getInstance();
     teamManager.addPropertyChangeListener(this);
   }
 
@@ -100,6 +103,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
             JOptionPane.YES_NO_OPTION);
     if (choice == JOptionPane.YES_OPTION) {
       try {
+        projectManager.guaranteeNoUnfinishedAssignedOrSupervisedProjects(name, teamId);
         teamManager.removeTeamMember(teamId, name);
       } catch (InexistentTeamException
           | InexistentDatabaseEntityException
@@ -124,6 +128,11 @@ public class TeamMembersController extends TeamController implements PropertyCha
             managerRemovalException,
             frame,
             "The user \"" + name + "\" is the current manager of the team.");
+      } catch (IllegalMemberRemovalException illegalMemberRemovalException) {
+        ErrorDialogFactory.createErrorDialog(
+            illegalMemberRemovalException,
+            frame,
+            "The user \"" + name + "\" cannot be removed from this team.");
       }
     }
   }

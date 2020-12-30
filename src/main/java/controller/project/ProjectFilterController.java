@@ -7,6 +7,7 @@ import model.team.TeamManager;
 import model.user.User;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
+import org.jetbrains.annotations.Nullable;
 import view.ErrorDialogFactory;
 import view.project.ProjectFilterPanel;
 import view.project.ProjectListModel;
@@ -31,7 +32,7 @@ public class ProjectFilterController implements PropertyChangeListener {
 
   private ProjectManager projectManager;
   private TeamManager teamManager;
-  private int teamId;
+  private Integer teamId;
   private ProjectListModel projectListModel;
   private ProjectFilterPanel panel;
 
@@ -43,7 +44,7 @@ public class ProjectFilterController implements PropertyChangeListener {
   }
 
   public ProjectFilterController(
-      int teamId, ProjectFilterPanel panel, ProjectListModel projectListModel) {
+      @Nullable Integer teamId, ProjectFilterPanel panel, ProjectListModel projectListModel) {
     this.teamId = teamId;
     projectManager = ProjectManager.getInstance();
     projectManager.addPropertyChangeListener(this);
@@ -59,6 +60,8 @@ public class ProjectFilterController implements PropertyChangeListener {
         || evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.CREATE_PROJECT.toString())
         || evt.getPropertyName()
+            .equals(ProjectManager.ProjectChangeablePropertyName.DELETE_PROJECT.toString())
+        || evt.getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       panel.applyFilter();
     } else if (enableProjectSelectionForTeam()) {
@@ -71,8 +74,6 @@ public class ProjectFilterController implements PropertyChangeListener {
     }
   }
 
-  public void createNewProject() {}
-
   public List<User> getTeamMembers() {
     try {
       return teamManager.getMembersOfTeam(teamId);
@@ -83,7 +84,7 @@ public class ProjectFilterController implements PropertyChangeListener {
   }
 
   public boolean enableProjectSelectionForTeam() {
-    return teamId > 0;
+    return teamId != null;
   }
 
   public void filterProjectsOfTeam(

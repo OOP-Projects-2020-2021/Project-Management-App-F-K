@@ -11,6 +11,7 @@ import model.user.User;
 import model.user.exceptions.EmptyFieldsException;
 import model.user.exceptions.InexistentUserException;
 import model.user.exceptions.NoSignedInUserException;
+import org.jetbrains.annotations.Nullable;
 import view.ErrorDialogFactory;
 
 import javax.swing.*;
@@ -31,13 +32,13 @@ public class CreateProjectController extends FrameController {
 
   private TeamManager teamManager;
   private ProjectManager projectManager;
-  private int teamId;
+  private Integer teamId;
   /** Messages to inform the user that the project was saved successfully. */
   private static final String PROJECT_SAVED_TITLE = "Project saved";
 
   private static final String PROJECT_SAVED_MESSAGE = "The project was successfully saved.";
 
-  public CreateProjectController(int teamId, JFrame frame) {
+  public CreateProjectController(@Nullable Integer teamId, JFrame frame) {
     super(frame);
     this.teamId = teamId;
     teamManager = TeamManager.getInstance();
@@ -49,8 +50,17 @@ public class CreateProjectController extends FrameController {
     parentFrame.setEnabled(true);
   }
 
+  public Integer getTeamId() {
+    return teamId;
+  }
+  /**
+   * Enables the user to select the team of the new project from the list of teams he/she is a
+   * member of.
+   *
+   * @return true if the id of a team is not specified
+   */
   public boolean enableTeamSelection() {
-    return teamId < 0;
+    return teamId == null;
   }
 
   public List<Team> getTeamsOfUser() {
@@ -62,7 +72,7 @@ public class CreateProjectController extends FrameController {
     return null;
   }
 
-  public List<User> getTeamMembers(int teamId) {
+  public List<User> getTeamMembers() {
     try {
       return teamManager.getMembersOfTeam(teamId);
     } catch (SQLException e) {
@@ -71,37 +81,20 @@ public class CreateProjectController extends FrameController {
     return null;
   }
 
-  public int getIdOfTeam(String teamName) {
-    List<Team> teams = getTeamsOfUser();
-    try {
-      for (Team team : teams) {
-        if (team.getName().equals(teamName)) {
-          return team.getId();
-        }
-      }
-    } catch (InexistentDatabaseEntityException e) {
-      ErrorDialogFactory.createErrorDialog(
-          e, frame, "No team with name \"" + teamName + "\" exists.");
-    }
-    return -1;
-  }
-
   /**
    * Creates a project with the data introduced by the user. It displays a confirmation message if
    * all the data was successfully saved and closes the frame.
    *
    * @param title introduced by the user
-   * @param team selected by the user from the list of teams in which he/she is a member
    * @param deadline selected by the user from the DatePicker
-   * @param assignee selected by the user from the list of members of the previously specified team
+   * @param assignee selected by the user from the list of members of the current team, it is an
+   *     Object type, because in case it would be null, an EmptyFieldsException is thrown when
+   *     trying to save the project
    * @param description added by the user
    */
-  public void createProject(
-      String title, String team, Object assignee, LocalDate deadline, String description) {
+  public void createProject(String title, Object assignee, LocalDate deadline, String description) {
     try {
-      if (assignee == null) throw new EmptyFieldsException();
-      projectManager.createProject(
-          title, getIdOfTeam(team), assignee.toString(), deadline, description);
+      projectManager.createProject(title, teamId, assignee.toString(), deadline, description);
       displaySavedMessageDialog();
       closeFrame();
     } catch (NoSignedInUserException
@@ -113,9 +106,7 @@ public class CreateProjectController extends FrameController {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     } catch (DuplicateProjectNameException e) {
       ErrorDialogFactory.createErrorDialog(
-          e,
-          frame,
-          "The project with title \"" + title + "\" already exists in the team \"" + team);
+          e, frame, "The project with title \"" + title + "\" already exists in this team.");
     }
   }
 

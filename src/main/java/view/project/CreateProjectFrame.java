@@ -1,7 +1,6 @@
 package view.project;
 
 import controller.project.CreateProjectController;
-import model.team.Team;
 import model.user.User;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -19,9 +18,9 @@ import java.util.Properties;
 
 /**
  * The CreateProjectFrame allows the user to create a new project, introducing all the required
- * data, such as the title of the project, the team to which the project should be added, the
- * deadline of turning in the specific project and the assignee to whom the project is intended. The
- * creator of the project will automatically become the supervisor.
+ * data, such as the title of the project, the deadline of turning in the specific project and the
+ * assignee to whom the project is intended. The creator of the project will automatically become
+ * the supervisor.
  *
  * @author Beata Keresztes
  */
@@ -37,8 +36,6 @@ public class CreateProjectFrame extends JFrame {
   private JTextArea descriptionTextArea;
   private JScrollPane descriptionScrollPane;
 
-  private JComboBox<String> teamComboBox;
-  private DefaultComboBoxModel<String> teamModel;
   private JComboBox<String> assigneeComboBox;
   private DefaultComboBoxModel<String> assigneeModel;
 
@@ -47,7 +44,7 @@ public class CreateProjectFrame extends JFrame {
 
   private static final Dimension DIMENSION = new Dimension(600, 600);
 
-  public CreateProjectFrame(int teamId, JFrame parentFrame) {
+  public CreateProjectFrame(Integer teamId, JFrame parentFrame) {
     super("New Project");
     this.parentFrame = parentFrame;
     controller = new CreateProjectController(teamId, this);
@@ -57,6 +54,19 @@ public class CreateProjectFrame extends JFrame {
     this.setResizable(false);
     this.addWindowListener(new ProjectWindowAdapter());
     this.setVisible(true);
+  }
+
+  private void initComponents() {
+    initDataFields();
+    initContentPanel();
+    initButtonsPanel();
+  }
+
+  private void initDataFields() {
+    titleTextField = UIFactory.createTextField(null);
+    initDatePicker();
+    initDescriptionTextArea();
+    initAssigneeComboBox();
   }
 
   private void initDatePicker() {
@@ -77,55 +87,20 @@ public class CreateProjectFrame extends JFrame {
     descriptionScrollPane = new JScrollPane(descriptionTextArea);
   }
 
-  private void initTeamsComboBox() {
-    teamComboBox = new JComboBox<>();
-    teamModel = new DefaultComboBoxModel<>();
-    List<Team> teamList = controller.getTeamsOfUser();
-    if (teamList != null) {
-      for (Team team : teamList) {
-        teamModel.addElement(team.getName());
-      }
-    }
-    teamComboBox.setModel(teamModel);
-    teamComboBox.addActionListener(
-        e -> {
-          String team = teamComboBox.getModel().getSelectedItem().toString();
-          int teamId = controller.getIdOfTeam(team);
-          if (teamId > 0) {
-            updateAssigneeModel(teamId);
-          }
-        });
-    teamComboBox.setVisible(controller.enableTeamSelection());
-  }
-
   private void initAssigneeComboBox() {
     assigneeComboBox = new JComboBox<>();
     assigneeModel = new DefaultComboBoxModel<>();
+    initAssigneeModel();
     assigneeComboBox.setModel(assigneeModel);
   }
 
-  private void updateAssigneeModel(int teamId) {
-    assigneeModel.removeAllElements();
-    List<User> members = controller.getTeamMembers(teamId);
+  private void initAssigneeModel() {
+    List<User> members = controller.getTeamMembers();
     if (members != null) {
       for (User member : members) {
         assigneeModel.addElement(member.getUsername());
       }
     }
-  }
-
-  private void initDataFields() {
-    titleTextField = UIFactory.createTextField(null);
-    initDatePicker();
-    initDescriptionTextArea();
-    initAssigneeComboBox();
-    initTeamsComboBox();
-  }
-
-  private void initComponents() {
-    initDataFields();
-    initContentPanel();
-    initButtonsPanel();
   }
 
   private void initContentPanel() {
@@ -136,12 +111,12 @@ public class CreateProjectFrame extends JFrame {
     contentPanel.setLayout(contentLayout);
     contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 50, 20, 50));
 
-    JLabel titleLabel = UIFactory.createLabel("* Title:", null);
-    JLabel teamLabel = UIFactory.createLabel("* Team:", null);
+    JLabel titleLabel = UIFactory.createLabel("*Title:", null);
+    JLabel teamLabel = UIFactory.createLabel("*Team:", null);
     teamLabel.setVisible(controller.enableTeamSelection());
-    JLabel deadlineLabel = UIFactory.createLabel("* Deadline:", null);
+    JLabel deadlineLabel = UIFactory.createLabel("*Deadline:", null);
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
-    JLabel assigneeLabel = UIFactory.createLabel("* Assignee:", null);
+    JLabel assigneeLabel = UIFactory.createLabel("*Assignee:", null);
 
     contentLayout.setHorizontalGroup(
         contentLayout
@@ -161,7 +136,6 @@ public class CreateProjectFrame extends JFrame {
                         contentLayout
                             .createParallelGroup()
                             .addComponent(titleTextField)
-                            .addComponent(teamComboBox)
                             .addComponent(datePanel)
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox))));
@@ -173,11 +147,7 @@ public class CreateProjectFrame extends JFrame {
                     .createParallelGroup()
                     .addComponent(titleLabel)
                     .addComponent(titleTextField))
-            .addGroup(
-                contentLayout
-                    .createParallelGroup()
-                    .addComponent(teamLabel)
-                    .addComponent(teamComboBox))
+            .addGroup(contentLayout.createParallelGroup().addComponent(teamLabel))
             .addGroup(
                 contentLayout
                     .createParallelGroup()
@@ -202,7 +172,6 @@ public class CreateProjectFrame extends JFrame {
     saveButton.addActionListener(
         e -> {
           String title = titleTextField.getText();
-          String team = teamComboBox.getModel().getSelectedItem().toString();
           Object assignee = assigneeComboBox.getSelectedItem();
           LocalDate deadline =
               LocalDate.of(
@@ -210,7 +179,7 @@ public class CreateProjectFrame extends JFrame {
                   deadlineDatePicker.getModel().getMonth(),
                   deadlineDatePicker.getModel().getDay());
           String description = descriptionTextArea.getText();
-          controller.createProject(title, team, assignee, deadline, description);
+          controller.createProject(title, assignee, deadline, description);
         });
 
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));

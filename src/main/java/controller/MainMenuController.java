@@ -1,6 +1,5 @@
 package controller;
 
-import view.project.CreateProjectFrame;
 import view.project.UserProjectsFrame;
 import view.user.AccountSettingsFrame;
 import view.user.SignInFrame;
@@ -61,12 +60,6 @@ public class MainMenuController extends FrameController {
   /** Provides access to viewing the list of projects in the respective frame. */
   public void enableViewingProjects() {
     new UserProjectsFrame(frame);
-    frame.setEnabled(false);
-  }
-
-  /** Provides access to creating a new project in a separate frame. */
-  public void enableCreatingProject() {
-    new CreateProjectFrame(-1, frame);
     frame.setEnabled(false);
   }
 }

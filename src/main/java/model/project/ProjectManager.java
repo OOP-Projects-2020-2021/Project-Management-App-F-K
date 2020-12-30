@@ -5,6 +5,7 @@ import model.Manager;
 import model.UnauthorisedOperationException;
 import model.project.exceptions.*;
 import model.team.Team;
+import model.team.exceptions.IllegalMemberRemovalException;
 import model.team.exceptions.InexistentTeamException;
 import model.team.exceptions.UnregisteredMemberRoleException;
 import model.user.User;
@@ -37,7 +38,8 @@ public class ProjectManager extends Manager {
   public enum ProjectChangeablePropertyName {
     UPDATE_PROJECT, // event fires when project is updated
     CREATE_PROJECT, // event fires when project is created
-    SET_PROJECT_STATUS // event fires when state of the project is changed
+    SET_PROJECT_STATUS, // event fires when state of the project is changed
+    DELETE_PROJECT // event is fired when a project is deleted
   }
 
   private boolean isEmptyText(String text) {
@@ -177,6 +179,8 @@ public class ProjectManager extends Manager {
         currentUser, project, "delete project", "they are not the " + "supervisor");
     commentRepository.deleteAllCommentsOfProject(projectId);
     projectRepository.deleteProject(projectId);
+    support.firePropertyChange(
+        ProjectChangeablePropertyName.DELETE_PROJECT.toString(), OLD_VALUE, NEW_VALUE);
   }
 
   /**
@@ -563,5 +567,38 @@ public class ProjectManager extends Manager {
    */
   public Project getProjectById(int projectId) throws InexistentProjectException, SQLException {
     return getMandatoryProject(projectId);
+  }
+
+  /**
+   * Guarantee that the member of the given team has no unfinished projects assigned to them or
+   * supervised by them.
+   *
+   * @param member = the name of the member
+   * @param teamId = id of the team of the given member
+   * @throws SQLException in case a database error occurs
+   * @throws InexistentDatabaseEntityException in case there is no team with the given id
+   * @throws InexistentUserException if no member exists with given name
+   * @throws IllegalMemberRemovalException if the given member has any unfinished projects left
+   */
+  public void guaranteeNoUnfinishedAssignedOrSupervisedProjects(String member, int teamId)
+      throws SQLException, InexistentDatabaseEntityException, InexistentUserException,
+          IllegalMemberRemovalException {
+    List<Project> unFinishedAssignedProjects =
+        getProjectsOfTeam(
+            teamId,
+            null,
+            member,
+            EnumSet.range(Project.Status.TO_DO, Project.Status.TURNED_IN),
+            EnumSet.allOf(Project.DeadlineStatus.class));
+    List<Project> unFinishedSupervisedProjects =
+        getProjectsOfTeam(
+            teamId,
+            member,
+            null,
+            EnumSet.range(Project.Status.TO_DO, Project.Status.TURNED_IN),
+            EnumSet.allOf(Project.DeadlineStatus.class));
+    if (!unFinishedAssignedProjects.isEmpty() || !unFinishedSupervisedProjects.isEmpty()) {
+      throw new IllegalMemberRemovalException(member);
+    }
   }
 }

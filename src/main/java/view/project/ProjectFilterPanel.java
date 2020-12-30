@@ -41,7 +41,7 @@ public class ProjectFilterPanel extends JPanel {
   private static final String statusName = "Project Status";
   private static final String deadlineStatusName = "Turn-in Time";
 
-  public ProjectFilterPanel(int teamId, ProjectListModel projectListModel) {
+  public ProjectFilterPanel(Integer teamId, ProjectListModel projectListModel) {
     this.controller = new ProjectFilterController(teamId, this, projectListModel);
     initFilters();
     initListPorjectsButton();

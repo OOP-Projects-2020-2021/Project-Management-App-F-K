@@ -34,5 +34,6 @@ public class TeamListPanel extends JPanel {
       this.add(new TeamLabel(frame, team));
     }
     this.revalidate();
+    this.repaint();
   }
 }

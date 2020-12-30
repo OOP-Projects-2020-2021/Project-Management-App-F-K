@@ -30,6 +30,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
   private JButton saveTeamManagerButton;
   private JButton regenerateCodeButton;
   private JButton leaveTeamButton;
+  private JButton deleteTeamButton;
 
   private TeamSettingsController controller;
 
@@ -72,7 +73,8 @@ public class TeamHomePanel extends JPanel implements ActionListener {
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(regenerateCodeButton)
                     .addComponent(saveTeamNameButton)
-                    .addComponent(saveTeamManagerButton)));
+                    .addComponent(saveTeamManagerButton)
+                    .addComponent(deleteTeamButton)));
 
     homeLayout.setVerticalGroup(
         homeLayout
@@ -100,7 +102,8 @@ public class TeamHomePanel extends JPanel implements ActionListener {
             .addGroup(
                 homeLayout
                     .createParallelGroup(GroupLayout.Alignment.BASELINE)
-                    .addComponent(leaveTeamButton)));
+                    .addComponent(leaveTeamButton)
+                    .addComponent(deleteTeamButton)));
   }
 
   private void clearTeamManagerModel() {
@@ -147,6 +150,7 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     saveTeamManagerButton = UIFactory.createButton("Save");
     regenerateCodeButton = UIFactory.createButton("Regenerate code");
     leaveTeamButton = UIFactory.createButton("Leave Team");
+    deleteTeamButton = UIFactory.createButton("Delete Team");
     addButtonListeners();
 
     enableNameTextField(false);
@@ -165,12 +169,14 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     saveTeamNameButton.addActionListener(this);
     saveTeamManagerButton.addActionListener(this);
     regenerateCodeButton.addActionListener(this);
+    deleteTeamButton.addActionListener(this);
   }
 
   private void enableButtons(boolean enable) {
     saveTeamNameButton.setVisible(enable);
     saveTeamManagerButton.setVisible(enable);
     regenerateCodeButton.setVisible(enable);
+    deleteTeamButton.setVisible(enable);
   }
 
   public void enableNameTextField(boolean enable) {
@@ -188,15 +194,15 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     Object source = actionEvent.getSource();
     if (source == leaveTeamButton) {
       controller.leaveTeam();
-    } else {
-      if (source == saveTeamNameButton) {
-        controller.saveTeamName(teamNameTextField.getText());
-      } else if (source == saveTeamManagerButton) {
-        System.out.println((String) teamManagerModel.getSelectedItem());
-        controller.saveTeamManager((String) teamManagerModel.getSelectedItem());
-      } else if (source == regenerateCodeButton) {
-        controller.regenerateTeamCode();
-      }
+    } else if (source == saveTeamNameButton) {
+      controller.saveTeamName(teamNameTextField.getText());
+    } else if (source == saveTeamManagerButton) {
+      System.out.println((String) teamManagerModel.getSelectedItem());
+      controller.saveTeamManager((String) teamManagerModel.getSelectedItem());
+    } else if (source == regenerateCodeButton) {
+      controller.regenerateTeamCode();
+    } else if (source == deleteTeamButton) {
+      controller.deleteTeam();
     }
   }
 }
