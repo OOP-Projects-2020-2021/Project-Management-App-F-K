@@ -15,7 +15,7 @@ import java.awt.event.*;
  *
  * @author Beata Keresztes
  */
-public class TeamFrame extends JFrame implements ActionListener{
+public class TeamFrame extends JFrame implements ActionListener {
 
   private JPanel homeTab;
   private JPanel membersTab;
@@ -41,23 +41,27 @@ public class TeamFrame extends JFrame implements ActionListener{
     membersTab = new TeamMembersPanel(this, controller.getTeamId());
     initProjectsTab();
   }
+
   private void initProjectsTab() {
     projectsTab = new JPanel(new BorderLayout());
     initProjectButtonPanel();
     initProjectListPanel();
   }
+
   private void initProjectButtonPanel() {
     JPanel projectButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     createProjectButton = UIFactory.createButton("Create Project");
     createProjectButton.addActionListener(this);
-    projectButtonPanel.add(UIFactory.createLabel("Create a new project:",null));
+    projectButtonPanel.add(UIFactory.createLabel("Create a new project:", null));
     projectButtonPanel.add(createProjectButton);
-    projectsTab.add(projectButtonPanel,BorderLayout.BEFORE_FIRST_LINE);
+    projectsTab.add(projectButtonPanel, BorderLayout.BEFORE_FIRST_LINE);
   }
+
   private void initProjectListPanel() {
     JPanel projectsListPanel = new ProjectsPanel(this, controller.getTeamId());
-    projectsTab.add(projectsListPanel,BorderLayout.CENTER);
+    projectsTab.add(projectsListPanel, BorderLayout.CENTER);
   }
+
   private void addTabbedPanes() {
     JTabbedPane mainPane = new JTabbedPane();
     initTabbedPanes();
@@ -80,7 +84,7 @@ public class TeamFrame extends JFrame implements ActionListener{
 
   @Override
   public void actionPerformed(ActionEvent e) {
-    if(e.getSource() == createProjectButton) {
+    if (e.getSource() == createProjectButton) {
       controller.enableProjectCreation(this);
     }
   }

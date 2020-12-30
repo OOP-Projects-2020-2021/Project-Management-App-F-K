@@ -1,12 +1,9 @@
 package view.project;
 
-import view.UIFactory;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * ProjectsPanel displays the list of projects, which can be sorted based on the deadline or

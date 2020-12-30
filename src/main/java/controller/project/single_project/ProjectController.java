@@ -6,7 +6,6 @@ import model.project.Project;
 import model.project.ProjectManager;
 import model.project.exceptions.InexistentProjectException;
 import view.ErrorDialogFactory;
-import view.project.CreateProjectFrame;
 
 import javax.swing.*;
 import java.sql.SQLException;

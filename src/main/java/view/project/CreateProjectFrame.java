@@ -119,12 +119,13 @@ public class CreateProjectFrame extends JFrame {
   }
 
   private void initAssigneeModel() {
-    if(controller.enableTeamSelection()) {
+    if (controller.enableTeamSelection()) {
       updateAssigneeModel(controller.getIdOfTeam(teamModel.getElementAt(0)));
     } else {
       updateAssigneeModel(controller.getTeamId());
     }
   }
+
   private void updateAssigneeModel(int teamId) {
     assigneeModel.removeAllElements();
     List<User> members = controller.getTeamMembers(teamId);

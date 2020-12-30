@@ -66,8 +66,9 @@ public class TeamController extends FrameController {
     parentFrame.setVisible(true);
     parentFrame.setEnabled(true);
   }
+
   public void enableProjectCreation(JFrame frame) {
-    new CreateProjectFrame(teamId,frame);
+    new CreateProjectFrame(teamId, frame);
     frame.setEnabled(false);
   }
 }

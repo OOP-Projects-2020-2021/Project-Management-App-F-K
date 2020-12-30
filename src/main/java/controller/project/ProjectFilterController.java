@@ -44,7 +44,7 @@ public class ProjectFilterController implements PropertyChangeListener {
   }
 
   public ProjectFilterController(
-          @Nullable Integer teamId, ProjectFilterPanel panel, ProjectListModel projectListModel) {
+      @Nullable Integer teamId, ProjectFilterPanel panel, ProjectListModel projectListModel) {
     this.teamId = teamId;
     projectManager = ProjectManager.getInstance();
     projectManager.addPropertyChangeListener(this);

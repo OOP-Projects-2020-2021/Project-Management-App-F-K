@@ -110,9 +110,8 @@ public class CreateProjectController extends FrameController {
       String title, String team, Object assignee, LocalDate deadline, String description) {
     try {
       if (assignee == null) throw new EmptyFieldsException();
-      int id = (teamId == null)? getIdOfTeam(team):teamId;
-      projectManager.createProject(
-          title, id, assignee.toString(), deadline, description);
+      int id = (teamId == null) ? getIdOfTeam(team) : teamId;
+      projectManager.createProject(title, id, assignee.toString(), deadline, description);
       displaySavedMessageDialog();
       closeFrame();
     } catch (NoSignedInUserException
