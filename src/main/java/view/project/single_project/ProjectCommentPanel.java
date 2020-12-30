@@ -50,7 +50,9 @@ public class ProjectCommentPanel extends JPanel {
     JPanel headerPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
     JLabel senderName = UIFactory.createLabel(controller.getSenderName(comment), null);
     JLabel sendingDate =
-        UIFactory.createLabel(comment.getDateTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)), null);
+        UIFactory.createLabel(
+            comment.getDateTime().format(DateTimeFormatter.ofLocalizedDateTime(FormatStyle.MEDIUM)),
+            null);
     headerPanel.add(senderName);
     headerPanel.add(new JLabel("-"));
     headerPanel.add(sendingDate);

@@ -202,7 +202,6 @@ public class ProjectDetailsPanel extends JPanel {
             .addComponent(buttonsPanel)
             .addComponent(projectStatusPanel));
 
-
     contentLayout.setVerticalGroup(
         contentLayout
             .createSequentialGroup()
@@ -248,17 +247,22 @@ public class ProjectDetailsPanel extends JPanel {
     projectStatusLayout.setAutoCreateContainerGaps(true);
 
     projectStatusLayout.setHorizontalGroup(
-            projectStatusLayout.createParallelGroup()
-                    .addGroup(projectStatusLayout.createSequentialGroup()
-                            .addGap(20)
-                            .addComponent(statusLabel)
-                            .addComponent(projectStatusLabel))
-                    .addComponent(statusButtonsPanel));
+        projectStatusLayout
+            .createParallelGroup()
+            .addGroup(
+                projectStatusLayout
+                    .createSequentialGroup()
+                    .addGap(20)
+                    .addComponent(statusLabel)
+                    .addComponent(projectStatusLabel))
+            .addComponent(statusButtonsPanel));
 
     projectStatusLayout.setVerticalGroup(
-            projectStatusLayout.createSequentialGroup()
+        projectStatusLayout
+            .createSequentialGroup()
             .addGroup(
-                    projectStatusLayout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                projectStatusLayout
+                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
                     .addComponent(statusLabel)
                     .addComponent(projectStatusLabel))
             .addComponent(statusButtonsPanel)
