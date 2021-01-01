@@ -172,12 +172,15 @@ public class ProjectStatusController extends ProjectController implements Proper
     }
   }
 
-  /** Updates the UI if the status of the project has changed. */
+  /** Updates the UI if the status, assignee or supervisor of the project have changed. */
   @Override
   public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
     if (propertyChangeEvent
         .getPropertyName()
-        .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
+        .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())
+    || propertyChangeEvent
+            .getPropertyName()
+            .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())) {
       setProject();
       panel.updateButtons();
     }
