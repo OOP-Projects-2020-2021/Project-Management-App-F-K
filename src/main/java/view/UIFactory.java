@@ -28,7 +28,7 @@ public class UIFactory {
 
   static {
     GraphicsEnvironment ge;
-    try{
+    try {
       ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
       InputStream is = UIFactory.class.getResourceAsStream("/arial.ttf");
       Font font = Font.createFont(Font.TRUETYPE_FONT, is);
@@ -36,7 +36,7 @@ public class UIFactory {
       NORMAL_TEXT_FONT = font.deriveFont(15f);
       MEDIUM_HIGHLIGHT_TEXT_FONT = font.deriveFont(Font.BOLD, 15);
       HIGHLIGHT_TEXT_FONT = font.deriveFont(Font.BOLD, 18);
-    } catch(FontFormatException | IOException e){
+    } catch (FontFormatException | IOException e) {
       e.printStackTrace();
     }
   }
