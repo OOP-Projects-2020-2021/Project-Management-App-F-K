@@ -58,6 +58,15 @@ public class ProjectManager extends Manager {
   private boolean isMissingProjectData(String title, String assignee, LocalDate deadline) {
     return isEmptyText(title) || isEmptyText(assignee) || isEmptyText(deadline.toString());
   }
+
+  /**
+   * Checks if the given date is outdated
+   * @param date the selected date
+   * @return true if the date is before the current date
+   */
+  private boolean isOutdatedDate(LocalDate date) {
+    return date.isBefore(LocalDate.now());
+  }
   /**
    * Creates a new project with the specified data and saves it in the database. The supervisor of
    * the project will be automatically the current user. There should not be another project with
@@ -75,12 +84,13 @@ public class ProjectManager extends Manager {
    * @throws DuplicateProjectNameException if there is already a project with the same name in the
    *     same team. This is not allowed.
    * @throws InexistentDatabaseEntityException should never occur.
+   * @throws InvalidDeadlineException if the selected deadline is outdated.
    */
   public void createProject(
       String projectName, int teamId, String assigneeName, LocalDate deadline, String description)
-      throws NoSignedInUserException, SQLException, InexistentUserException,
+          throws NoSignedInUserException, SQLException, InexistentUserException,
           InexistentTeamException, DuplicateProjectNameException, InexistentDatabaseEntityException,
-          EmptyFieldsException {
+          EmptyFieldsException, InvalidDeadlineException {
     if (isMissingProjectData(projectName, assigneeName, deadline)) {
       throw new EmptyFieldsException();
     }
@@ -90,6 +100,10 @@ public class ProjectManager extends Manager {
     // check that there is no other project with the same name
     if (projectRepository.getProject(teamId, projectName).isPresent()) {
       throw new DuplicateProjectNameException(projectName, team.getName());
+    }
+    // check if the new deadline of project is outdated (before the current date)
+    if(isOutdatedDate(deadline)) {
+      throw new InvalidDeadlineException();
     }
     // save project
     Project.SavableProject project =
@@ -123,6 +137,7 @@ public class ProjectManager extends Manager {
    *     desired name.
    * @throws UnregisteredMemberRoleException if the assignee or the supervisor to be set is not the
    *     member of the team.
+   * @throws InvalidDeadlineException if the selected deadline is outdated.
    */
   public void updateProject(
       int projectId,
@@ -131,9 +146,9 @@ public class ProjectManager extends Manager {
       String newSupervisorName,
       LocalDate newDeadline,
       String newDescription)
-      throws NoSignedInUserException, SQLException, InexistentProjectException,
+          throws NoSignedInUserException, SQLException, InexistentProjectException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
-          InexistentUserException, DuplicateProjectNameException, UnregisteredMemberRoleException {
+          InexistentUserException, DuplicateProjectNameException, UnregisteredMemberRoleException, InvalidDeadlineException {
     User currentUser = getMandatoryCurrentUser();
     Project project = getMandatoryProject(projectId);
     guaranteeUserIsSupervisor(
@@ -146,6 +161,10 @@ public class ProjectManager extends Manager {
     if (!newProjectTitle.equals(project.getTitle())
         && projectRepository.getProject(project.getTeamId(), newProjectTitle).isPresent()) {
       throw new DuplicateProjectNameException(newProjectTitle);
+    }
+    // check that the new deadline of the project is valid
+    if (isOutdatedDate(newDeadline)) {
+      throw new InvalidDeadlineException();
     }
     // update project
     project.setAssigneeId(assignee.getId());

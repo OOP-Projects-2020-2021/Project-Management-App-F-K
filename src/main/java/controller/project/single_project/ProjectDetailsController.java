@@ -6,6 +6,7 @@ import model.project.Project;
 import model.project.ProjectManager;
 import model.project.exceptions.DuplicateProjectNameException;
 import model.project.exceptions.InexistentProjectException;
+import model.project.exceptions.InvalidDeadlineException;
 import model.team.TeamManager;
 import model.team.exceptions.UnregisteredMemberRoleException;
 import model.user.User;
@@ -137,7 +138,7 @@ public class ProjectDetailsController extends ProjectController implements Prope
       projectManager.updateProject(
           project.getId(), title, assignee, supervisor, deadline, description);
       displaySuccessfulSaveMessage();
-    } catch (InexistentDatabaseEntityException | SQLException | InexistentProjectException e) {
+    } catch (InexistentDatabaseEntityException | SQLException | InexistentProjectException | InvalidDeadlineException e) {
       ErrorDialogFactory.createErrorDialog(
           e,
           null,
