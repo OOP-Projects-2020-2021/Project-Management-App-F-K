@@ -32,7 +32,7 @@ public class UserProjectsFrame extends JFrame {
   }
 
   private void initPanel() {
-    ProjectsPanel panel = new ProjectsPanel(this, -1);
+    ProjectsPanel panel = new ProjectsPanel(this, null);
     getContentPane().add(panel, BorderLayout.CENTER);
   }
 

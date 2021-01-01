@@ -49,10 +49,11 @@ public class JoinTeamFrame extends JFrame implements ActionListener {
     JPanel buttonPanel = new JPanel();
     submitBtn = UIFactory.createButton(SUBMIT_BUTTON_TEXT);
     submitBtn.addActionListener(this);
+    getRootPane().setDefaultButton(submitBtn);
     buttonPanel.add(submitBtn);
 
-    JPanel contentPannel = new JPanel();
-    this.setContentPane(contentPannel);
+    JPanel contentPanel = new JPanel();
+    this.setContentPane(contentPanel);
 
     Border padding = BorderFactory.createEmptyBorder(10, 10, 10, 10);
     dataPanel.setBorder(padding);

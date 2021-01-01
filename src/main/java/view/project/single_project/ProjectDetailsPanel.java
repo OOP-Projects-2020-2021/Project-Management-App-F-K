@@ -46,9 +46,11 @@ public class ProjectDetailsPanel extends JPanel {
   private DefaultComboBoxModel<String> supervisorModel;
 
   private ProjectStatusButtonsPanel statusButtonsPanel;
+  private JPanel projectStatusPanel;
 
   private JButton saveButton;
   private JButton deleteButton;
+  private JPanel buttonsPanel;
 
   private ProjectDetailsController controller;
 
@@ -61,9 +63,10 @@ public class ProjectDetailsPanel extends JPanel {
 
   private void initDetailsPanel() {
     initDataFields();
-    initContentPanel();
     initButtonsPanel();
     addButtonListener();
+    initProjectStatusPanel();
+    initContentPanel();
     enableEditFields(controller.enableEditing());
   }
 
@@ -173,7 +176,6 @@ public class ProjectDetailsPanel extends JPanel {
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
     JLabel assigneeLabel = UIFactory.createLabel("Assignee:", null);
     JLabel supervisorLabel = UIFactory.createLabel("Supervisor:", null);
-    JLabel statusLabel = UIFactory.createLabel("Status:", null);
 
     contentLayout.setHorizontalGroup(
         contentLayout
@@ -188,8 +190,7 @@ public class ProjectDetailsPanel extends JPanel {
                             .addComponent(deadlineLabel)
                             .addComponent(descriptionLabel)
                             .addComponent(assigneeLabel)
-                            .addComponent(supervisorLabel)
-                            .addComponent(statusLabel))
+                            .addComponent(supervisorLabel))
                     .addGroup(
                         contentLayout
                             .createParallelGroup()
@@ -197,9 +198,9 @@ public class ProjectDetailsPanel extends JPanel {
                             .addComponent(deadlineDatePicker)
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox)
-                            .addComponent(supervisorComboBox)
-                            .addComponent(projectStatusLabel)))
-            .addGroup(contentLayout.createSequentialGroup().addComponent(statusButtonsPanel)));
+                            .addComponent(supervisorComboBox)))
+            .addComponent(buttonsPanel)
+            .addComponent(projectStatusPanel));
 
     contentLayout.setVerticalGroup(
         contentLayout
@@ -229,24 +230,52 @@ public class ProjectDetailsPanel extends JPanel {
                     .createParallelGroup()
                     .addComponent(supervisorLabel)
                     .addComponent(supervisorComboBox))
+            .addGap(20)
+            .addComponent(buttonsPanel)
+            .addGap(30)
+            .addComponent(projectStatusPanel));
+    this.add(contentPanel, BorderLayout.CENTER);
+  }
+
+  private void initProjectStatusPanel() {
+    JLabel statusLabel = UIFactory.createLabel("Status:", null);
+
+    projectStatusPanel = new JPanel();
+    GroupLayout projectStatusLayout = new GroupLayout(projectStatusPanel);
+    projectStatusPanel.setLayout(projectStatusLayout);
+    projectStatusLayout.setAutoCreateGaps(true);
+    projectStatusLayout.setAutoCreateContainerGaps(true);
+
+    projectStatusLayout.setHorizontalGroup(
+        projectStatusLayout
+            .createParallelGroup()
             .addGroup(
-                contentLayout
-                    .createParallelGroup()
+                projectStatusLayout
+                    .createSequentialGroup()
+                    .addGap(20)
                     .addComponent(statusLabel)
                     .addComponent(projectStatusLabel))
-            .addGap(20)
             .addComponent(statusButtonsPanel));
-    this.add(contentPanel, BorderLayout.CENTER);
+
+    projectStatusLayout.setVerticalGroup(
+        projectStatusLayout
+            .createSequentialGroup()
+            .addGroup(
+                projectStatusLayout
+                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(statusLabel)
+                    .addComponent(projectStatusLabel))
+            .addComponent(statusButtonsPanel)
+            .addGap(20));
   }
 
   private void initButtonsPanel() {
     saveButton = UIFactory.createButton("Save Project");
     deleteButton = UIFactory.createButton("Delete Project");
-    JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+    buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
     buttonsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     buttonsPanel.add(saveButton);
     buttonsPanel.add(deleteButton);
-    this.add(buttonsPanel, BorderLayout.SOUTH);
   }
 
   public void addButtonListener() {
