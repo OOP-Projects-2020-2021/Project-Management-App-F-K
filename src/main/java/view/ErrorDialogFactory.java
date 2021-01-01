@@ -108,7 +108,7 @@ public class ErrorDialogFactory {
   private static final String EMPTY_FIELDS_LEFT_TITLE = "Empty fields left";
 
   private static final String EMPTY_FIELDS_LEFT_MESSAGE =
-      "Please fill in all the required information before continuing!";
+      "You have empty fields left.\nPlease fill in all the required information before continuing!";
   /**
    * Messages displayed to inform the user that the status change requested for a project is
    * illegal.
