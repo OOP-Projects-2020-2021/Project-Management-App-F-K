@@ -177,7 +177,10 @@ public class ProjectStatusController extends ProjectController implements Proper
   public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
     if (propertyChangeEvent
         .getPropertyName()
-        .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
+        .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())
+        || propertyChangeEvent
+                .getPropertyName()
+                .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())) {
       setProject();
       panel.updateButtons();
     }
