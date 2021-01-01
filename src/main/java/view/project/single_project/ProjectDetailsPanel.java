@@ -292,7 +292,7 @@ public class ProjectDetailsPanel extends JPanel {
   private void enableEditingTextFields(boolean enable) {
     titleTextField.setEditable(enable);
     descriptionTextArea.setEditable(enable);
-    deadlineDatePicker.setEnabled(enable);
+    deadlineDatePicker.getComponent(1).setEnabled(enable);
     assigneeComboBox.setEnabled(enable);
     supervisorComboBox.setEnabled(enable);
   }
