@@ -177,7 +177,7 @@ public class CreateProjectFrame extends JFrame {
           LocalDate deadline =
               LocalDate.of(
                   deadlineDatePicker.getModel().getYear(),
-                  deadlineDatePicker.getModel().getMonth(),
+                  deadlineDatePicker.getModel().getMonth() + 1,
                   deadlineDatePicker.getModel().getDay());
           String description = descriptionTextArea.getText();
           controller.createProject(title, assignee, deadline, description);
