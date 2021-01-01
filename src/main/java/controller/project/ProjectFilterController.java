@@ -49,6 +49,7 @@ public class ProjectFilterController implements PropertyChangeListener {
     projectManager = ProjectManager.getInstance();
     projectManager.addPropertyChangeListener(this);
     teamManager = TeamManager.getInstance();
+    teamManager.addPropertyChangeListener(this);
     this.projectListModel = projectListModel;
     this.panel = panel;
   }

@@ -15,6 +15,7 @@ public abstract class Repository {
   protected Repository() {
     try {
       c = SqliteDatabaseConnectionFactory.getConnection();
+      //System.out.println(SqliteDatabaseConnectionFactory.class.getResource("/project_management_app.db"));
       prepareStatements();
     } catch (SQLException e) {
       e.printStackTrace();
