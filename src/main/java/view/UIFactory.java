@@ -30,7 +30,7 @@ public class UIFactory {
     GraphicsEnvironment ge;
     try{
       ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-      InputStream is = UIFactory.class.getResourceAsStream("/COURIER.TTF");
+      InputStream is = UIFactory.class.getResourceAsStream("/arial.ttf");
       Font font = Font.createFont(Font.TRUETYPE_FONT, is);
       ge.registerFont(font);
       NORMAL_TEXT_FONT = font.deriveFont(15f);
