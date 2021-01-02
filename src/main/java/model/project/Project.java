@@ -58,8 +58,8 @@ public class Project {
   public enum SorterType {
     NONE("true"),
     DEADLINE("Deadline"),
-    STATUS("StatusId"),
-    IMPORTANCE("ImportanceId");
+    STATUS("p.StatusId"),
+    IMPORTANCE("p.ImportanceId");
 
     private String columnName; // specifies the name of the column in the database on which
     // sorting is
