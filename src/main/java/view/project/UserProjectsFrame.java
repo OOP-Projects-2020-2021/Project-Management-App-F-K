@@ -18,7 +18,7 @@ import java.awt.event.WindowEvent;
 public class UserProjectsFrame extends JFrame {
   private JFrame parentFrame;
   private UserProjectsController controller;
-  private static final Dimension DIMENSION = new Dimension(600, 600);
+  private static final Dimension DIMENSION = new Dimension(620, 600);
 
   public UserProjectsFrame(JFrame parentFrame) {
     super("My projects");

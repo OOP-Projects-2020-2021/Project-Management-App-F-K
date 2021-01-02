@@ -56,12 +56,6 @@ public class ProjectTableController implements PropertyChangeListener {
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName().equals(ProjectListModel.PROJECT_LIST)) {
       updateTableModel();
-      System.out.println("updated project list");
-      int i = 0;
-      for (Project project : projectListModel.getProjectList()) {
-        System.out.println(i + ":" + project.getTitle());
-        i++;
-      }
     }
   }
 }
