@@ -39,7 +39,7 @@ public class ProjectFilterPanel extends JPanel {
   private JPanel sorterPanel;
   private JRadioButton sortAscButton;
   private JRadioButton sortDescButton;
-  private JComboBox<String> sortComboBox;
+  private JComboBox<Project.SorterType> sortComboBox;
 
   private JButton listProjectsButton;
 
@@ -166,12 +166,10 @@ public class ProjectFilterPanel extends JPanel {
 
   private void initSortComboBox() {
     sortComboBox = new JComboBox<>();
-    DefaultComboBoxModel<String> sortModel = new DefaultComboBoxModel<>();
-    sortModel.addElement(ProjectFilterController.SORT_OPTION.UNSORTED.name());
-    sortModel.addElement(ProjectFilterController.SORT_OPTION.DEADLINE.name());
-    sortModel.addElement(ProjectFilterController.SORT_OPTION.STATUS.name());
-    sortModel.addElement(ProjectFilterController.SORT_OPTION.IMPORTANCE.name());
+    DefaultComboBoxModel<Project.SorterType> sortModel =
+            new DefaultComboBoxModel<>(Project.SorterType.values());
     sortComboBox.setModel(sortModel);
+    sortComboBox.setSelectedItem(Project.SorterType.NONE);
     sorterPanel.add(sortComboBox);
   }
 
@@ -260,19 +258,21 @@ public class ProjectFilterPanel extends JPanel {
     } else if (deadlineStatusFilterList.getSelectedIndices().length == 0) {
       showSelectAtLeastOnStatusDialog(deadlineStatusName);
     } else {
+      Project.SorterType sorterType = (Project.SorterType) sortComboBox.getSelectedItem();
+      boolean descendingSort = sortDescButton.isSelected();
       if (controller.enableProjectSelectionForTeam()) {
         controller.filterProjectsOfTeam(
             statusFilterList.getSelectedValuesList(),
             deadlineStatusFilterList.getSelectedValuesList(),
             (String) assigneeComboBoxModel.getSelectedItem(),
-            (String) supervisorComboBoxModel.getSelectedItem());
+            (String) supervisorComboBoxModel.getSelectedItem(), sorterType, descendingSort);
       } else {
         if (isAtLeastOnePrivilegeButtonSelected()) { // the query is valid
           controller.filterProjectsOfUser(
               statusFilterList.getSelectedValuesList(),
               deadlineStatusFilterList.getSelectedValuesList(),
               assignedToUserButton.isSelected(),
-              supervisedByUserButton.isSelected());
+              supervisedByUserButton.isSelected(), sorterType, descendingSort);
         } else {
           showSelectAtLeastOnePrivilegeDialog();
         }
@@ -285,10 +285,6 @@ public class ProjectFilterPanel extends JPanel {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       if (actionEvent.getSource() == listProjectsButton) {
-        ProjectFilterController.SORT_OPTION option =
-            ProjectFilterController.SORT_OPTION.valueOf(
-                sortComboBox.getModel().getSelectedItem().toString());
-        SortOrder order = sortAscButton.isSelected() ? SortOrder.ASCENDING : SortOrder.DESCENDING;
         applyFilter();
       }
     }
