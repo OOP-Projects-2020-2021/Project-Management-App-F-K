@@ -19,10 +19,24 @@ public class Project {
     FINISHED
   }
 
-  public enum Importance {
-    LOW,
-    MEDIUM,
-    HIGH
+  public enum Importance{
+    LOW(0),
+    MEDIUM(1),
+    HIGH(2);
+
+    private int value;
+
+    Importance(int value) {
+      this.value = value;
+    }
+
+    public static class ImportanceComparator implements Comparator<Importance> {
+
+      @Override
+      public int compare(Importance i1, Importance i2) {
+        return i1.value - i2.value;
+      }
+    }
   }
 
   /**

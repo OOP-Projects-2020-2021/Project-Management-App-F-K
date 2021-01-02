@@ -68,6 +68,15 @@ public class ProjectTable extends JTable {
             return 0;
           }
         });
+    // todo: sort TableListModel as well
+    sorter.setComparator(
+            3, //importance
+            (s1, s2) -> {
+                Project.Importance i1 = Project.Importance.valueOf((String) s1);
+                Project.Importance i2 = Project.Importance.valueOf((String) s2);
+                return new Project.Importance.ImportanceComparator().compare(i1, i2);
+            }
+            );
     this.setRowSorter(sorter);
   }
 
