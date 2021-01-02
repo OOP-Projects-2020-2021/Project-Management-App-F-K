@@ -311,6 +311,7 @@ public class ProjectDetailsPanel extends JPanel {
     deadlineDatePicker.setEnabled(enable);
     assigneeComboBox.setEnabled(enable);
     supervisorComboBox.setEnabled(enable);
+    importanceComboBox.setEnabled(enable);
   }
 
   private void enableEditFields(boolean enable) {
