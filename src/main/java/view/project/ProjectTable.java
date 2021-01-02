@@ -116,13 +116,13 @@ public class ProjectTable extends JTable {
     Color getColor(Project.Importance importance) {
       switch (importance) {
         case HIGH:
-          return Color.RED;
+          return Color.decode("#fcddd7");
         case MEDIUM:
-          return Color.YELLOW;
+          return Color.decode("#fbfcd7");
         case LOW:
-          return Color.GREEN;
+          return Color.decode("#cfe6d2");
       }
-      return Color.GREEN;
+      return Color.decode("#cfe6d2");
     }
 
     public Component getTableCellRendererComponent(
