@@ -49,6 +49,10 @@ public class ProjectTableController implements PropertyChangeListener {
     }
   }
 
+  public Project.Importance getProjectImportance(int projectIndex) {
+    return projectListModel.getProjectList().get(projectIndex).getImportance();
+  }
+
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName().equals(ProjectListModel.PROJECT_LIST)) {

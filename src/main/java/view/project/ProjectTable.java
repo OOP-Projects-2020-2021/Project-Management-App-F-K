@@ -5,13 +5,16 @@ import model.project.Project;
 import view.UIFactory;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 /**
  * ProjectTable displays the list of projects which belong to a certain team or which are related to
@@ -25,13 +28,14 @@ public class ProjectTable extends JTable {
   private DefaultTableModel tableModel;
   private ProjectTableController controller;
   private JFrame frame;
-  private static final String[] columnNames = {"Name", "Deadline", "Status"};
+  private static final String[] columnNames = {"Name", "Deadline", "Status", "Importance"};
 
   public ProjectTable(JFrame frame, ProjectListModel projectListModel) {
     this.controller = new ProjectTableController(this, projectListModel);
     this.frame = frame;
     initTableDesign();
     this.addMouseListener(new TableMouseListener());
+    this.setDefaultRenderer(Object.class, new ImportanceRenderer());
     // initialize the model
     initTableModel();
     // sort the rows by the deadline
@@ -64,6 +68,14 @@ public class ProjectTable extends JTable {
             return 0;
           }
         });
+    // todo: sort TableListModel as well
+    sorter.setComparator(
+        3, // importance
+        (s1, s2) -> {
+          Project.Importance i1 = Project.Importance.valueOf((String) s1);
+          Project.Importance i2 = Project.Importance.valueOf((String) s2);
+          return new Project.Importance.ImportanceComparator().compare(i1, i2);
+        });
     this.setRowSorter(sorter);
   }
 
@@ -85,7 +97,8 @@ public class ProjectTable extends JTable {
           new String[] {
             project.getTitle(),
             String.valueOf(project.getDeadline()),
-            String.valueOf(project.getStatus())
+            String.valueOf(project.getStatus()),
+            String.valueOf(project.getImportance())
           };
       tableModel.addRow(rowData);
     }
@@ -104,6 +117,34 @@ public class ProjectTable extends JTable {
         // on double click on the name of the project, the project frame is opened
         controller.openProject(frame, row);
       }
+    }
+  }
+
+  class ImportanceRenderer implements TableCellRenderer {
+
+    Color getColor(Project.Importance importance) {
+      switch (importance) {
+        case HIGH:
+          return Color.decode("#fcddd7");
+        case MEDIUM:
+          return Color.decode("#fbfcd7");
+        case LOW:
+          return Color.decode("#cfe6d2");
+      }
+      return Color.decode("#cfe6d2");
+    }
+
+    public Component getTableCellRendererComponent(
+        JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+      JTextField editor = new JTextField();
+      if (value != null) editor.setText(value.toString());
+      if (isSelected) {
+        editor.setBackground(Color.LIGHT_GRAY);
+      } else {
+        // get color from controller
+        editor.setBackground(getColor(controller.getProjectImportance(row)));
+      }
+      return editor;
     }
   }
 }
