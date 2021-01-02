@@ -148,6 +148,7 @@ public class ErrorDialogFactory {
   private static final String INVALID_DEADLINE_TITLE = "Invalid deadline";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
+    exception.printStackTrace();
     if (message == null) {
       message = "";
     }

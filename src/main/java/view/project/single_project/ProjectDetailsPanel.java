@@ -44,6 +44,7 @@ public class ProjectDetailsPanel extends JPanel {
   private DefaultComboBoxModel<String> assigneeModel;
   private JComboBox<String> supervisorComboBox;
   private DefaultComboBoxModel<String> supervisorModel;
+  private JComboBox<Project.Importance> importanceComboBox;
 
   private ProjectStatusButtonsPanel statusButtonsPanel;
   private JPanel projectStatusPanel;
@@ -66,6 +67,7 @@ public class ProjectDetailsPanel extends JPanel {
     initButtonsPanel();
     addButtonListener();
     initProjectStatusPanel();
+    initImportanceComboBox();
     initContentPanel();
     enableEditFields(controller.enableEditing());
   }
@@ -88,6 +90,12 @@ public class ProjectDetailsPanel extends JPanel {
     properties.put("text.year", "Year");
     datePanel = new JDatePanelImpl(dateModel, properties);
     deadlineDatePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+  }
+
+  private void initImportanceComboBox() {
+    importanceComboBox = new JComboBox<>();
+    importanceComboBox.setModel(new DefaultComboBoxModel<>(Project.Importance.values()));
+    importanceComboBox.setSelectedItem(controller.getProjectImportance());
   }
 
   public static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
@@ -176,6 +184,7 @@ public class ProjectDetailsPanel extends JPanel {
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
     JLabel assigneeLabel = UIFactory.createLabel("Assignee:", null);
     JLabel supervisorLabel = UIFactory.createLabel("Supervisor:", null);
+    JLabel importanceLabel = UIFactory.createLabel("*Importance:", null);
 
     contentLayout.setHorizontalGroup(
         contentLayout
@@ -190,7 +199,8 @@ public class ProjectDetailsPanel extends JPanel {
                             .addComponent(deadlineLabel)
                             .addComponent(descriptionLabel)
                             .addComponent(assigneeLabel)
-                            .addComponent(supervisorLabel))
+                            .addComponent(supervisorLabel)
+                            .addComponent(importanceLabel))
                     .addGroup(
                         contentLayout
                             .createParallelGroup()
@@ -198,7 +208,8 @@ public class ProjectDetailsPanel extends JPanel {
                             .addComponent(deadlineDatePicker)
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox)
-                            .addComponent(supervisorComboBox)))
+                            .addComponent(supervisorComboBox)
+                            .addComponent(importanceComboBox)))
             .addComponent(buttonsPanel)
             .addComponent(projectStatusPanel));
 
@@ -230,6 +241,11 @@ public class ProjectDetailsPanel extends JPanel {
                     .createParallelGroup()
                     .addComponent(supervisorLabel)
                     .addComponent(supervisorComboBox))
+            .addGroup(
+                contentLayout
+                    .createParallelGroup()
+                    .addComponent(importanceLabel)
+                    .addComponent(importanceComboBox))
             .addGap(20)
             .addComponent(buttonsPanel)
             .addGap(30)
@@ -292,9 +308,10 @@ public class ProjectDetailsPanel extends JPanel {
   private void enableEditingTextFields(boolean enable) {
     titleTextField.setEditable(enable);
     descriptionTextArea.setEditable(enable);
-    deadlineDatePicker.setEnabled(enable);
+    deadlineDatePicker.getComponent(1).setEnabled(enable);
     assigneeComboBox.setEnabled(enable);
     supervisorComboBox.setEnabled(enable);
+    importanceComboBox.setEnabled(enable);
   }
 
   private void enableEditFields(boolean enable) {
@@ -330,7 +347,8 @@ public class ProjectDetailsPanel extends JPanel {
                 // but LocalDate from 1
                 deadlineDatePicker.getModel().getDay());
         String description = descriptionTextArea.getText();
-        controller.saveProject(title, assignee, supervisor, selectedDate, description);
+        Project.Importance importance = (Project.Importance) importanceComboBox.getSelectedItem();
+        controller.saveProject(title, assignee, supervisor, selectedDate, description, importance);
       } else if (actionEvent.getSource() == deleteButton) {
         controller.deleteProject();
       }

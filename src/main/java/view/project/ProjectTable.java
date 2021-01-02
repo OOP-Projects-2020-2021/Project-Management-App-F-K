@@ -3,12 +3,16 @@ package view.project;
 import controller.project.ProjectTableController;
 import model.project.Project;
 import view.UIFactory;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.*;
+import java.util.List;
 
 /**
  * ProjectTable displays the list of projects which belong to a certain team or which are related to
@@ -22,13 +26,14 @@ public class ProjectTable extends JTable {
   private DefaultTableModel tableModel;
   private ProjectTableController controller;
   private JFrame frame;
-  private static final String[] columnNames = {"Name", "Deadline", "Status"};
+  private static final String[] columnNames = {"Name", "Deadline", "Status", "Importance"};
 
   public ProjectTable(JFrame frame, ProjectListModel projectListModel) {
-    this.controller = new ProjectTableController(this,projectListModel);
+    this.controller = new ProjectTableController(this, projectListModel);
     this.frame = frame;
     initTableDesign();
     this.addMouseListener(new TableMouseListener());
+    this.setDefaultRenderer(Object.class, new ImportanceRenderer());
     // initialize the model
     initTableModel();
   }
@@ -58,16 +63,16 @@ public class ProjectTable extends JTable {
 
   public void fillTableModel(List<Project> projectsList) {
     for (Project project : projectsList) {
-      Object[] rowData =
-          new Object[] {
+      String[] rowData =
+          new String[] {
             project.getTitle(),
-            project.getDeadline(),
-            project.getStatus()
+            String.valueOf(project.getDeadline()),
+            String.valueOf(project.getStatus()),
+            String.valueOf(project.getImportance())
           };
       tableModel.addRow(rowData);
     }
   }
-
   // the data in the tables cannot be edited only viewed
   @Override
   public boolean isCellEditable(int row, int column) {
@@ -82,6 +87,34 @@ public class ProjectTable extends JTable {
         // on double click on the name of the project, the project frame is opened
         controller.openProject(frame, row);
       }
+    }
+  }
+
+  class ImportanceRenderer implements TableCellRenderer {
+
+    Color getColor(Project.Importance importance) {
+      switch (importance) {
+        case HIGH:
+          return Color.decode("#fcddd7");
+        case MEDIUM:
+          return Color.decode("#fbfcd7");
+        case LOW:
+          return Color.decode("#cfe6d2");
+      }
+      return Color.decode("#cfe6d2");
+    }
+
+    public Component getTableCellRendererComponent(
+        JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+      JTextField editor = new JTextField();
+      if (value != null) editor.setText(value.toString());
+      if (isSelected) {
+        editor.setBackground(Color.LIGHT_GRAY);
+      } else {
+        // get color from controller
+        editor.setBackground(getColor(controller.getProjectImportance(row)));
+      }
+      return editor;
     }
   }
 }

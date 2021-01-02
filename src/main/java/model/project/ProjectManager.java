@@ -87,8 +87,13 @@ public class ProjectManager extends Manager {
    * @throws InvalidDeadlineException if the selected deadline is outdated.
    */
   public void createProject(
-      String projectName, int teamId, String assigneeName, LocalDate deadline, String description)
-          throws NoSignedInUserException, SQLException, InexistentUserException,
+      String projectName,
+      int teamId,
+      String assigneeName,
+      LocalDate deadline,
+      String description,
+      Project.Importance importance)
+      throws NoSignedInUserException, SQLException, InexistentUserException,
           InexistentTeamException, DuplicateProjectNameException, InexistentDatabaseEntityException,
           EmptyFieldsException, InvalidDeadlineException {
     if (isMissingProjectData(projectName, assigneeName, deadline)) {
@@ -108,7 +113,7 @@ public class ProjectManager extends Manager {
     // save project
     Project.SavableProject project =
         new Project.SavableProject(
-            projectName, teamId, deadline, currentUser.getId(), assignee.getId());
+            projectName, teamId, deadline, currentUser.getId(), assignee.getId(), importance);
     project.setDescription(description);
     projectRepository.saveProject(project);
     support.firePropertyChange(
@@ -145,8 +150,9 @@ public class ProjectManager extends Manager {
       String newAssigneeName,
       String newSupervisorName,
       LocalDate newDeadline,
-      String newDescription)
-          throws NoSignedInUserException, SQLException, InexistentProjectException,
+      String newDescription,
+      Project.Importance importance)
+      throws NoSignedInUserException, SQLException, InexistentProjectException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
           InexistentUserException, DuplicateProjectNameException, UnregisteredMemberRoleException, InvalidDeadlineException {
     User currentUser = getMandatoryCurrentUser();
@@ -172,6 +178,7 @@ public class ProjectManager extends Manager {
     project.setDescription(newDescription);
     project.setTitle(newProjectTitle);
     project.setDeadline(newDeadline);
+    project.setImportance(importance);
     projectRepository.updateProject(project);
     support.firePropertyChange(
         ProjectChangeablePropertyName.UPDATE_PROJECT.toString(), OLD_VALUE, NEW_VALUE);

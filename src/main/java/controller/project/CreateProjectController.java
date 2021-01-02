@@ -2,6 +2,7 @@ package controller.project;
 
 import controller.FrameController;
 import model.InexistentDatabaseEntityException;
+import model.project.Project;
 import model.project.ProjectManager;
 import model.project.exceptions.DuplicateProjectNameException;
 import model.project.exceptions.InvalidDeadlineException;
@@ -93,9 +94,15 @@ public class CreateProjectController extends FrameController {
    *     trying to save the project
    * @param description added by the user
    */
-  public void createProject(String title, Object assignee, LocalDate deadline, String description) {
+  public void createProject(
+      String title,
+      Object assignee,
+      LocalDate deadline,
+      String description,
+      Project.Importance importance) {
     try {
-      projectManager.createProject(title, teamId, assignee.toString(), deadline, description);
+      projectManager.createProject(
+          title, teamId, assignee.toString(), deadline, description, importance);
       displaySavedMessageDialog();
       closeFrame();
     } catch (NoSignedInUserException | SQLException | InexistentDatabaseEntityException | InexistentUserException | InexistentTeamException | EmptyFieldsException | InvalidDeadlineException e) {
