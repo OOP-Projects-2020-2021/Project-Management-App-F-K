@@ -138,6 +138,7 @@ public class ErrorDialogFactory {
   private static final String ILLEGAL_TEAM_REMOVAL_TITLE = "Illegal team removal";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
+    exception.printStackTrace();
     if (message == null) {
       message = "";
     }
