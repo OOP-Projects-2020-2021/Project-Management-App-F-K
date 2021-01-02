@@ -184,7 +184,7 @@ public class ProjectDetailsPanel extends JPanel {
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
     JLabel assigneeLabel = UIFactory.createLabel("Assignee:", null);
     JLabel supervisorLabel = UIFactory.createLabel("Supervisor:", null);
-    JLabel importanceLabel = UIFactory.createLabel("*Importance:", null);
+    JLabel importanceLabel = UIFactory.createLabel("Importance:", null);
 
     contentLayout.setHorizontalGroup(
         contentLayout
