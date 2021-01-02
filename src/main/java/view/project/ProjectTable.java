@@ -5,13 +5,16 @@ import model.project.Project;
 import view.UIFactory;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.List;
 
 /**
  * ProjectTable displays the list of projects which belong to a certain team or which are related to
@@ -32,6 +35,7 @@ public class ProjectTable extends JTable {
     this.frame = frame;
     initTableDesign();
     this.addMouseListener(new TableMouseListener());
+    this.setDefaultRenderer(Object.class, new ImportanceRenderer());
     // initialize the model
     initTableModel();
     // sort the rows by the deadline
@@ -104,6 +108,29 @@ public class ProjectTable extends JTable {
         // on double click on the name of the project, the project frame is opened
         controller.openProject(frame, row);
       }
+    }
+  }
+
+  class ImportanceRenderer implements TableCellRenderer {
+
+    Color getColor(Project.Importance importance) {
+//      switch (importance) {
+//        case :
+        return Color.RED;
+//      }
+    }
+
+    public Component getTableCellRendererComponent(
+            JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+      JTextField editor = new JTextField();
+      if (value != null) editor.setText(value.toString());
+      if (isSelected) {
+        editor.setBackground(Color.LIGHT_GRAY);
+      } else {
+        // get color from controller
+        editor.setBackground(getColor(controller.getProjectImportance(row)));
+      }
+      return editor;
     }
   }
 }
