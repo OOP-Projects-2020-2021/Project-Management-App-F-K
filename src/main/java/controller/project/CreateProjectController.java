@@ -105,7 +105,13 @@ public class CreateProjectController extends FrameController {
           title, teamId, assignee.toString(), deadline, description, importance);
       displaySavedMessageDialog();
       closeFrame();
-    } catch (NoSignedInUserException | SQLException | InexistentDatabaseEntityException | InexistentUserException | InexistentTeamException | EmptyFieldsException | InvalidDeadlineException e) {
+    } catch (NoSignedInUserException
+        | SQLException
+        | InexistentDatabaseEntityException
+        | InexistentUserException
+        | InexistentTeamException
+        | EmptyFieldsException
+        | InvalidDeadlineException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     } catch (DuplicateProjectNameException e) {
       ErrorDialogFactory.createErrorDialog(

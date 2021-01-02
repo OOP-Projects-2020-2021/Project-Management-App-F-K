@@ -138,12 +138,10 @@ public class ErrorDialogFactory {
 
   private static final String ILLEGAL_TEAM_REMOVAL_TITLE = "Illegal team removal";
 
-  /**
-   * Messages to warn the user about attempting to set an invalid deadline to a project.
-   */
+  /** Messages to warn the user about attempting to set an invalid deadline to a project. */
   private static final String INVALID_DEADLINE_MESSAGE =
-          "The selected deadline for this project is invalid, because it is outdated.\n" +
-                  "Please choose a date that is the same or after the current date.";
+      "The selected deadline for this project is invalid, because it is outdated.\n"
+          + "Please choose a date that is the same or after the current date.";
 
   private static final String INVALID_DEADLINE_TITLE = "Invalid deadline";
 
@@ -366,9 +364,9 @@ public class ErrorDialogFactory {
   /** Displays an error message to inform the user that the selected date is invalid. */
   private static void displayInvalidDeadlineErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            INVALID_DEADLINE_MESSAGE + "\n" + message,
-            INVALID_DEADLINE_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        INVALID_DEADLINE_MESSAGE + "\n" + message,
+        INVALID_DEADLINE_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
 }

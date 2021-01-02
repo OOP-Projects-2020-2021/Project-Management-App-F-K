@@ -1,12 +1,6 @@
 package controller.project;
 
 import model.project.Project;
-import model.project.ProjectManager;
-import model.team.Team;
-import model.team.TeamManager;
-import model.team.exceptions.InexistentTeamException;
-import org.jetbrains.annotations.Nullable;
-import view.ErrorDialogFactory;
 import view.project.ProjectListModel;
 import view.project.ProjectTable;
 import view.project.single_project.ProjectFrame;
@@ -14,8 +8,6 @@ import view.project.single_project.ProjectFrame;
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.sql.SQLException;
-import java.util.Comparator;
 
 /**
  * ProjectTableController manages the project table, and it is responsible for displaying and
@@ -65,9 +57,9 @@ public class ProjectTableController implements PropertyChangeListener {
     if (evt.getPropertyName().equals(ProjectListModel.PROJECT_LIST)) {
       updateTableModel();
       System.out.println("updated project list");
-      int i=0;
-      for (Project project:projectListModel.getProjectList()) {
-        System.out.println(i+":"+project.getTitle());
+      int i = 0;
+      for (Project project : projectListModel.getProjectList()) {
+        System.out.println(i + ":" + project.getTitle());
         i++;
       }
     }
