@@ -1,6 +1,7 @@
 package view.project;
 
 import controller.project.CreateProjectController;
+import model.project.Project;
 import model.user.User;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -39,6 +40,8 @@ public class CreateProjectFrame extends JFrame {
   private JComboBox<String> assigneeComboBox;
   private DefaultComboBoxModel<String> assigneeModel;
 
+  private JComboBox<Project.Importance> importanceComboBox;
+
   private JFrame parentFrame;
   private CreateProjectController controller;
 
@@ -66,6 +69,7 @@ public class CreateProjectFrame extends JFrame {
     titleTextField = UIFactory.createTextField(null);
     initDatePicker();
     initDescriptionTextArea();
+    initImportanceComboBox();
     initAssigneeComboBox();
   }
 
@@ -103,6 +107,11 @@ public class CreateProjectFrame extends JFrame {
     }
   }
 
+  private void initImportanceComboBox() {
+    importanceComboBox = new JComboBox<>();
+    importanceComboBox.setModel(new DefaultComboBoxModel<>(Project.Importance.values()));
+  }
+
   private void initContentPanel() {
     JPanel contentPanel = new JPanel();
     GroupLayout contentLayout = new GroupLayout(contentPanel);
@@ -117,6 +126,7 @@ public class CreateProjectFrame extends JFrame {
     JLabel deadlineLabel = UIFactory.createLabel("*Deadline:", null);
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
     JLabel assigneeLabel = UIFactory.createLabel("*Assignee:", null);
+    JLabel importanceLabel = UIFactory.createLabel("*Importance:", null);
 
     contentLayout.setHorizontalGroup(
         contentLayout
@@ -131,14 +141,16 @@ public class CreateProjectFrame extends JFrame {
                             .addComponent(teamLabel)
                             .addComponent(deadlineLabel)
                             .addComponent(descriptionLabel)
-                            .addComponent(assigneeLabel))
+                            .addComponent(assigneeLabel)
+                            .addComponent(importanceLabel))
                     .addGroup(
                         contentLayout
                             .createParallelGroup()
                             .addComponent(titleTextField)
                             .addComponent(datePanel)
                             .addComponent(descriptionScrollPane)
-                            .addComponent(assigneeComboBox))));
+                            .addComponent(assigneeComboBox)
+                            .addComponent(importanceComboBox))));
     contentLayout.setVerticalGroup(
         contentLayout
             .createSequentialGroup()
@@ -162,7 +174,12 @@ public class CreateProjectFrame extends JFrame {
                 contentLayout
                     .createParallelGroup()
                     .addComponent(assigneeLabel)
-                    .addComponent(assigneeComboBox)));
+                    .addComponent(assigneeComboBox))
+            .addGroup(
+                    contentLayout
+                            .createParallelGroup()
+                            .addComponent(importanceLabel)
+                            .addComponent(importanceComboBox)));
 
     this.add(contentPanel, BorderLayout.CENTER);
   }
