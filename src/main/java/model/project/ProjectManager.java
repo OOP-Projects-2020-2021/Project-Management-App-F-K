@@ -77,8 +77,12 @@ public class ProjectManager extends Manager {
    * @throws InexistentDatabaseEntityException should never occur.
    */
   public void createProject(
-          String projectName, int teamId, String assigneeName, LocalDate deadline, String description
-          , Project.Importance importance)
+      String projectName,
+      int teamId,
+      String assigneeName,
+      LocalDate deadline,
+      String description,
+      Project.Importance importance)
       throws NoSignedInUserException, SQLException, InexistentUserException,
           InexistentTeamException, DuplicateProjectNameException, InexistentDatabaseEntityException,
           EmptyFieldsException {
@@ -126,12 +130,13 @@ public class ProjectManager extends Manager {
    *     member of the team.
    */
   public void updateProject(
-          int projectId,
-          String newProjectTitle,
-          String newAssigneeName,
-          String newSupervisorName,
-          LocalDate newDeadline,
-          String newDescription, Project.Importance importance)
+      int projectId,
+      String newProjectTitle,
+      String newAssigneeName,
+      String newSupervisorName,
+      LocalDate newDeadline,
+      String newDescription,
+      Project.Importance importance)
       throws NoSignedInUserException, SQLException, InexistentProjectException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
           InexistentUserException, DuplicateProjectNameException, UnregisteredMemberRoleException {

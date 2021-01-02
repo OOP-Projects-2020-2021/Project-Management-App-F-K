@@ -42,8 +42,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
           + "StatusName, TurnInDate, ImportanceName "
           + "From Project p JOIN ProjectStatus st ON p"
-          + ".StatusId = st.StatusId JOIN Importance i ON p.ImportanceId = i.ImportanceId WHERE " +
-              "ProjectId = ?";
+          + ".StatusId = st.StatusId JOIN Importance i ON p.ImportanceId = i.ImportanceId WHERE "
+          + "ProjectId = ?";
   private PreparedStatement getProjectByIdSt;
 
   // Update project bases on id.
@@ -59,8 +59,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
           + "StatusName, TurnInDate, ImportanceName "
           + "From Project p JOIN ProjectStatus st ON p"
-          + ".StatusId = st.StatusId JOIN Importance i ON p.ImportanceId = i.ImportanceId WHERE " +
-              "Name = ? and TeamId = ? ";
+          + ".StatusId = st.StatusId JOIN Importance i ON p.ImportanceId = i.ImportanceId WHERE "
+          + "Name = ? and TeamId = ? ";
   private PreparedStatement getProjectByTitleTeamSt;
 
   // Delete project.
@@ -72,8 +72,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   private static final String GET_PROJECTS_OF_TEAM =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
           + "AssigneeId, SupervisorId, StatusName, TurnInDate, ImportanceName From Project p "
-          + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p" +
-              ".ImportanceId = i.ImportanceId "
+          + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p"
+          + ".ImportanceId = i.ImportanceId "
           + "WHERE p.TeamId = ? AND "
           + "(p.SupervisorId = ? OR ?) AND "
           + "(p.AssigneeId = ? OR ?) AND "
@@ -92,8 +92,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   private static final String GET_PROJECTS =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
           + "AssigneeId, SupervisorId, StatusName, TurnInDate, ImportanceName From Project p "
-          + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p" +
-              ".ImportanceId = i.ImportanceId "
+          + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p"
+          + ".ImportanceId = i.ImportanceId "
           + "WHERE (p.SupervisorId = ? OR ?) AND "
           + "(p.AssigneeId = ? OR ?) AND"
           + "((st.StatusName = 'TO_DO' AND ?) OR" // TO_DO allowed
@@ -113,7 +113,7 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
 
   // Get importance id.
   private static final String GET_PROJECTS_IMPORTANCE_ID =
-          "SELECT ImportanceId from Importance WHERE ImportanceName = ?";
+      "SELECT ImportanceId from Importance WHERE ImportanceName = ?";
   private PreparedStatement getProjectImportanceIdSt;
 
   /**
@@ -330,7 +330,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     Project.Status status = Project.Status.valueOf(result.getString("StatusName"));
     Project.Importance importance = Project.Importance.valueOf(result.getString("ImportanceName"));
     Project project =
-        new Project(id, title, teamId, deadline, status, supervisorId, assigneeId, turnInDate, importance);
+        new Project(
+            id, title, teamId, deadline, status, supervisorId, assigneeId, turnInDate, importance);
     project.setDescription(description);
     return project;
   }
