@@ -176,10 +176,10 @@ public class CreateProjectFrame extends JFrame {
                     .addComponent(assigneeLabel)
                     .addComponent(assigneeComboBox))
             .addGroup(
-                    contentLayout
-                            .createParallelGroup()
-                            .addComponent(importanceLabel)
-                            .addComponent(importanceComboBox)));
+                contentLayout
+                    .createParallelGroup()
+                    .addComponent(importanceLabel)
+                    .addComponent(importanceComboBox)));
 
     this.add(contentPanel, BorderLayout.CENTER);
   }

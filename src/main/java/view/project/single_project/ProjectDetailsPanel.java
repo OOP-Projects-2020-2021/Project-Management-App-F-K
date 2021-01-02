@@ -187,69 +187,69 @@ public class ProjectDetailsPanel extends JPanel {
     JLabel importanceLabel = UIFactory.createLabel("*Importance:", null);
 
     contentLayout.setHorizontalGroup(
-            contentLayout
-                    .createParallelGroup()
-                    .addGroup(
-                            contentLayout
-                                    .createSequentialGroup()
-                                    .addGroup(
-                                            contentLayout
-                                                    .createParallelGroup()
-                                                    .addComponent(titleLabel)
-                                                    .addComponent(deadlineLabel)
-                                                    .addComponent(descriptionLabel)
-                                                    .addComponent(assigneeLabel)
-                                                    .addComponent(supervisorLabel)
-                                                    .addComponent(importanceLabel))
-                                    .addGroup(
-                                            contentLayout
-                                                    .createParallelGroup()
-                                                    .addComponent(titleTextField)
-                                                    .addComponent(deadlineDatePicker)
-                                                    .addComponent(descriptionScrollPane)
-                                                    .addComponent(assigneeComboBox)
-                                                    .addComponent(supervisorComboBox)
-                                                    .addComponent(importanceComboBox)))
-                    .addComponent(buttonsPanel)
-                    .addComponent(projectStatusPanel));
-
-    contentLayout.setVerticalGroup(
-            contentLayout
+        contentLayout
+            .createParallelGroup()
+            .addGroup(
+                contentLayout
                     .createSequentialGroup()
                     .addGroup(
-                            contentLayout
-                                    .createParallelGroup()
-                                    .addComponent(titleLabel)
-                                    .addComponent(titleTextField))
+                        contentLayout
+                            .createParallelGroup()
+                            .addComponent(titleLabel)
+                            .addComponent(deadlineLabel)
+                            .addComponent(descriptionLabel)
+                            .addComponent(assigneeLabel)
+                            .addComponent(supervisorLabel)
+                            .addComponent(importanceLabel))
                     .addGroup(
-                            contentLayout
-                                    .createParallelGroup()
-                                    .addComponent(deadlineLabel)
-                                    .addComponent(deadlineDatePicker))
-                    .addGroup(
-                            contentLayout
-                                    .createParallelGroup()
-                                    .addComponent(descriptionLabel)
-                                    .addComponent(descriptionScrollPane, 80, 80, 80))
-                    .addGroup(
-                            contentLayout
-                                    .createParallelGroup()
-                                    .addComponent(assigneeLabel)
-                                    .addComponent(assigneeComboBox))
-                    .addGroup(
-                            contentLayout
-                                    .createParallelGroup()
-                                    .addComponent(supervisorLabel)
-                                    .addComponent(supervisorComboBox))
-                    .addGroup(
-                            contentLayout
-                                    .createParallelGroup()
-                                    .addComponent(importanceLabel)
-                                    .addComponent(importanceComboBox))
-                    .addGap(20)
-                    .addComponent(buttonsPanel)
-                    .addGap(30)
-                    .addComponent(projectStatusPanel));
+                        contentLayout
+                            .createParallelGroup()
+                            .addComponent(titleTextField)
+                            .addComponent(deadlineDatePicker)
+                            .addComponent(descriptionScrollPane)
+                            .addComponent(assigneeComboBox)
+                            .addComponent(supervisorComboBox)
+                            .addComponent(importanceComboBox)))
+            .addComponent(buttonsPanel)
+            .addComponent(projectStatusPanel));
+
+    contentLayout.setVerticalGroup(
+        contentLayout
+            .createSequentialGroup()
+            .addGroup(
+                contentLayout
+                    .createParallelGroup()
+                    .addComponent(titleLabel)
+                    .addComponent(titleTextField))
+            .addGroup(
+                contentLayout
+                    .createParallelGroup()
+                    .addComponent(deadlineLabel)
+                    .addComponent(deadlineDatePicker))
+            .addGroup(
+                contentLayout
+                    .createParallelGroup()
+                    .addComponent(descriptionLabel)
+                    .addComponent(descriptionScrollPane, 80, 80, 80))
+            .addGroup(
+                contentLayout
+                    .createParallelGroup()
+                    .addComponent(assigneeLabel)
+                    .addComponent(assigneeComboBox))
+            .addGroup(
+                contentLayout
+                    .createParallelGroup()
+                    .addComponent(supervisorLabel)
+                    .addComponent(supervisorComboBox))
+            .addGroup(
+                contentLayout
+                    .createParallelGroup()
+                    .addComponent(importanceLabel)
+                    .addComponent(importanceComboBox))
+            .addGap(20)
+            .addComponent(buttonsPanel)
+            .addGap(30)
+            .addComponent(projectStatusPanel));
     this.add(contentPanel, BorderLayout.CENTER);
   }
 

@@ -70,13 +70,12 @@ public class ProjectTable extends JTable {
         });
     // todo: sort TableListModel as well
     sorter.setComparator(
-            3, //importance
-            (s1, s2) -> {
-                Project.Importance i1 = Project.Importance.valueOf((String) s1);
-                Project.Importance i2 = Project.Importance.valueOf((String) s2);
-                return new Project.Importance.ImportanceComparator().compare(i1, i2);
-            }
-            );
+        3, // importance
+        (s1, s2) -> {
+          Project.Importance i1 = Project.Importance.valueOf((String) s1);
+          Project.Importance i2 = Project.Importance.valueOf((String) s2);
+          return new Project.Importance.ImportanceComparator().compare(i1, i2);
+        });
     this.setRowSorter(sorter);
   }
 
@@ -136,7 +135,7 @@ public class ProjectTable extends JTable {
     }
 
     public Component getTableCellRendererComponent(
-            JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+        JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
       JTextField editor = new JTextField();
       if (value != null) editor.setText(value.toString());
       if (isSelected) {

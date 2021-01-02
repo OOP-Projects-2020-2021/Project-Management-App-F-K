@@ -136,8 +136,12 @@ public class ProjectDetailsController extends ProjectController implements Prope
   }
 
   public void saveProject(
-          String title, String assignee, String supervisor, LocalDate deadline,
-          String description, Project.Importance importance) {
+      String title,
+      String assignee,
+      String supervisor,
+      LocalDate deadline,
+      String description,
+      Project.Importance importance) {
     try {
       projectManager.updateProject(
           project.getId(), title, assignee, supervisor, deadline, description, importance);

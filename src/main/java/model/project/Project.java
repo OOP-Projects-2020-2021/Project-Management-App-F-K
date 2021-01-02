@@ -19,7 +19,7 @@ public class Project {
     FINISHED
   }
 
-  public enum Importance{
+  public enum Importance {
     LOW(0),
     MEDIUM(1),
     HIGH(2);
@@ -57,7 +57,11 @@ public class Project {
    */
   public static class SavableProject extends Project {
     public SavableProject(
-        String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId,
+        String title,
+        int teamId,
+        LocalDate deadline,
+        int supervisorId,
+        int assigneeId,
         Importance importance) {
       super(-1, title, teamId, deadline, supervisorId, assigneeId, importance);
     }
@@ -91,7 +95,12 @@ public class Project {
 
   /** Conrtuctor which sets the projects status to TO_DO. */
   public Project(
-      int id, String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId,
+      int id,
+      String title,
+      int teamId,
+      LocalDate deadline,
+      int supervisorId,
+      int assigneeId,
       Importance importance) {
     this(id, title, teamId, deadline, Status.TO_DO, supervisorId, assigneeId, null, importance);
   }
@@ -104,7 +113,8 @@ public class Project {
       Status status,
       int supervisorId,
       int assigneeId,
-      @Nullable LocalDate turnInDate, Importance importance) {
+      @Nullable LocalDate turnInDate,
+      Importance importance) {
     this.id = id;
     this.title = title;
     this.teamId = teamId;

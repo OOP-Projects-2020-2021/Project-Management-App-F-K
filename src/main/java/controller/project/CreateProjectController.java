@@ -93,10 +93,15 @@ public class CreateProjectController extends FrameController {
    *     trying to save the project
    * @param description added by the user
    */
-  public void createProject(String title, Object assignee, LocalDate deadline, String description
-          , Project.Importance importance) {
+  public void createProject(
+      String title,
+      Object assignee,
+      LocalDate deadline,
+      String description,
+      Project.Importance importance) {
     try {
-      projectManager.createProject(title, teamId, assignee.toString(), deadline, description, importance);
+      projectManager.createProject(
+          title, teamId, assignee.toString(), deadline, description, importance);
       displaySavedMessageDialog();
       closeFrame();
     } catch (NoSignedInUserException
