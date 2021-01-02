@@ -194,7 +194,7 @@ public class CreateProjectFrame extends JFrame {
           LocalDate deadline =
               LocalDate.of(
                   deadlineDatePicker.getModel().getYear(),
-                  deadlineDatePicker.getModel().getMonth(),
+                  deadlineDatePicker.getModel().getMonth() + 1,
                   deadlineDatePicker.getModel().getDay());
           String description = descriptionTextArea.getText();
           Project.Importance importance = (Project.Importance) importanceComboBox.getSelectedItem();

@@ -6,6 +6,8 @@ import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Objects;
 
 /**
@@ -18,11 +20,26 @@ public class UIFactory {
   public static final double SIDE_PADDING_WIDTH_RATIO = 0.1;
   public static final double TOP_PADDING_HEIGHT_RATIO = 0.05;
 
-  public static final Font NORMAL_TEXT_FONT = new Font("Courier", Font.PLAIN, 15);
-  public static final Font MEDIUM_HIGHLIGHT_TEXT_FONT = new Font("Courier", Font.BOLD, 15);
-  public static final Font HIGHLIGHT_TEXT_FONT = new Font("Courier", Font.BOLD, 18);
+  public static Font NORMAL_TEXT_FONT;
+  public static Font MEDIUM_HIGHLIGHT_TEXT_FONT;
+  public static Font HIGHLIGHT_TEXT_FONT;
 
   public static final Dimension LABEL_DIMENSION = new Dimension(100, 50);
+
+  static {
+    GraphicsEnvironment ge;
+    try {
+      ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+      InputStream is = UIFactory.class.getResourceAsStream("/arial.ttf");
+      Font font = Font.createFont(Font.TRUETYPE_FONT, is);
+      ge.registerFont(font);
+      NORMAL_TEXT_FONT = font.deriveFont(15f);
+      MEDIUM_HIGHLIGHT_TEXT_FONT = font.deriveFont(Font.BOLD, 15);
+      HIGHLIGHT_TEXT_FONT = font.deriveFont(Font.BOLD, 18);
+    } catch (FontFormatException | IOException e) {
+      e.printStackTrace();
+    }
+  }
 
   public static JLabel createLabel(String text, @Nullable Dimension dimension) {
     JLabel label = createGenericLabel(text, dimension);
