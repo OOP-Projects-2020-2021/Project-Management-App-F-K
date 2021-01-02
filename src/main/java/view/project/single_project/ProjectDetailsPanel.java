@@ -228,9 +228,9 @@ public class ProjectDetailsPanel extends JPanel {
                     .addComponent(titleTextField))
             .addGroup(
                 contentLayout
-                     .createParallelGroup()
-                     .addComponent(teamLabel)
-                     .addComponent(teamNameLabel))
+                    .createParallelGroup()
+                    .addComponent(teamLabel)
+                    .addComponent(teamNameLabel))
             .addGroup(
                 contentLayout
                     .createParallelGroup()
