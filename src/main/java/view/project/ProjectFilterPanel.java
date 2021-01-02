@@ -146,11 +146,13 @@ public class ProjectFilterPanel extends JPanel {
     deadlineStatusFilterList.setSelectedIndex(0);
     deadlineStatusPanel.add(deadlineStatusFilterList);
   }
+
   private void initSorterPanel() {
-    sorterPanel = new JPanel(new GridLayout(3,1));
+    sorterPanel = new JPanel(new GridLayout(3, 1));
     initSortComboBox();
     initSortOrderButtons();
   }
+
   private void initSortOrderButtons() {
     sortAscButton = new JRadioButton(ProjectFilterController.ASC);
     sortDescButton = new JRadioButton(ProjectFilterController.DESC);
@@ -161,6 +163,7 @@ public class ProjectFilterPanel extends JPanel {
     sorterPanel.add(sortAscButton);
     sorterPanel.add(sortDescButton);
   }
+
   private void initSortComboBox() {
     sortComboBox = new JComboBox<>();
     DefaultComboBoxModel<String> sortModel = new DefaultComboBoxModel<>();
@@ -183,7 +186,7 @@ public class ProjectFilterPanel extends JPanel {
     JLabel deadlineStatusFilterLabel =
         UIFactory.createMediumHighlightedLabel(deadlineStatusName + ": ", null);
     JLabel privilegeFilterLabel = UIFactory.createMediumHighlightedLabel("Type:", null);
-    JLabel sortLabel = UIFactory.createMediumHighlightedLabel("Sort Projects by:",null);
+    JLabel sortLabel = UIFactory.createMediumHighlightedLabel("Sort Projects by:", null);
 
     layout.setHorizontalGroup(
         layout
@@ -191,8 +194,8 @@ public class ProjectFilterPanel extends JPanel {
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(filterLabel)
-                        .addGap(10, 10, 10)
+                    .addComponent(filterLabel)
+                    .addGap(10, 10, 10)
                     .addComponent(statusFilterLabel)
                     .addComponent(statusFilterPanel))
             .addGap(10, 10, 10)
@@ -210,16 +213,16 @@ public class ProjectFilterPanel extends JPanel {
                     .addComponent(privilegeFilterButtonsPanel))
             .addGap(10, 10, 10)
             .addGroup(
-                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
-                        .addComponent(sortLabel)
+                layout
+                    .createParallelGroup(GroupLayout.Alignment.LEADING)
+                    .addComponent(sortLabel)
                     .addComponent(sorterPanel)));
-
 
     layout.setVerticalGroup(
         layout
             .createSequentialGroup()
-                .addComponent(filterLabel)
-                .addGap(10, 10, 10)
+            .addComponent(filterLabel)
+            .addGap(10, 10, 10)
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -239,13 +242,11 @@ public class ProjectFilterPanel extends JPanel {
                             .addComponent(privilegeFilterLabel)
                             .addComponent(privilegeFilterButtonsPanel))
                     .addGroup(
-                            layout.createSequentialGroup()
-                                    .addComponent(sortLabel)
-                                    .addComponent(sorterPanel)
-                    ))
-                .addComponent(listProjectsButton)
-                );
-
+                        layout
+                            .createSequentialGroup()
+                            .addComponent(sortLabel)
+                            .addComponent(sorterPanel)))
+            .addComponent(listProjectsButton));
   }
 
   private boolean isAtLeastOnePrivilegeButtonSelected() {
@@ -284,12 +285,15 @@ public class ProjectFilterPanel extends JPanel {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       if (actionEvent.getSource() == listProjectsButton) {
-        ProjectFilterController.SORT_OPTION option = ProjectFilterController.SORT_OPTION.valueOf(sortComboBox.getModel().getSelectedItem().toString());
-        SortOrder order = sortAscButton.isSelected()? SortOrder.ASCENDING : SortOrder.DESCENDING;
+        ProjectFilterController.SORT_OPTION option =
+            ProjectFilterController.SORT_OPTION.valueOf(
+                sortComboBox.getModel().getSelectedItem().toString());
+        SortOrder order = sortAscButton.isSelected() ? SortOrder.ASCENDING : SortOrder.DESCENDING;
         applyFilter();
       }
     }
   }
+
   private void showSelectAtLeastOnePrivilegeDialog() {
     JOptionPane.showMessageDialog(
         null,

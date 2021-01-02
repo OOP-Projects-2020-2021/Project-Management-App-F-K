@@ -40,7 +40,8 @@ public class ProjectFilterController implements PropertyChangeListener {
   public static final String ANYONE = "Anyone";
   public static final String ASC = "ASCENDING";
   public static final String DESC = "DESCENDING";
-  public enum SORT_OPTION{
+
+  public enum SORT_OPTION {
     UNSORTED,
     DEADLINE,
     STATUS,
@@ -84,9 +85,8 @@ public class ProjectFilterController implements PropertyChangeListener {
     }
   }
 
-  public void sortProjectList(SORT_OPTION option,SortOrder order) {
+  public void sortProjectList(SORT_OPTION option, SortOrder order) {}
 
-  }
   public List<User> getTeamMembers() {
     try {
       return teamManager.getMembersOfTeam(teamId);
