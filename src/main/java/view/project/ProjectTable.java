@@ -114,10 +114,15 @@ public class ProjectTable extends JTable {
   class ImportanceRenderer implements TableCellRenderer {
 
     Color getColor(Project.Importance importance) {
-//      switch (importance) {
-//        case :
-        return Color.RED;
-//      }
+      switch (importance) {
+        case HIGH:
+          return Color.RED;
+        case MEDIUM:
+          return Color.YELLOW;
+        case LOW:
+          return Color.GREEN;
+      }
+      return Color.GREEN;
     }
 
     public Component getTableCellRendererComponent(
