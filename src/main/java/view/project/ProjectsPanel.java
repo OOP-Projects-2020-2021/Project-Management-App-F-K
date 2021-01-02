@@ -22,7 +22,7 @@ public class ProjectsPanel extends JPanel {
     setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
     ProjectListModel projectListModel = new ProjectListModel();
     initProjectsHeader(teamId, projectListModel);
-    initProjectsTable(projectListModel);
+    initProjectsTable(teamId, projectListModel);
   }
 
   private void initProjectsHeader(Integer teamId, ProjectListModel projectListModel) {
@@ -30,7 +30,7 @@ public class ProjectsPanel extends JPanel {
     add(header, BorderLayout.NORTH);
   }
 
-  private void initProjectsTable(ProjectListModel projectListModel) {
+  private void initProjectsTable(Integer teamId, ProjectListModel projectListModel) {
     projectsTable = new ProjectTable(frame, projectListModel);
     addScrollPane();
   }

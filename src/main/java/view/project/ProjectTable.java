@@ -6,14 +6,9 @@ import view.UIFactory;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
 import java.util.List;
 
 /**
@@ -38,8 +33,6 @@ public class ProjectTable extends JTable {
     this.setDefaultRenderer(Object.class, new ImportanceRenderer());
     // initialize the model
     initTableModel();
-    // sort the rows by the deadline
-    addSorter();
   }
 
   private void initTableDesign() {
@@ -51,32 +44,6 @@ public class ProjectTable extends JTable {
     setRowHeight(30);
     // the columns cannot be rearranged
     getTableHeader().setReorderingAllowed(false);
-  }
-
-  private void addSorter() {
-    // the projects can be sorted by deadlines when clicking on the column's header
-    TableRowSorter<TableModel> sorter = new TableRowSorter<>(tableModel);
-    sorter.setComparator(
-        1,
-        (s1, s2) -> {
-          try {
-            Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse((String) s1);
-            Date date2 = new SimpleDateFormat("yyyy-MM-dd").parse((String) s2);
-            return date1.compareTo(date2);
-          } catch (ParseException e) {
-            e.printStackTrace();
-            return 0;
-          }
-        });
-    // todo: sort TableListModel as well
-    sorter.setComparator(
-        3, // importance
-        (s1, s2) -> {
-          Project.Importance i1 = Project.Importance.valueOf((String) s1);
-          Project.Importance i2 = Project.Importance.valueOf((String) s2);
-          return new Project.Importance.ImportanceComparator().compare(i1, i2);
-        });
-    this.setRowSorter(sorter);
   }
 
   private void initTableModel() {

@@ -172,7 +172,7 @@ public class ProjectStatusController extends ProjectController implements Proper
     }
   }
 
-  /** Updates the UI if the status of the project has changed. */
+  /** Updates the UI if the status, assignee or supervisor of the project have changed. */
   @Override
   public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
     if (propertyChangeEvent

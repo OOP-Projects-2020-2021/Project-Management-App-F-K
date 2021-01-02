@@ -5,6 +5,7 @@ import model.InexistentDatabaseEntityException;
 import model.project.Project;
 import model.project.ProjectManager;
 import model.project.exceptions.DuplicateProjectNameException;
+import model.project.exceptions.InvalidDeadlineException;
 import model.team.Team;
 import model.team.TeamManager;
 import model.team.exceptions.InexistentTeamException;
@@ -109,7 +110,8 @@ public class CreateProjectController extends FrameController {
         | InexistentDatabaseEntityException
         | InexistentUserException
         | InexistentTeamException
-        | EmptyFieldsException e) {
+        | EmptyFieldsException
+        | InvalidDeadlineException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     } catch (DuplicateProjectNameException e) {
       ErrorDialogFactory.createErrorDialog(

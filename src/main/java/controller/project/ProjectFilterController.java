@@ -12,6 +12,7 @@ import view.ErrorDialogFactory;
 import view.project.ProjectFilterPanel;
 import view.project.ProjectListModel;
 
+import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
@@ -37,6 +38,15 @@ public class ProjectFilterController implements PropertyChangeListener {
   private ProjectFilterPanel panel;
 
   public static final String ANYONE = "Anyone";
+  public static final String ASC = "ASCENDING";
+  public static final String DESC = "DESCENDING";
+
+  public enum SORT_OPTION {
+    UNSORTED,
+    DEADLINE,
+    STATUS,
+    IMPORTANCE
+  }
 
   public enum PrivilegeTypes {
     ASSIGNED_TO_ME,
@@ -49,6 +59,7 @@ public class ProjectFilterController implements PropertyChangeListener {
     projectManager = ProjectManager.getInstance();
     projectManager.addPropertyChangeListener(this);
     teamManager = TeamManager.getInstance();
+    teamManager.addPropertyChangeListener(this);
     this.projectListModel = projectListModel;
     this.panel = panel;
   }
@@ -73,6 +84,8 @@ public class ProjectFilterController implements PropertyChangeListener {
       }
     }
   }
+
+  public void sortProjectList(SORT_OPTION option, SortOrder order) {}
 
   public List<User> getTeamMembers() {
     try {
