@@ -23,7 +23,7 @@ public class ProjectFrame extends JFrame {
   JPanel detailsPanel;
   JPanel commentPanel;
 
-  private static final Dimension DIMENSION = new Dimension(800, 600);
+  private static final Dimension DIMENSION = new Dimension(1200, 800);
 
   public ProjectFrame(JFrame parentFrame, Project project) {
     super(project.getTitle());

@@ -41,7 +41,6 @@ public class ProjectFilterPanel extends JPanel {
   private JRadioButton sortAscButton;
   private JRadioButton sortDescButton;
   private JComboBox<String> sortComboBox;
-  private JButton sortProjectsButton;
 
   private JButton listProjectsButton;
 
@@ -149,11 +148,9 @@ public class ProjectFilterPanel extends JPanel {
     deadlineStatusPanel.add(deadlineStatusFilterList);
   }
   private void initSorterPanel() {
-    sorterPanel = new JPanel(new GridLayout(1,3));
+    sorterPanel = new JPanel(new GridLayout(3,1));
     initSortComboBox();
     initSortOrderButtons();
-    sortProjectsButton = UIFactory.createButton("Sort Projects");
-    sortProjectsButton.addActionListener(new ButtonListener());
   }
   private void initSortOrderButtons() {
     sortAscButton = new JRadioButton(ProjectFilterController.ASC);
@@ -168,9 +165,10 @@ public class ProjectFilterPanel extends JPanel {
   private void initSortComboBox() {
     sortComboBox = new JComboBox<>();
     DefaultComboBoxModel<String> sortModel = new DefaultComboBoxModel<>();
-    sortModel.addElement(ProjectFilterController.SORT_OPTION.TITLE.name());
+    sortModel.addElement(ProjectFilterController.SORT_OPTION.UNSORTED.name());
     sortModel.addElement(ProjectFilterController.SORT_OPTION.DEADLINE.name());
     sortModel.addElement(ProjectFilterController.SORT_OPTION.STATUS.name());
+    sortModel.addElement(ProjectFilterController.SORT_OPTION.IMPORTANCE.name());
     sortComboBox.setModel(sortModel);
     sorterPanel.add(sortComboBox);
   }
@@ -186,43 +184,43 @@ public class ProjectFilterPanel extends JPanel {
     JLabel deadlineStatusFilterLabel =
         UIFactory.createMediumHighlightedLabel(deadlineStatusName + ": ", null);
     JLabel privilegeFilterLabel = UIFactory.createMediumHighlightedLabel("Type:", null);
-    JLabel sortLabel = UIFactory.createHighlightedLabel("Sort Projects by:",null);
+    JLabel sortLabel = UIFactory.createMediumHighlightedLabel("Sort Projects by:",null);
 
     layout.setHorizontalGroup(
-            layout.createParallelGroup()
-            .addGroup(
         layout
             .createSequentialGroup()
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(filterLabel)
+                        .addGap(10, 10, 10)
                     .addComponent(statusFilterLabel)
                     .addComponent(statusFilterPanel))
             .addGap(10, 10, 10)
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(filterLabel)
                     .addComponent(deadlineStatusFilterLabel)
                     .addComponent(deadlineStatusPanel)
-                    .addComponent(listProjectsButton)
-                    .addComponent(sortLabel)
-                    .addComponent(sortProjectsButton))
+                    .addComponent(listProjectsButton))
             .addGap(10, 10, 10)
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(privilegeFilterLabel)
                     .addComponent(privilegeFilterButtonsPanel))
-            .addGap(10, 10, 10))
-            .addComponent(sorterPanel));
+            .addGap(10, 10, 10)
+            .addGroup(
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                        .addComponent(sortLabel)
+                    .addComponent(sorterPanel)));
 
 
     layout.setVerticalGroup(
         layout
             .createSequentialGroup()
-            .addComponent(filterLabel)
-            .addGap(10, 10, 10)
+                .addComponent(filterLabel)
+                .addGap(10, 10, 10)
             .addGroup(
                 layout
                     .createParallelGroup(GroupLayout.Alignment.BASELINE)
@@ -240,12 +238,14 @@ public class ProjectFilterPanel extends JPanel {
                         layout
                             .createSequentialGroup()
                             .addComponent(privilegeFilterLabel)
-                            .addComponent(privilegeFilterButtonsPanel)))
+                            .addComponent(privilegeFilterButtonsPanel))
+                    .addGroup(
+                            layout.createSequentialGroup()
+                                    .addComponent(sortLabel)
+                                    .addComponent(sorterPanel)
+                    ))
                 .addComponent(listProjectsButton)
-                .addComponent(sortLabel)
-                .addGap(10, 10, 10)
-                .addComponent(sorterPanel)
-                .addComponent(sortProjectsButton));
+                );
 
   }
 
@@ -285,12 +285,9 @@ public class ProjectFilterPanel extends JPanel {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
       if (actionEvent.getSource() == listProjectsButton) {
-        applyFilter();
-      } else if(actionEvent.getSource() == sortProjectsButton) {
         ProjectFilterController.SORT_OPTION option = ProjectFilterController.SORT_OPTION.valueOf(sortComboBox.getModel().getSelectedItem().toString());
         SortOrder order = sortAscButton.isSelected()? SortOrder.ASCENDING : SortOrder.DESCENDING;
-        System.out.println(option + order.toString());
-        controller.sortProjectList(option,order);
+        applyFilter();
       }
     }
   }
