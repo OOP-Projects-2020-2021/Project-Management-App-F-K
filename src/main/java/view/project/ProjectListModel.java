@@ -6,7 +6,6 @@ import model.project.Project;
 import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,38 +39,43 @@ public class ProjectListModel implements PropertyChangeObservable {
 
   /**
    * Sorts the list of projects.
+   *
    * @param sortByComponent specifies the component after which the list should be sorted.
    * @param order specifies the order of the sorting: ASC or DESC
-   * <p>For value 0, it will sort the projects based on the title.</p>
-   * <p>For value 1, it will sort the projects based on the deadline.</p>
-   * <p>For value 2, it will sort the projects based on the status.</p>
+   *     <p>For value 0, it will sort the projects based on the title.
+   *     <p>For value 1, it will sort the projects based on the deadline.
+   *     <p>For value 2, it will sort the projects based on the status.
    */
   public void sortProjects(int sortByComponent, SortOrder order) {
     List<Project> oldProjectList = projectList;
     Comparator<Project> comparator = getComparator(sortByComponent);
     projectList.sort(comparator);
-    if(order.equals(SortOrder.DESCENDING)) {
+    if (order.equals(SortOrder.DESCENDING)) {
       Collections.reverse(projectList);
       System.out.println("reversed");
     }
     support.firePropertyChange(
-            PROJECT_LIST, oldProjectList, Collections.unmodifiableCollection(projectList));
+        PROJECT_LIST, oldProjectList, Collections.unmodifiableCollection(projectList));
   }
 
   /**
    * Gets the appropriate comparator for sorting the list.
-   * @param compareByComponent specifies the component after which the list should be sorted
-   * For value 0, it will sort the projects based on the title.
-   * For value 1, it will sort the projects based on the deadline.
-   * For value 2, it will sort the projects based on the status.
+   *
+   * @param compareByComponent specifies the component after which the list should be sorted For
+   *     value 0, it will sort the projects based on the title. For value 1, it will sort the
+   *     projects based on the deadline. For value 2, it will sort the projects based on the status.
    * @return the chosen comparator
    */
   public Comparator<Project> getComparator(int compareByComponent) {
     switch (compareByComponent) {
-      case 0: return Comparator.comparing(Project::getTitle);
-      case 1: return Comparator.comparing(Project::getDeadline);
-      case 2: return Comparator.comparing(Project::getStatus);
-      default: return null;
+      case 0:
+        return Comparator.comparing(Project::getTitle);
+      case 1:
+        return Comparator.comparing(Project::getDeadline);
+      case 2:
+        return Comparator.comparing(Project::getStatus);
+      default:
+        return null;
     }
   }
 

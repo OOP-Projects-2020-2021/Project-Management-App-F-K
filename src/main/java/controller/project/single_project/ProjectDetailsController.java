@@ -138,7 +138,10 @@ public class ProjectDetailsController extends ProjectController implements Prope
       projectManager.updateProject(
           project.getId(), title, assignee, supervisor, deadline, description);
       displaySuccessfulSaveMessage();
-    } catch (InexistentDatabaseEntityException | SQLException | InexistentProjectException | InvalidDeadlineException e) {
+    } catch (InexistentDatabaseEntityException
+        | SQLException
+        | InexistentProjectException
+        | InvalidDeadlineException e) {
       ErrorDialogFactory.createErrorDialog(
           e,
           null,

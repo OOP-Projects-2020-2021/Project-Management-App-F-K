@@ -176,9 +176,9 @@ public class ProjectStatusController extends ProjectController implements Proper
   @Override
   public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
     if (propertyChangeEvent
-        .getPropertyName()
-        .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())
-    || propertyChangeEvent
+            .getPropertyName()
+            .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())
+        || propertyChangeEvent
             .getPropertyName()
             .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())) {
       setProject();

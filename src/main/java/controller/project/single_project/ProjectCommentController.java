@@ -73,11 +73,12 @@ public class ProjectCommentController implements PropertyChangeListener {
   private boolean isEmptyComment(String text) {
     return text.isEmpty() || text.isBlank() || text.equals(LEAVE_COMMENT_MESSAGE);
   }
+
   public void addComment(String text) {
     try {
-      if(isEmptyComment(text)) {
+      if (isEmptyComment(text)) {
         throw new EmptyFieldsException();
-      }else {
+      } else {
         commentManager.addComment(text, projectId);
       }
     } catch (NoSignedInUserException

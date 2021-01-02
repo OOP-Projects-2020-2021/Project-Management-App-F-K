@@ -10,7 +10,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
-import java.util.EnumSet;
 import java.util.List;
 
 /**
@@ -148,13 +147,15 @@ public class ProjectFilterPanel extends JPanel {
     deadlineStatusFilterList.setSelectedIndex(0);
     deadlineStatusPanel.add(deadlineStatusFilterList);
   }
+
   private void initSorterPanel() {
-    sorterPanel = new JPanel(new GridLayout(1,3));
+    sorterPanel = new JPanel(new GridLayout(1, 3));
     initSortComboBox();
     initSortOrderButtons();
     sortProjectsButton = UIFactory.createButton("Sort Projects");
     sortProjectsButton.addActionListener(new ButtonListener());
   }
+
   private void initSortOrderButtons() {
     sortAscButton = new JRadioButton(ProjectFilterController.ASC);
     sortDescButton = new JRadioButton(ProjectFilterController.DESC);
@@ -165,6 +166,7 @@ public class ProjectFilterPanel extends JPanel {
     sorterPanel.add(sortAscButton);
     sorterPanel.add(sortDescButton);
   }
+
   private void initSortComboBox() {
     sortComboBox = new JComboBox<>();
     DefaultComboBoxModel<String> sortModel = new DefaultComboBoxModel<>();
@@ -186,37 +188,37 @@ public class ProjectFilterPanel extends JPanel {
     JLabel deadlineStatusFilterLabel =
         UIFactory.createMediumHighlightedLabel(deadlineStatusName + ": ", null);
     JLabel privilegeFilterLabel = UIFactory.createMediumHighlightedLabel("Type:", null);
-    JLabel sortLabel = UIFactory.createHighlightedLabel("Sort Projects by:",null);
+    JLabel sortLabel = UIFactory.createHighlightedLabel("Sort Projects by:", null);
 
     layout.setHorizontalGroup(
-            layout.createParallelGroup()
-            .addGroup(
         layout
-            .createSequentialGroup()
+            .createParallelGroup()
             .addGroup(
                 layout
-                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(statusFilterLabel)
-                    .addComponent(statusFilterPanel))
-            .addGap(10, 10, 10)
-            .addGroup(
-                layout
-                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(filterLabel)
-                    .addComponent(deadlineStatusFilterLabel)
-                    .addComponent(deadlineStatusPanel)
-                    .addComponent(listProjectsButton)
-                    .addComponent(sortLabel)
-                    .addComponent(sortProjectsButton))
-            .addGap(10, 10, 10)
-            .addGroup(
-                layout
-                    .createParallelGroup(GroupLayout.Alignment.LEADING)
-                    .addComponent(privilegeFilterLabel)
-                    .addComponent(privilegeFilterButtonsPanel))
-            .addGap(10, 10, 10))
+                    .createSequentialGroup()
+                    .addGroup(
+                        layout
+                            .createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(statusFilterLabel)
+                            .addComponent(statusFilterPanel))
+                    .addGap(10, 10, 10)
+                    .addGroup(
+                        layout
+                            .createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(filterLabel)
+                            .addComponent(deadlineStatusFilterLabel)
+                            .addComponent(deadlineStatusPanel)
+                            .addComponent(listProjectsButton)
+                            .addComponent(sortLabel)
+                            .addComponent(sortProjectsButton))
+                    .addGap(10, 10, 10)
+                    .addGroup(
+                        layout
+                            .createParallelGroup(GroupLayout.Alignment.LEADING)
+                            .addComponent(privilegeFilterLabel)
+                            .addComponent(privilegeFilterButtonsPanel))
+                    .addGap(10, 10, 10))
             .addComponent(sorterPanel));
-
 
     layout.setVerticalGroup(
         layout
@@ -241,12 +243,11 @@ public class ProjectFilterPanel extends JPanel {
                             .createSequentialGroup()
                             .addComponent(privilegeFilterLabel)
                             .addComponent(privilegeFilterButtonsPanel)))
-                .addComponent(listProjectsButton)
-                .addComponent(sortLabel)
-                .addGap(10, 10, 10)
-                .addComponent(sorterPanel)
-                .addComponent(sortProjectsButton));
-
+            .addComponent(listProjectsButton)
+            .addComponent(sortLabel)
+            .addGap(10, 10, 10)
+            .addComponent(sorterPanel)
+            .addComponent(sortProjectsButton));
   }
 
   private boolean isAtLeastOnePrivilegeButtonSelected() {
@@ -286,14 +287,17 @@ public class ProjectFilterPanel extends JPanel {
     public void actionPerformed(ActionEvent actionEvent) {
       if (actionEvent.getSource() == listProjectsButton) {
         applyFilter();
-      } else if(actionEvent.getSource() == sortProjectsButton) {
-        ProjectFilterController.SORT_OPTION option = ProjectFilterController.SORT_OPTION.valueOf(sortComboBox.getModel().getSelectedItem().toString());
-        SortOrder order = sortAscButton.isSelected()? SortOrder.ASCENDING : SortOrder.DESCENDING;
+      } else if (actionEvent.getSource() == sortProjectsButton) {
+        ProjectFilterController.SORT_OPTION option =
+            ProjectFilterController.SORT_OPTION.valueOf(
+                sortComboBox.getModel().getSelectedItem().toString());
+        SortOrder order = sortAscButton.isSelected() ? SortOrder.ASCENDING : SortOrder.DESCENDING;
         System.out.println(option + order.toString());
-        controller.sortProjectList(option,order);
+        controller.sortProjectList(option, order);
       }
     }
   }
+
   private void showSelectAtLeastOnePrivilegeDialog() {
     JOptionPane.showMessageDialog(
         null,

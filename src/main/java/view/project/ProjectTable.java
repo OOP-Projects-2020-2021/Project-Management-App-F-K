@@ -25,7 +25,7 @@ public class ProjectTable extends JTable {
   private static final String[] columnNames = {"Name", "Deadline", "Status"};
 
   public ProjectTable(JFrame frame, ProjectListModel projectListModel) {
-    this.controller = new ProjectTableController(this,projectListModel);
+    this.controller = new ProjectTableController(this, projectListModel);
     this.frame = frame;
     initTableDesign();
     this.addMouseListener(new TableMouseListener());
@@ -59,11 +59,7 @@ public class ProjectTable extends JTable {
   public void fillTableModel(List<Project> projectsList) {
     for (Project project : projectsList) {
       Object[] rowData =
-          new Object[] {
-            project.getTitle(),
-            project.getDeadline(),
-            project.getStatus()
-          };
+          new Object[] {project.getTitle(), project.getDeadline(), project.getStatus()};
       tableModel.addRow(rowData);
     }
   }

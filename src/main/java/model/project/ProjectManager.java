@@ -61,6 +61,7 @@ public class ProjectManager extends Manager {
 
   /**
    * Checks if the given date is outdated
+   *
    * @param date the selected date
    * @return true if the date is before the current date
    */
@@ -88,7 +89,7 @@ public class ProjectManager extends Manager {
    */
   public void createProject(
       String projectName, int teamId, String assigneeName, LocalDate deadline, String description)
-          throws NoSignedInUserException, SQLException, InexistentUserException,
+      throws NoSignedInUserException, SQLException, InexistentUserException,
           InexistentTeamException, DuplicateProjectNameException, InexistentDatabaseEntityException,
           EmptyFieldsException, InvalidDeadlineException {
     if (isMissingProjectData(projectName, assigneeName, deadline)) {
@@ -102,7 +103,7 @@ public class ProjectManager extends Manager {
       throw new DuplicateProjectNameException(projectName, team.getName());
     }
     // check if the new deadline of project is outdated (before the current date)
-    if(isOutdatedDate(deadline)) {
+    if (isOutdatedDate(deadline)) {
       throw new InvalidDeadlineException();
     }
     // save project
@@ -146,9 +147,10 @@ public class ProjectManager extends Manager {
       String newSupervisorName,
       LocalDate newDeadline,
       String newDescription)
-          throws NoSignedInUserException, SQLException, InexistentProjectException,
+      throws NoSignedInUserException, SQLException, InexistentProjectException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
-          InexistentUserException, DuplicateProjectNameException, UnregisteredMemberRoleException, InvalidDeadlineException {
+          InexistentUserException, DuplicateProjectNameException, UnregisteredMemberRoleException,
+          InvalidDeadlineException {
     User currentUser = getMandatoryCurrentUser();
     Project project = getMandatoryProject(projectId);
     guaranteeUserIsSupervisor(
