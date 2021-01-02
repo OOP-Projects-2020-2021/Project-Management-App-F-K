@@ -6,8 +6,30 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
+/**
+ * SqliteProjectStatementCache works as a cache for more specific queries of
+ * SqliteProjectRepository, aimed to improve efficiency of database accesses.
+ *
+ * It is known that a statement should be prepared only once, and then it will be stored in the
+ * server's cache and at further calls only the missing parameters are filled in, thus icreasing
+ * speed.
+ * However, these parameters can only be values, not column names, order parameters (ASC/DESC), etc.
+ * Thus, the queries which have such non-value changing parameters must be prepared separately
+ * for all values of the parameters. In order to avoid copying the query multiple times and
+ * prepare each version of it even if it is not needed during runtime, this cache stores in a
+ * hashmap the statements of a certain kind with a particular configuration of non-value
+ * parameters in a hashmap (with the configuration of non-value parameters being the key, stored
+ *in an OrderParameters object), and whenever a statement is requested, if
+ * it was prepared before, it returns the existing instance from the hashmap, and if it hasn't
+ * been prepared yet, it prepares it and saves it in the map.
+ * With this method, I can make sure that each query with each configuration is prepared at most
+ * once, in a lazy way, i.e it is only prepared if it is needed.
+ *
+ * @author Bori Fazakas
+ */
 public class SqliteProjectStatementCache {
     private Connection c;
 
@@ -67,7 +89,7 @@ public class SqliteProjectStatementCache {
                     + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
                     + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
                     + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?)) "; // FINISHED_LATE
-    private HashMap<OrderParameters, PreparedStatement> preparedGetProjectsOfTeamStataments;
+    private Map<OrderParameters, PreparedStatement> preparedGetProjectsOfTeamStataments;
 
     // Get projects possibly with a given assignee, supervisor, status and status with respect to
     // deadline. The extra wildcards are responsible for making some attributes optional.
@@ -86,8 +108,16 @@ public class SqliteProjectStatementCache {
                     + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
                     + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
                     + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))"; // FINISHED_LATE
-    private HashMap<OrderParameters, PreparedStatement> preparedGetProjectsStatements;
+    private Map<OrderParameters, PreparedStatement> preparedGetProjectsStatements;
 
+    /** Returns a prepared statement for getting the projects of a team with the specified order
+     * parameters.
+     *
+     * @param sorterType specifies the attribute by which the statement will sort the projects.
+     * @param descending specifies the order of sorting. If true, descending, otherwise, ascending.
+     * @return a prepared statement for connection c.
+     * @throws SQLException if the statement could not be prepared.
+     */
     public PreparedStatement getGetProjectsOfTeamSt(Project.SorterType sorterType, boolean descending) throws SQLException {
         OrderParameters orderParameters = new OrderParameters(sorterType, descending);
         if (preparedGetProjectsOfTeamStataments.containsKey(orderParameters)) {
@@ -100,6 +130,14 @@ public class SqliteProjectStatementCache {
         }
     }
 
+    /** Returns a prepared statement for getting any projects with the specified order
+     * parameters.
+     *
+     * @param sorterType specifies the attribute by which the statement will sort the projects.
+     * @param descending specifies the order of sorting. If true, descending, otherwise, ascending.
+     * @return a prepared statement for connection c.
+     * @throws SQLException if the statement could not be prepared.
+     */
     public PreparedStatement getGetProjectsSt(Project.SorterType sorterType, boolean descending) throws SQLException {
         OrderParameters orderParameters = new OrderParameters(sorterType, descending);
         if (preparedGetProjectsStatements.containsKey(orderParameters)) {
