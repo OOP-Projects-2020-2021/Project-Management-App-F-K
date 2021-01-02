@@ -131,11 +131,16 @@ public class ProjectDetailsController extends ProjectController implements Prope
     }
   }
 
+  public Project.Importance getProjectImportance() {
+    return project.getImportance();
+  }
+
   public void saveProject(
-      String title, String assignee, String supervisor, LocalDate deadline, String description) {
+          String title, String assignee, String supervisor, LocalDate deadline,
+          String description, Project.Importance importance) {
     try {
       projectManager.updateProject(
-          project.getId(), title, assignee, supervisor, deadline, description);
+          project.getId(), title, assignee, supervisor, deadline, description, importance);
       displaySuccessfulSaveMessage();
     } catch (InexistentDatabaseEntityException | SQLException | InexistentProjectException e) {
       ErrorDialogFactory.createErrorDialog(

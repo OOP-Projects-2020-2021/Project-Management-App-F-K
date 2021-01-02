@@ -126,12 +126,12 @@ public class ProjectManager extends Manager {
    *     member of the team.
    */
   public void updateProject(
-      int projectId,
-      String newProjectTitle,
-      String newAssigneeName,
-      String newSupervisorName,
-      LocalDate newDeadline,
-      String newDescription)
+          int projectId,
+          String newProjectTitle,
+          String newAssigneeName,
+          String newSupervisorName,
+          LocalDate newDeadline,
+          String newDescription, Project.Importance importance)
       throws NoSignedInUserException, SQLException, InexistentProjectException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
           InexistentUserException, DuplicateProjectNameException, UnregisteredMemberRoleException {
@@ -154,6 +154,7 @@ public class ProjectManager extends Manager {
     project.setDescription(newDescription);
     project.setTitle(newProjectTitle);
     project.setDeadline(newDeadline);
+    project.setImportance(importance);
     projectRepository.updateProject(project);
     support.firePropertyChange(
         ProjectChangeablePropertyName.UPDATE_PROJECT.toString(), OLD_VALUE, NEW_VALUE);

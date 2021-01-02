@@ -44,6 +44,7 @@ public class ProjectDetailsPanel extends JPanel {
   private DefaultComboBoxModel<String> assigneeModel;
   private JComboBox<String> supervisorComboBox;
   private DefaultComboBoxModel<String> supervisorModel;
+  private JComboBox<Project.Importance> importanceComboBox;
 
   private ProjectStatusButtonsPanel statusButtonsPanel;
   private JPanel projectStatusPanel;
@@ -66,6 +67,7 @@ public class ProjectDetailsPanel extends JPanel {
     initButtonsPanel();
     addButtonListener();
     initProjectStatusPanel();
+    initImportanceComboBox();
     initContentPanel();
     enableEditFields(controller.enableEditing());
   }
@@ -88,6 +90,12 @@ public class ProjectDetailsPanel extends JPanel {
     properties.put("text.year", "Year");
     datePanel = new JDatePanelImpl(dateModel, properties);
     deadlineDatePicker = new JDatePickerImpl(datePanel, new DateLabelFormatter());
+  }
+
+  private void initImportanceComboBox() {
+    importanceComboBox = new JComboBox<>();
+    importanceComboBox.setModel(new DefaultComboBoxModel<>(Project.Importance.values()));
+    importanceComboBox.setSelectedItem(controller.getProjectImportance());
   }
 
   public static class DateLabelFormatter extends JFormattedTextField.AbstractFormatter {
@@ -176,64 +184,72 @@ public class ProjectDetailsPanel extends JPanel {
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
     JLabel assigneeLabel = UIFactory.createLabel("Assignee:", null);
     JLabel supervisorLabel = UIFactory.createLabel("Supervisor:", null);
+    JLabel importanceLabel = UIFactory.createLabel("*Importance:", null);
 
     contentLayout.setHorizontalGroup(
-        contentLayout
-            .createParallelGroup()
-            .addGroup(
-                contentLayout
-                    .createSequentialGroup()
+            contentLayout
+                    .createParallelGroup()
                     .addGroup(
-                        contentLayout
-                            .createParallelGroup()
-                            .addComponent(titleLabel)
-                            .addComponent(deadlineLabel)
-                            .addComponent(descriptionLabel)
-                            .addComponent(assigneeLabel)
-                            .addComponent(supervisorLabel))
-                    .addGroup(
-                        contentLayout
-                            .createParallelGroup()
-                            .addComponent(titleTextField)
-                            .addComponent(deadlineDatePicker)
-                            .addComponent(descriptionScrollPane)
-                            .addComponent(assigneeComboBox)
-                            .addComponent(supervisorComboBox)))
-            .addComponent(buttonsPanel)
-            .addComponent(projectStatusPanel));
+                            contentLayout
+                                    .createSequentialGroup()
+                                    .addGroup(
+                                            contentLayout
+                                                    .createParallelGroup()
+                                                    .addComponent(titleLabel)
+                                                    .addComponent(deadlineLabel)
+                                                    .addComponent(descriptionLabel)
+                                                    .addComponent(assigneeLabel)
+                                                    .addComponent(supervisorLabel)
+                                                    .addComponent(importanceLabel))
+                                    .addGroup(
+                                            contentLayout
+                                                    .createParallelGroup()
+                                                    .addComponent(titleTextField)
+                                                    .addComponent(deadlineDatePicker)
+                                                    .addComponent(descriptionScrollPane)
+                                                    .addComponent(assigneeComboBox)
+                                                    .addComponent(supervisorComboBox)
+                                                    .addComponent(importanceComboBox)))
+                    .addComponent(buttonsPanel)
+                    .addComponent(projectStatusPanel));
 
     contentLayout.setVerticalGroup(
-        contentLayout
-            .createSequentialGroup()
-            .addGroup(
-                contentLayout
-                    .createParallelGroup()
-                    .addComponent(titleLabel)
-                    .addComponent(titleTextField))
-            .addGroup(
-                contentLayout
-                    .createParallelGroup()
-                    .addComponent(deadlineLabel)
-                    .addComponent(deadlineDatePicker))
-            .addGroup(
-                contentLayout
-                    .createParallelGroup()
-                    .addComponent(descriptionLabel)
-                    .addComponent(descriptionScrollPane, 80, 80, 80))
-            .addGroup(
-                contentLayout
-                    .createParallelGroup()
-                    .addComponent(assigneeLabel)
-                    .addComponent(assigneeComboBox))
-            .addGroup(
-                contentLayout
-                    .createParallelGroup()
-                    .addComponent(supervisorLabel)
-                    .addComponent(supervisorComboBox))
-            .addGap(20)
-            .addComponent(buttonsPanel)
-            .addGap(30)
-            .addComponent(projectStatusPanel));
+            contentLayout
+                    .createSequentialGroup()
+                    .addGroup(
+                            contentLayout
+                                    .createParallelGroup()
+                                    .addComponent(titleLabel)
+                                    .addComponent(titleTextField))
+                    .addGroup(
+                            contentLayout
+                                    .createParallelGroup()
+                                    .addComponent(deadlineLabel)
+                                    .addComponent(deadlineDatePicker))
+                    .addGroup(
+                            contentLayout
+                                    .createParallelGroup()
+                                    .addComponent(descriptionLabel)
+                                    .addComponent(descriptionScrollPane, 80, 80, 80))
+                    .addGroup(
+                            contentLayout
+                                    .createParallelGroup()
+                                    .addComponent(assigneeLabel)
+                                    .addComponent(assigneeComboBox))
+                    .addGroup(
+                            contentLayout
+                                    .createParallelGroup()
+                                    .addComponent(supervisorLabel)
+                                    .addComponent(supervisorComboBox))
+                    .addGroup(
+                            contentLayout
+                                    .createParallelGroup()
+                                    .addComponent(importanceLabel)
+                                    .addComponent(importanceComboBox))
+                    .addGap(20)
+                    .addComponent(buttonsPanel)
+                    .addGap(30)
+                    .addComponent(projectStatusPanel));
     this.add(contentPanel, BorderLayout.CENTER);
   }
 
@@ -330,7 +346,8 @@ public class ProjectDetailsPanel extends JPanel {
                 // but LocalDate from 1
                 deadlineDatePicker.getModel().getDay());
         String description = descriptionTextArea.getText();
-        controller.saveProject(title, assignee, supervisor, selectedDate, description);
+        Project.Importance importance = (Project.Importance) importanceComboBox.getSelectedItem();
+        controller.saveProject(title, assignee, supervisor, selectedDate, description, importance);
       } else if (actionEvent.getSource() == deleteButton) {
         controller.deleteProject();
       }
