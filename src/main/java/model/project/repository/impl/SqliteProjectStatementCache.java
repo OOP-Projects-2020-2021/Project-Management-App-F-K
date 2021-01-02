@@ -45,6 +45,8 @@ public class SqliteProjectStatementCache {
 
     SqliteProjectStatementCache(Connection c) {
         this.c = c;
+        preparedGetProjectsOfTeamStataments = new HashMap<>();
+        preparedGetProjectsStatements = new HashMap<>();
     }
 
     // Get projects of team, possibly with a given assignee, supervisor, status and status with
@@ -83,8 +85,7 @@ public class SqliteProjectStatementCache {
                     + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
                     + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
                     + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
-                    + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))" // FINISHED_LATE
-                    + "ORDER BY Deadline DESC";
+                    + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))"; // FINISHED_LATE
     private HashMap<OrderParameters, PreparedStatement> preparedGetProjectsStatements;
 
     public PreparedStatement getGetProjectsOfTeamSt(Project.SorterType sorterType, boolean descending) throws SQLException {
@@ -104,7 +105,7 @@ public class SqliteProjectStatementCache {
         if (preparedGetProjectsStatements.containsKey(orderParameters)) {
             return preparedGetProjectsStatements.get(orderParameters);
         } else {
-            String query = GET_PROJECTS_OF_TEAM.concat(getOrderClause(orderParameters));
+            String query = GET_PROJECTS.concat(getOrderClause(orderParameters));
             PreparedStatement st = c.prepareStatement(query);
             preparedGetProjectsStatements.put(orderParameters, st);
             return preparedGetProjectsStatements.get(orderParameters);
@@ -112,10 +113,14 @@ public class SqliteProjectStatementCache {
     }
 
     private String getOrderClause(OrderParameters orderParameters) {
-        String clause = "ORDER BY".concat(orderParameters.getSorterType().getColumnName());
-        if (orderParameters.getSorterType() != Project.SorterType.NONE && orderParameters.isDescending()) {
-            clause = clause.concat(" DESC");
+        if (orderParameters.getSorterType() != Project.SorterType.NONE) {
+            String clause = "ORDER BY ".concat(orderParameters.getSorterType().getColumnName());
+            if (orderParameters.getSorterType() != Project.SorterType.NONE && orderParameters.isDescending()) {
+                clause = clause.concat(" DESC");
+            }
+            return clause;
+        } else {
+            return "";
         }
-        return clause;
     }
 }

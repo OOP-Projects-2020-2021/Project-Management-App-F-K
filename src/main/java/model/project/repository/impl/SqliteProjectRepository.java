@@ -14,14 +14,18 @@ import java.util.Optional;
 
 /**
  * SqliteTeamRepository is an implementation of ProjectRepository which provides database access to
- * an sqlite database holding project-related data.
+ * an sqlite database holding project-related data. Implemented with singleton pattern.
  *
  * @author Bori Fazakas
  */
 public class SqliteProjectRepository extends Repository implements ProjectRepository {
   protected static SqliteProjectRepository instance;
+  private SqliteProjectStatementCache statementCache;
 
-  private SqliteProjectRepository() {}
+  private SqliteProjectRepository() {
+    super();
+    statementCache = new SqliteProjectStatementCache(c);
+  }
 
   /** Implemented with the singleton pattern. */
   public static SqliteProjectRepository getInstance() {
@@ -67,45 +71,6 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   private static final String DELETE_PROJECT_STATEMENT = "DELETE FROM Project WHERE ProjectId = ?";
   private PreparedStatement deleteProjectSt;
 
-  // Get projects of team, possibly with a given assignee, supervisor, status and status with
-  // respect to deadline. The extra wildcards are responsible for making some attributes optional.
-  private static final String GET_PROJECTS_OF_TEAM =
-      "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
-          + "AssigneeId, SupervisorId, StatusName, TurnInDate, ImportanceName From Project p "
-          + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p"
-          + ".ImportanceId = i.ImportanceId "
-          + "WHERE p.TeamId = ? AND "
-          + "(p.SupervisorId = ? OR ?) AND "
-          + "(p.AssigneeId = ? OR ?) AND "
-          + "((st.StatusName = 'TO_DO' AND ?) OR" // TO_DO allowed
-          + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" // IN_PROGRESS allowed
-          + " (st.StatusName = 'TURNED_IN' AND ?) OR" // TURNED_IN allowed
-          + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
-          + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
-          + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
-          + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
-          + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))"; // FINISHED_LATE
-  private PreparedStatement getProjectsOfTeamSt;
-
-  // Get projects possibly with a given assignee, supervisor, status and status with respect to
-  // deadline. The extra wildcards are responsible for making some attributes optional.
-  private static final String GET_PROJECTS =
-      "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
-          + "AssigneeId, SupervisorId, StatusName, TurnInDate, ImportanceName From Project p "
-          + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p"
-          + ".ImportanceId = i.ImportanceId "
-          + "WHERE (p.SupervisorId = ? OR ?) AND "
-          + "(p.AssigneeId = ? OR ?) AND"
-          + "((st.StatusName = 'TO_DO' AND ?) OR" // TO_DO allowed
-          + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" // IN_PROGRESS allowed
-          + " (st.StatusName = 'TURNED_IN' AND ?) OR" // TURNED_IN allowed
-          + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
-          + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
-          + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
-          + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
-          + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))"; // FINISHED_LATE
-  private PreparedStatement getProjectsSt;
-
   // Get status id
   private static final String GET_PROJECTS_STATUS_ID =
       "SELECT StatusId from ProjectStatus WHERE StatusName = ?";
@@ -127,8 +92,6 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     getProjectByTitleTeamSt = c.prepareStatement(GET_PROJECT_BY_TEAM_TITLE_STATEMENT);
     deleteProjectSt = c.prepareStatement(DELETE_PROJECT_STATEMENT);
     getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID);
-    getProjectsOfTeamSt = c.prepareStatement(GET_PROJECTS_OF_TEAM);
-    getProjectsSt = c.prepareStatement(GET_PROJECTS);
     getProjectImportanceIdSt = c.prepareStatement(GET_PROJECTS_IMPORTANCE_ID);
   }
 
@@ -220,8 +183,12 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       EnumSet<Project.Status> allowedStatuses,
       Integer assigneeId,
       Integer supervisorId,
-      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
+      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses,
+      Project.SorterType sorterType,
+      boolean descending)
       throws SQLException {
+    PreparedStatement getProjectsOfTeamSt = statementCache.getGetProjectsOfTeamSt(sorterType,
+            descending);
     getProjectsOfTeamSt.setInt(1, teamId);
     // if supervisorid is null, it is don't care
     if (supervisorId != null) {
@@ -264,8 +231,11 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       EnumSet<Project.Status> allowedStatuses,
       Integer assigneeId,
       Integer supervisorId,
-      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
+      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses,
+      Project.SorterType sorterType,
+      boolean descending)
       throws SQLException {
+    PreparedStatement getProjectsSt = statementCache.getGetProjectsSt(sorterType, descending);
     // if supervisorid is null, it is don't care
     if (supervisorId != null) {
       getProjectsSt.setInt(1, supervisorId);
