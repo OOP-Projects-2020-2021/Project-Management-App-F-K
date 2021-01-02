@@ -184,7 +184,8 @@ public class ProjectFilterPanel extends JPanel {
     JLabel deadlineStatusFilterLabel =
         UIFactory.createMediumHighlightedLabel(deadlineStatusName + ": ", null);
     JLabel privilegeFilterLabel = UIFactory.createMediumHighlightedLabel("Type:", null);
-    JLabel sortLabel = UIFactory.createMediumHighlightedLabel("Sort Projects by:", null);
+    JLabel sortByLabel = UIFactory.createMediumHighlightedLabel("Sort Projects by:", null);
+    JLabel sortLabel = UIFactory.createHighlightedLabel("Sort Projects", null);
 
     layout.setHorizontalGroup(
         layout
@@ -214,12 +215,17 @@ public class ProjectFilterPanel extends JPanel {
                 layout
                     .createParallelGroup(GroupLayout.Alignment.LEADING)
                     .addComponent(sortLabel)
+                    .addComponent(sortByLabel)
                     .addComponent(sorterPanel)));
 
     layout.setVerticalGroup(
         layout
             .createSequentialGroup()
-            .addComponent(filterLabel)
+            .addGroup(
+                    layout
+                          .createParallelGroup(GroupLayout.Alignment.BASELINE)
+                          .addComponent(filterLabel)
+                          .addComponent(sortLabel))
             .addGap(10, 10, 10)
             .addGroup(
                 layout
@@ -242,7 +248,7 @@ public class ProjectFilterPanel extends JPanel {
                     .addGroup(
                         layout
                             .createSequentialGroup()
-                            .addComponent(sortLabel)
+                            .addComponent(sortByLabel)
                             .addComponent(sorterPanel)))
             .addComponent(listProjectsButton));
   }
