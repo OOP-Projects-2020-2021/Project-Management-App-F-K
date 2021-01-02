@@ -197,7 +197,8 @@ public class CreateProjectFrame extends JFrame {
                   deadlineDatePicker.getModel().getMonth(),
                   deadlineDatePicker.getModel().getDay());
           String description = descriptionTextArea.getText();
-          controller.createProject(title, assignee, deadline, description);
+          Project.Importance importance = (Project.Importance) importanceComboBox.getSelectedItem();
+          controller.createProject(title, assignee, deadline, description, importance);
         });
 
     JPanel buttonsPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
