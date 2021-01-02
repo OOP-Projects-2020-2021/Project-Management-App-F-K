@@ -19,6 +19,12 @@ public class Project {
     FINISHED
   }
 
+  public enum Importance {
+    LOW,
+    MEDIUM,
+    HIGH
+  }
+
   /**
    * DeadlineStatus is used for database queries and specifies the required status of the project
    * with respect to its deadline.
@@ -37,8 +43,9 @@ public class Project {
    */
   public static class SavableProject extends Project {
     public SavableProject(
-        String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId) {
-      super(-1, title, teamId, deadline, supervisorId, assigneeId);
+        String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId,
+        Importance importance) {
+      super(-1, title, teamId, deadline, supervisorId, assigneeId, importance);
     }
 
     @Override
@@ -65,11 +72,14 @@ public class Project {
   private Status status;
   /** Turn-in date of the project, if the project is turned in or finished. Otherwise, null. */
   private @Nullable LocalDate turnInDate;
+  /** The importance of the project. */
+  private Importance importance;
 
   /** Conrtuctor which sets the projects status to TO_DO. */
   public Project(
-      int id, String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId) {
-    this(id, title, teamId, deadline, Status.TO_DO, supervisorId, assigneeId, null);
+      int id, String title, int teamId, LocalDate deadline, int supervisorId, int assigneeId,
+      Importance importance) {
+    this(id, title, teamId, deadline, Status.TO_DO, supervisorId, assigneeId, null, importance);
   }
 
   public Project(
@@ -80,7 +90,7 @@ public class Project {
       Status status,
       int supervisorId,
       int assigneeId,
-      @Nullable LocalDate turnInDate) {
+      @Nullable LocalDate turnInDate, Importance importance) {
     this.id = id;
     this.title = title;
     this.teamId = teamId;
@@ -89,6 +99,7 @@ public class Project {
     this.supervisorId = supervisorId;
     this.assigneeId = assigneeId;
     this.turnInDate = turnInDate;
+    this.importance = importance;
   }
 
   public int getId() throws InexistentDatabaseEntityException {
@@ -155,7 +166,15 @@ public class Project {
     return Optional.ofNullable(turnInDate);
   }
 
-  public void setTurnInDate(LocalDate turnInDate) {
+  public void setTurnInDate(@Nullable LocalDate turnInDate) {
     this.turnInDate = turnInDate;
+  }
+
+  public Importance getImportance() {
+    return importance;
+  }
+
+  public void setImportance(Importance importance) {
+    this.importance = importance;
   }
 }
