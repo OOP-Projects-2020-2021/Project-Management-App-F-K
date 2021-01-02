@@ -83,8 +83,8 @@ public interface ProjectRepository {
    *     result.
    * @param sorterType specifies by which attribute the projects must be sorted.
    * @param descending specifies the order of sorting. If true, the projects are sorted in
-   *                   descending order, otherwise ascending. If the sorterType is NONE, this
-   *                   parameter does not count.
+   *     descending order, otherwise ascending. If the sorterType is NONE, this parameter does not
+   *     count.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    */
@@ -115,8 +115,8 @@ public interface ProjectRepository {
    *     result.
    * @param sorterType specifies by which attribute the projects must be sorted.
    * @param descending specifies the order of sorting. If true, the projects are sorted in
-   *                   descending order, otherwise ascending. If the sorterType is NONE, this
-   *                   parameter does not count.
+   *     descending order, otherwise ascending. If the sorterType is NONE, this parameter does not
+   *     count.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    */

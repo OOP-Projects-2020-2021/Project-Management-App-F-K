@@ -61,7 +61,7 @@ public class Project {
     STATUS("StatusId"),
     IMPORTANCE("ImportanceId");
 
-    private String columnName; //specifies the name of the column in the database on which
+    private String columnName; // specifies the name of the column in the database on which
     // sorting is
     // applied.
 

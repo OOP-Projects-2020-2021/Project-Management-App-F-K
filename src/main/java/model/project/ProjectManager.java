@@ -207,7 +207,9 @@ public class ProjectManager extends Manager {
             null,
             null,
             EnumSet.allOf(Project.Status.class),
-            EnumSet.allOf(Project.DeadlineStatus.class), Project.SorterType.NONE, false);
+            EnumSet.allOf(Project.DeadlineStatus.class),
+            Project.SorterType.NONE,
+            false);
     for (Project project : projectsOfTeam) {
       commentRepository.deleteAllCommentsOfProject(project.getId());
       projectRepository.deleteProject(project.getId());
@@ -446,7 +448,8 @@ public class ProjectManager extends Manager {
       boolean supervisedByCurrentUser,
       EnumSet<Project.Status> allowedStatuses,
       EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses,
-      Project.SorterType sorterType, boolean descending)
+      Project.SorterType sorterType,
+      boolean descending)
       throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException {
     User currentUser = getMandatoryCurrentUser();
     Integer assigneeId = null;
@@ -478,8 +481,8 @@ public class ProjectManager extends Manager {
    *     returned projects.
    * @param sorterType desifes how (if any) the returned projects must be sorted.
    * @param descending specifies the order of sorting. If true, the projects are sorted in
-   *                   descending order, otherwise ascending. If the sorterType is NONE, this
-   *                   parameter does not count.
+   *     descending order, otherwise ascending. If the sorterType is NONE, this parameter does not
+   *     count.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    * @throws InexistentDatabaseEntityException should never occur.
@@ -492,7 +495,8 @@ public class ProjectManager extends Manager {
       String assigneeName,
       EnumSet<Project.Status> allowedStatuses,
       EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses,
-      Project.SorterType sorterType, boolean descending)
+      Project.SorterType sorterType,
+      boolean descending)
       throws InexistentDatabaseEntityException, SQLException, InexistentUserException {
     Integer assigneeId = null;
     if (assigneeName != null) {
@@ -505,8 +509,13 @@ public class ProjectManager extends Manager {
       supervisorId = supervisor.getId();
     }
     return projectRepository.getProjectsOfTeam(
-        teamId, allowedStatuses, assigneeId, supervisorId, allowedDeadlineStatuses, sorterType,
-            descending);
+        teamId,
+        allowedStatuses,
+        assigneeId,
+        supervisorId,
+        allowedDeadlineStatuses,
+        sorterType,
+        descending);
   }
 
   private void guaranteeUserIsSupervisor(
@@ -603,14 +612,18 @@ public class ProjectManager extends Manager {
             null,
             member,
             EnumSet.range(Project.Status.TO_DO, Project.Status.TURNED_IN),
-            EnumSet.allOf(Project.DeadlineStatus.class), Project.SorterType.NONE, false);
+            EnumSet.allOf(Project.DeadlineStatus.class),
+            Project.SorterType.NONE,
+            false);
     List<Project> unFinishedSupervisedProjects =
         getProjectsOfTeam(
             teamId,
             member,
             null,
             EnumSet.range(Project.Status.TO_DO, Project.Status.TURNED_IN),
-            EnumSet.allOf(Project.DeadlineStatus.class), Project.SorterType.NONE, false);
+            EnumSet.allOf(Project.DeadlineStatus.class),
+            Project.SorterType.NONE,
+            false);
     if (!unFinishedAssignedProjects.isEmpty() || !unFinishedSupervisedProjects.isEmpty()) {
       throw new IllegalMemberRemovalException(member);
     }

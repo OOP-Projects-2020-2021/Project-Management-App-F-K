@@ -187,8 +187,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
       Project.SorterType sorterType,
       boolean descending)
       throws SQLException {
-    PreparedStatement getProjectsOfTeamSt = statementCache.getGetProjectsOfTeamSt(sorterType,
-            descending);
+    PreparedStatement getProjectsOfTeamSt =
+        statementCache.getGetProjectsOfTeamSt(sorterType, descending);
     getProjectsOfTeamSt.setInt(1, teamId);
     // if supervisorid is null, it is don't care
     if (supervisorId != null) {

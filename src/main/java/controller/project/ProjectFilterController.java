@@ -101,7 +101,9 @@ public class ProjectFilterController implements PropertyChangeListener {
               supervisorName,
               assigneeName,
               EnumSet.copyOf(selectedStatuses),
-              EnumSet.copyOf(selectedDeadlineStatuses), Project.SorterType.NONE, false));
+              EnumSet.copyOf(selectedDeadlineStatuses),
+              Project.SorterType.NONE,
+              false));
     } catch (SQLException | InexistentDatabaseEntityException | InexistentUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
@@ -125,7 +127,9 @@ public class ProjectFilterController implements PropertyChangeListener {
               assignedToUser,
               supervisedByUser,
               EnumSet.copyOf(selectedStatuses),
-              EnumSet.copyOf(selectedDeadlineStatuses), Project.SorterType.NONE, false));
+              EnumSet.copyOf(selectedDeadlineStatuses),
+              Project.SorterType.NONE,
+              false));
     } catch (SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
