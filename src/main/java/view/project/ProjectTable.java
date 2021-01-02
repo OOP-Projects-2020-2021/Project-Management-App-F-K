@@ -28,7 +28,7 @@ public class ProjectTable extends JTable {
   private DefaultTableModel tableModel;
   private ProjectTableController controller;
   private JFrame frame;
-  private static final String[] columnNames = {"Name", "Deadline", "Status"};
+  private static final String[] columnNames = {"Name", "Deadline", "Status", "Importance"};
 
   public ProjectTable(JFrame frame, ProjectListModel projectListModel) {
     this.controller = new ProjectTableController(this, projectListModel);
@@ -89,7 +89,8 @@ public class ProjectTable extends JTable {
           new String[] {
             project.getTitle(),
             String.valueOf(project.getDeadline()),
-            String.valueOf(project.getStatus())
+            String.valueOf(project.getStatus()),
+            String.valueOf(project.getImportance())
           };
       tableModel.addRow(rowData);
     }
