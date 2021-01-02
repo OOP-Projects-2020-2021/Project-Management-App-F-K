@@ -167,7 +167,7 @@ public class ProjectFilterPanel extends JPanel {
   private void initSortComboBox() {
     sortComboBox = new JComboBox<>();
     DefaultComboBoxModel<Project.SorterType> sortModel =
-            new DefaultComboBoxModel<>(Project.SorterType.values());
+        new DefaultComboBoxModel<>(Project.SorterType.values());
     sortComboBox.setModel(sortModel);
     sortComboBox.setSelectedItem(Project.SorterType.NONE);
     sorterPanel.add(sortComboBox);
@@ -222,10 +222,10 @@ public class ProjectFilterPanel extends JPanel {
         layout
             .createSequentialGroup()
             .addGroup(
-                    layout
-                          .createParallelGroup(GroupLayout.Alignment.BASELINE)
-                          .addComponent(filterLabel)
-                          .addComponent(sortLabel))
+                layout
+                    .createParallelGroup(GroupLayout.Alignment.BASELINE)
+                    .addComponent(filterLabel)
+                    .addComponent(sortLabel))
             .addGap(10, 10, 10)
             .addGroup(
                 layout
@@ -271,14 +271,18 @@ public class ProjectFilterPanel extends JPanel {
             statusFilterList.getSelectedValuesList(),
             deadlineStatusFilterList.getSelectedValuesList(),
             (String) assigneeComboBoxModel.getSelectedItem(),
-            (String) supervisorComboBoxModel.getSelectedItem(), sorterType, descendingSort);
+            (String) supervisorComboBoxModel.getSelectedItem(),
+            sorterType,
+            descendingSort);
       } else {
         if (isAtLeastOnePrivilegeButtonSelected()) { // the query is valid
           controller.filterProjectsOfUser(
               statusFilterList.getSelectedValuesList(),
               deadlineStatusFilterList.getSelectedValuesList(),
               assignedToUserButton.isSelected(),
-              supervisedByUserButton.isSelected(), sorterType, descendingSort);
+              supervisedByUserButton.isSelected(),
+              sorterType,
+              descendingSort);
         } else {
           showSelectAtLeastOnePrivilegeDialog();
         }

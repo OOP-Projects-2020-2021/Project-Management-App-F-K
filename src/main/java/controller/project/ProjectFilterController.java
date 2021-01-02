@@ -92,11 +92,12 @@ public class ProjectFilterController implements PropertyChangeListener {
   }
 
   public void filterProjectsOfTeam(
-          List<Project.Status> selectedStatuses,
-          List<Project.DeadlineStatus> selectedDeadlineStatuses,
-          String assigneeName,
-          String supervisorName,
-          Project.SorterType sorterType, boolean descending) {
+      List<Project.Status> selectedStatuses,
+      List<Project.DeadlineStatus> selectedDeadlineStatuses,
+      String assigneeName,
+      String supervisorName,
+      Project.SorterType sorterType,
+      boolean descending) {
     assigneeName = convertAnyoneStringToNull(assigneeName);
     supervisorName = convertAnyoneStringToNull(supervisorName);
     try {
@@ -107,7 +108,8 @@ public class ProjectFilterController implements PropertyChangeListener {
               assigneeName,
               EnumSet.copyOf(selectedStatuses),
               EnumSet.copyOf(selectedDeadlineStatuses),
-              sorterType, descending));
+              sorterType,
+              descending));
     } catch (SQLException | InexistentDatabaseEntityException | InexistentUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
@@ -125,7 +127,8 @@ public class ProjectFilterController implements PropertyChangeListener {
       List<Project.DeadlineStatus> selectedDeadlineStatuses,
       boolean assignedToUser,
       boolean supervisedByUser,
-      Project.SorterType sorterType, boolean descending) {
+      Project.SorterType sorterType,
+      boolean descending) {
     try {
       projectListModel.setProjectList(
           projectManager.getProjects(
@@ -133,7 +136,8 @@ public class ProjectFilterController implements PropertyChangeListener {
               supervisedByUser,
               EnumSet.copyOf(selectedStatuses),
               EnumSet.copyOf(selectedDeadlineStatuses),
-              sorterType, descending));
+              sorterType,
+              descending));
     } catch (SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
