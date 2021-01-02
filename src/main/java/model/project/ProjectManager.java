@@ -58,6 +58,16 @@ public class ProjectManager extends Manager {
   private boolean isMissingProjectData(String title, String assignee, LocalDate deadline) {
     return isEmptyText(title) || isEmptyText(assignee) || isEmptyText(deadline.toString());
   }
+
+  /**
+   * Checks if the given date is outdated
+   *
+   * @param date the selected date
+   * @return true if the date is before the current date
+   */
+  private boolean isOutdatedDate(LocalDate date) {
+    return date.isBefore(LocalDate.now());
+  }
   /**
    * Creates a new project with the specified data and saves it in the database. The supervisor of
    * the project will be automatically the current user. There should not be another project with
@@ -75,6 +85,7 @@ public class ProjectManager extends Manager {
    * @throws DuplicateProjectNameException if there is already a project with the same name in the
    *     same team. This is not allowed.
    * @throws InexistentDatabaseEntityException should never occur.
+   * @throws InvalidDeadlineException if the selected deadline is outdated.
    */
   public void createProject(
       String projectName,
@@ -85,7 +96,7 @@ public class ProjectManager extends Manager {
       Project.Importance importance)
       throws NoSignedInUserException, SQLException, InexistentUserException,
           InexistentTeamException, DuplicateProjectNameException, InexistentDatabaseEntityException,
-          EmptyFieldsException {
+          EmptyFieldsException, InvalidDeadlineException {
     if (isMissingProjectData(projectName, assigneeName, deadline)) {
       throw new EmptyFieldsException();
     }
@@ -95,6 +106,10 @@ public class ProjectManager extends Manager {
     // check that there is no other project with the same name
     if (projectRepository.getProject(teamId, projectName).isPresent()) {
       throw new DuplicateProjectNameException(projectName, team.getName());
+    }
+    // check if the new deadline of project is outdated (before the current date)
+    if (isOutdatedDate(deadline)) {
+      throw new InvalidDeadlineException();
     }
     // save project
     Project.SavableProject project =
@@ -128,6 +143,7 @@ public class ProjectManager extends Manager {
    *     desired name.
    * @throws UnregisteredMemberRoleException if the assignee or the supervisor to be set is not the
    *     member of the team.
+   * @throws InvalidDeadlineException if the selected deadline is outdated.
    */
   public void updateProject(
       int projectId,
@@ -139,7 +155,8 @@ public class ProjectManager extends Manager {
       Project.Importance importance)
       throws NoSignedInUserException, SQLException, InexistentProjectException,
           InexistentDatabaseEntityException, UnauthorisedOperationException,
-          InexistentUserException, DuplicateProjectNameException, UnregisteredMemberRoleException {
+          InexistentUserException, DuplicateProjectNameException, UnregisteredMemberRoleException,
+          InvalidDeadlineException {
     User currentUser = getMandatoryCurrentUser();
     Project project = getMandatoryProject(projectId);
     guaranteeUserIsSupervisor(
@@ -152,6 +169,10 @@ public class ProjectManager extends Manager {
     if (!newProjectTitle.equals(project.getTitle())
         && projectRepository.getProject(project.getTeamId(), newProjectTitle).isPresent()) {
       throw new DuplicateProjectNameException(newProjectTitle);
+    }
+    // check that the new deadline of the project is valid
+    if (isOutdatedDate(newDeadline)) {
+      throw new InvalidDeadlineException();
     }
     // update project
     project.setAssigneeId(assignee.getId());
@@ -207,7 +228,9 @@ public class ProjectManager extends Manager {
             null,
             null,
             EnumSet.allOf(Project.Status.class),
-            EnumSet.allOf(Project.DeadlineStatus.class));
+            EnumSet.allOf(Project.DeadlineStatus.class),
+            Project.SorterType.NONE,
+            false);
     for (Project project : projectsOfTeam) {
       commentRepository.deleteAllCommentsOfProject(project.getId());
       projectRepository.deleteProject(project.getId());
@@ -445,7 +468,9 @@ public class ProjectManager extends Manager {
       boolean assignedToCurrentUser,
       boolean supervisedByCurrentUser,
       EnumSet<Project.Status> allowedStatuses,
-      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
+      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses,
+      Project.SorterType sorterType,
+      boolean descending)
       throws NoSignedInUserException, InexistentDatabaseEntityException, SQLException {
     User currentUser = getMandatoryCurrentUser();
     Integer assigneeId = null;
@@ -457,7 +482,7 @@ public class ProjectManager extends Manager {
       supervisorId = currentUser.getId();
     }
     return projectRepository.getProjects(
-        allowedStatuses, assigneeId, supervisorId, allowedDeadlineStatuses);
+        allowedStatuses, assigneeId, supervisorId, allowedDeadlineStatuses, sorterType, descending);
   }
 
   /**
@@ -475,6 +500,10 @@ public class ProjectManager extends Manager {
    *     only those projects are returned, which are supervised by the user with id supervisorName.
    * @param allowedDeadlineStatuses is the set of deadline statuses which are allowed for the
    *     returned projects.
+   * @param sorterType desifes how (if any) the returned projects must be sorted.
+   * @param descending specifies the order of sorting. If true, the projects are sorted in
+   *     descending order, otherwise ascending. If the sorterType is NONE, this parameter does not
+   *     count.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    * @throws InexistentDatabaseEntityException should never occur.
@@ -486,7 +515,9 @@ public class ProjectManager extends Manager {
       String supervisorName,
       String assigneeName,
       EnumSet<Project.Status> allowedStatuses,
-      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
+      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses,
+      Project.SorterType sorterType,
+      boolean descending)
       throws InexistentDatabaseEntityException, SQLException, InexistentUserException {
     Integer assigneeId = null;
     if (assigneeName != null) {
@@ -499,7 +530,13 @@ public class ProjectManager extends Manager {
       supervisorId = supervisor.getId();
     }
     return projectRepository.getProjectsOfTeam(
-        teamId, allowedStatuses, assigneeId, supervisorId, allowedDeadlineStatuses);
+        teamId,
+        allowedStatuses,
+        assigneeId,
+        supervisorId,
+        allowedDeadlineStatuses,
+        sorterType,
+        descending);
   }
 
   private void guaranteeUserIsSupervisor(
@@ -596,14 +633,18 @@ public class ProjectManager extends Manager {
             null,
             member,
             EnumSet.range(Project.Status.TO_DO, Project.Status.TURNED_IN),
-            EnumSet.allOf(Project.DeadlineStatus.class));
+            EnumSet.allOf(Project.DeadlineStatus.class),
+            Project.SorterType.NONE,
+            false);
     List<Project> unFinishedSupervisedProjects =
         getProjectsOfTeam(
             teamId,
             member,
             null,
             EnumSet.range(Project.Status.TO_DO, Project.Status.TURNED_IN),
-            EnumSet.allOf(Project.DeadlineStatus.class));
+            EnumSet.allOf(Project.DeadlineStatus.class),
+            Project.SorterType.NONE,
+            false);
     if (!unFinishedAssignedProjects.isEmpty() || !unFinishedSupervisedProjects.isEmpty()) {
       throw new IllegalMemberRemovalException(member);
     }

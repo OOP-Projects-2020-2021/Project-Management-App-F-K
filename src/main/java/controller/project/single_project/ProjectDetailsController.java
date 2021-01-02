@@ -6,7 +6,9 @@ import model.project.Project;
 import model.project.ProjectManager;
 import model.project.exceptions.DuplicateProjectNameException;
 import model.project.exceptions.InexistentProjectException;
+import model.project.exceptions.InvalidDeadlineException;
 import model.team.TeamManager;
+import model.team.exceptions.InexistentTeamException;
 import model.team.exceptions.UnregisteredMemberRoleException;
 import model.user.User;
 import model.user.UserManager;
@@ -122,6 +124,15 @@ public class ProjectDetailsController extends ProjectController implements Prope
     return project.getStatus().toString();
   }
 
+  public String getTeamName() {
+    try {
+      return teamManager.getTeam(project.getTeamId()).getName();
+    } catch (SQLException | InexistentTeamException e) {
+      ErrorDialogFactory.createErrorDialog(e, frame, null);
+    }
+    return "";
+  }
+
   public List<User> getTeamMembers() {
     try {
       return teamManager.getMembersOfTeam(project.getTeamId());
@@ -146,7 +157,10 @@ public class ProjectDetailsController extends ProjectController implements Prope
       projectManager.updateProject(
           project.getId(), title, assignee, supervisor, deadline, description, importance);
       displaySuccessfulSaveMessage();
-    } catch (InexistentDatabaseEntityException | SQLException | InexistentProjectException e) {
+    } catch (InexistentDatabaseEntityException
+        | SQLException
+        | InexistentProjectException
+        | InvalidDeadlineException e) {
       ErrorDialogFactory.createErrorDialog(
           e,
           null,

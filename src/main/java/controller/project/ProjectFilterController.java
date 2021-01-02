@@ -12,6 +12,7 @@ import view.ErrorDialogFactory;
 import view.project.ProjectFilterPanel;
 import view.project.ProjectListModel;
 
+import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
@@ -37,6 +38,8 @@ public class ProjectFilterController implements PropertyChangeListener {
   private ProjectFilterPanel panel;
 
   public static final String ANYONE = "Anyone";
+  public static final String ASC = "ASCENDING";
+  public static final String DESC = "DESCENDING";
 
   public enum PrivilegeTypes {
     ASSIGNED_TO_ME,
@@ -49,6 +52,7 @@ public class ProjectFilterController implements PropertyChangeListener {
     projectManager = ProjectManager.getInstance();
     projectManager.addPropertyChangeListener(this);
     teamManager = TeamManager.getInstance();
+    teamManager.addPropertyChangeListener(this);
     this.projectListModel = projectListModel;
     this.panel = panel;
   }
@@ -91,7 +95,9 @@ public class ProjectFilterController implements PropertyChangeListener {
       List<Project.Status> selectedStatuses,
       List<Project.DeadlineStatus> selectedDeadlineStatuses,
       String assigneeName,
-      String supervisorName) {
+      String supervisorName,
+      Project.SorterType sorterType,
+      boolean descending) {
     assigneeName = convertAnyoneStringToNull(assigneeName);
     supervisorName = convertAnyoneStringToNull(supervisorName);
     try {
@@ -101,7 +107,9 @@ public class ProjectFilterController implements PropertyChangeListener {
               supervisorName,
               assigneeName,
               EnumSet.copyOf(selectedStatuses),
-              EnumSet.copyOf(selectedDeadlineStatuses)));
+              EnumSet.copyOf(selectedDeadlineStatuses),
+              sorterType,
+              descending));
     } catch (SQLException | InexistentDatabaseEntityException | InexistentUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
@@ -118,14 +126,18 @@ public class ProjectFilterController implements PropertyChangeListener {
       List<Project.Status> selectedStatuses,
       List<Project.DeadlineStatus> selectedDeadlineStatuses,
       boolean assignedToUser,
-      boolean supervisedByUser) {
+      boolean supervisedByUser,
+      Project.SorterType sorterType,
+      boolean descending) {
     try {
       projectListModel.setProjectList(
           projectManager.getProjects(
               assignedToUser,
               supervisedByUser,
               EnumSet.copyOf(selectedStatuses),
-              EnumSet.copyOf(selectedDeadlineStatuses)));
+              EnumSet.copyOf(selectedDeadlineStatuses),
+              sorterType,
+              descending));
     } catch (SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }

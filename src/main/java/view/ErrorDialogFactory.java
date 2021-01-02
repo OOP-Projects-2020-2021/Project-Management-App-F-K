@@ -3,6 +3,7 @@ package view;
 import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
 import model.project.exceptions.IllegalProjectStatusChangeException;
+import model.project.exceptions.InvalidDeadlineException;
 import model.team.exceptions.*;
 import model.user.exceptions.*;
 
@@ -108,7 +109,7 @@ public class ErrorDialogFactory {
   private static final String EMPTY_FIELDS_LEFT_TITLE = "Empty fields left";
 
   private static final String EMPTY_FIELDS_LEFT_MESSAGE =
-      "Please fill in all the required information before continuing!";
+      "You have empty fields left.\nPlease fill in all the required information before continuing!";
   /**
    * Messages displayed to inform the user that the status change requested for a project is
    * illegal.
@@ -136,6 +137,13 @@ public class ErrorDialogFactory {
           + "because this team still has unfinished projects.";
 
   private static final String ILLEGAL_TEAM_REMOVAL_TITLE = "Illegal team removal";
+
+  /** Messages to warn the user about attempting to set an invalid deadline to a project. */
+  private static final String INVALID_DEADLINE_MESSAGE =
+      "The selected deadline for this project is invalid, because it is outdated.\n"
+          + "Please choose a date that is the same or after the current date.";
+
+  private static final String INVALID_DEADLINE_TITLE = "Invalid deadline";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     exception.printStackTrace();
@@ -190,6 +198,9 @@ public class ErrorDialogFactory {
     }
     if (exception instanceof IllegalTeamRemovalException) {
       displayIllegalTeamRemovalErrorDialog(frame, message);
+    }
+    if (exception instanceof InvalidDeadlineException) {
+      displayInvalidDeadlineErrorDialog(frame, message);
     }
   }
 
@@ -348,6 +359,14 @@ public class ErrorDialogFactory {
         frame,
         ILLEGAL_STATUS_CHANGE_MESSAGE + "\n" + message,
         ILLEGAL_STATUS_CHANGE_TITLE,
+        JOptionPane.ERROR_MESSAGE);
+  }
+  /** Displays an error message to inform the user that the selected date is invalid. */
+  private static void displayInvalidDeadlineErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+        frame,
+        INVALID_DEADLINE_MESSAGE + "\n" + message,
+        INVALID_DEADLINE_TITLE,
         JOptionPane.ERROR_MESSAGE);
   }
 }

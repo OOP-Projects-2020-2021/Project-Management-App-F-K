@@ -45,7 +45,6 @@ public class ProjectTableController implements PropertyChangeListener {
     if (project != null) {
       new ProjectFrame(frame, project);
       frame.setEnabled(false);
-      frame.setVisible(false);
     }
   }
 

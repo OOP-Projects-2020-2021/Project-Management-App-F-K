@@ -180,11 +180,13 @@ public class ProjectDetailsPanel extends JPanel {
     contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
     JLabel titleLabel = UIFactory.createLabel("Title:", null);
+    JLabel teamLabel = UIFactory.createLabel("Team:", null);
     JLabel deadlineLabel = UIFactory.createLabel("Deadline:", null);
     JLabel descriptionLabel = UIFactory.createLabel("Description:", null);
     JLabel assigneeLabel = UIFactory.createLabel("Assignee:", null);
     JLabel supervisorLabel = UIFactory.createLabel("Supervisor:", null);
-    JLabel importanceLabel = UIFactory.createLabel("*Importance:", null);
+    JLabel importanceLabel = UIFactory.createLabel("Importance:", null);
+    JLabel teamNameLabel = UIFactory.createLabel(controller.getTeamName(), null);
 
     contentLayout.setHorizontalGroup(
         contentLayout
@@ -196,6 +198,7 @@ public class ProjectDetailsPanel extends JPanel {
                         contentLayout
                             .createParallelGroup()
                             .addComponent(titleLabel)
+                            .addComponent(teamLabel)
                             .addComponent(deadlineLabel)
                             .addComponent(descriptionLabel)
                             .addComponent(assigneeLabel)
@@ -205,6 +208,7 @@ public class ProjectDetailsPanel extends JPanel {
                         contentLayout
                             .createParallelGroup()
                             .addComponent(titleTextField)
+                            .addComponent(teamNameLabel)
                             .addComponent(deadlineDatePicker)
                             .addComponent(descriptionScrollPane)
                             .addComponent(assigneeComboBox)
@@ -221,6 +225,11 @@ public class ProjectDetailsPanel extends JPanel {
                     .createParallelGroup()
                     .addComponent(titleLabel)
                     .addComponent(titleTextField))
+            .addGroup(
+                contentLayout
+                    .createParallelGroup()
+                    .addComponent(teamLabel)
+                    .addComponent(teamNameLabel))
             .addGroup(
                 contentLayout
                     .createParallelGroup()

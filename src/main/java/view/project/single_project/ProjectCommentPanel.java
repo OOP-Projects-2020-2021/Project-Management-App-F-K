@@ -28,7 +28,6 @@ public class ProjectCommentPanel extends JPanel {
   private AdjustmentListener adjustmentListener;
 
   private ProjectCommentController controller;
-  private static final String LEAVE_COMMENT_MESSAGE = "Leave a comment";
 
   private static final Dimension COMMENT_PANEL_DIMENSION = new Dimension(200, 200);
   private static final Dimension COMMENT_AREA_DIMENSION = new Dimension(80, 80);
@@ -101,7 +100,7 @@ public class ProjectCommentPanel extends JPanel {
   }
 
   private void initCommentArea() {
-    commentTextArea = createUneditableCommentArea(LEAVE_COMMENT_MESSAGE);
+    commentTextArea = createUneditableCommentArea(ProjectCommentController.LEAVE_COMMENT_MESSAGE);
     commentTextArea.addMouseListener(
         new MouseAdapter() {
           @Override
@@ -160,7 +159,7 @@ public class ProjectCommentPanel extends JPanel {
   }
 
   private void clearCommentArea() {
-    commentTextArea.setText(LEAVE_COMMENT_MESSAGE);
+    commentTextArea.setText(ProjectCommentController.LEAVE_COMMENT_MESSAGE);
     commentTextArea.setEditable(false);
   }
 

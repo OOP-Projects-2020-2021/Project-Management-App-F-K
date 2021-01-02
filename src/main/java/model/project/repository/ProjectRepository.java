@@ -81,6 +81,10 @@ public interface ProjectRepository {
    *     those projects are returned, which are supervised by the user with id supervisorId.
    * @param allowedDeadlineStatuses is the set of deadline statuses which are allowed in the query
    *     result.
+   * @param sorterType specifies by which attribute the projects must be sorted.
+   * @param descending specifies the order of sorting. If true, the projects are sorted in
+   *     descending order, otherwise ascending. If the sorterType is NONE, this parameter does not
+   *     count.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    */
@@ -89,7 +93,9 @@ public interface ProjectRepository {
       EnumSet<Project.Status> allowedStatuses,
       Integer assigneeId,
       Integer supervisorId,
-      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
+      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses,
+      Project.SorterType sorterType,
+      boolean descending)
       throws SQLException;
 
   /**
@@ -107,6 +113,10 @@ public interface ProjectRepository {
    *     those projects are returned, which are supervised by the user with id supervisorId.
    * @param allowedDeadlineStatuses is the set of deadline statuses which are allowed in the query
    *     result.
+   * @param sorterType specifies by which attribute the projects must be sorted.
+   * @param descending specifies the order of sorting. If true, the projects are sorted in
+   *     descending order, otherwise ascending. If the sorterType is NONE, this parameter does not
+   *     count.
    * @return the list of projects fulfilling all the above requirements.
    * @throws SQLException if the operations could not be performed in the database.
    */
@@ -114,6 +124,8 @@ public interface ProjectRepository {
       EnumSet<Project.Status> allowedStatuses,
       Integer assigneeId,
       Integer supervisorId,
-      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses)
+      EnumSet<Project.DeadlineStatus> allowedDeadlineStatuses,
+      Project.SorterType sorterType,
+      boolean descending)
       throws SQLException;
 }

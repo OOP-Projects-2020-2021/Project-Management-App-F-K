@@ -3,6 +3,7 @@ package view.project;
 import model.PropertyChangeObservable;
 import model.project.Project;
 
+import javax.swing.*;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.util.ArrayList;

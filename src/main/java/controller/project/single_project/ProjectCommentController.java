@@ -8,6 +8,7 @@ import model.project.Project;
 import model.project.exceptions.InexistentProjectException;
 import model.team.exceptions.InexistentTeamException;
 import model.user.UserManager;
+import model.user.exceptions.EmptyFieldsException;
 import model.user.exceptions.NoSignedInUserException;
 import view.ErrorDialogFactory;
 import view.project.single_project.ProjectCommentPanel;
@@ -30,6 +31,7 @@ public class ProjectCommentController implements PropertyChangeListener {
   private UserManager userManager;
   private ProjectCommentPanel panel;
   private int projectId;
+  public static final String LEAVE_COMMENT_MESSAGE = "Leave a comment";
 
   public ProjectCommentController(ProjectCommentPanel panel, Project project) {
     commentManager = CommentManager.getInstance();
@@ -68,14 +70,23 @@ public class ProjectCommentController implements PropertyChangeListener {
     return null;
   }
 
+  private boolean isEmptyComment(String text) {
+    return text.isEmpty() || text.isBlank() || text.equals(LEAVE_COMMENT_MESSAGE);
+  }
+
   public void addComment(String text) {
     try {
-      commentManager.addComment(text, projectId);
+      if (isEmptyComment(text)) {
+        throw new EmptyFieldsException();
+      } else {
+        commentManager.addComment(text, projectId);
+      }
     } catch (NoSignedInUserException
         | InexistentProjectException
         | SQLException
         | InexistentDatabaseEntityException
-        | InexistentTeamException e) {
+        | InexistentTeamException
+        | EmptyFieldsException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     } catch (UnauthorisedOperationException e) {
       ErrorDialogFactory.createErrorDialog(

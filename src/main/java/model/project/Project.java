@@ -52,6 +52,29 @@ public class Project {
   }
 
   /**
+   * PorjectSorter is used for the database and specifies by which attribute the projects must be
+   * sorted when returned from the database.
+   */
+  public enum SorterType {
+    NONE("true"),
+    DEADLINE("Deadline"),
+    STATUS("p.StatusId"),
+    IMPORTANCE("p.ImportanceId");
+
+    private String columnName; // specifies the name of the column in the database on which
+    // sorting is
+    // applied.
+
+    SorterType(String columnName) {
+      this.columnName = columnName;
+    }
+
+    public String getColumnName() {
+      return this.columnName;
+    }
+  }
+
+  /**
    * This class is used only when the project instance is created to be saved in the database, but
    * does not have a valid id yet.
    */
