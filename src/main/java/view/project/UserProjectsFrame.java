@@ -1,11 +1,14 @@
 package view.project;
 
 import controller.project.UserProjectsController;
+import view.CloseableComponent;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.*;
+import java.util.List;
 
 /**
  * The UserProjectsFrame allows the user to view all the projects that are either assigned to them,
@@ -20,6 +23,8 @@ public class UserProjectsFrame extends JFrame {
   private UserProjectsController controller;
   private static final Dimension DIMENSION = new Dimension(620, 600);
 
+  private List<CloseableComponent> closeableComponents = new ArrayList<>();
+
   public UserProjectsFrame(JFrame parentFrame) {
     super("My projects");
     this.parentFrame = parentFrame;
@@ -33,6 +38,7 @@ public class UserProjectsFrame extends JFrame {
 
   private void initPanel() {
     ProjectsPanel panel = new ProjectsPanel(this, null);
+    closeableComponents.add(panel);
     getContentPane().add(panel, BorderLayout.CENTER);
   }
 
@@ -40,6 +46,9 @@ public class UserProjectsFrame extends JFrame {
     @Override
     public void windowClosing(WindowEvent evt) {
       controller.onClose(parentFrame);
+      for (CloseableComponent closeableComponent: closeableComponents) {
+        closeableComponent.onClose();
+      }
     }
   }
 }

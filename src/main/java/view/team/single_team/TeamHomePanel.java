@@ -2,6 +2,7 @@ package view.team.single_team;
 
 import controller.team.single_team.TeamSettingsController;
 import model.user.User;
+import view.CloseableComponent;
 import view.UIFactory;
 
 import javax.swing.*;
@@ -19,7 +20,7 @@ import java.util.List;
  *
  * @author Beata Keresztes
  */
-public class TeamHomePanel extends JPanel implements ActionListener {
+public class TeamHomePanel extends JPanel implements ActionListener, CloseableComponent {
 
   private JTextField teamNameTextField;
   private JLabel teamCodeLabel;
@@ -204,5 +205,10 @@ public class TeamHomePanel extends JPanel implements ActionListener {
     } else if (source == deleteTeamButton) {
       controller.deleteTeam();
     }
+  }
+
+  @Override
+  public void onClose() {
+    controller.close();
   }
 }

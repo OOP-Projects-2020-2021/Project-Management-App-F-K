@@ -3,6 +3,7 @@ package view.project.single_project;
 import controller.project.single_project.ProjectCommentController;
 import model.comment.Comment;
 import model.project.Project;
+import view.CloseableComponent;
 import view.UIFactory;
 
 import javax.swing.*;
@@ -19,7 +20,7 @@ import java.util.List;
  *
  * @author Beata Keresztes
  */
-public class ProjectCommentPanel extends JPanel {
+public class ProjectCommentPanel extends JPanel implements CloseableComponent {
 
   private JTextArea commentTextArea;
   private JButton sendButton;
@@ -173,5 +174,10 @@ public class ProjectCommentPanel extends JPanel {
 
   private void scrollToBottom() {
     commentListScrollPanel.getVerticalScrollBar().addAdjustmentListener(adjustmentListener);
+  }
+
+  @Override
+  public void onClose() {
+    controller.close();
   }
 }

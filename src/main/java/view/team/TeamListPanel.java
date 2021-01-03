@@ -1,6 +1,7 @@
 package view.team;
 
 import controller.team.TeamListController;
+import view.CloseableComponent;
 import view.ModifiedFlowLayout;
 import javax.swing.*;
 import java.awt.*;
@@ -12,7 +13,7 @@ import java.util.List;
  *
  * @author Bori Fazakas
  */
-public class TeamListPanel extends JPanel {
+public class TeamListPanel extends JPanel implements CloseableComponent {
   private TeamListController controller;
   private JFrame frame;
 
@@ -35,5 +36,10 @@ public class TeamListPanel extends JPanel {
     }
     this.revalidate();
     this.repaint();
+  }
+
+  @Override
+  public void onClose() {
+    controller.close();
   }
 }
