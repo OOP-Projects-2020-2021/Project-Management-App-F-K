@@ -137,8 +137,8 @@ public class TeamSettingsController extends TeamController
   }
   /** Displays a message dialog to inform the user that he/she has left the team. */
   private void affirmLeavingTeam() {
-    JOptionPane.showConfirmDialog(
-        frame, AFFIRM_LEAVING_TEAM_MESSAGE, AFFIRM_LEAVING_TEAM_TITLE, JOptionPane.YES_NO_OPTION);
+    JOptionPane.showMessageDialog(
+        frame, AFFIRM_LEAVING_TEAM_MESSAGE, AFFIRM_LEAVING_TEAM_TITLE, JOptionPane.PLAIN_MESSAGE);
   }
 
   /**
