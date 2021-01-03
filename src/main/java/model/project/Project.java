@@ -111,8 +111,8 @@ public class Project {
   private int supervisorId;
   /** Status of the project. */
   private Status status;
-  /** Turn-in date of the project, if the project is turned in or finished. Otherwise, null. */
-  private @Nullable LocalDate turnInDate;
+  /** Finishing date of the project, if the project is finished. Otherwise, null. */
+  private @Nullable LocalDate finishingDate;
   /** The importance of the project. */
   private Importance importance;
 
@@ -136,7 +136,7 @@ public class Project {
       Status status,
       int supervisorId,
       int assigneeId,
-      @Nullable LocalDate turnInDate,
+      @Nullable LocalDate finishingDate,
       Importance importance) {
     this.id = id;
     this.title = title;
@@ -145,7 +145,7 @@ public class Project {
     this.status = status;
     this.supervisorId = supervisorId;
     this.assigneeId = assigneeId;
-    this.turnInDate = turnInDate;
+    this.finishingDate = finishingDate;
     this.importance = importance;
   }
 
@@ -209,12 +209,12 @@ public class Project {
     return status;
   }
 
-  public Optional<LocalDate> getTurnInDate() {
-    return Optional.ofNullable(turnInDate);
+  public Optional<LocalDate> getFinishingDate() {
+    return Optional.ofNullable(finishingDate);
   }
 
-  public void setTurnInDate(@Nullable LocalDate turnInDate) {
-    this.turnInDate = turnInDate;
+  public void setFinishingDate(@Nullable LocalDate finishingDate) {
+    this.finishingDate = finishingDate;
   }
 
   public Importance getImportance() {

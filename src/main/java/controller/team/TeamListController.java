@@ -34,7 +34,8 @@ public class TeamListController implements CloseablePropertyChangeListener {
   Frame parentFrame;
   TeamListPanel panel;
 
-  private List<PropertyChangeObservable> propertyChangeObservables = List.of(teamManager);
+  private List<PropertyChangeObservable> propertyChangeObservables =
+      List.of(teamManager, userManager);
 
   public TeamListController(TeamListPanel panel, Frame frame) {
     this.panel = panel;
@@ -81,7 +82,8 @@ public class TeamListController implements CloseablePropertyChangeListener {
             .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())
         || propertyChangeEvent
             .getPropertyName()
-            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString())) {
+            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString())
+        || propertyChangeEvent.getPropertyName().equals(UserManager.UPDATE_ACCOUNT_PROPERTY)) {
       panel.updateTeams();
     }
   }

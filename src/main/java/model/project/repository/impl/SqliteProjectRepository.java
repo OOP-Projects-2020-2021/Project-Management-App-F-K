@@ -38,13 +38,13 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   // Save a new team.
   private static final String SAVE_PROJECT_STATEMENT =
       "INSERT INTO Project (Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusId, TurnInDate, ImportanceId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+          + "StatusId, FinishingDate, ImportanceId) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
   private PreparedStatement saveProjectSt;
 
   // Get project based on id.
   private static final String GET_PROJECT_BY_ID =
       "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusName, TurnInDate, ImportanceName "
+          + "StatusName, FinishingDate, ImportanceName "
           + "From Project p JOIN ProjectStatus st ON p"
           + ".StatusId = st.StatusId JOIN Importance i ON p.ImportanceId = i.ImportanceId WHERE "
           + "ProjectId = ?";
@@ -54,14 +54,14 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
   private static final String UPDATE_PROJECT =
       "UPDATE Project "
           + " SET Name = ?, TeamId = ?, Description = ?, Deadline = ?, AssigneeId = ?, "
-          + "SupervisorId = ?, StatusId = ?, TurnInDate = ?, ImportanceId = ?"
+          + "SupervisorId = ?, StatusId = ?, FinishingDate = ?, ImportanceId = ?"
           + "Where ProjectId = ?";
   private PreparedStatement updateProjectSt;
 
   // Get projects based on team and title.
   private static final String GET_PROJECT_BY_TEAM_TITLE_STATEMENT =
       "SELECT ProjectId, Name, TeamId, Description, Deadline, AssigneeId, SupervisorId, "
-          + "StatusName, TurnInDate, ImportanceName "
+          + "StatusName, FinishingDate, ImportanceName "
           + "From Project p JOIN ProjectStatus st ON p"
           + ".StatusId = st.StatusId JOIN Importance i ON p.ImportanceId = i.ImportanceId WHERE "
           + "Name = ? and TeamId = ? ";
@@ -109,8 +109,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     saveProjectSt.setInt(5, project.getAssigneeId());
     saveProjectSt.setInt(6, project.getSupervisorId());
     saveProjectSt.setInt(7, getProjectStatusId(project.getStatus()));
-    if (project.getTurnInDate().isPresent()) {
-      saveProjectSt.setString(8, project.getTurnInDate().get().toString());
+    if (project.getFinishingDate().isPresent()) {
+      saveProjectSt.setString(8, project.getFinishingDate().get().toString());
     } else {
       saveProjectSt.setNull(8, Types.NVARCHAR);
     }
@@ -161,8 +161,8 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     updateProjectSt.setInt(5, project.getAssigneeId());
     updateProjectSt.setInt(6, project.getSupervisorId());
     updateProjectSt.setInt(7, getProjectStatusId(project.getStatus()));
-    if (project.getTurnInDate().isPresent()) {
-      updateProjectSt.setString(8, project.getTurnInDate().get().toString());
+    if (project.getFinishingDate().isPresent()) {
+      updateProjectSt.setString(8, project.getFinishingDate().get().toString());
     } else {
       updateProjectSt.setNull(8, Types.NVARCHAR);
     }
@@ -293,15 +293,23 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     LocalDate deadline = LocalDate.parse(result.getString("Deadline"));
     int supervisorId = result.getInt("SupervisorId");
     int assigneeId = result.getInt("AssigneeId");
-    LocalDate turnInDate = null;
-    if (result.getString("TurnInDate") != null) {
-      turnInDate = LocalDate.parse(result.getString("TurnInDate"));
+    LocalDate finishingDate = null;
+    if (result.getString("FinishingDate") != null) {
+      finishingDate = LocalDate.parse(result.getString("finishingDate"));
     }
     Project.Status status = Project.Status.valueOf(result.getString("StatusName"));
     Project.Importance importance = Project.Importance.valueOf(result.getString("ImportanceName"));
     Project project =
         new Project(
-            id, title, teamId, deadline, status, supervisorId, assigneeId, turnInDate, importance);
+            id,
+            title,
+            teamId,
+            deadline,
+            status,
+            supervisorId,
+            assigneeId,
+            finishingDate,
+            importance);
     project.setDescription(description);
     return project;
   }

@@ -340,7 +340,7 @@ public class ProjectDetailsPanel extends JPanel implements CloseableComponent {
     enableEditFields(controller.enableEditing());
   }
 
-  public void updateStatusLabel() {
+  private void updateStatusLabel() {
     projectStatusLabel.setText(controller.getStatus());
   }
 

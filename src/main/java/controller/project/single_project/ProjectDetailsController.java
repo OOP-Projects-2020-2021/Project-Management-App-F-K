@@ -65,13 +65,11 @@ public class ProjectDetailsController extends ProjectController
   @Override
   public void propertyChange(PropertyChangeEvent evt) {
     if (evt.getPropertyName()
-        .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())) {
+            .equals(ProjectManager.ProjectChangeablePropertyName.UPDATE_PROJECT.toString())
+        || evt.getPropertyName()
+            .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       setProject();
       panel.updatePanel();
-    } else if (evt.getPropertyName()
-        .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
-      setProject();
-      panel.updateStatusLabel();
     } else if (evt.getPropertyName()
         .equals(ProjectManager.ProjectChangeablePropertyName.DELETE_PROJECT.toString())) {
       closeFrame();

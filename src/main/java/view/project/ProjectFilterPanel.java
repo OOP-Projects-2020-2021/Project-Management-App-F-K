@@ -45,7 +45,7 @@ public class ProjectFilterPanel extends JPanel implements CloseableComponent {
   private JButton listProjectsButton;
 
   private static final String statusName = "Project Status";
-  private static final String deadlineStatusName = "Turn-in Time";
+  private static final String deadlineStatusName = "Finishing Time";
 
   public ProjectFilterPanel(Integer teamId, ProjectListModel projectListModel) {
     this.controller = new ProjectFilterController(teamId, this, projectListModel);
