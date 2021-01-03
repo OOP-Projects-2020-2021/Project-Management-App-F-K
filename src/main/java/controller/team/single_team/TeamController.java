@@ -53,8 +53,7 @@ public class TeamController extends FrameController {
       int currentManagerId = teamManager.getTeam(teamId).getManagerId();
       managerAccess = currentUserId == currentManagerId;
     } catch (SQLException | InexistentDatabaseEntityException | InexistentTeamException e) {
-      ErrorDialogFactory.createErrorDialog(
-          e, frame, null);
+      ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
   }
 

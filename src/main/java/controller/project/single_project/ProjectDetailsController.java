@@ -159,10 +159,8 @@ public class ProjectDetailsController extends ProjectController
       projectManager.updateProject(
           project.getId(), title, assignee, supervisor, deadline, description, importance);
       displaySuccessfulSaveMessage();
-    } catch (InexistentDatabaseEntityException
-        | SQLException
-        | InexistentProjectException e) {
-      panel.updatePanel(); //reset original state
+    } catch (InexistentDatabaseEntityException | SQLException | InexistentProjectException e) {
+      panel.updatePanel(); // reset original state
       ErrorDialogFactory.createErrorDialog(
           e,
           null,
@@ -172,11 +170,10 @@ public class ProjectDetailsController extends ProjectController
         | InexistentUserException
         | UnregisteredMemberRoleException
         | InvalidDeadlineException e) {
-      panel.updatePanel(); //reset original state
-      ErrorDialogFactory.createErrorDialog(
-          e, null, null);
+      panel.updatePanel(); // reset original state
+      ErrorDialogFactory.createErrorDialog(e, null, null);
     } catch (DuplicateProjectNameException e) {
-      panel.updatePanel(); //reset original state
+      panel.updatePanel(); // reset original state
       ErrorDialogFactory.createErrorDialog(
           e, null, "The project with title\"" + project.getTitle() + "\" already exists");
     }
