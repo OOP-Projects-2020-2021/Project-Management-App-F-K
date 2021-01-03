@@ -54,7 +54,7 @@ public class TeamController extends FrameController {
       managerAccess = currentUserId == currentManagerId;
     } catch (SQLException | InexistentDatabaseEntityException | InexistentTeamException e) {
       ErrorDialogFactory.createErrorDialog(
-          e, frame, "The access to edit this team could not be granted.");
+          e, frame, null);
     }
   }
 

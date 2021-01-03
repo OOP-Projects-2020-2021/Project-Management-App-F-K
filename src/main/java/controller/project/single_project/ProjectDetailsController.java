@@ -161,8 +161,7 @@ public class ProjectDetailsController extends ProjectController
       displaySuccessfulSaveMessage();
     } catch (InexistentDatabaseEntityException
         | SQLException
-        | InexistentProjectException
-        | InvalidDeadlineException e) {
+        | InexistentProjectException e) {
       ErrorDialogFactory.createErrorDialog(
           e,
           null,
@@ -170,9 +169,10 @@ public class ProjectDetailsController extends ProjectController
     } catch (NoSignedInUserException
         | UnauthorisedOperationException
         | InexistentUserException
-        | UnregisteredMemberRoleException e) {
+        | UnregisteredMemberRoleException
+        | InvalidDeadlineException e) {
       ErrorDialogFactory.createErrorDialog(
-          e, null, "You don't have access to edit the project \"" + project.getTitle() + "\"");
+          e, null, null);
     } catch (DuplicateProjectNameException e) {
       ErrorDialogFactory.createErrorDialog(
           e, null, "The project with title\"" + project.getTitle() + "\" already exists");

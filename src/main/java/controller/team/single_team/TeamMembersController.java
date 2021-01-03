@@ -77,11 +77,10 @@ public class TeamMembersController extends TeamController
   public void addMember(String name) {
     try {
       teamManager.addMemberToTeam(teamId, name);
-    } catch (SQLException | InexistentTeamException databaseException) {
+    } catch (SQLException | InexistentTeamException | InexistentDatabaseEntityException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The member \"" + name + "\" could not be added to the team.");
     } catch (UnauthorisedOperationException
-        | InexistentDatabaseEntityException
         | NoSignedInUserException operationNotAllowedException) {
       ErrorDialogFactory.createErrorDialog(
           operationNotAllowedException,
