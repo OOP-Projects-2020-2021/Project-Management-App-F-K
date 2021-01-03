@@ -104,8 +104,8 @@ public class UserManager extends Manager {
       int id = currentUser.getId();
       currentUser = new User(id, username, password);
       userRepository.updateUser(currentUser);
-    } catch (NoSuchElementException | InexistentDatabaseEntityException noSuchElementException) {
-      throw new NoSignedInUserException();
+    } catch (InexistentDatabaseEntityException e) {
+      throw new SQLException(); //this can be handled as a database exception
     }
     support.firePropertyChange(UPDATE_ACCOUNT_PROPERTY, oldUser, currentUser);
   }
