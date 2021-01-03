@@ -128,16 +128,6 @@ public class ErrorDialogFactory {
 
   private static final String ILLEGAL_MEMBER_REMOVAL_TITLE = "Illegal member removal";
 
-  /**
-   * Messages to warn the user about attempting to delete a team, which still has
-   * assigned/supervised projects.
-   */
-  private static final String ILLEGAL_TEAM_REMOVAL_MESSAGE =
-      "The attempt to delete the team failed, \n"
-          + "because this team still has unfinished projects.";
-
-  private static final String ILLEGAL_TEAM_REMOVAL_TITLE = "Illegal team removal";
-
   /** Messages to warn the user about attempting to set an invalid deadline to a project. */
   private static final String INVALID_DEADLINE_MESSAGE =
       "The selected deadline for this project is invalid, because it is outdated.\n"
@@ -195,9 +185,6 @@ public class ErrorDialogFactory {
     }
     if (exception instanceof IllegalMemberRemovalException) {
       displayIllegalMemberRemovalErrorDialog(frame, message);
-    }
-    if (exception instanceof IllegalTeamRemovalException) {
-      displayIllegalTeamRemovalErrorDialog(frame, message);
     }
     if (exception instanceof InvalidDeadlineException) {
       displayInvalidDeadlineErrorDialog(frame, message);
@@ -343,14 +330,6 @@ public class ErrorDialogFactory {
         frame,
         ILLEGAL_MEMBER_REMOVAL_MESSAGE + "\n" + message,
         ILLEGAL_MEMBER_REMOVAL_TITLE,
-        JOptionPane.ERROR_MESSAGE);
-  }
-  /** Displays an error message to warn the user that removing that team is illegal. */
-  private static void displayIllegalTeamRemovalErrorDialog(Frame frame, String message) {
-    JOptionPane.showMessageDialog(
-        frame,
-        ILLEGAL_TEAM_REMOVAL_MESSAGE + "\n" + message,
-        ILLEGAL_TEAM_REMOVAL_TITLE,
         JOptionPane.ERROR_MESSAGE);
   }
   /** Displays an error message to inform the user that the project status change is illegal. */
