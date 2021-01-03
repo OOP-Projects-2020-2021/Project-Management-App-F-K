@@ -144,6 +144,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
   public void leaveTeam() {
     try {
       if (confirmLeavingTeam() == JOptionPane.YES_OPTION) {
+        projectManager.guaranteeNoUnfinishedAssignedOrSupervisedProjects(userManager.getCurrentUser().get().getUsername(), teamId);
         teamManager.leaveTeam(teamId);
         affirmLeavingTeam();
         closeFrame();
@@ -153,7 +154,7 @@ public class TeamSettingsController extends TeamController implements PropertyCh
         | InexistentTeamException databaseException) {
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "You could not be removed from the team.");
-    } catch (NoSignedInUserException userException) {
+    } catch (NoSignedInUserException | IllegalMemberRemovalException | InexistentUserException userException) {
       ErrorDialogFactory.createErrorDialog(userException, frame, null);
     } catch (UnregisteredMemberRemovalException unregisteredMemberRemovalException) {
       ErrorDialogFactory.createErrorDialog(
