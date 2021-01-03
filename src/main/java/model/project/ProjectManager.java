@@ -145,7 +145,7 @@ public class ProjectManager extends Manager {
       throw new DuplicateProjectNameException(newProjectTitle);
     }
     // check that the new deadline of the project is valid
-    if (isOutdatedDate(newDeadline)) {
+    if (!project.getDeadline().equals(newDeadline) && isOutdatedDate(newDeadline)) {
       throw new InvalidDeadlineException();
     }
     // update project
