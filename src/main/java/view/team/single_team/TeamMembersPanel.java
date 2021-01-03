@@ -2,6 +2,7 @@ package view.team.single_team;
 
 import controller.team.single_team.TeamMembersController;
 import model.user.User;
+import view.CloseableComponent;
 import view.UIFactory;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import java.awt.event.ActionListener;
  *
  * @author Beata Keresztes
  */
-public class TeamMembersPanel extends JPanel implements ActionListener {
+public class TeamMembersPanel extends JPanel implements ActionListener, CloseableComponent {
 
   private JLabel addMemberLabel;
   private JButton addMemberButton;
@@ -161,5 +162,10 @@ public class TeamMembersPanel extends JPanel implements ActionListener {
       String memberName = membersList.getSelectedValue();
       controller.removeMember(memberName);
     }
+  }
+
+  @Override
+  public void onClose() {
+    controller.close();
   }
 }

@@ -1,10 +1,13 @@
 package view.main;
 
 import controller.MainMenuController;
+import view.CloseableComponent;
 import view.team.TeamListPanel;
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is the main frame of the application, which provides access to the main menu and displays
@@ -14,8 +17,12 @@ import java.awt.event.WindowEvent;
  */
 public class MainFrame extends JFrame {
 
+  List<CloseableComponent> closeableComponents = new ArrayList<>();
+
   public MainFrame() {
-    this.add(new JScrollPane(new TeamListPanel(this)));
+    TeamListPanel teamListPanel = new TeamListPanel(this);
+    closeableComponents.add(teamListPanel);
+    this.add(new JScrollPane(teamListPanel));
     this.setTitle("Project Management App");
     this.setJMenuBar(new MainMenu(this));
     this.setSize(600, 400);
@@ -37,6 +44,9 @@ public class MainFrame extends JFrame {
     public void windowClosing(WindowEvent e) {
       if (!getController().getLogOutFlag()) {
         System.exit(0);
+      }
+      for (CloseableComponent closeableComponent : closeableComponents) {
+        closeableComponent.onClose();
       }
     }
   }

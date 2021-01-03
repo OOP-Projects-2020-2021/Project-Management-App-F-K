@@ -1,6 +1,8 @@
 package controller.team.single_team;
 
+import controller.CloseablePropertyChangeListener;
 import model.InexistentDatabaseEntityException;
+import model.PropertyChangeObservable;
 import model.UnauthorisedOperationException;
 import model.project.ProjectManager;
 import model.team.Team;
@@ -13,8 +15,8 @@ import view.team.single_team.TeamHomePanel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -24,11 +26,13 @@ import java.util.Objects;
  *
  * @author Beata Keresztes
  */
-public class TeamSettingsController extends TeamController implements PropertyChangeListener {
+public class TeamSettingsController extends TeamController
+    implements CloseablePropertyChangeListener {
 
   private Team currentTeam;
   private TeamHomePanel homePanel;
   private ProjectManager projectManager;
+  private List<PropertyChangeObservable> propertyChangeObservables;
 
   /** Messages to confirm leaving the team. */
   private static final String CONFIRM_LEAVING_TEAM_MESSAGE =
@@ -52,7 +56,8 @@ public class TeamSettingsController extends TeamController implements PropertyCh
     super(frame, teamId);
     this.homePanel = homePanel;
     projectManager = ProjectManager.getInstance();
-    teamManager.addPropertyChangeListener(this);
+    propertyChangeObservables = List.of(teamManager);
+    this.setObservables();
     try {
       currentTeam = teamManager.getTeam(teamId);
     } catch (SQLException | InexistentTeamException e) {
@@ -251,5 +256,10 @@ public class TeamSettingsController extends TeamController implements PropertyCh
         | InexistentUserException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
+  }
+
+  @Override
+  public List<PropertyChangeObservable> getPropertyChangeObservables() {
+    return Collections.unmodifiableList(propertyChangeObservables);
   }
 }

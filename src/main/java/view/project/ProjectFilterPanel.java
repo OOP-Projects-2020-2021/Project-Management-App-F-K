@@ -3,6 +3,7 @@ package view.project;
 import controller.project.ProjectFilterController;
 import model.project.Project;
 import model.user.User;
+import view.CloseableComponent;
 import view.UIFactory;
 
 import javax.swing.*;
@@ -23,7 +24,7 @@ import java.util.List;
  *
  * @author Beata Keresztes, Bori Fazakas
  */
-public class ProjectFilterPanel extends JPanel {
+public class ProjectFilterPanel extends JPanel implements CloseableComponent {
 
   private JPanel privilegeFilterButtonsPanel;
   private JCheckBox assignedToUserButton;
@@ -314,5 +315,10 @@ public class ProjectFilterPanel extends JPanel {
         "Please select at least one of the option for " + statusName,
         "Error in query",
         JOptionPane.ERROR_MESSAGE);
+  }
+
+  @Override
+  public void onClose() {
+    controller.close();
   }
 }

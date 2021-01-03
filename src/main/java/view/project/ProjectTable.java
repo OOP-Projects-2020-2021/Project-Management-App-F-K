@@ -2,6 +2,7 @@ package view.project;
 
 import controller.project.ProjectTableController;
 import model.project.Project;
+import view.CloseableComponent;
 import view.UIFactory;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,7 +19,7 @@ import java.util.List;
  *
  * @author Beata Keresztes
  */
-public class ProjectTable extends JTable {
+public class ProjectTable extends JTable implements CloseableComponent {
 
   private DefaultTableModel tableModel;
   private ProjectTableController controller;
@@ -113,5 +114,10 @@ public class ProjectTable extends JTable {
       }
       return editor;
     }
+  }
+
+  @Override
+  public void onClose() {
+    controller.close();
   }
 }

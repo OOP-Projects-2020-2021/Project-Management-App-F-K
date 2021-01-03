@@ -1,5 +1,7 @@
 package controller.project;
 
+import controller.CloseablePropertyChangeListener;
+import model.PropertyChangeObservable;
 import model.project.Project;
 import view.project.ProjectListModel;
 import view.project.ProjectTable;
@@ -7,7 +9,8 @@ import view.project.single_project.ProjectFrame;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * ProjectTableController manages the project table, and it is responsible for displaying and
@@ -19,16 +22,17 @@ import java.beans.PropertyChangeListener;
  *
  * @author Beata Keresztes, Bori Fazakas
  */
-public class ProjectTableController implements PropertyChangeListener {
+public class ProjectTableController implements CloseablePropertyChangeListener {
 
   private ProjectListModel projectListModel;
   private ProjectTable projectTable;
+  private List<PropertyChangeObservable> propertyChangeObservables;
 
   public ProjectTableController(ProjectTable projectTable, ProjectListModel projectListModel) {
     this.projectListModel = projectListModel;
     this.projectTable = projectTable;
-
-    projectListModel.addPropertyChangeListener(this);
+    propertyChangeObservables = List.of(projectListModel);
+    this.setObservables();
   }
 
   public void initializeTableModel() {
@@ -57,5 +61,10 @@ public class ProjectTableController implements PropertyChangeListener {
     if (evt.getPropertyName().equals(ProjectListModel.PROJECT_LIST)) {
       updateTableModel();
     }
+  }
+
+  @Override
+  public List<PropertyChangeObservable> getPropertyChangeObservables() {
+    return Collections.unmodifiableList(propertyChangeObservables);
   }
 }
