@@ -72,7 +72,7 @@ public class SqliteProjectStatementCache {
   // respect to deadline. The extra wildcards are responsible for making some attributes optional.
   private static final String GET_PROJECTS_OF_TEAM =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
-          + "AssigneeId, SupervisorId, StatusName, TurnInDate, ImportanceName From Project p "
+          + "AssigneeId, SupervisorId, StatusName, FinishingDate, ImportanceName From Project p "
           + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p"
           + ".ImportanceId = i.ImportanceId "
           + "WHERE p.TeamId = ? AND "
@@ -84,15 +84,15 @@ public class SqliteProjectStatementCache {
           + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
           + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
           + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
-          + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
-          + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?)) "; // FINISHED_LATE
+          + " ((p.StatusId = 4 AND p.FinishingDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
+          + " ((p.StatusId = 4 AND p.FinishingDate > p.Deadline) AND ?)) "; // FINISHED_LATE
   private Map<OrderParameters, PreparedStatement> preparedGetProjectsOfTeamStataments;
 
   // Get projects possibly with a given assignee, supervisor, status and status with respect to
   // deadline. The extra wildcards are responsible for making some attributes optional.
   private static final String GET_PROJECTS =
       "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
-          + "AssigneeId, SupervisorId, StatusName, TurnInDate, ImportanceName From Project p "
+          + "AssigneeId, SupervisorId, StatusName, FinishingDate, ImportanceName From Project p "
           + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p"
           + ".ImportanceId = i.ImportanceId "
           + "WHERE (p.SupervisorId = ? OR ?) AND "
@@ -103,8 +103,8 @@ public class SqliteProjectStatementCache {
           + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
           + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
           + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
-          + " ((p.StatusId = 4 AND p.TurnInDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
-          + " ((p.StatusId = 4 AND p.TurnInDate > p.Deadline) AND ?))"; // FINISHED_LATE
+          + " ((p.StatusId = 4 AND p.FinishingDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
+          + " ((p.StatusId = 4 AND p.FinishingDate > p.Deadline) AND ?))"; // FINISHED_LATE
   private Map<OrderParameters, PreparedStatement> preparedGetProjectsStatements;
 
   /**

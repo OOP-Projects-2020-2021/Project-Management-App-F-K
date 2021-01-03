@@ -42,32 +42,6 @@ public class ProjectManager extends Manager {
     DELETE_PROJECT // event is fired when a project is deleted
   }
 
-  private boolean isEmptyText(String text) {
-    return text == null || text.isEmpty();
-  }
-
-  /**
-   * Checks if all the required (compulsory) data was introduced to create a new project.
-   *
-   * @param title of the project
-   * @param assignee to whom the project is assigned
-   * @param deadline until which the project can be turned in
-   * @return true if all some fields are left uncompleted, if all the necessary data has been
-   *     introduced it returns false
-   */
-  private boolean isMissingProjectData(String title, String assignee, LocalDate deadline) {
-    return isEmptyText(title) || isEmptyText(assignee) || isEmptyText(deadline.toString());
-  }
-
-  /**
-   * Checks if the given date is outdated
-   *
-   * @param date the selected date
-   * @return true if the date is before the current date
-   */
-  private boolean isOutdatedDate(LocalDate date) {
-    return date.isBefore(LocalDate.now());
-  }
   /**
    * Creates a new project with the specified data and saves it in the database. The supervisor of
    * the project will be automatically the current user. There should not be another project with
@@ -319,7 +293,6 @@ public class ProjectManager extends Manager {
         && project.getStatus() != Project.Status.TURNED_IN) {
       if (userIsAssignee(currentUser, project)) {
         project.setStatus(Project.Status.TURNED_IN);
-        project.setTurnInDate(LocalDate.now());
         projectRepository.updateProject(project);
       } else {
         throw new UnauthorisedOperationException(
@@ -356,7 +329,6 @@ public class ProjectManager extends Manager {
       if (userIsAssignee(currentUser, project)) {
         if (newStatus == Project.Status.TO_DO || newStatus == Project.Status.IN_PROGRESS) {
           project.setStatus(newStatus);
-          project.setTurnInDate(null);
           projectRepository.updateProject(project);
         } else {
           throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
@@ -393,6 +365,7 @@ public class ProjectManager extends Manager {
     if (project.getStatus() == Project.Status.TURNED_IN) {
       if (userIsSupervisor(currentUser, project)) {
         project.setStatus(Project.Status.FINISHED);
+        project.setFinishingDate(LocalDate.now());
         projectRepository.updateProject(project);
       } else {
         throw new UnauthorisedOperationException(
@@ -429,7 +402,6 @@ public class ProjectManager extends Manager {
       if (userIsSupervisor(currentUser, project)) {
         if (newStatus != Project.Status.FINISHED && newStatus != Project.Status.TURNED_IN) {
           project.setStatus(newStatus);
-          project.setTurnInDate(null);
           projectRepository.updateProject(project);
         } else {
           throw new IllegalProjectStatusChangeException(project.getStatus(), newStatus);
@@ -648,5 +620,32 @@ public class ProjectManager extends Manager {
     if (!unFinishedAssignedProjects.isEmpty() || !unFinishedSupervisedProjects.isEmpty()) {
       throw new IllegalMemberRemovalException(member);
     }
+  }
+
+  private boolean isEmptyText(String text) {
+    return text == null || text.isEmpty();
+  }
+
+  /**
+   * Checks if all the required (compulsory) data was introduced to create a new project.
+   *
+   * @param title of the project
+   * @param assignee to whom the project is assigned
+   * @param deadline until which the project can be turned in
+   * @return true if all some fields are left uncompleted, if all the necessary data has been
+   *     introduced it returns false
+   */
+  private boolean isMissingProjectData(String title, String assignee, LocalDate deadline) {
+    return isEmptyText(title) || isEmptyText(assignee) || isEmptyText(deadline.toString());
+  }
+
+  /**
+   * Checks if the given date is outdated
+   *
+   * @param date the selected date
+   * @return true if the date is before the current date
+   */
+  private boolean isOutdatedDate(LocalDate date) {
+    return date.isBefore(LocalDate.now());
   }
 }

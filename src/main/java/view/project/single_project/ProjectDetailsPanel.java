@@ -338,7 +338,7 @@ public class ProjectDetailsPanel extends JPanel {
     enableEditFields(controller.enableEditing());
   }
 
-  public void updateStatusLabel() {
+  private void updateStatusLabel() {
     projectStatusLabel.setText(controller.getStatus());
   }
 
