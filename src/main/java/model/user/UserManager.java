@@ -8,7 +8,6 @@ import model.user.exceptions.NoSignedInUserException;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /** Singleton class UserManager. */
@@ -105,7 +104,7 @@ public class UserManager extends Manager {
       currentUser = new User(id, username, password);
       userRepository.updateUser(currentUser);
     } catch (InexistentDatabaseEntityException e) {
-      throw new SQLException(); //this can be handled as a database exception
+      throw new SQLException(); // this can be handled as a database exception
     }
     support.firePropertyChange(UPDATE_ACCOUNT_PROPERTY, oldUser, currentUser);
   }
