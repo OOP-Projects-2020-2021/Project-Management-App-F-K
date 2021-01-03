@@ -1,13 +1,13 @@
 package model.user.repository.impl;
 
 import model.InexistentDatabaseEntityException;
-import model.database.Repository;
+import model.database.SqliteDatabaseConnectionFactory;
 import model.user.repository.UserRepository;
 import model.user.User;
 import org.jetbrains.annotations.Nullable;
 import java.sql.*;
 
-public class SqliteUserRepository extends Repository implements UserRepository {
+public class SqliteUserRepository implements UserRepository {
   protected static SqliteUserRepository instance;
 
   private SqliteUserRepository() {}
@@ -20,12 +20,6 @@ public class SqliteUserRepository extends Repository implements UserRepository {
     return instance;
   }
 
-  private PreparedStatement saveUserStatement;
-  private PreparedStatement getUserIdStatement;
-  private PreparedStatement getUserByIdStatement;
-  private PreparedStatement getUserByUsernameStatement;
-  private PreparedStatement updateUserStatement;
-
   private static final String SAVE_USER_STATEMENT =
       "INSERT INTO User (UserName,Password) VALUES (?,?)";
   private static final String GET_USER_ID_STATEMENT =
@@ -36,55 +30,61 @@ public class SqliteUserRepository extends Repository implements UserRepository {
   private static final String UPDATE_USER_STATEMENT =
       "UPDATE User SET UserName = ?, Password = ? WHERE UserId = ?;";
 
-  protected void prepareStatements() throws SQLException {
-    saveUserStatement = c.prepareStatement(SAVE_USER_STATEMENT);
-    getUserIdStatement = c.prepareStatement(GET_USER_ID_STATEMENT);
-    getUserByIdStatement = c.prepareStatement(GET_USER_BY_ID_STATEMENT);
-    getUserByUsernameStatement = c.prepareStatement(GET_USER_BY_USERNAME_STATEMENT);
-    updateUserStatement = c.prepareStatement(UPDATE_USER_STATEMENT);
-  }
-
   /** Saves the user in the database. */
   public void saveUser(User user) throws SQLException {
-    saveUserStatement.setString(1, user.getUsername());
-    saveUserStatement.setString(2, user.getPassword());
-    saveUserStatement.execute();
-    // check if the user was saved
-    User savedUser = getUserByUsername(user.getUsername());
-    if (savedUser == null) {
-      throw new SQLException("User could not be saved.");
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement saveUserStatement = c.prepareStatement(SAVE_USER_STATEMENT); ) {
+      saveUserStatement.setString(1, user.getUsername());
+      saveUserStatement.setString(2, user.getPassword());
+      saveUserStatement.execute();
+      // check if the user was saved
+      User savedUser = getUserByUsername(user.getUsername());
+      if (savedUser == null) {
+        throw new SQLException("User could not be saved.");
+      }
     }
   }
   /** Updates information about an existing user. */
   public void updateUser(User user) throws SQLException, InexistentDatabaseEntityException {
-    updateUserStatement.setString(1, user.getUsername());
-    updateUserStatement.setString(2, user.getPassword());
-    updateUserStatement.setInt(3, user.getId());
-    updateUserStatement.execute();
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement updateUserStatement = c.prepareStatement(UPDATE_USER_STATEMENT); ) {
+      updateUserStatement.setString(1, user.getUsername());
+      updateUserStatement.setString(2, user.getPassword());
+      updateUserStatement.setInt(3, user.getId());
+      updateUserStatement.execute();
+    }
   }
 
   /** Get the user's id based on the username and password, used for validating the sign-in. */
   public int getUserId(String username, String password) throws SQLException {
-    getUserIdStatement.setString(1, username);
-    getUserIdStatement.setString(2, password);
-    ResultSet result = getUserIdStatement.executeQuery();
-    if (result.next()) {
-      return result.getInt("UserId");
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement getUserIdStatement = c.prepareStatement(GET_USER_ID_STATEMENT); ) {
+      getUserIdStatement.setString(1, username);
+      getUserIdStatement.setString(2, password);
+      try (ResultSet result = getUserIdStatement.executeQuery()) {
+        if (result.next()) {
+          return result.getInt("UserId");
+        }
+        return -1;
+      }
     }
-    return -1;
   }
 
   /** Access the user's data based on the id of the user. */
   @Nullable
   public User getUserById(int id) throws SQLException {
-    getUserByIdStatement.setInt(1, id);
-    ResultSet result = getUserByIdStatement.executeQuery();
-    if (result.next()) {
-      String username = result.getString("UserName");
-      String password = result.getString("Password");
-      return new User(id, username, password);
-    } else {
-      return null;
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement getUserByIdStatement = c.prepareStatement(GET_USER_BY_ID_STATEMENT); ) {
+      getUserByIdStatement.setInt(1, id);
+      try (ResultSet result = getUserByIdStatement.executeQuery()) {
+        if (result.next()) {
+          String username = result.getString("UserName");
+          String password = result.getString("Password");
+          return new User(id, username, password);
+        } else {
+          return null;
+        }
+      }
     }
   }
 
@@ -94,14 +94,19 @@ public class SqliteUserRepository extends Repository implements UserRepository {
    */
   @Nullable
   public User getUserByUsername(String username) throws SQLException {
-    getUserByUsernameStatement.setString(1, username);
-    ResultSet result = getUserByUsernameStatement.executeQuery();
-    if (result.next()) {
-      int id = result.getInt("UserId");
-      String password = result.getString("Password");
-      return new User(id, username, password);
-    } else {
-      return null;
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement getUserByUsernameStatement =
+            c.prepareStatement(GET_USER_BY_USERNAME_STATEMENT); ) {
+      getUserByUsernameStatement.setString(1, username);
+      try (ResultSet result = getUserByUsernameStatement.executeQuery()) {
+        if (result.next()) {
+          int id = result.getInt("UserId");
+          String password = result.getString("Password");
+          return new User(id, username, password);
+        } else {
+          return null;
+        }
+      }
     }
   }
 }

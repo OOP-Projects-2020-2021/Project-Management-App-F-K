@@ -2,8 +2,9 @@ package model.comment.repository.impl;
 
 import model.comment.Comment;
 import model.comment.repository.CommentRepository;
-import model.database.Repository;
+import model.database.SqliteDatabaseConnectionFactory;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,7 +18,7 @@ import java.util.List;
  *
  * @author Bori Fazakas
  */
-public class SqliteCommentRepository extends Repository implements CommentRepository {
+public class SqliteCommentRepository implements CommentRepository {
   protected static SqliteCommentRepository instance;
 
   private SqliteCommentRepository() {}
@@ -33,49 +34,51 @@ public class SqliteCommentRepository extends Repository implements CommentReposi
   // Save a new comment.
   private static final String SAVE_COMMENT_STATEMENT =
       "INSERT INTO Comment (CommentText, ProjectId, SenderId, DateTime) VALUES (?, ?, ?, ?)";
-  private PreparedStatement saveCommentSt;
 
   // Get comments of a project.
   private static final String GET_COMMENTS_OF_PROJECT_STATEMENT =
       "Select * FROM Comment WHERE projectId = ?";
-  private PreparedStatement getCommentsOfProjectSt;
 
   // Delete all comments of a project.
   private static final String DELETE_COMMENTS_OF_PROJECT_STATEMENT =
       "DELETE FROM Comment WHERE projectId = ?";
-  private PreparedStatement deleteCommentsOfProjectSt;
-
-  @Override
-  protected void prepareStatements() throws SQLException {
-    saveCommentSt = c.prepareStatement(SAVE_COMMENT_STATEMENT);
-    getCommentsOfProjectSt = c.prepareStatement(GET_COMMENTS_OF_PROJECT_STATEMENT);
-    deleteCommentsOfProjectSt = c.prepareStatement(DELETE_COMMENTS_OF_PROJECT_STATEMENT);
-  }
 
   @Override
   public void saveComment(Comment.SavableComment comment) throws SQLException {
-    saveCommentSt.setString(1, comment.getText());
-    saveCommentSt.setInt(2, comment.getProjectId());
-    saveCommentSt.setInt(3, comment.getSenderId());
-    saveCommentSt.setString(4, comment.getDateTime().toString());
-    saveCommentSt.execute();
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement saveCommentSt = c.prepareStatement(SAVE_COMMENT_STATEMENT)) {
+      saveCommentSt.setString(1, comment.getText());
+      saveCommentSt.setInt(2, comment.getProjectId());
+      saveCommentSt.setInt(3, comment.getSenderId());
+      saveCommentSt.setString(4, comment.getDateTime().toString());
+      saveCommentSt.executeUpdate();
+    }
   }
 
   @Override
   public List<Comment> getCommentsOfProject(int projectId) throws SQLException {
-    getCommentsOfProjectSt.setInt(1, projectId);
-    ResultSet result = getCommentsOfProjectSt.executeQuery();
-    List<Comment> commentsOfProject = new ArrayList<>();
-    while (result.next()) {
-      commentsOfProject.add(getCommentFromResult(result));
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement getCommentsOfProjectSt =
+            c.prepareStatement(GET_COMMENTS_OF_PROJECT_STATEMENT)) {
+      getCommentsOfProjectSt.setInt(1, projectId);
+      try (ResultSet result = getCommentsOfProjectSt.executeQuery()) {
+        List<Comment> commentsOfProject = new ArrayList<>();
+        while (result.next()) {
+          commentsOfProject.add(getCommentFromResult(result));
+        }
+        return commentsOfProject;
+      }
     }
-    return commentsOfProject;
   }
 
   @Override
   public void deleteAllCommentsOfProject(int projectId) throws SQLException {
-    deleteCommentsOfProjectSt.setInt(1, projectId);
-    deleteCommentsOfProjectSt.execute();
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement deleteCommentsOfProjectSt =
+            c.prepareStatement(DELETE_COMMENTS_OF_PROJECT_STATEMENT)) {
+      deleteCommentsOfProjectSt.setInt(1, projectId);
+      deleteCommentsOfProjectSt.executeUpdate();
+    }
   }
 
   private static Comment getCommentFromResult(ResultSet result) throws SQLException {

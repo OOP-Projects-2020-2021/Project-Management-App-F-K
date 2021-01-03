@@ -12,22 +12,16 @@ import java.sql.SQLException;
  * @author Bori Fazakas
  */
 public class SqliteDatabaseConnectionFactory {
-  private static Connection c;
 
-  private static void connect() {
+  public static Connection getConnection() {
     try {
       Class.forName("org.sqlite.JDBC");
-      c = DriverManager.getConnection("jdbc:sqlite:project_management_app" + ".db?foreign_keys=on");
+      return DriverManager.getConnection(
+          "jdbc:sqlite:project_management_app" + ".db" + "?foreign_keys=on");
     } catch (ClassNotFoundException | SQLException e) {
       e.printStackTrace();
       System.exit(1);
     }
-  }
-
-  public static Connection getConnection() {
-    if (c == null) {
-      connect();
-    }
-    return c;
+    return null;
   }
 }
