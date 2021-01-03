@@ -91,6 +91,11 @@ public class SignInFrame extends JFrame {
     this.pack();
   }
 
+  public void clearTextFields() {
+    usernameTextField.setText("");
+    passwordField.setText("");
+  }
+
   private class ButtonListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent actionEvent) {
@@ -98,14 +103,7 @@ public class SignInFrame extends JFrame {
       if (source == signInButton) {
         String username = usernameTextField.getText();
         String password = String.valueOf(passwordField.getPassword());
-        if (signInController.validateSignIn(username, password)) {
-          signInController.enableSigningIn();
-        } else {
-          signInController.displayInvalidSignInDialog();
-          // clear fields and let the user try again
-          usernameTextField.setText("");
-          passwordField.setText("");
-        }
+        signInController.trySignIn(username, password);
       } else if (source == createAccountButton) {
         signInController.enableSigningUp();
       }
