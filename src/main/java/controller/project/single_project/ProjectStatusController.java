@@ -85,9 +85,8 @@ public class ProjectStatusController extends ProjectController implements Proper
   public void turnIn() {
     try {
       projectManager.turnInProject(getProject().getId());
-    } catch (SQLException | InexistentDatabaseEntityException | InexistentProjectException e) {
-      Exception exception = new SQLException();
-      ErrorDialogFactory.createErrorDialog(exception, frame, null);
+    } catch (SQLException | InexistentDatabaseEntityException | InexistentProjectException | NoSignedInUserException | UnauthorisedOperationException e) {
+      ErrorDialogFactory.createErrorDialog(e, frame, null);
     } catch (IllegalProjectStatusChangeException e) {
       ErrorDialogFactory.createErrorDialog(
           e,
@@ -95,8 +94,6 @@ public class ProjectStatusController extends ProjectController implements Proper
           "You can't mark a project with status "
               + getProject().getStatus().toString()
               + " as 'Turned In'");
-    } catch (NoSignedInUserException | UnauthorisedOperationException e) {
-      ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
   }
 
