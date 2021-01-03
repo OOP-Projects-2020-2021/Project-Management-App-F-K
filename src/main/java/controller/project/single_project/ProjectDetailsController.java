@@ -67,6 +67,7 @@ public class ProjectDetailsController extends ProjectController implements Prope
     } else if (evt.getPropertyName()
         .equals(ProjectManager.ProjectChangeablePropertyName.SET_PROJECT_STATUS.toString())) {
       setProject();
+      panel.updatePanel();
       panel.updateStatusLabel();
     } else if (evt.getPropertyName()
         .equals(ProjectManager.ProjectChangeablePropertyName.DELETE_PROJECT.toString())) {
