@@ -65,12 +65,11 @@ public class AccountSettingsController extends FrameController {
    * @return boolean = true if changes to the account could be saved
    */
   public boolean saveAccountData(String username, String password) {
-    // todo restore the old data if the update failed
     try {
       userManager.updateUser(username, password);
       return true;
-    } catch (SQLException sqlException) {
-      ErrorDialogFactory.createErrorDialog(sqlException, frame, null);
+    } catch (SQLException | DuplicateUsernameException | EmptyFieldsException e) {
+      ErrorDialogFactory.createErrorDialog(e, frame, null);
     } catch (NoSignedInUserException e) {
       displayFailedUpdateDialog();
     }

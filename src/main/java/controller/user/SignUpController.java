@@ -41,7 +41,7 @@ public class SignUpController extends FrameController {
     try {
       userManager.signUp(username, password);
       return true;
-    } catch (DuplicateUsernameException | SQLException | EmptyFieldsException e) {
+    } catch (SQLException | EmptyFieldsException | DuplicateUsernameException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
     return false;

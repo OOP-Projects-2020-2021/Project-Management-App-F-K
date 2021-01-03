@@ -28,6 +28,8 @@ public class UserManager extends Manager {
     return instance;
   }
 
+  public static final String UPDATE_ACCOUNT_PROPERTY = "Updated account data";
+
   public Optional<User> getCurrentUser() {
     return Optional.ofNullable(currentUser);
   }
@@ -62,10 +64,9 @@ public class UserManager extends Manager {
     User existingUser = userRepository.getUserByUsername(username);
     if (existingUser != null) {
       throw new DuplicateUsernameException(username);
-    } else {
-      User user = new User.SavableUser(username, password);
-      userRepository.saveUser(user);
     }
+    User user = new User.SavableUser(username, password);
+    userRepository.saveUser(user);
   }
 
   /**
@@ -82,10 +83,8 @@ public class UserManager extends Manager {
   public boolean signIn(String username, String password)
       throws SQLException, EmptyFieldsException {
     if (isMissingCredentials(username, password)) throw new EmptyFieldsException();
-    else {
-      currentUser = userRepository.getUserByUsername(username);
-      return (currentUser != null && currentUser.getPassword().equals(password));
-    }
+    currentUser = userRepository.getUserByUsername(username);
+    return (currentUser != null && currentUser.getPassword().equals(password));
   }
 
   /**
@@ -107,14 +106,21 @@ public class UserManager extends Manager {
    * @param password = new password
    */
   public void updateUser(String username, String password)
-      throws SQLException, NoSignedInUserException {
+      throws SQLException, NoSignedInUserException,DuplicateUsernameException,EmptyFieldsException {
+    User oldUser = getMandatoryCurrentUser();
     try {
+      User existingUser = userRepository.getUserByUsername(username);
+      if (existingUser != null) {
+        throw new DuplicateUsernameException(username);
+      }
+      if (isMissingCredentials(username, password)) throw new EmptyFieldsException();
       int id = currentUser.getId();
       currentUser = new User(id, username, password);
       userRepository.updateUser(currentUser);
     } catch (NoSuchElementException | InexistentDatabaseEntityException noSuchElementException) {
       throw new NoSignedInUserException();
     }
+    support.firePropertyChange(UPDATE_ACCOUNT_PROPERTY,oldUser,currentUser);
   }
 
   /**

@@ -36,6 +36,7 @@ public class TeamListController implements PropertyChangeListener {
     this.panel = panel;
     this.parentFrame = frame;
     teamManager.addPropertyChangeListener(this);
+    userManager.addPropertyChangeListener(this);
   }
 
   public List<TeamViewModel> getUsersTeams() {
@@ -77,7 +78,10 @@ public class TeamListController implements PropertyChangeListener {
             .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_MANAGER.toString())
         || propertyChangeEvent
             .getPropertyName()
-            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString())) {
+            .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString())
+        || propertyChangeEvent
+            .getPropertyName()
+            .equals(UserManager.UPDATE_ACCOUNT_PROPERTY)) {
       panel.updateTeams();
     }
   }
