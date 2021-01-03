@@ -32,10 +32,8 @@ public class SqliteUserRepository implements UserRepository {
 
   /** Saves the user in the database. */
   public void saveUser(User user) throws SQLException {
-    try (
-            Connection c = SqliteDatabaseConnectionFactory.getConnection();
-            PreparedStatement saveUserStatement = c.prepareStatement(SAVE_USER_STATEMENT);
-    ) {
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement saveUserStatement = c.prepareStatement(SAVE_USER_STATEMENT); ) {
       saveUserStatement.setString(1, user.getUsername());
       saveUserStatement.setString(2, user.getPassword());
       saveUserStatement.execute();
@@ -48,10 +46,8 @@ public class SqliteUserRepository implements UserRepository {
   }
   /** Updates information about an existing user. */
   public void updateUser(User user) throws SQLException, InexistentDatabaseEntityException {
-    try (
-            Connection c= SqliteDatabaseConnectionFactory.getConnection();
-            PreparedStatement updateUserStatement = c.prepareStatement(UPDATE_USER_STATEMENT);
-            ) {
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement updateUserStatement = c.prepareStatement(UPDATE_USER_STATEMENT); ) {
       updateUserStatement.setString(1, user.getUsername());
       updateUserStatement.setString(2, user.getPassword());
       updateUserStatement.setInt(3, user.getId());
@@ -61,10 +57,8 @@ public class SqliteUserRepository implements UserRepository {
 
   /** Get the user's id based on the username and password, used for validating the sign-in. */
   public int getUserId(String username, String password) throws SQLException {
-    try (
-            Connection c= SqliteDatabaseConnectionFactory.getConnection();
-            PreparedStatement getUserIdStatement = c.prepareStatement(GET_USER_ID_STATEMENT);
-            ) {
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement getUserIdStatement = c.prepareStatement(GET_USER_ID_STATEMENT); ) {
       getUserIdStatement.setString(1, username);
       getUserIdStatement.setString(2, password);
       try (ResultSet result = getUserIdStatement.executeQuery()) {
@@ -79,10 +73,8 @@ public class SqliteUserRepository implements UserRepository {
   /** Access the user's data based on the id of the user. */
   @Nullable
   public User getUserById(int id) throws SQLException {
-    try (
-            Connection c= SqliteDatabaseConnectionFactory.getConnection();
-            PreparedStatement getUserByIdStatement = c.prepareStatement(GET_USER_BY_ID_STATEMENT);
-            ) {
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement getUserByIdStatement = c.prepareStatement(GET_USER_BY_ID_STATEMENT); ) {
       getUserByIdStatement.setInt(1, id);
       try (ResultSet result = getUserByIdStatement.executeQuery()) {
         if (result.next()) {
@@ -102,11 +94,9 @@ public class SqliteUserRepository implements UserRepository {
    */
   @Nullable
   public User getUserByUsername(String username) throws SQLException {
-    try (
-            Connection c = SqliteDatabaseConnectionFactory.getConnection();
-            PreparedStatement getUserByUsernameStatement =
-                    c.prepareStatement(GET_USER_BY_USERNAME_STATEMENT);
-    ) {
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement getUserByUsernameStatement =
+            c.prepareStatement(GET_USER_BY_USERNAME_STATEMENT); ) {
       getUserByUsernameStatement.setString(1, username);
       try (ResultSet result = getUserByUsernameStatement.executeQuery()) {
         if (result.next()) {

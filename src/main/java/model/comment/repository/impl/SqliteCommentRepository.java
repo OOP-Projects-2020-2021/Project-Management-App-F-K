@@ -46,7 +46,7 @@ public class SqliteCommentRepository implements CommentRepository {
   @Override
   public void saveComment(Comment.SavableComment comment) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement saveCommentSt = c.prepareStatement(SAVE_COMMENT_STATEMENT)) {
+        PreparedStatement saveCommentSt = c.prepareStatement(SAVE_COMMENT_STATEMENT)) {
       saveCommentSt.setString(1, comment.getText());
       saveCommentSt.setInt(2, comment.getProjectId());
       saveCommentSt.setInt(3, comment.getSenderId());
@@ -58,7 +58,7 @@ public class SqliteCommentRepository implements CommentRepository {
   @Override
   public List<Comment> getCommentsOfProject(int projectId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement getCommentsOfProjectSt =
+        PreparedStatement getCommentsOfProjectSt =
             c.prepareStatement(GET_COMMENTS_OF_PROJECT_STATEMENT)) {
       getCommentsOfProjectSt.setInt(1, projectId);
       try (ResultSet result = getCommentsOfProjectSt.executeQuery()) {
@@ -74,7 +74,7 @@ public class SqliteCommentRepository implements CommentRepository {
   @Override
   public void deleteAllCommentsOfProject(int projectId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement deleteCommentsOfProjectSt =
+        PreparedStatement deleteCommentsOfProjectSt =
             c.prepareStatement(DELETE_COMMENTS_OF_PROJECT_STATEMENT)) {
       deleteCommentsOfProjectSt.setInt(1, projectId);
       deleteCommentsOfProjectSt.executeUpdate();

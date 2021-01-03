@@ -81,14 +81,11 @@ public class SqliteTeamRepository implements TeamRepository {
       "SELECT * FROM User AS u JOIN MemberToTeam AS m ON u.UserId = m.MemberId WHERE"
           + " m.TeamId = ?";
 
-
   @Override
   public int saveTeam(Team.SavableTeam team)
       throws SQLException, InexistentDatabaseEntityException {
-    try (
-            Connection c = SqliteDatabaseConnectionFactory.getConnection();
-            PreparedStatement saveTeamSt = c.prepareStatement(SAVE_TEAM_STATEMENT);
-            ) {
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement saveTeamSt = c.prepareStatement(SAVE_TEAM_STATEMENT); ) {
       saveTeamSt.setString(1, team.getName());
       saveTeamSt.setInt(2, team.getManagerId());
       saveTeamSt.setString(3, team.getCode());
@@ -104,10 +101,8 @@ public class SqliteTeamRepository implements TeamRepository {
 
   @Override
   public Optional<Team> getTeam(int teamId) throws SQLException {
-    try (
-            Connection c = SqliteDatabaseConnectionFactory.getConnection();
-            PreparedStatement getTeamWithIdSt = c.prepareStatement(GET_TEAM_WITH_ID_QUERY);
-            ) {
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement getTeamWithIdSt = c.prepareStatement(GET_TEAM_WITH_ID_QUERY); ) {
       getTeamWithIdSt.setInt(1, teamId);
       try (ResultSet result = getTeamWithIdSt.executeQuery()) {
         if (result.next()) {
@@ -126,7 +121,7 @@ public class SqliteTeamRepository implements TeamRepository {
   @Override
   public Optional<Team> getTeam(String code) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-          PreparedStatement getTeamWithCodeSt = c.prepareStatement(GET_TEAM_WITH_CODE_QUERY)) {
+        PreparedStatement getTeamWithCodeSt = c.prepareStatement(GET_TEAM_WITH_CODE_QUERY)) {
       getTeamWithCodeSt.setString(1, code);
       try (ResultSet result = getTeamWithCodeSt.executeQuery()) {
         if (result.next()) {
@@ -145,7 +140,7 @@ public class SqliteTeamRepository implements TeamRepository {
   @Override
   public List<Team> getTeamsOfUser(int userId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement getTeamsOfUserSt = c.prepareStatement(GET_TEAMS_OF_USER_QUERY)) {
+        PreparedStatement getTeamsOfUserSt = c.prepareStatement(GET_TEAMS_OF_USER_QUERY)) {
       getTeamsOfUserSt.setInt(1, userId);
       try (ResultSet result = getTeamsOfUserSt.executeQuery()) {
         List<Team> usersTeams = new ArrayList<>();
@@ -164,7 +159,7 @@ public class SqliteTeamRepository implements TeamRepository {
   @Override
   public void deleteTeam(int teamId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement deleteTeamSt = c.prepareStatement(DELETE_TEAM_STATEMENT)) {
+        PreparedStatement deleteTeamSt = c.prepareStatement(DELETE_TEAM_STATEMENT)) {
       deleteTeamSt.setInt(1, teamId);
       deleteTeamSt.executeUpdate();
     }
@@ -173,7 +168,7 @@ public class SqliteTeamRepository implements TeamRepository {
   @Override
   public void deleteAllMembersOfTeam(int teamId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement removeAllTeamMembersSt =
+        PreparedStatement removeAllTeamMembersSt =
             c.prepareStatement(REMOVE_ALL_TEAM_MEMBERS_STATEMENT)) {
       removeAllTeamMembersSt.setInt(1, teamId);
       removeAllTeamMembersSt.execute();
@@ -183,7 +178,7 @@ public class SqliteTeamRepository implements TeamRepository {
   @Override
   public void addTeamMember(int teamId, int userId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement addTeamMembershipSt = c.prepareStatement(ADD_TEAM_MEMBERSHIP_STATEMENT)) {
+        PreparedStatement addTeamMembershipSt = c.prepareStatement(ADD_TEAM_MEMBERSHIP_STATEMENT)) {
       addTeamMembershipSt.setInt(1, userId);
       addTeamMembershipSt.setInt(2, teamId);
       addTeamMembershipSt.executeUpdate();
@@ -193,8 +188,8 @@ public class SqliteTeamRepository implements TeamRepository {
   @Override
   public void removeTeamMember(int teamId, int userId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-         PreparedStatement removeTeamMembershipSt =
-                 c.prepareStatement(REMOVE_TEAM_MEMBERSHIP_STATEMENT)) {
+        PreparedStatement removeTeamMembershipSt =
+            c.prepareStatement(REMOVE_TEAM_MEMBERSHIP_STATEMENT)) {
       removeTeamMembershipSt.setInt(1, userId);
       removeTeamMembershipSt.setInt(2, teamId);
       removeTeamMembershipSt.executeUpdate();
@@ -204,7 +199,7 @@ public class SqliteTeamRepository implements TeamRepository {
   @Override
   public boolean isMemberOfTeam(int teamId, int userId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-         PreparedStatement isMemberSt = c.prepareStatement(IS_MEMBER_QUERY)) {
+        PreparedStatement isMemberSt = c.prepareStatement(IS_MEMBER_QUERY)) {
       isMemberSt.setInt(1, teamId);
       isMemberSt.setInt(2, userId);
       try (ResultSet result = isMemberSt.executeQuery()) {
@@ -216,7 +211,7 @@ public class SqliteTeamRepository implements TeamRepository {
   @Override
   public void setNewCode(int teamId, String newCode) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-         PreparedStatement setNewCodeSt = c.prepareStatement(SET_NEW_TEAMCODE_STATEMENT)) {
+        PreparedStatement setNewCodeSt = c.prepareStatement(SET_NEW_TEAMCODE_STATEMENT)) {
       setNewCodeSt.setString(1, newCode);
       setNewCodeSt.setInt(2, teamId);
       setNewCodeSt.executeUpdate();
@@ -226,7 +221,7 @@ public class SqliteTeamRepository implements TeamRepository {
   @Override
   public void setNewManagerPosition(int teamId, int managerId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-         PreparedStatement setManagerSt = c.prepareStatement(SET_MANAGER_STATEMENT)) {
+        PreparedStatement setManagerSt = c.prepareStatement(SET_MANAGER_STATEMENT)) {
       setManagerSt.setInt(1, managerId);
       setManagerSt.setInt(2, teamId);
       setManagerSt.executeUpdate();
@@ -236,7 +231,7 @@ public class SqliteTeamRepository implements TeamRepository {
   @Override
   public void setNewName(int teamId, String newTeamName) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-         PreparedStatement setNameSt = c.prepareStatement(SET_NAME_STATEMENT)) {
+        PreparedStatement setNameSt = c.prepareStatement(SET_NAME_STATEMENT)) {
       setNameSt.setString(1, newTeamName);
       setNameSt.setInt(2, teamId);
       setNameSt.executeUpdate();
@@ -246,16 +241,16 @@ public class SqliteTeamRepository implements TeamRepository {
   @Override
   public List<User> getMembersOfTeam(int teamId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement getTeamMembersSt = c.prepareStatement(GET_TEAM_MEMBERS_QUERY)){
+        PreparedStatement getTeamMembersSt = c.prepareStatement(GET_TEAM_MEMBERS_QUERY)) {
       List<User> members = new ArrayList<>();
       getTeamMembersSt.setInt(1, teamId);
       try (ResultSet resultSet = getTeamMembersSt.executeQuery()) {
         while (resultSet.next()) {
           User member =
-                  new User(
-                          resultSet.getInt("UserId"),
-                          resultSet.getString("UserName"),
-                          resultSet.getString("Password"));
+              new User(
+                  resultSet.getInt("UserId"),
+                  resultSet.getString("UserName"),
+                  resultSet.getString("Password"));
           members.add(member);
         }
         return members;

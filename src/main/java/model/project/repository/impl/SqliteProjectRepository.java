@@ -65,39 +65,39 @@ public class SqliteProjectRepository implements ProjectRepository {
   // Get projects of team, possibly with a given assignee, supervisor, status and status with
   // respect to deadline. The extra wildcards are responsible for making some attributes optional.
   private static final String GET_PROJECTS_OF_TEAM =
-          "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
-                  + "AssigneeId, SupervisorId, StatusName, FinishingDate, ImportanceName From Project p "
-                  + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p"
-                  + ".ImportanceId = i.ImportanceId "
-                  + "WHERE p.TeamId = ? AND "
-                  + "(p.SupervisorId = ? OR ?) AND "
-                  + "(p.AssigneeId = ? OR ?) AND "
-                  + "((st.StatusName = 'TO_DO' AND ?) OR" // TO_DO allowed
-                  + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" // IN_PROGRESS allowed
-                  + " (st.StatusName = 'TURNED_IN' AND ?) OR" // TURNED_IN allowed
-                  + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
-                  + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
-                  + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
-                  + " ((p.StatusId = 4 AND p.FinishingDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
-                  + " ((p.StatusId = 4 AND p.FinishingDate > p.Deadline) AND ?)) "; // FINISHED_LATE
+      "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
+          + "AssigneeId, SupervisorId, StatusName, FinishingDate, ImportanceName From Project p "
+          + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p"
+          + ".ImportanceId = i.ImportanceId "
+          + "WHERE p.TeamId = ? AND "
+          + "(p.SupervisorId = ? OR ?) AND "
+          + "(p.AssigneeId = ? OR ?) AND "
+          + "((st.StatusName = 'TO_DO' AND ?) OR" // TO_DO allowed
+          + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" // IN_PROGRESS allowed
+          + " (st.StatusName = 'TURNED_IN' AND ?) OR" // TURNED_IN allowed
+          + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
+          + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
+          + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
+          + " ((p.StatusId = 4 AND p.FinishingDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
+          + " ((p.StatusId = 4 AND p.FinishingDate > p.Deadline) AND ?)) "; // FINISHED_LATE
 
   // Get projects possibly with a given assignee, supervisor, status and status with respect to
   // deadline. The extra wildcards are responsible for making some attributes optional.
   private static final String GET_PROJECTS =
-          "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
-                  + "AssigneeId, SupervisorId, StatusName, FinishingDate, ImportanceName From Project p "
-                  + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p"
-                  + ".ImportanceId = i.ImportanceId "
-                  + "WHERE (p.SupervisorId = ? OR ?) AND "
-                  + "(p.AssigneeId = ? OR ?) AND"
-                  + "((st.StatusName = 'TO_DO' AND ?) OR" // TO_DO allowed
-                  + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" // IN_PROGRESS allowed
-                  + " (st.StatusName = 'TURNED_IN' AND ?) OR" // TURNED_IN allowed
-                  + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
-                  + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
-                  + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
-                  + " ((p.StatusId = 4 AND p.FinishingDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
-                  + " ((p.StatusId = 4 AND p.FinishingDate > p.Deadline) AND ?))"; // FINISHED_LATE
+      "SELECT ProjectId, p.Name AS Name, p.TeamId AS TeamId, Description, Deadline, "
+          + "AssigneeId, SupervisorId, StatusName, FinishingDate, ImportanceName From Project p "
+          + "JOIN ProjectStatus st ON p.StatusId = st.StatusId JOIN Importance i ON p"
+          + ".ImportanceId = i.ImportanceId "
+          + "WHERE (p.SupervisorId = ? OR ?) AND "
+          + "(p.AssigneeId = ? OR ?) AND"
+          + "((st.StatusName = 'TO_DO' AND ?) OR" // TO_DO allowed
+          + " (st.StatusName = 'IN_PROGRESS' AND ?) OR" // IN_PROGRESS allowed
+          + " (st.StatusName = 'TURNED_IN' AND ?) OR" // TURNED_IN allowed
+          + " (st.StatusName = 'FINISHED' AND ?)) AND " // FINISHED allowed
+          + "(((p.Deadline >= date(\"now\") AND p.StatusId <= 3) AND ?) OR " // IN_TIME_TO_FINISH
+          + " ((p.Deadline < date(\"now\") AND p.statusId <= 3) AND ?) OR" // OVERDUE
+          + " ((p.StatusId = 4 AND p.FinishingDate <= p.Deadline) AND ?) OR" // FINISHED_IN_TIME
+          + " ((p.StatusId = 4 AND p.FinishingDate > p.Deadline) AND ?))"; // FINISHED_LATE
 
   // Get status id
   private static final String GET_PROJECTS_STATUS_ID =
@@ -111,7 +111,7 @@ public class SqliteProjectRepository implements ProjectRepository {
   public int saveProject(Project.SavableProject project)
       throws SQLException, InexistentDatabaseEntityException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement saveProjectSt = c.prepareStatement(SAVE_PROJECT_STATEMENT)) {
+        PreparedStatement saveProjectSt = c.prepareStatement(SAVE_PROJECT_STATEMENT)) {
       saveProjectSt.setString(1, project.getTitle());
       saveProjectSt.setInt(2, project.getTeamId());
       if (project.getDescription().isPresent()) {
@@ -142,7 +142,7 @@ public class SqliteProjectRepository implements ProjectRepository {
   @Override
   public Optional<Project> getProject(int projectId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement getProjectByIdSt = c.prepareStatement(GET_PROJECT_BY_ID)) {
+        PreparedStatement getProjectByIdSt = c.prepareStatement(GET_PROJECT_BY_ID)) {
       getProjectByIdSt.setInt(1, projectId);
       try (ResultSet result = getProjectByIdSt.executeQuery()) {
         if (result.next()) {
@@ -157,7 +157,7 @@ public class SqliteProjectRepository implements ProjectRepository {
   @Override
   public Optional<Project> getProject(int teamId, String name) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement getProjectByTitleTeamSt =
+        PreparedStatement getProjectByTitleTeamSt =
             c.prepareStatement(GET_PROJECT_BY_TEAM_TITLE_STATEMENT)) {
       getProjectByTitleTeamSt.setString(1, name);
       getProjectByTitleTeamSt.setInt(2, teamId);
@@ -174,8 +174,8 @@ public class SqliteProjectRepository implements ProjectRepository {
   @Override
   public void updateProject(Project project)
       throws SQLException, InexistentDatabaseEntityException {
-    try (Connection c= SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement updateProjectSt = c.prepareStatement(UPDATE_PROJECT)) {
+    try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
+        PreparedStatement updateProjectSt = c.prepareStatement(UPDATE_PROJECT)) {
       updateProjectSt.setString(1, project.getTitle());
       updateProjectSt.setInt(2, project.getTeamId());
       if (project.getDescription().isPresent()) {
@@ -201,7 +201,7 @@ public class SqliteProjectRepository implements ProjectRepository {
   @Override
   public void deleteProject(int projectId) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement deleteProjectSt = c.prepareStatement(DELETE_PROJECT_STATEMENT)) {
+        PreparedStatement deleteProjectSt = c.prepareStatement(DELETE_PROJECT_STATEMENT)) {
       deleteProjectSt.setInt(1, projectId);
       deleteProjectSt.executeUpdate();
     }
@@ -218,7 +218,7 @@ public class SqliteProjectRepository implements ProjectRepository {
       boolean descending)
       throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement getProjectsOfTeamSt = c.prepareStatement(GET_PROJECTS_OF_TEAM)) {
+        PreparedStatement getProjectsOfTeamSt = c.prepareStatement(GET_PROJECTS_OF_TEAM)) {
       getProjectsOfTeamSt.setInt(1, teamId);
       // if supervisorid is null, it is don't care
       if (supervisorId != null) {
@@ -241,13 +241,13 @@ public class SqliteProjectRepository implements ProjectRepository {
       getProjectsOfTeamSt.setBoolean(8, allowedStatuses.contains(Project.Status.TURNED_IN));
       getProjectsOfTeamSt.setBoolean(9, allowedStatuses.contains(Project.Status.FINISHED));
       getProjectsOfTeamSt.setBoolean(
-              10, allowedDeadlineStatuses.contains(Project.DeadlineStatus.IN_TIME_TO_FINISH));
+          10, allowedDeadlineStatuses.contains(Project.DeadlineStatus.IN_TIME_TO_FINISH));
       getProjectsOfTeamSt.setBoolean(
-              11, allowedDeadlineStatuses.contains(Project.DeadlineStatus.OVERDUE));
+          11, allowedDeadlineStatuses.contains(Project.DeadlineStatus.OVERDUE));
       getProjectsOfTeamSt.setBoolean(
-              12, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_IN_TIME));
+          12, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_IN_TIME));
       getProjectsOfTeamSt.setBoolean(
-              13, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_LATE));
+          13, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_LATE));
       try (ResultSet result = getProjectsOfTeamSt.executeQuery()) {
         ArrayList<Project> projectsOfTeam = new ArrayList<>();
         while (result.next()) {
@@ -268,7 +268,7 @@ public class SqliteProjectRepository implements ProjectRepository {
       boolean descending)
       throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement getProjectsSt = c.prepareStatement(GET_PROJECTS)) {
+        PreparedStatement getProjectsSt = c.prepareStatement(GET_PROJECTS)) {
       // if supervisorid is null, it is don't care
       if (supervisorId != null) {
         getProjectsSt.setInt(1, supervisorId);
@@ -290,12 +290,13 @@ public class SqliteProjectRepository implements ProjectRepository {
       getProjectsSt.setBoolean(7, allowedStatuses.contains(Project.Status.TURNED_IN));
       getProjectsSt.setBoolean(8, allowedStatuses.contains(Project.Status.FINISHED));
       getProjectsSt.setBoolean(
-              9, allowedDeadlineStatuses.contains(Project.DeadlineStatus.IN_TIME_TO_FINISH));
-      getProjectsSt.setBoolean(10, allowedDeadlineStatuses.contains(Project.DeadlineStatus.OVERDUE));
+          9, allowedDeadlineStatuses.contains(Project.DeadlineStatus.IN_TIME_TO_FINISH));
       getProjectsSt.setBoolean(
-              11, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_IN_TIME));
+          10, allowedDeadlineStatuses.contains(Project.DeadlineStatus.OVERDUE));
       getProjectsSt.setBoolean(
-              12, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_LATE));
+          11, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_IN_TIME));
+      getProjectsSt.setBoolean(
+          12, allowedDeadlineStatuses.contains(Project.DeadlineStatus.FINISHED_LATE));
       try (ResultSet result = getProjectsSt.executeQuery()) {
         ArrayList<Project> projects = new ArrayList<>();
         while (result.next()) {
@@ -308,7 +309,7 @@ public class SqliteProjectRepository implements ProjectRepository {
 
   private int getProjectStatusId(Project.Status status) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID)) {
+        PreparedStatement getProjectStatusIdSt = c.prepareStatement(GET_PROJECTS_STATUS_ID)) {
       getProjectStatusIdSt.setString(1, status.toString());
       try (ResultSet result = getProjectStatusIdSt.executeQuery()) {
         result.next();
@@ -319,7 +320,8 @@ public class SqliteProjectRepository implements ProjectRepository {
 
   private int getProjectImportanceId(Project.Importance importance) throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-    PreparedStatement getProjectImportanceIdSt = c.prepareStatement(GET_PROJECTS_IMPORTANCE_ID)) {
+        PreparedStatement getProjectImportanceIdSt =
+            c.prepareStatement(GET_PROJECTS_IMPORTANCE_ID)) {
       getProjectImportanceIdSt.setString(1, importance.toString());
       ResultSet result = getProjectImportanceIdSt.executeQuery();
       result.next();
@@ -356,8 +358,7 @@ public class SqliteProjectRepository implements ProjectRepository {
     return project;
   }
 
-  private String getGetProjectsOfTeamQuery(Project.SorterType sorterType,
-                                          boolean descending) {
+  private String getGetProjectsOfTeamQuery(Project.SorterType sorterType, boolean descending) {
     return GET_PROJECTS_OF_TEAM.concat(getOrderClause(sorterType, descending));
   }
 
