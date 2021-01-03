@@ -1,6 +1,5 @@
 package controller.project;
 
-import model.InexistentDatabaseEntityException;
 import model.project.Project;
 import view.project.ProjectListModel;
 import view.project.ProjectTable;

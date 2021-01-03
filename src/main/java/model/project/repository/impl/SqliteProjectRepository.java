@@ -301,7 +301,15 @@ public class SqliteProjectRepository extends Repository implements ProjectReposi
     Project.Importance importance = Project.Importance.valueOf(result.getString("ImportanceName"));
     Project project =
         new Project(
-            id, title, teamId, deadline, status, supervisorId, assigneeId, finishingDate, importance);
+            id,
+            title,
+            teamId,
+            deadline,
+            status,
+            supervisorId,
+            assigneeId,
+            finishingDate,
+            importance);
     project.setDescription(description);
     return project;
   }
