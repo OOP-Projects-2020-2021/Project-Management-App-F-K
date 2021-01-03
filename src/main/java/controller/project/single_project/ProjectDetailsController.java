@@ -21,7 +21,6 @@ import view.project.single_project.ProjectDetailsPanel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -33,7 +32,8 @@ import java.util.List;
  *
  * @author Beata Keresztes
  */
-public class ProjectDetailsController extends ProjectController implements CloseablePropertyChangeListener {
+public class ProjectDetailsController extends ProjectController
+    implements CloseablePropertyChangeListener {
 
   private TeamManager teamManager;
   private UserManager userManager;

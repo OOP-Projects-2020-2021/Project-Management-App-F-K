@@ -46,7 +46,7 @@ public class UserProjectsFrame extends JFrame {
     @Override
     public void windowClosing(WindowEvent evt) {
       controller.onClose(parentFrame);
-      for (CloseableComponent closeableComponent: closeableComponents) {
+      for (CloseableComponent closeableComponent : closeableComponents) {
         closeableComponent.onClose();
       }
     }

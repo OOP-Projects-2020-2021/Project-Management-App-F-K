@@ -14,7 +14,6 @@ import view.project.single_project.ProjectStatusButtonsPanel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.EnumSet;
@@ -30,7 +29,8 @@ import static model.project.Project.Status.TO_DO;
  *
  * @author Bori Fazakas
  */
-public class ProjectStatusController extends ProjectController implements CloseablePropertyChangeListener {
+public class ProjectStatusController extends ProjectController
+    implements CloseablePropertyChangeListener {
 
   private ProjectStatusButtonsPanel panel;
   private List<PropertyChangeObservable> propertyChangeObservables;

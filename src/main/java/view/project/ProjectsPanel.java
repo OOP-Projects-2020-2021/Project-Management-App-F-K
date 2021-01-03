@@ -15,7 +15,7 @@ import java.util.List;
  *
  * @author Beata Keresztes
  */
-public class ProjectsPanel extends JPanel implements CloseableComponent{
+public class ProjectsPanel extends JPanel implements CloseableComponent {
 
   private ProjectTable projectsTable;
   private JFrame frame;
@@ -54,7 +54,6 @@ public class ProjectsPanel extends JPanel implements CloseableComponent{
 
     add(scrollPane, BorderLayout.CENTER);
   }
-
 
   @Override
   public void onClose() {

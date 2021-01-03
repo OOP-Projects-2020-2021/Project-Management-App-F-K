@@ -120,5 +120,4 @@ public class ProjectTable extends JTable implements CloseableComponent {
   public void onClose() {
     controller.close();
   }
-
 }

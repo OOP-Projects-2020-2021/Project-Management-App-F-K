@@ -16,7 +16,8 @@ import java.util.EnumSet;
  *
  * @author Bori Fazakas
  */
-public class ProjectStatusButtonsPanel extends JPanel implements ActionListener, CloseableComponent {
+public class ProjectStatusButtonsPanel extends JPanel
+    implements ActionListener, CloseableComponent {
   // Status buttons.
   // The progress can be marked by anyone if the current status is TO_DO.
   private JButton markProgressButton = UIFactory.createButton("Mark progress");

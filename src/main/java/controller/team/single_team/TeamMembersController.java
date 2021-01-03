@@ -15,7 +15,6 @@ import view.team.single_team.TeamMembersPanel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +25,8 @@ import java.util.List;
  *
  * @author Beata Keresztes
  */
-public class TeamMembersController extends TeamController implements CloseablePropertyChangeListener {
+public class TeamMembersController extends TeamController
+    implements CloseablePropertyChangeListener {
 
   private TeamMembersPanel membersPanel;
   private ProjectManager projectManager;

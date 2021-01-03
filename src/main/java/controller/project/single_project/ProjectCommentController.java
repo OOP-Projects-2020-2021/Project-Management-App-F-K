@@ -16,7 +16,6 @@ import view.ErrorDialogFactory;
 import view.project.single_project.ProjectCommentPanel;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;

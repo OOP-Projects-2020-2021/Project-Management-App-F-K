@@ -9,7 +9,6 @@ import view.project.single_project.ProjectFrame;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.util.Collections;
 import java.util.List;
 

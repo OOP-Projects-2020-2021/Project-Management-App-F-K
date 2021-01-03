@@ -15,7 +15,6 @@ import view.team.single_team.TeamHomePanel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.List;
@@ -27,7 +26,8 @@ import java.util.Objects;
  *
  * @author Beata Keresztes
  */
-public class TeamSettingsController extends TeamController implements CloseablePropertyChangeListener {
+public class TeamSettingsController extends TeamController
+    implements CloseablePropertyChangeListener {
 
   private Team currentTeam;
   private TeamHomePanel homePanel;

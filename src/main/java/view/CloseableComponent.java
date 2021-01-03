@@ -7,6 +7,6 @@ package view;
  * @author Bori Fazakas
  */
 public interface CloseableComponent {
-    /** onClose is called when the parent frame of a CloseableComponent is closed. */
-    void onClose();
+  /** onClose is called when the parent frame of a CloseableComponent is closed. */
+  void onClose();
 }
