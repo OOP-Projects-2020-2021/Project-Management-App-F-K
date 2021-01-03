@@ -182,11 +182,13 @@ public class TeamSettingsController extends TeamController
       teamManager.setNewName(teamId, name);
       homePanel.enableNameTextField(false);
     } catch (SQLException | InexistentTeamException databaseException) {
+      updateHomePanel(); //reset correct state in UI
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new name could not be saved.");
     } catch (UnauthorisedOperationException
         | NoSignedInUserException
         | InexistentDatabaseEntityException unauthorizedAccessException) {
+      updateHomePanel(); //reset correct state in UI
       ErrorDialogFactory.createErrorDialog(
           unauthorizedAccessException,
           frame,
@@ -198,11 +200,13 @@ public class TeamSettingsController extends TeamController
     try {
       teamManager.regenerateTeamCode(teamId);
     } catch (SQLException | InexistentTeamException databaseException) {
+      updateHomePanel(); //reset correct state in UI
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new code could not be generated.");
     } catch (UnauthorisedOperationException
         | NoSignedInUserException
         | InexistentDatabaseEntityException unauthorisedAccessException) {
+      updateHomePanel(); //reset correct state in UI
       ErrorDialogFactory.createErrorDialog(
           unauthorisedAccessException,
           frame,
@@ -214,12 +218,15 @@ public class TeamSettingsController extends TeamController
     try {
       teamManager.passManagerPosition(teamId, newManagerName);
     } catch (InexistentTeamException | SQLException databaseException) {
+      updateHomePanel(); //reset correct state in UI
       ErrorDialogFactory.createErrorDialog(
           databaseException, frame, "The new manager could not be saved.");
     } catch (InexistentUserException inexistentUserException) {
+      updateHomePanel(); //reset correct state in UI
       ErrorDialogFactory.createErrorDialog(
           inexistentUserException, frame, "The user \"" + newManagerName + "\" doesn't exist.");
     } catch (UnregisteredMemberRoleException e) {
+      updateHomePanel(); //reset correct state in UI
       ErrorDialogFactory.createErrorDialog(
           e,
           frame,
@@ -227,6 +234,7 @@ public class TeamSettingsController extends TeamController
     } catch (NoSignedInUserException
         | UnauthorisedOperationException
         | InexistentDatabaseEntityException unauthorisedAccessException) {
+      updateHomePanel(); //reset correct state in UI
       ErrorDialogFactory.createErrorDialog(
           unauthorisedAccessException,
           frame,
