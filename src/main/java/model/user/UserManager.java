@@ -34,20 +34,6 @@ public class UserManager extends Manager {
     return Optional.ofNullable(currentUser);
   }
 
-  private boolean isEmptyText(String text) {
-    return text == null || text.isEmpty();
-  }
-
-  /**
-   * Check if all the required data has been introduced by the user.
-   *
-   * @param username = the username of the user
-   * @param password = the password of the user
-   * @return true if some credentials are missing, otherwise false
-   */
-  private boolean isMissingCredentials(String username, String password) {
-    return isEmptyText(username) || isEmptyText(password);
-  }
   /**
    * Creates a new user in the database.
    *
@@ -138,5 +124,20 @@ public class UserManager extends Manager {
 
   public void logOut() {
     currentUser = null;
+  }
+
+  private boolean isEmptyText(String text) {
+    return text == null || text.isEmpty();
+  }
+
+  /**
+   * Check if all the required data has been introduced by the user.
+   *
+   * @param username = the username of the user
+   * @param password = the password of the user
+   * @return true if some credentials are missing, otherwise false
+   */
+  private boolean isMissingCredentials(String username, String password) {
+    return isEmptyText(username) || isEmptyText(password);
   }
 }
