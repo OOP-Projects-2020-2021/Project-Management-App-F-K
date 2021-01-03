@@ -106,7 +106,8 @@ public class UserManager extends Manager {
    * @param password = new password
    */
   public void updateUser(String username, String password)
-      throws SQLException, NoSignedInUserException,DuplicateUsernameException,EmptyFieldsException {
+      throws SQLException, NoSignedInUserException, DuplicateUsernameException,
+          EmptyFieldsException {
     User oldUser = getMandatoryCurrentUser();
     try {
       User existingUser = userRepository.getUserByUsername(username);
@@ -120,7 +121,7 @@ public class UserManager extends Manager {
     } catch (NoSuchElementException | InexistentDatabaseEntityException noSuchElementException) {
       throw new NoSignedInUserException();
     }
-    support.firePropertyChange(UPDATE_ACCOUNT_PROPERTY,oldUser,currentUser);
+    support.firePropertyChange(UPDATE_ACCOUNT_PROPERTY, oldUser, currentUser);
   }
 
   /**
