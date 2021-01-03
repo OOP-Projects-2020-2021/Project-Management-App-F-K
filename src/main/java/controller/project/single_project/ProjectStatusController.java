@@ -1,6 +1,8 @@
 package controller.project.single_project;
 
+import controller.CloseablePropertyChangeListener;
 import model.InexistentDatabaseEntityException;
+import model.PropertyChangeObservable;
 import model.UnauthorisedOperationException;
 import model.project.Project;
 import model.project.ProjectManager;
@@ -14,7 +16,9 @@ import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.EnumSet;
+import java.util.List;
 
 import static model.project.Project.Status.*;
 import static model.project.Project.Status.TO_DO;
@@ -26,13 +30,15 @@ import static model.project.Project.Status.TO_DO;
  *
  * @author Bori Fazakas
  */
-public class ProjectStatusController extends ProjectController implements PropertyChangeListener {
+public class ProjectStatusController extends ProjectController implements CloseablePropertyChangeListener {
 
-  ProjectStatusButtonsPanel panel;
+  private ProjectStatusButtonsPanel panel;
+  private List<PropertyChangeObservable> propertyChangeObservables;
 
   public ProjectStatusController(JFrame frame, Project project, ProjectStatusButtonsPanel panel) {
     super(frame, project);
-    projectManager.addPropertyChangeListener(this);
+    propertyChangeObservables = List.of(projectManager);
+    this.setObservables();
     this.panel = panel;
   }
 
@@ -219,5 +225,10 @@ public class ProjectStatusController extends ProjectController implements Proper
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
     return result;
+  }
+
+  @Override
+  public List<PropertyChangeObservable> getPropertyChangeObservables() {
+    return Collections.unmodifiableList(propertyChangeObservables);
   }
 }

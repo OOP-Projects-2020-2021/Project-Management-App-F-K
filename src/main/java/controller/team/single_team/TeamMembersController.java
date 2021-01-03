@@ -1,6 +1,8 @@
 package controller.team.single_team;
 
+import controller.CloseablePropertyChangeListener;
 import model.InexistentDatabaseEntityException;
+import model.PropertyChangeObservable;
 import model.UnauthorisedOperationException;
 import model.project.ProjectManager;
 import model.team.TeamManager;
@@ -15,6 +17,7 @@ import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,10 +26,11 @@ import java.util.List;
  *
  * @author Beata Keresztes
  */
-public class TeamMembersController extends TeamController implements PropertyChangeListener {
+public class TeamMembersController extends TeamController implements CloseablePropertyChangeListener {
 
   private TeamMembersPanel membersPanel;
   private ProjectManager projectManager;
+  private List<PropertyChangeObservable> propertyChangeObservables = List.of(teamManager);
 
   /** Messages to confirm the removal of a member from the team. */
   private static final String CONFIRM_REMOVING_MEMBER_MESSAGE =
@@ -38,7 +42,7 @@ public class TeamMembersController extends TeamController implements PropertyCha
     super(frame, teamId);
     this.membersPanel = membersPanel;
     projectManager = ProjectManager.getInstance();
-    teamManager.addPropertyChangeListener(this);
+    this.setObservables();
   }
 
   @Override
@@ -135,5 +139,10 @@ public class TeamMembersController extends TeamController implements PropertyCha
             "The user \"" + name + "\" cannot be removed from this team.");
       }
     }
+  }
+
+  @Override
+  public List<PropertyChangeObservable> getPropertyChangeObservables() {
+    return Collections.unmodifiableList(propertyChangeObservables);
   }
 }

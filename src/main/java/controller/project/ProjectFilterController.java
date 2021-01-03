@@ -1,6 +1,8 @@
 package controller.project;
 
+import controller.CloseablePropertyChangeListener;
 import model.InexistentDatabaseEntityException;
+import model.PropertyChangeObservable;
 import model.project.Project;
 import model.project.ProjectManager;
 import model.team.TeamManager;
@@ -16,6 +18,7 @@ import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.EnumSet;
 import java.util.List;
 
@@ -29,7 +32,7 @@ import java.util.List;
  *
  * @author Beata Keresztes, Bori Fazakas
  */
-public class ProjectFilterController implements PropertyChangeListener {
+public class ProjectFilterController implements CloseablePropertyChangeListener {
 
   private ProjectManager projectManager;
   private TeamManager teamManager;
@@ -46,15 +49,17 @@ public class ProjectFilterController implements PropertyChangeListener {
     SUPERVISED_BY_ME
   }
 
+  private List<PropertyChangeObservable> propertyChangeObservables;
+
   public ProjectFilterController(
       @Nullable Integer teamId, ProjectFilterPanel panel, ProjectListModel projectListModel) {
     this.teamId = teamId;
     projectManager = ProjectManager.getInstance();
-    projectManager.addPropertyChangeListener(this);
     teamManager = TeamManager.getInstance();
-    teamManager.addPropertyChangeListener(this);
     this.projectListModel = projectListModel;
     this.panel = panel;
+    propertyChangeObservables = List.of(teamManager, projectManager);
+    this.setObservables();
   }
 
   @Override
@@ -141,5 +146,10 @@ public class ProjectFilterController implements PropertyChangeListener {
     } catch (SQLException | InexistentDatabaseEntityException | NoSignedInUserException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
+  }
+
+  @Override
+  public List<PropertyChangeObservable> getPropertyChangeObservables() {
+    return Collections.unmodifiableList(propertyChangeObservables);
   }
 }

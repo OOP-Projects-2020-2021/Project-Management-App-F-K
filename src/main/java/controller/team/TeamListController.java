@@ -1,6 +1,8 @@
 package controller.team;
 
+import controller.CloseablePropertyChangeListener;
 import model.InexistentDatabaseEntityException;
+import model.PropertyChangeObservable;
 import model.team.Team;
 import model.team.TeamManager;
 import model.user.exceptions.*;
@@ -15,6 +17,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,17 +28,19 @@ import java.util.Objects;
  *
  * @author Bori Fazakas
  */
-public class TeamListController implements PropertyChangeListener {
+public class TeamListController implements CloseablePropertyChangeListener {
   TeamManager teamManager = TeamManager.getInstance();
   UserManager userManager = UserManager.getInstance();
 
   Frame parentFrame;
   TeamListPanel panel;
 
+  private List<PropertyChangeObservable> propertyChangeObservables = List.of(teamManager);
+
   public TeamListController(TeamListPanel panel, Frame frame) {
     this.panel = panel;
     this.parentFrame = frame;
-    teamManager.addPropertyChangeListener(this);
+    this.setObservables();
   }
 
   public List<TeamViewModel> getUsersTeams() {
@@ -80,5 +85,10 @@ public class TeamListController implements PropertyChangeListener {
             .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString())) {
       panel.updateTeams();
     }
+  }
+
+  @Override
+  public List<PropertyChangeObservable> getPropertyChangeObservables() {
+    return Collections.unmodifiableList(propertyChangeObservables);
   }
 }
