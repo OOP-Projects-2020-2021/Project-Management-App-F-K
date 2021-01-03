@@ -359,8 +359,8 @@ public class ProjectDetailsPanel extends JPanel implements CloseableComponent {
                 deadlineDatePicker.getModel().getDay());
         String description = descriptionTextArea.getText();
         Project.Importance importance = (Project.Importance) importanceComboBox.getSelectedItem();
-        controller.updateProject(title, assignee, supervisor, selectedDate, description,
-                importance);
+        controller.updateProject(
+            title, assignee, supervisor, selectedDate, description, importance);
       } else if (actionEvent.getSource() == deleteButton) {
         controller.deleteProject();
       }
