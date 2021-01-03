@@ -85,7 +85,11 @@ public class ProjectStatusController extends ProjectController implements Proper
   public void turnIn() {
     try {
       projectManager.turnInProject(getProject().getId());
-    } catch (SQLException | InexistentDatabaseEntityException | InexistentProjectException | NoSignedInUserException | UnauthorisedOperationException e) {
+    } catch (SQLException
+        | InexistentDatabaseEntityException
+        | InexistentProjectException
+        | NoSignedInUserException
+        | UnauthorisedOperationException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     } catch (IllegalProjectStatusChangeException e) {
       ErrorDialogFactory.createErrorDialog(

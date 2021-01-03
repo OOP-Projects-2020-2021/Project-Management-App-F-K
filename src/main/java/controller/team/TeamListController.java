@@ -79,9 +79,7 @@ public class TeamListController implements PropertyChangeListener {
         || propertyChangeEvent
             .getPropertyName()
             .equals(TeamManager.ChangablePropertyName.CHANGED_TEAM_NAME.toString())
-        || propertyChangeEvent
-            .getPropertyName()
-            .equals(UserManager.UPDATE_ACCOUNT_PROPERTY)) {
+        || propertyChangeEvent.getPropertyName().equals(UserManager.UPDATE_ACCOUNT_PROPERTY)) {
       panel.updateTeams();
     }
   }
