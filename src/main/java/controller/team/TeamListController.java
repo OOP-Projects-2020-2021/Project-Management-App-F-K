@@ -34,7 +34,7 @@ public class TeamListController implements CloseablePropertyChangeListener {
   Frame parentFrame;
   TeamListPanel panel;
 
-  private List<PropertyChangeObservable> propertyChangeObservables = List.of(teamManager);
+  private List<PropertyChangeObservable> propertyChangeObservables = List.of(teamManager,userManager);
 
   public TeamListController(TeamListPanel panel, Frame frame) {
     this.panel = panel;
