@@ -6,6 +6,7 @@ import model.user.User;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
+import view.CloseableComponent;
 import view.UIFactory;
 
 import javax.swing.*;
@@ -15,9 +16,7 @@ import java.awt.event.ActionListener;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Calendar;
-import java.util.Objects;
-import java.util.Properties;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -29,7 +28,7 @@ import java.util.List;
  *
  * @author Beata Keresztes
  */
-public class ProjectDetailsPanel extends JPanel {
+public class ProjectDetailsPanel extends JPanel implements CloseableComponent {
 
   private JDatePickerImpl deadlineDatePicker;
   private JDatePanelImpl datePanel;
@@ -55,10 +54,13 @@ public class ProjectDetailsPanel extends JPanel {
 
   private ProjectDetailsController controller;
 
+  private List<CloseableComponent> closeableComponents = new ArrayList<>();
+
   public ProjectDetailsPanel(JFrame frame, Project project) {
     controller = new ProjectDetailsController(frame, project, this);
     this.setLayout(new BorderLayout());
     statusButtonsPanel = new ProjectStatusButtonsPanel(frame, project);
+    closeableComponents.add(statusButtonsPanel);
     initDetailsPanel();
   }
 
@@ -362,5 +364,13 @@ public class ProjectDetailsPanel extends JPanel {
         controller.deleteProject();
       }
     }
+  }
+
+  @Override
+  public void onClose() {
+    for (CloseableComponent closeableComponent : closeableComponents) {
+      closeableComponent.onClose();
+    }
+    controller.close();
   }
 }

@@ -1,6 +1,8 @@
 package controller.project.single_project;
 
+import controller.CloseablePropertyChangeListener;
 import model.InexistentDatabaseEntityException;
+import model.PropertyChangeObservable;
 import model.UnauthorisedOperationException;
 import model.project.Project;
 import model.project.ProjectManager;
@@ -19,7 +21,6 @@ import view.project.single_project.ProjectDetailsPanel;
 
 import javax.swing.*;
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Collections;
@@ -31,12 +32,14 @@ import java.util.List;
  *
  * @author Beata Keresztes
  */
-public class ProjectDetailsController extends ProjectController implements PropertyChangeListener {
+public class ProjectDetailsController extends ProjectController
+    implements CloseablePropertyChangeListener {
 
   private TeamManager teamManager;
   private UserManager userManager;
   private ProjectManager projectManager;
   private ProjectDetailsPanel panel;
+  private List<PropertyChangeObservable> propertyChangeObservables;
 
   /** Messages to confirm with the user the deletion of the project. */
   private static final String CONFIRM_DELETION_MESSAGE =
@@ -54,7 +57,8 @@ public class ProjectDetailsController extends ProjectController implements Prope
     teamManager = TeamManager.getInstance();
     userManager = UserManager.getInstance();
     projectManager = ProjectManager.getInstance();
-    projectManager.addPropertyChangeListener(this);
+    propertyChangeObservables = List.of(projectManager);
+    this.setObservables();
     this.panel = panel;
   }
 
@@ -202,5 +206,10 @@ public class ProjectDetailsController extends ProjectController implements Prope
         | UnauthorisedOperationException e) {
       ErrorDialogFactory.createErrorDialog(e, null, null);
     }
+  }
+
+  @Override
+  public List<PropertyChangeObservable> getPropertyChangeObservables() {
+    return Collections.unmodifiableList(propertyChangeObservables);
   }
 }

@@ -1,6 +1,8 @@
 package controller.project.single_project;
 
+import controller.CloseablePropertyChangeListener;
 import model.InexistentDatabaseEntityException;
+import model.PropertyChangeObservable;
 import model.UnauthorisedOperationException;
 import model.comment.Comment;
 import model.comment.CommentManager;
@@ -14,8 +16,8 @@ import view.ErrorDialogFactory;
 import view.project.single_project.ProjectCommentPanel;
 
 import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -25,17 +27,19 @@ import java.util.Objects;
  *
  * @author Beata Keresztes
  */
-public class ProjectCommentController implements PropertyChangeListener {
+public class ProjectCommentController implements CloseablePropertyChangeListener {
 
   private CommentManager commentManager;
   private UserManager userManager;
   private ProjectCommentPanel panel;
   private int projectId;
   public static final String LEAVE_COMMENT_MESSAGE = "Leave a comment";
+  private List<PropertyChangeObservable> propertyChangeObservables;
 
   public ProjectCommentController(ProjectCommentPanel panel, Project project) {
     commentManager = CommentManager.getInstance();
-    commentManager.addPropertyChangeListener(this);
+    propertyChangeObservables = List.of(commentManager);
+    this.setObservables();
     userManager = UserManager.getInstance();
     this.panel = panel;
     try {
@@ -92,5 +96,10 @@ public class ProjectCommentController implements PropertyChangeListener {
       ErrorDialogFactory.createErrorDialog(
           e, null, "You cannot add a comment, because you are not a member of the team.");
     }
+  }
+
+  @Override
+  public List<PropertyChangeObservable> getPropertyChangeObservables() {
+    return Collections.unmodifiableList(propertyChangeObservables);
   }
 }
