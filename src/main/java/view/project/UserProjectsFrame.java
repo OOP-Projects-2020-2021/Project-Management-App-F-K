@@ -21,7 +21,7 @@ import java.util.List;
 public class UserProjectsFrame extends JFrame {
   private JFrame parentFrame;
   private UserProjectsController controller;
-  private static final Dimension DIMENSION = new Dimension(620, 600);
+  private static final Dimension DIMENSION = new Dimension(680, 600);
 
   private List<CloseableComponent> closeableComponents = new ArrayList<>();
 
