@@ -137,13 +137,15 @@ public class ErrorDialogFactory {
   private static final String INVALID_DEADLINE_TITLE = "Invalid deadline";
 
   /**
-   * Messages to warn the user about attempting to set a name for a project which is already
-   * taken inside the team.
+   * Messages to warn the user about attempting to set a name for a project which is already taken
+   * inside the team.
    */
   private static final String DUPLICATE_PROJECT_NAME_MESSAGE =
-          "The selected name is invalid, because there is another project in the team with the " +
-                  "same name" + ".\n"
-                  + "Please choose a unique name for the project";
+      "The selected name is invalid, because there is another project in the team with the "
+          + "same name"
+          + ".\n"
+          + "Please choose a unique name for the project";
+
   private static final String DUPLICATE_PROJECT_NAME_TITLE = "Duplicate project name";
 
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
@@ -365,9 +367,9 @@ public class ErrorDialogFactory {
   /** Displays an error message to inform the user that the name of the project is taken already. */
   private static void displayDuplicateProjectNameErrorDialog(Frame frame, String message) {
     JOptionPane.showMessageDialog(
-            frame,
-            DUPLICATE_PROJECT_NAME_MESSAGE + "\n" + message,
-            DUPLICATE_PROJECT_NAME_TITLE,
-            JOptionPane.ERROR_MESSAGE);
+        frame,
+        DUPLICATE_PROJECT_NAME_MESSAGE + "\n" + message,
+        DUPLICATE_PROJECT_NAME_TITLE,
+        JOptionPane.ERROR_MESSAGE);
   }
 }
