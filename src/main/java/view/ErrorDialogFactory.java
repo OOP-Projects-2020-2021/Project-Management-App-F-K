@@ -2,6 +2,7 @@ package view;
 
 import model.InexistentDatabaseEntityException;
 import model.UnauthorisedOperationException;
+import model.project.exceptions.DuplicateProjectNameException;
 import model.project.exceptions.IllegalProjectStatusChangeException;
 import model.project.exceptions.InvalidDeadlineException;
 import model.team.exceptions.*;
@@ -135,6 +136,16 @@ public class ErrorDialogFactory {
 
   private static final String INVALID_DEADLINE_TITLE = "Invalid deadline";
 
+  /**
+   * Messages to warn the user about attempting to set a name for a project which is already
+   * taken inside the team.
+   */
+  private static final String DUPLICATE_PROJECT_NAME_MESSAGE =
+          "The selected name is invalid, because there is another project in the team with the " +
+                  "same name" + ".\n"
+                  + "Please choose a unique name for the project";
+  private static final String DUPLICATE_PROJECT_NAME_TITLE = "Duplicate project name";
+
   public static void createErrorDialog(Exception exception, Frame frame, String message) {
     exception.printStackTrace();
     if (message == null) {
@@ -188,6 +199,9 @@ public class ErrorDialogFactory {
     }
     if (exception instanceof InvalidDeadlineException) {
       displayInvalidDeadlineErrorDialog(frame, message);
+    }
+    if (exception instanceof DuplicateProjectNameException) {
+      displayDuplicateProjectNameErrorDialog(frame, message);
     }
   }
 
@@ -347,5 +361,13 @@ public class ErrorDialogFactory {
         INVALID_DEADLINE_MESSAGE + "\n" + message,
         INVALID_DEADLINE_TITLE,
         JOptionPane.ERROR_MESSAGE);
+  }
+  /** Displays an error message to inform the user that the name of the project is taken already. */
+  private static void displayDuplicateProjectNameErrorDialog(Frame frame, String message) {
+    JOptionPane.showMessageDialog(
+            frame,
+            DUPLICATE_PROJECT_NAME_MESSAGE + "\n" + message,
+            DUPLICATE_PROJECT_NAME_TITLE,
+            JOptionPane.ERROR_MESSAGE);
   }
 }
