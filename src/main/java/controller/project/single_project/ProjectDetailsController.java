@@ -148,7 +148,7 @@ public class ProjectDetailsController extends ProjectController
     return project.getImportance();
   }
 
-  public void saveProject(
+  public void updateProject(
       String title,
       String assignee,
       String supervisor,
@@ -159,10 +159,8 @@ public class ProjectDetailsController extends ProjectController
       projectManager.updateProject(
           project.getId(), title, assignee, supervisor, deadline, description, importance);
       displaySuccessfulSaveMessage();
-    } catch (InexistentDatabaseEntityException
-        | SQLException
-        | InexistentProjectException
-        | InvalidDeadlineException e) {
+    } catch (InexistentDatabaseEntityException | SQLException | InexistentProjectException e) {
+      panel.updatePanel(); // reset original state
       ErrorDialogFactory.createErrorDialog(
           e,
           null,
@@ -170,10 +168,12 @@ public class ProjectDetailsController extends ProjectController
     } catch (NoSignedInUserException
         | UnauthorisedOperationException
         | InexistentUserException
-        | UnregisteredMemberRoleException e) {
-      ErrorDialogFactory.createErrorDialog(
-          e, null, "You don't have access to edit the project \"" + project.getTitle() + "\"");
+        | UnregisteredMemberRoleException
+        | InvalidDeadlineException e) {
+      panel.updatePanel(); // reset original state
+      ErrorDialogFactory.createErrorDialog(e, null, null);
     } catch (DuplicateProjectNameException e) {
+      panel.updatePanel(); // reset original state
       ErrorDialogFactory.createErrorDialog(
           e, null, "The project with title\"" + project.getTitle() + "\" already exists");
     }

@@ -5,6 +5,7 @@ import model.user.UserManager;
 import model.user.exceptions.EmptyFieldsException;
 import view.ErrorDialogFactory;
 import view.main.MainFrame;
+import view.user.SignInFrame;
 import view.user.SignUpFrame;
 import javax.swing.*;
 import java.sql.SQLException;
@@ -28,9 +29,11 @@ public class SignInController extends FrameController {
 
   private static final String INVALID_SIGN_IN_MESSAGE =
       "Check that the username and password\nthat you introduced are correct!";
+  private SignInFrame signInFrame;
 
-  public SignInController(JFrame signInFrame) {
+  public SignInController(SignInFrame signInFrame) {
     super(signInFrame);
+    this.signInFrame = signInFrame;
     signInFlag = false;
     userManager = UserManager.getInstance();
   }
@@ -40,22 +43,28 @@ public class SignInController extends FrameController {
   }
 
   /**
-   * Check if the username and password introduced are correct.
+   * Check if the username and password introduced are correct for the sign-in and handles both
+   * cases.
    *
    * @param username = the username introduced by the user
    * @param password = the password introduced by the user
-   * @return boolean = true, if the username and password are correct
    */
-  public boolean validateSignIn(String username, String password) {
+  public void trySignIn(String username, String password) {
     try {
-      return userManager.signIn(username, password);
+      if (userManager.signIn(username, password)) {
+        signingIn();
+      } else {
+        // show error dialog and let the user try again
+        displayInvalidSignInDialog();
+        signInFrame.clearTextFields();
+      }
     } catch (SQLException | EmptyFieldsException e) {
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     }
-    return false;
   }
+
   /** Opens the main menu on successful sign-in. */
-  public void enableSigningIn() {
+  public void signingIn() {
     new MainFrame();
     signInFlag = true;
     closeFrame();
@@ -67,6 +76,7 @@ public class SignInController extends FrameController {
     frame.setVisible(false);
     frame.setEnabled(false);
   }
+
   /** Display an error message in case of an unsuccessful sign-in attempt. */
   public void displayInvalidSignInDialog() {
     JOptionPane.showMessageDialog(

@@ -78,19 +78,17 @@ public class SignUpFrame extends JFrame implements ActionListener {
     this.pack();
   }
 
+  public void clearTextFields() {
+    usernameTextField.setText("");
+    passwordField.setText("");
+  }
+
   @Override
   public void actionPerformed(ActionEvent actionEvent) {
     if (actionEvent.getSource() == signUpButton) {
       String username = usernameTextField.getText();
       String password = String.valueOf(passwordField.getPassword());
-      if (signUpController.signUp(username, password)) {
-        signUpController.displayFinalizeSignUpDialog();
-        signUpController.goBack();
-      } else {
-        // clear fields and let the user try again
-        usernameTextField.setText("");
-        passwordField.setText("");
-      }
+      signUpController.signUp(username, password);
     } else if (actionEvent.getSource() == goBackButton) {
       signUpController.goBack();
     }

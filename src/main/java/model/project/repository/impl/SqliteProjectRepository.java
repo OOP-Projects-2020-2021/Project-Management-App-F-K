@@ -218,7 +218,8 @@ public class SqliteProjectRepository implements ProjectRepository {
       boolean descending)
       throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-        PreparedStatement getProjectsOfTeamSt = c.prepareStatement(GET_PROJECTS_OF_TEAM)) {
+        PreparedStatement getProjectsOfTeamSt =
+            c.prepareStatement(getGetProjectsOfTeamQuery(sorterType, descending))) {
       getProjectsOfTeamSt.setInt(1, teamId);
       // if supervisorid is null, it is don't care
       if (supervisorId != null) {
@@ -268,7 +269,8 @@ public class SqliteProjectRepository implements ProjectRepository {
       boolean descending)
       throws SQLException {
     try (Connection c = SqliteDatabaseConnectionFactory.getConnection();
-        PreparedStatement getProjectsSt = c.prepareStatement(GET_PROJECTS)) {
+        PreparedStatement getProjectsSt =
+            c.prepareStatement(getGetProjectsQuery(sorterType, descending))) {
       // if supervisorid is null, it is don't care
       if (supervisorId != null) {
         getProjectsSt.setInt(1, supervisorId);
@@ -362,7 +364,7 @@ public class SqliteProjectRepository implements ProjectRepository {
     return GET_PROJECTS_OF_TEAM.concat(getOrderClause(sorterType, descending));
   }
 
-  private String getGetProjectsSt(Project.SorterType sorterType, boolean descending) {
+  private String getGetProjectsQuery(Project.SorterType sorterType, boolean descending) {
     return GET_PROJECTS.concat(getOrderClause(sorterType, descending));
   }
 

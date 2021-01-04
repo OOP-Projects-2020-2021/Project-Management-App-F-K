@@ -1,5 +1,6 @@
 package controller;
 
+import model.user.UserManager;
 import view.project.UserProjectsFrame;
 import view.user.AccountSettingsFrame;
 import view.user.SignInFrame;
@@ -28,6 +29,7 @@ public class MainMenuController extends FrameController {
 
   public void logoutUser() {
     logOutFlag = true;
+    UserManager.getInstance().logOut();
     new SignInFrame();
     closeFrame();
   }

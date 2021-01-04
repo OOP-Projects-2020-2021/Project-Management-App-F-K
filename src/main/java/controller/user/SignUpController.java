@@ -5,6 +5,7 @@ import model.user.UserManager;
 import model.user.exceptions.DuplicateUsernameException;
 import model.user.exceptions.EmptyFieldsException;
 import view.ErrorDialogFactory;
+import view.user.SignUpFrame;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -23,28 +24,30 @@ public class SignUpController extends FrameController {
       "Please sign in to your account to finalize the registration.";
 
   private UserManager userManager;
+  private SignUpFrame signUpFrame;
 
-  public SignUpController(JFrame signUpFrame) {
+  public SignUpController(SignUpFrame signUpFrame) {
     super(signUpFrame);
+    this.signUpFrame = signUpFrame;
     userManager = UserManager.getInstance();
   }
 
   /**
-   * Forward the data introduced by the user, to create a new account. Close the current frame and
-   * open the SignIn Frame. The user has to introduce its new credentials to sign in.
+   * Forward the data introduced by the user, to create a new account.
    *
    * @param username = the username set by the user
    * @param password = the password set by the user
-   * @return boolean = true on successful sign-up
    */
-  public boolean signUp(String username, String password) {
+  public void signUp(String username, String password) {
     try {
       userManager.signUp(username, password);
-      return true;
+      displayFinalizeSignUpDialog();
+      goBack();
     } catch (SQLException | EmptyFieldsException | DuplicateUsernameException e) {
+      // display error and let the user try again.
       ErrorDialogFactory.createErrorDialog(e, frame, null);
+      signUpFrame.clearTextFields();
     }
-    return false;
   }
   /** It closes the current frame and returns to the parent Frame. */
   public void goBack() {

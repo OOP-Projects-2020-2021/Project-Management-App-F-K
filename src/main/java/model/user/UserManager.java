@@ -8,7 +8,6 @@ import model.user.exceptions.NoSignedInUserException;
 import org.jetbrains.annotations.Nullable;
 
 import java.sql.SQLException;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /** Singleton class UserManager. */
@@ -34,20 +33,6 @@ public class UserManager extends Manager {
     return Optional.ofNullable(currentUser);
   }
 
-  private boolean isEmptyText(String text) {
-    return text == null || text.isEmpty();
-  }
-
-  /**
-   * Check if all the required data has been introduced by the user.
-   *
-   * @param username = the username of the user
-   * @param password = the password of the user
-   * @return true if some credentials are missing, otherwise false
-   */
-  private boolean isMissingCredentials(String username, String password) {
-    return isEmptyText(username) || isEmptyText(password);
-  }
   /**
    * Creates a new user in the database.
    *
@@ -118,8 +103,8 @@ public class UserManager extends Manager {
       int id = currentUser.getId();
       currentUser = new User(id, username, password);
       userRepository.updateUser(currentUser);
-    } catch (NoSuchElementException | InexistentDatabaseEntityException noSuchElementException) {
-      throw new NoSignedInUserException();
+    } catch (InexistentDatabaseEntityException e) {
+      throw new SQLException(); // this can be handled as a database exception
     }
     support.firePropertyChange(UPDATE_ACCOUNT_PROPERTY, oldUser, currentUser);
   }
@@ -138,5 +123,20 @@ public class UserManager extends Manager {
 
   public void logOut() {
     currentUser = null;
+  }
+
+  private boolean isEmptyText(String text) {
+    return text == null || text.isEmpty();
+  }
+
+  /**
+   * Check if all the required data has been introduced by the user.
+   *
+   * @param username = the username of the user
+   * @param password = the password of the user
+   * @return true if some credentials are missing, otherwise false
+   */
+  private boolean isMissingCredentials(String username, String password) {
+    return isEmptyText(username) || isEmptyText(password);
   }
 }
