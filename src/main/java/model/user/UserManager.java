@@ -96,7 +96,7 @@ public class UserManager extends Manager {
     User oldUser = getMandatoryCurrentUser();
     try {
       User existingUser = userRepository.getUserByUsername(username);
-      if (existingUser != null) {
+      if (existingUser != null && oldUser.getId() != existingUser.getId()) {
         throw new DuplicateUsernameException(username);
       }
       if (isMissingCredentials(username, password)) throw new EmptyFieldsException();
