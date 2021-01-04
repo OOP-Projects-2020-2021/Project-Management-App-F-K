@@ -4,6 +4,7 @@ import controller.FrameController;
 import model.user.exceptions.*;
 import model.user.UserManager;
 import view.ErrorDialogFactory;
+import view.user.AccountSettingsFrame;
 
 import javax.swing.*;
 import java.sql.SQLException;
@@ -28,8 +29,11 @@ public class AccountSettingsController extends FrameController {
 
   private static final String INCORRECT_PASSWORD_MESSAGE = "The password introduced is incorrect!";
 
-  public AccountSettingsController(JFrame accountSettingsFrame) {
+  private AccountSettingsFrame accountSettingsFrame;
+
+  public AccountSettingsController(AccountSettingsFrame accountSettingsFrame) {
     super(accountSettingsFrame);
+    this.accountSettingsFrame = accountSettingsFrame;
     userManager = UserManager.getInstance();
   }
 
@@ -69,8 +73,10 @@ public class AccountSettingsController extends FrameController {
       userManager.updateUser(username, password);
       return true;
     } catch (SQLException | DuplicateUsernameException | EmptyFieldsException e) {
+      accountSettingsFrame.resetFields();
       ErrorDialogFactory.createErrorDialog(e, frame, null);
     } catch (NoSignedInUserException e) {
+      accountSettingsFrame.resetFields();
       displayFailedUpdateDialog();
     }
     return false;

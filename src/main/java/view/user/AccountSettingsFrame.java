@@ -161,14 +161,18 @@ public class AccountSettingsFrame extends JFrame implements ActionListener {
     }
   }
 
-  public void updateFieldsAfterSave() {
-    dataSavedLabel.setVisible(true);
+  public void resetFields() {
     usernameTextField.setText(accountSettingsController.getUsername());
     usernameTextField.setEditable(false);
     passwordField.setText(accountSettingsController.getPassword());
     passwordField.setEditable(false);
     passwordField.setEchoChar('*');
     showPasswordButton.setText(SHOW_PASSWORD);
+  }
+
+  public void updateFieldsAfterSave() {
+    dataSavedLabel.setVisible(true);
+    resetFields();
   }
 
   private class AccountSettingsWindowAdapter extends WindowAdapter {
