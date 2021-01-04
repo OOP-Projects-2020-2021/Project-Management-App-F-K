@@ -175,7 +175,7 @@ public class ProjectDetailsController extends ProjectController
     } catch (DuplicateProjectNameException e) {
       panel.updatePanel(); // reset original state
       ErrorDialogFactory.createErrorDialog(
-          e, null, "The project with title\"" + project.getTitle() + "\" already exists");
+          e, null, "The project with title\"" + title + "\" already exists");
     }
   }
 
